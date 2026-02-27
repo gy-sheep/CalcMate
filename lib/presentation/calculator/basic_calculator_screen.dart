@@ -1,6 +1,9 @@
+import 'package:calcmate/domain/models/calculator_state.dart';
+import 'package:calcmate/presentation/calculator/basic_calculator_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BasicCalculatorScreen extends StatelessWidget {
+class BasicCalculatorScreen extends ConsumerWidget {
   final String title;
   final IconData icon;
   final Color color;
@@ -13,7 +16,9 @@ class BasicCalculatorScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(basicCalculatorViewModelProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF0F0F3),
       appBar: AppBar(
@@ -69,7 +74,7 @@ class BasicCalculatorScreen extends StatelessWidget {
               child: Container(),
             ),
           ),
-          const _CalculatorBody(),
+          _CalculatorBody(state: state),
         ],
       ),
     );
@@ -77,13 +82,15 @@ class BasicCalculatorScreen extends StatelessWidget {
 }
 
 class _CalculatorBody extends StatelessWidget {
-  const _CalculatorBody();
+  final CalculatorState state;
+
+  const _CalculatorBody({required this.state});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Expanded(child: _DisplayPanel()),
+        Expanded(child: _DisplayPanel(state: state)),
         const SizedBox(height: 16),
         const _ButtonPad(),
         SizedBox(height: MediaQuery.of(context).padding.bottom + 12),
@@ -97,7 +104,9 @@ class _CalculatorBody extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _DisplayPanel extends StatelessWidget {
-  const _DisplayPanel();
+  final CalculatorState state;
+
+  const _DisplayPanel({required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -109,29 +118,36 @@ class _DisplayPanel extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              // 수식 — 계산 완료 후에만 표시 (ViewModel 연결 시 visibility 제어)
-              Text(
-                '',  // 기본 hidden, ViewModel에서 수식 문자열로 채움
-                textAlign: TextAlign.right,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFFAAAAAA),
-                  fontWeight: FontWeight.w400,
-                  height: 1.4,
+            children: [
+              // 수식 — 계산 완료 후에만 표시
+              Visibility(
+                visible: state.isResult && state.expression.isNotEmpty,
+                child: Text(
+                  state.expression,
+                  textAlign: TextAlign.right,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Color(0xFFAAAAAA),
+                    fontWeight: FontWeight.w400,
+                    height: 1.4,
+                  ),
                 ),
               ),
-              // 입력값 / 결과 — 항상 표시
-              Text(
-                '0',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 48,
-                  color: Color(0xFF333333),
-                  fontWeight: FontWeight.w300,
-                  height: 1.1,
+              // 입력값 / 결과
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  state.input,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 48,
+                    color: Color(0xFF333333),
+                    fontWeight: FontWeight.w300,
+                    height: 1.1,
+                  ),
                 ),
               ),
             ],
@@ -146,12 +162,11 @@ class _DisplayPanel extends StatelessWidget {
 // 버튼 패드
 // ---------------------------------------------------------------------------
 
-class _ButtonPad extends StatelessWidget {
+class _ButtonPad extends ConsumerWidget {
   const _ButtonPad();
 
   static const _gap = 14.0;
   static const _numCols = 4;
-  static const _numRows = 5;
 
   static const _rows = [
     [('⌫', _BtnType.function), ('AC', _BtnType.function), ('%', _BtnType.function), ('÷', _BtnType.operator)],
@@ -161,18 +176,19 @@ class _ButtonPad extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final vm = ref.read(basicCalculatorViewModelProvider.notifier);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final cellW = (constraints.maxWidth - _gap * (_numCols - 1)) / _numCols;
-          final cellH = cellW; // 정사각형 유지
+          final cellH = cellW;
 
           return Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              // 상단 4행
               for (final row in _rows) ...[
                 SizedBox(
                   height: cellH,
@@ -182,7 +198,11 @@ class _ButtonPad extends StatelessWidget {
                         if (i > 0) const SizedBox(width: _gap),
                         SizedBox(
                           width: cellW,
-                          child: _CalcButton(label: row[i].$1, type: row[i].$2),
+                          child: _CalcButton(
+                            label: row[i].$1,
+                            type: row[i].$2,
+                            onTap: () => vm.handleIntent(_intentFor(row[i].$1)),
+                          ),
                         ),
                       ],
                     ],
@@ -190,18 +210,46 @@ class _ButtonPad extends StatelessWidget {
                 ),
                 const SizedBox(height: _gap),
               ],
-              // 마지막 행: +/-, 0, ., = (모두 동일 크기)
+              // 마지막 행: +/-, 0, ., =
               SizedBox(
                 height: cellH,
                 child: Row(
                   children: [
-                    SizedBox(width: cellW, child: const _CalcButton(label: '+/-', type: _BtnType.function)),
+                    SizedBox(
+                      width: cellW,
+                      child: _CalcButton(
+                        label: '+/-',
+                        type: _BtnType.function,
+                        onTap: () => vm.handleIntent(const CalculatorIntent.negatePressed()),
+                      ),
+                    ),
                     const SizedBox(width: _gap),
-                    SizedBox(width: cellW, child: const _CalcButton(label: '0', type: _BtnType.number)),
+                    SizedBox(
+                      width: cellW,
+                      child: _CalcButton(
+                        label: '0',
+                        type: _BtnType.number,
+                        onTap: () => vm.handleIntent(const CalculatorIntent.numberPressed('0')),
+                      ),
+                    ),
                     const SizedBox(width: _gap),
-                    SizedBox(width: cellW, child: const _CalcButton(label: '.', type: _BtnType.number)),
+                    SizedBox(
+                      width: cellW,
+                      child: _CalcButton(
+                        label: '.',
+                        type: _BtnType.number,
+                        onTap: () => vm.handleIntent(const CalculatorIntent.decimalPressed()),
+                      ),
+                    ),
                     const SizedBox(width: _gap),
-                    SizedBox(width: cellW, child: const _CalcButton(label: '=', type: _BtnType.equals)),
+                    SizedBox(
+                      width: cellW,
+                      child: _CalcButton(
+                        label: '=',
+                        type: _BtnType.equals,
+                        onTap: () => vm.handleIntent(const CalculatorIntent.equalsPressed()),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -210,6 +258,16 @@ class _ButtonPad extends StatelessWidget {
         },
       ),
     );
+  }
+
+  CalculatorIntent _intentFor(String label) {
+    return switch (label) {
+      '⌫' => const CalculatorIntent.backspacePressed(),
+      'AC' => const CalculatorIntent.clearPressed(),
+      '%' => const CalculatorIntent.percentPressed(),
+      '÷' || '×' || '-' || '+' => CalculatorIntent.operatorPressed(label),
+      _ => CalculatorIntent.numberPressed(label),
+    };
   }
 }
 
@@ -226,10 +284,12 @@ enum _BtnType { number, operator, function, equals }
 class _CalcButton extends StatelessWidget {
   final String label;
   final _BtnType type;
+  final VoidCallback onTap;
 
   const _CalcButton({
     required this.label,
     required this.type,
+    required this.onTap,
   });
 
   Color get _textColor {
@@ -244,9 +304,7 @@ class _CalcButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // TODO: ViewModel intent 연결
-      },
+      onTap: onTap,
       child: type == _BtnType.equals
           ? _ElevatedButton(label: label, textColor: _textColor)
           : _NeumorphicButton(label: label, textColor: _textColor),
@@ -320,7 +378,7 @@ class _ElevatedButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFE8735A).withOpacity(0.45),
+            color: const Color(0xFFE8735A).withValues(alpha: 0.45),
             offset: const Offset(0, 6),
             blurRadius: 12,
           ),

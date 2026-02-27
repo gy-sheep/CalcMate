@@ -21,7 +21,6 @@
   - 이미지 배경 + Hero fadeout 전환 애니메이션
   - 그라디언트 오버레이 (좌→우, 60%→20% black)
   - 라운드 사각형 아이콘 컨테이너, 타이틀 외곽 그림자, 체브론 버튼
-- [x] `presentation/calculator/basic_calculator_screen.dart` — 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
 - [x] macOS Impeller 비활성화 (`macos/Runner/Info.plist`)
 - [x] Android Gradle JVM 메모리 최적화 (`android/gradle.properties`)
 
@@ -32,20 +31,27 @@
 - [x] `presentation/main/main_screen.dart` — ConsumerStatefulWidget 전환, Provider 구독
 - [x] `pubspec.yaml` — retrofit 버전 충돌 수정 (`>=4.4.1 <4.9.0`)
 
+### Phase 1: 기본 계산기 — `feat/basic-calculator` 완료
+- [x] 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
+- [x] `docs/dev/basic_calculator.md` — 구현 명세 작성
+- [x] `domain/models/calculator_state.dart` — CalculatorState (Freezed) 정의
+- [x] `domain/usecases/evaluate_expression_usecase.dart` — TDD 작성 후 구현 (14케이스)
+- [x] `presentation/calculator/basic_calculator_viewmodel.dart` — CalculatorViewModel (Notifier + sealed Intent)
+- [x] `presentation/calculator/basic_calculator_screen.dart` — ConsumerWidget 전환 및 ViewModel 연결
+
 ---
 
 ## 다음 작업
 
-### Phase 1: 기본 계산기 — `feat/basic-calculator`
+### Phase 2: 환율 계산기 — `feat/exchange-rate`
 
-> 구현 명세: `docs/dev/basic_calculator.md`
+> 구현 명세: (작성 예정)
 
-- [x] 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
-- [x] `docs/dev/basic_calculator.md` — 구현 명세 작성
-- [ ] `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
-- [ ] `EvaluateExpressionUseCase` — TDD 작성 후 구현
-- [ ] `CalculatorViewModel` (Riverpod Notifier, handleIntent) 연결
-- [ ] `BasicCalculatorScreen` ConsumerWidget 전환 및 ViewModel 연결
+- [ ] **Data**: Retrofit API 인터페이스, 환율 DTO, Repository 구현체
+- [ ] **Domain**: `ExchangeRateEntity`, `GetExchangeRateUseCase`
+- [ ] **Presentation**: 통화 선택 UI, 금액 입력, 환산 결과 표시
+- [ ] **ViewModel**: `ExchangeRateViewModel` (AsyncNotifier — API 상태 관리)
+- [ ] 오프라인 fallback: 마지막 조회 환율 `shared_preferences` 캐싱
 
 ---
 
@@ -55,24 +61,28 @@
 lib/
 ├── core/
 │   ├── config/
-│   │   └── calc_mode_config.dart    # 13개 항목 상수 (kCalcModeEntries)
+│   │   └── calc_mode_config.dart        # 13개 항목 상수 (kCalcModeEntries)
 │   ├── di/
-│   │   └── providers.dart           # dioProvider
+│   │   └── providers.dart               # dioProvider
 │   ├── network/
-│   │   └── error_interceptor.dart   # 공통 오류 처리
+│   │   └── error_interceptor.dart       # 공통 오류 처리
 │   └── theme/
-│       └── app_theme.dart           # 라이트/다크 테마
+│       └── app_theme.dart               # 라이트/다크 테마
 ├── domain/
-│   └── models/
-│       └── calc_mode_entry.dart     # CalcModeEntry (Freezed)
+│   ├── models/
+│   │   ├── calc_mode_entry.dart         # CalcModeEntry (Freezed)
+│   │   └── calculator_state.dart        # CalculatorState (Freezed)
+│   └── usecases/
+│       └── evaluate_expression_usecase.dart  # 사칙연산 파서
 ├── presentation/
 │   ├── main/
-│   │   ├── main_screen.dart         # 메인 화면 (ConsumerStatefulWidget)
-│   │   └── main_screen_viewmodel.dart  # MainScreenViewModel (Notifier)
+│   │   ├── main_screen.dart             # 메인 화면 (ConsumerStatefulWidget)
+│   │   └── main_screen_viewmodel.dart   # MainScreenViewModel (Notifier)
 │   ├── calculator/
-│   │   └── basic_calculator_screen.dart  # 기본 계산기 UI (뉴모피즘, ViewModel 연결 전)
+│   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget)
+│   │   └── basic_calculator_viewmodel.dart  # BasicCalculatorViewModel (Notifier)
 │   └── widgets/
-│       └── calc_mode_card.dart      # 공통 계산기 카드 위젯
+│       └── calc_mode_card.dart          # 공통 계산기 카드 위젯
 └── main.dart
 ```
 

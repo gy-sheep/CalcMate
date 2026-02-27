@@ -110,6 +110,34 @@
 
 ---
 
+## 2026-02-28 — Phase 1 기본 계산기 로직 구현 완료
+
+### 완료 항목
+
+**계산기 상태 모델** (`domain/models/calculator_state.dart`)
+- `CalculatorState` (Freezed) — input, expression, isResult 3필드
+
+**계산 로직** (`domain/usecases/evaluate_expression_usecase.dart`)
+- 순수 Dart 파서 — 외부 패키지 미사용
+- 2단계 파싱: `*·/` 먼저 처리 후 `+·-` 처리 (연산자 우선순위 반영)
+- 음수 부호, 소수점, 0 나누기(infinity) 처리
+- TDD 14케이스 전부 통과 (`test/domain/usecases/evaluate_expression_usecase_test.dart`)
+
+**ViewModel** (`presentation/calculator/basic_calculator_viewmodel.dart`)
+- `CalculatorIntent` (sealed class) — 8가지 Intent 정의
+- `BasicCalculatorViewModel` (Riverpod Notifier) — handleIntent로 state 전이
+- 계산 완료 후 숫자 입력 시 새 수식 시작, % / +/- 처리 포함
+
+**화면 연결** (`presentation/calculator/basic_calculator_screen.dart`)
+- `StatelessWidget` → `ConsumerWidget` 전환
+- 디스플레이: state.input / state.expression 구독, FittedBox로 긴 숫자 자동 축소
+- 버튼 탭 → handleIntent 연결 완료
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-02-28 — 기본 계산기 UI 구현 (Phase 1 - 1단계)
 
 ### 완료 항목
