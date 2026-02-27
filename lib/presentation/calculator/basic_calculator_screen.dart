@@ -27,8 +27,13 @@ class BasicCalculatorScreen extends StatelessWidget {
               tag: 'calc_icon_$title',
               child: Material(
                 color: Colors.transparent,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white.withOpacity(0.3),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.25),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Icon(icon, color: Colors.white, size: 20),
                 ),
               ),

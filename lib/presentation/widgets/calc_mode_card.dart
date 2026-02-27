@@ -69,14 +69,19 @@ class CalcModeCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Hero(
                       tag: 'calc_icon_$title',
                       child: Material(
                         color: Colors.transparent,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white.withOpacity(0.3),
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.25),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Icon(icon, color: Colors.white),
                         ),
                       ),
@@ -85,6 +90,7 @@ class CalcModeCard extends StatelessWidget {
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Hero(
                             tag: 'calc_title_$title',
@@ -96,11 +102,16 @@ class CalcModeCard extends StatelessWidget {
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
+                                  shadows: [
+                                    Shadow(offset: Offset(-1.5, -1.5), color: Colors.black26),
+                                    Shadow(offset: Offset( 1.5, -1.5), color: Colors.black26),
+                                    Shadow(offset: Offset(-1.5,  1.5), color: Colors.black26),
+                                    Shadow(offset: Offset( 1.5,  1.5), color: Colors.black26),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 4),
                           Text(
                             description,
                             style: TextStyle(
@@ -111,6 +122,14 @@ class CalcModeCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    CircleAvatar(
+                      backgroundColor: Colors.white.withOpacity(0.2),
+                      child: Icon(
+                        Icons.chevron_right,
+                        color: Colors.white.withOpacity(0.8),
                       ),
                     ),
                   ],
