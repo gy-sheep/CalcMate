@@ -21,7 +21,7 @@
   - 이미지 배경 + Hero fadeout 전환 애니메이션
   - 그라디언트 오버레이 (좌→우, 60%→20% black)
   - 라운드 사각형 아이콘 컨테이너, 타이틀 외곽 그림자, 체브론 버튼
-- [x] `presentation/calculator/basic_calculator_screen.dart` — 플레이스홀더 화면
+- [x] `presentation/calculator/basic_calculator_screen.dart` — 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
 - [x] macOS Impeller 비활성화 (`macos/Runner/Info.plist`)
 - [x] Android Gradle JVM 메모리 최적화 (`android/gradle.properties`)
 
@@ -38,12 +38,14 @@
 
 ### Phase 1: 기본 계산기 — `feat/basic-calculator`
 
-> UI 구현을 먼저 진행한 후 로직을 붙이는 순서로 진행
+> 구현 명세: `docs/dev/basic_calculator.md`
 
-1. 기본 계산기 UI 구현 (결과창 + 버튼 패드)
-2. `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
-3. `EvaluateExpressionUseCase` — TDD 작성 후 구현
-4. `CalculatorViewModel` (Riverpod Notifier, handleIntent) 연결
+- [x] 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
+- [x] `docs/dev/basic_calculator.md` — 구현 명세 작성
+- [ ] `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
+- [ ] `EvaluateExpressionUseCase` — TDD 작성 후 구현
+- [ ] `CalculatorViewModel` (Riverpod Notifier, handleIntent) 연결
+- [ ] `BasicCalculatorScreen` ConsumerWidget 전환 및 ViewModel 연결
 
 ---
 
@@ -68,7 +70,7 @@ lib/
 │   │   ├── main_screen.dart         # 메인 화면 (ConsumerStatefulWidget)
 │   │   └── main_screen_viewmodel.dart  # MainScreenViewModel (Notifier)
 │   ├── calculator/
-│   │   └── basic_calculator_screen.dart  # 기본 계산기 (플레이스홀더)
+│   │   └── basic_calculator_screen.dart  # 기본 계산기 UI (뉴모피즘, ViewModel 연결 전)
 │   └── widgets/
 │       └── calc_mode_card.dart      # 공통 계산기 카드 위젯
 └── main.dart

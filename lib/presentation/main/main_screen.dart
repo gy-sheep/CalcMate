@@ -99,7 +99,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         title: entry.title,
                         icon: entry.icon,
                         color: entry.id == 'basic_calculator'
-                            ? Colors.blue
+                            ? Colors.black.withOpacity(0.2)
                             : Colors.green,
                       ),
                       transitionsBuilder:

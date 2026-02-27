@@ -110,6 +110,31 @@
 
 ---
 
+## 2026-02-28 — 기본 계산기 UI 구현 (Phase 1 - 1단계)
+
+### 완료 항목
+
+**기본 계산기 화면** (`presentation/calculator/basic_calculator_screen.dart`)
+- 플레이스홀더 → 뉴모피즘 디자인 전체 UI로 교체
+- 디스플레이: 수식(위, 회색, 계산 완료 후 표시) + 입력값/결과(아래, 48px) 하단 정렬
+- 버튼 레이아웃: iOS 계산기 동일 구조 (⌫·AC·%·÷ / 7~1 / +/-·0·.·=)
+  - `LayoutBuilder` 기반 정사각형 셀 계산 (cellH = cellW)
+  - `⌫` 버튼: `Icons.backspace_outlined` 아이콘
+  - 연산자(÷·×·-·+) 폰트 28px, = 버튼 코랄(`#E8735A`) 포인트
+  - 뉴모피즘 그림자: 흰색(-4,-4) + 회색(+4,+4)
+- AppBar: 반투명 다크 컨테이너(black 20%) + 흰색 아이콘, 타이틀 20px
+
+**메인 화면** (`presentation/main/main_screen.dart`)
+- 기본 계산기 진입 color: `Colors.blue` → `Colors.black.withOpacity(0.2)` 변경
+
+**구현 명세**
+- `docs/dev/basic_calculator.md` — State/Intent/UseCase/ViewModel 구현 명세 작성
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-02-27 — 카드 리스트 리팩터링 (Phase 1 선행)
 
 ### 완료 항목
