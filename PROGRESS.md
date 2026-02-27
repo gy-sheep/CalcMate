@@ -27,12 +27,20 @@
 
 ## 다음 작업
 
+### 카드 리스트 리팩터링 (Phase 1 선행 작업)
+**브랜치**: `feat/calc-mode-card-refactor`
+
+1. `domain/models/calc_mode_entry.dart` — CalcModeEntry (Freezed) 모델 정의
+   - id, title, description, icon, imagePath, isVisible, order 필드
+2. `core/config/calc_mode_config.dart` — 13개 기본 항목 상수 정의
+3. `presentation/main/main_screen_viewmodel.dart` — NotifierProvider, 카드 리스트 상태 관리
+4. `presentation/main/main_screen.dart` — ConsumerWidget 전환, Provider 구독
+
 ### Phase 1: 기본 계산기
-1. `domain/models/calc_mode_entry.dart` — CalcModeEntry (Freezed) 정의 및 카드 리스트 분리
-2. `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
-3. `EvaluateExpressionUseCase` — TDD 작성 후 구현
-4. `CalculatorViewModel` (Riverpod Notifier, handleIntent)
-5. 기본 계산기 UI 구현 (결과창 + 버튼 패드)
+1. `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
+2. `EvaluateExpressionUseCase` — TDD 작성 후 구현
+3. `CalculatorViewModel` (Riverpod Notifier, handleIntent)
+4. 기본 계산기 UI 구현 (결과창 + 버튼 패드)
 
 ## 프로젝트 구조 (현재)
 

@@ -96,6 +96,40 @@ lib/
 
 ---
 
+## 브랜치명
+
+- **규칙**: `{type}/{kebab-case-기능명}`
+- **기준**: Q0002 브랜치 전략 참조 → [Q0002.md](../prompts/answers/Q0002.md)
+
+### Phase별 브랜치명
+
+| Phase | 브랜치명 | 설명 |
+|-------|----------|------|
+| 선행 작업 | `feat/calc-mode-card-refactor` | 카드 리스트 데이터 분리 |
+| Phase 1 | `feat/basic-calculator` | 기본 계산기 |
+| Phase 2 | `feat/exchange-rate` | 환율 계산기 |
+| Phase 3 | `feat/unit-converter` | 단위 변환기 |
+| Phase 4 | `feat/vat-calculator` | 부가세 계산기 |
+| Phase 5 | `feat/age-calculator` | 나이 계산기 |
+| Phase 6 | `feat/date-calculator` | 날짜 계산기 |
+| Phase 7 | `feat/loan-calculator` | 대출 계산기 |
+| Phase 8 | `feat/salary-calculator` | 실수령액 계산기 |
+| Phase 9 | `feat/discount-calculator` | 할인 계산기 |
+| Phase 10 | `feat/dutch-pay` | 더치페이 계산기 |
+| Phase 11 | `feat/rent-calculator` | 전월세 계산기 |
+| Phase 12 | `feat/acquisition-tax` | 취득세 계산기 |
+| Phase 13 | `feat/bmi-calculator` | BMI 계산기 |
+| Phase 14 | `feat/polish` | 마무리 및 출시 |
+
+### 세부 분기 (하나의 Phase를 나눠 작업할 경우)
+
+```bash
+feat/basic-calculator-usecase   # UseCase만 먼저
+feat/basic-calculator-ui        # UI 별도 작업
+```
+
+---
+
 ## Asset 파일명
 
 - **규칙**: `snake_case`
