@@ -4,7 +4,7 @@ class CalcModeCard extends StatelessWidget {
   final String title;
   final String description;
   final IconData icon;
-  final Color color;
+  final String imagePath;
   final VoidCallback onTap;
 
   const CalcModeCard({
@@ -12,9 +12,17 @@ class CalcModeCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.icon,
-    required this.color,
+    required this.imagePath,
     required this.onTap,
   });
+
+  Widget _buildImage() {
+    return Image.asset(
+      imagePath,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(color: Colors.blueGrey),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +33,32 @@ class CalcModeCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // 배경 Hero: 카드 전체 영역 → 전체 화면으로 확장
+          // 배경 Hero: 이미지가 확장되며 fadeout
           Positioned.fill(
             child: Hero(
               tag: 'calc_bg_$title',
-              child: Container(color: color),
+              flightShuttleBuilder: (_, animation, __, ___, ____) {
+                return FadeTransition(
+                  opacity: Tween<double>(begin: 1.0, end: 0.0).animate(animation),
+                  child: _buildImage(),
+                );
+              },
+              child: _buildImage(),
+            ),
+          ),
+          // 그라디언트 오버레이: 이미지 위에 씌워 텍스트 가독성 확보
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0x99000000), // 60% black
+                    Color(0x33000000), // 20% black
+                  ],
+                ),
+              ),
             ),
           ),
           // 콘텐츠: 아이콘/텍스트 Hero는 배경 Hero와 형제 관계

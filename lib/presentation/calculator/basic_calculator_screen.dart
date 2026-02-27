@@ -52,13 +52,17 @@ class BasicCalculatorScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      // 배경 Hero가 전체 화면을 채우고, 콘텐츠는 그 위에 위치
       body: Stack(
         children: [
+          // 실제 화면 배경 (이미지 fadeout 후 표시)
+          Positioned.fill(
+            child: Container(color: color),
+          ),
+          // 배경 Hero 도착지: 투명 Container (이미지가 fadeout되며 착지)
           Positioned.fill(
             child: Hero(
               tag: 'calc_bg_$title',
-              child: Container(color: color),
+              child: Container(),
             ),
           ),
           const Center(

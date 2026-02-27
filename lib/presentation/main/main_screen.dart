@@ -12,12 +12,10 @@ class MainScreen extends StatelessWidget {
         title: '기본 계산기',
         description: '사칙연산 및 공학 계산',
         icon: Icons.calculate,
-        color: Colors.blue,
+        imagePath: 'assets/images/basic_calculator.png',
         onTap: () {
-          // [복원] icon과 color 데이터를 다시 전달합니다.
           Navigator.of(context).push(
             PageRouteBuilder(
-              // transitionDuration: const Duration(milliseconds: 200),
               pageBuilder: (context, animation, secondaryAnimation) =>
                   const BasicCalculatorScreen(
                 title: '기본 계산기',
@@ -30,18 +28,17 @@ class MainScreen extends StatelessWidget {
           );
         },
       ),
-      // ... 다른 카드들은 일단 그대로 둡니다 ...
       CalcModeCard(
         title: '환율 계산기',
         description: '실시간 전 세계 환율 변환',
         icon: Icons.currency_exchange,
-        color: Colors.green,
+        // imagePath: 'assets/images/exchange_rate.png',
+        imagePath: 'assets/images/basic_calculator.jpg',
         onTap: () {
           Navigator.of(context).push(
             PageRouteBuilder(
-              // transitionDuration: const Duration(milliseconds: 400),
               pageBuilder: (context, animation, secondaryAnimation) =>
-              const BasicCalculatorScreen(
+                  const BasicCalculatorScreen(
                 title: '환율 계산기',
                 icon: Icons.currency_exchange,
                 color: Colors.green,
@@ -56,28 +53,32 @@ class MainScreen extends StatelessWidget {
         title: '단위 변환기',
         description: '길이, 무게, 넓이 등 변환',
         icon: Icons.straighten,
-        color: Colors.orange,
+        // imagePath: 'assets/images/unit_converter.jpg',
+        imagePath: 'assets/images/basic_calculator.png',
         onTap: () {},
       ),
       CalcModeCard(
         title: '부가세 계산기',
         description: '부가세 포함/별도 계산',
         icon: Icons.receipt_long,
-        color: Colors.red,
+        // imagePath: 'assets/images/vat_calculator.jpg',
+        imagePath: 'assets/images/basic_calculator.png',
         onTap: () {},
       ),
       CalcModeCard(
         title: '나이 계산기',
         description: '만 나이, 띠, 별자리 확인',
         icon: Icons.cake,
-        color: Colors.purple,
+        // imagePath: 'assets/images/age_calculator.jpg',
+        imagePath: 'assets/images/basic_calculator.png',
         onTap: () {},
       ),
       CalcModeCard(
         title: '날짜 계산기',
         description: '디데이 및 날짜 간격 계산',
         icon: Icons.calendar_month,
-        color: Colors.teal,
+        // imagePath: 'assets/images/date_calculator.jpg',
+        imagePath: 'assets/images/basic_calculator.png',
         onTap: () {},
       ),
     ];
