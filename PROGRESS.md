@@ -15,7 +15,7 @@
 
 ### UI 기반 작업 (Phase 0 외 선행 구현)
 - [x] `presentation/main/main_screen.dart` — 메인 화면, 13개 카드 리스트 UI
-  - StatefulWidget 전환, ScrollController 기반 스크롤 감지
+  - ConsumerStatefulWidget 전환, ScrollController 기반 스크롤 감지
   - 스크롤 시 BackdropFilter blur(20) + 흰색 75% 투명 AppBar 전환
 - [x] `presentation/widgets/calc_mode_card.dart` — 카드 위젯
   - 이미지 배경 + Hero fadeout 전환 애니메이션
@@ -25,37 +25,48 @@
 - [x] macOS Impeller 비활성화 (`macos/Runner/Info.plist`)
 - [x] Android Gradle JVM 메모리 최적화 (`android/gradle.properties`)
 
+### 카드 리스트 리팩터링 (Phase 1 선행) — `feat/calc-mode-card-refactor` 완료
+- [x] `domain/models/calc_mode_entry.dart` — CalcModeEntry (Freezed) 모델 정의
+- [x] `core/config/calc_mode_config.dart` — 13개 항목 상수 정의
+- [x] `presentation/main/main_screen_viewmodel.dart` — NotifierProvider, State, Intent
+- [x] `presentation/main/main_screen.dart` — ConsumerStatefulWidget 전환, Provider 구독
+- [x] `pubspec.yaml` — retrofit 버전 충돌 수정 (`>=4.4.1 <4.9.0`)
+
+---
+
 ## 다음 작업
-
-### 카드 리스트 리팩터링 (Phase 1 선행 작업) — `feat/calc-mode-card-refactor`
-
-1. `domain/models/calc_mode_entry.dart` — CalcModeEntry (Freezed) 모델 정의
-   - id, title, description, icon, imagePath, isVisible, order 필드
-2. `core/config/calc_mode_config.dart` — 13개 기본 항목 상수 정의
-3. `presentation/main/main_screen_viewmodel.dart` — NotifierProvider, 카드 리스트 상태 관리
-4. `presentation/main/main_screen.dart` — ConsumerWidget 전환, Provider 구독
 
 ### Phase 1: 기본 계산기 — `feat/basic-calculator`
 
-1. `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
-2. `EvaluateExpressionUseCase` — TDD 작성 후 구현
-3. `CalculatorViewModel` (Riverpod Notifier, handleIntent)
-4. 기본 계산기 UI 구현 (결과창 + 버튼 패드)
+> UI 구현을 먼저 진행한 후 로직을 붙이는 순서로 진행
+
+1. 기본 계산기 UI 구현 (결과창 + 버튼 패드)
+2. `CalculatorState` (Freezed), `CalculatorIntent` (sealed class) 정의
+3. `EvaluateExpressionUseCase` — TDD 작성 후 구현
+4. `CalculatorViewModel` (Riverpod Notifier, handleIntent) 연결
+
+---
 
 ## 프로젝트 구조 (현재)
 
 ```
 lib/
 ├── core/
+│   ├── config/
+│   │   └── calc_mode_config.dart    # 13개 항목 상수 (kCalcModeEntries)
 │   ├── di/
 │   │   └── providers.dart           # dioProvider
 │   ├── network/
 │   │   └── error_interceptor.dart   # 공통 오류 처리
 │   └── theme/
 │       └── app_theme.dart           # 라이트/다크 테마
+├── domain/
+│   └── models/
+│       └── calc_mode_entry.dart     # CalcModeEntry (Freezed)
 ├── presentation/
 │   ├── main/
-│   │   └── main_screen.dart         # 메인 화면 (13개 카드 리스트)
+│   │   ├── main_screen.dart         # 메인 화면 (ConsumerStatefulWidget)
+│   │   └── main_screen_viewmodel.dart  # MainScreenViewModel (Notifier)
 │   ├── calculator/
 │   │   └── basic_calculator_screen.dart  # 기본 계산기 (플레이스홀더)
 │   └── widgets/

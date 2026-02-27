@@ -106,4 +106,40 @@
 - push 완료 후 `/clear` 안내 문구 추가
 
 ### 커밋
+- `ce34147` — chore: Phase 0 인프라 완성 — 의존성 추가 및 DI/네트워크 설정
+
+---
+
+## 2026-02-27 — 카드 리스트 리팩터링 (Phase 1 선행)
+
+### 완료 항목
+
+**데이터 모델**
+- `domain/models/calc_mode_entry.dart` — CalcModeEntry (Freezed) 불변 모델
+  - id, title, description, icon, imagePath, isVisible, order 필드
+
+**설정 상수**
+- `core/config/calc_mode_config.dart` — 13개 항목 `kCalcModeEntries` 상수 정의
+
+**ViewModel**
+- `presentation/main/main_screen_viewmodel.dart` — MVVM + Intent 패턴 적용
+  - `MainScreenState` (Freezed), `MainScreenIntent` (sealed class)
+  - `MainScreenViewModel` (Riverpod Notifier, handleIntent)
+
+**메인 화면 전환**
+- `presentation/main/main_screen.dart` — StatefulWidget → ConsumerStatefulWidget
+  - 하드코딩 카드 목록 제거, `state.entries` 구독으로 전환
+  - 스크롤 상태를 `setState` 대신 ViewModel Intent로 위임
+
+**인프라**
+- `pubspec.yaml` — retrofit 버전 충돌 수정 (`^4.4.1` → `>=4.4.1 <4.9.0`)
+  - retrofit 4.9.2 + retrofit_generator 9.7.0 호환성 문제로 build_runner 실패하던 이슈 해결
+
+**문서**
+- `docs/dev/CARD_LIST_REFACTOR.md` — 리팩터링 구현 명세
+- `docs/dev/_IMPL_SPEC_TEMPLATE.md` — 구현 명세 템플릿
+- `docs/prompts/answers/Q0011.md` — Android Statusbar 아이콘 색상 이슈
+- `docs/prompts/answers/Q0013.md` — Freezed/@freezed 개념 (코틀린 data class 비교)
+
+### 커밋
 - (이번 커밋)

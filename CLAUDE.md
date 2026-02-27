@@ -46,9 +46,16 @@ lib/
 - **질문/답변 로그**: `docs/prompts/PROPMTS.md`
 - **세션 시작 시 반드시 읽기**: `PROGRESS.md` (현재 상태 및 다음 작업 — 구현에 필요한 정보 포함)
 
+## 구현 명세 작성 규칙
+
+기능 개발 전 구현 명세 문서 작성을 요청받으면 아래 규칙을 따른다.
+
+- **저장 위치**: `docs/dev/{FEATURE_NAME}.md`
+- **템플릿**: `docs/dev/_IMPL_SPEC_TEMPLATE.md`를 반드시 따른다
+
 ## 문서 관리
 
-- **Phase/Step 구현 완료 시**: `PROGRESS.md` 업데이트를 제안한다
+- **기능 구현 완료 시**: `PROGRESS.md` 업데이트를 제안한다
 - **세션 종료 감지 시** ("오늘은 여기까지", "커밋하고 끝낼게" 등): `PROGRESS.md` 업데이트 여부를 확인한다
 - **`/commit` 실행 시**: 커밋 전에 `PROGRESS.md` 반영 여부를 자동으로 확인한다
 - 업데이트 시 완료된 내용은 `HISTORY.md`로 이동하고, `PROGRESS.md`는 다음 작업 기준으로 유지한다
