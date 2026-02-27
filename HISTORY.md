@@ -74,4 +74,36 @@
 - `.claude/commands/sync-docs.md` — 잘못된 docs 경로 수정 (docs/dev/, docs/git/ 제거)
 
 ### 커밋
+- `136b02a` — feat: 메인 화면 UI 완성 및 13개 계산기 카드 전체 구현
+
+---
+
+## 2026-02-27 — Phase 0 인프라 완성
+
+### 완료 항목
+
+**의존성 추가** (`pubspec.yaml`)
+- `flutter_riverpod ^2.6.1` — 상태관리
+- `dio ^5.7.0`, `retrofit ^4.4.1` — 네트워크
+- `freezed_annotation ^2.4.4`, `json_annotation ^4.9.0` — 직렬화
+- `shared_preferences ^2.3.3` — 로컬 저장소
+- `build_runner`, `freezed`, `json_serializable`, `retrofit_generator` — 코드 생성 (dev)
+
+**DI 설정** (`core/di/providers.dart`)
+- `dioProvider` — Dio 인스턴스 (timeout 10초, LogInterceptor + ErrorInterceptor)
+
+**네트워크 인터셉터** (`core/network/error_interceptor.dart`)
+- 타임아웃, 연결 오류, 서버 오류를 한국어 메시지로 변환
+
+**앱 진입점** (`main.dart`)
+- `ProviderScope`로 앱 전체 래핑
+
+**문서 추가**
+- `docs/prompts/answers/Q0009.md` — 다음 작업 우선순위 (Phase 0 → 카드 리팩터링 → Phase 1)
+- `docs/prompts/answers/Q0010.md` — Riverpod ProviderScope 개념 설명
+
+**커맨드 개선** (`.claude/commands/commit.md`)
+- push 완료 후 `/clear` 안내 문구 추가
+
+### 커밋
 - (이번 커밋)

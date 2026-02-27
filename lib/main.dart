@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/main/main_screen.dart';
 
 void main() {
-  runApp(const CalcmateApp());
+  runApp(
+    const ProviderScope(
+      child: CalcmateApp(),
+    ),
+  );
 }
 
 class CalcmateApp extends StatelessWidget {
@@ -12,7 +17,7 @@ class CalcmateApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Calcmate',
+      title: 'CalcMate',
       // 라이트 테마 적용
       theme: AppTheme.lightTheme,
       // 다크 테마 적용
