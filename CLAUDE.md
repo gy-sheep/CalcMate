@@ -6,7 +6,7 @@
 기본 계산기, 환율, 단위 변환, 세금, 나이, 날짜 등 13가지 계산기 제공 예정.
 
 ## 기술 스택
-
+- **Android Studio**
 - **Framework**: Flutter / Dart
 - **State Management & DI**: Riverpod (Notifier 기반)
 - **Networking**: Dio + Retrofit
