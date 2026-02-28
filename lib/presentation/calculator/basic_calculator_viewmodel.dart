@@ -62,6 +62,10 @@ final basicCalculatorViewModelProvider =
 class BasicCalculatorViewModel extends Notifier<CalculatorState> {
   final _useCase = EvaluateExpressionUseCase();
 
+  // 반복 = 를 위한 마지막 연산자/피연산자 (resolved 값)
+  String _repeatOperator = '';
+  String _repeatOperand = '';
+
   @override
   CalculatorState build() => const CalculatorState();
 
@@ -74,7 +78,7 @@ class BasicCalculatorViewModel extends Notifier<CalculatorState> {
       case _EqualsPressed():
         _onEquals();
       case _ClearPressed():
-        state = const CalculatorState();
+        _onClear();
       case _BackspacePressed():
         _onBackspace();
       case _DecimalPressed():
@@ -90,12 +94,17 @@ class BasicCalculatorViewModel extends Notifier<CalculatorState> {
 
   void _onNumber(String digit) {
     if (state.isResult) {
-      // 계산 완료 후 숫자 입력 → 새 수식 시작
+      // 결과 후 숫자 입력 → 반복 = 초기화 후 새 수식 시작
+      _repeatOperator = '';
+      _repeatOperand = '';
       state = CalculatorState(input: digit == '0' ? '0' : digit);
       return;
     }
     if (state.input == '0') {
       state = state.copyWith(input: digit);
+    } else if (state.input == '-0') {
+      // 음수 대기 상태: 0이면 유지, 다른 숫자면 음수로 완성
+      state = state.copyWith(input: digit == '0' ? '-0' : '-$digit');
     } else {
       state = state.copyWith(input: state.input + digit);
     }
@@ -107,37 +116,105 @@ class BasicCalculatorViewModel extends Notifier<CalculatorState> {
     // 표시용 연산자 (÷ → / , × → * 변환은 UseCase 진입 전에 처리)
     final displayOp = op;
     if (state.isResult) {
-      // 결과값에 이어 연산자 입력
-      state = CalculatorState(
-        input: state.input + displayOp,
-        isResult: false,
-      );
+      // 결과에 이어 연산자 입력 → 반복 = 초기화
+      _repeatOperator = '';
+      _repeatOperand = '';
+      state = CalculatorState(input: state.input + displayOp, isResult: false);
       return;
     }
     final current = state.input;
+    // 초기 상태(0)에서 - 누름: 음수 입력 모드 (0 제거 후 - 만 표시)
+    if (current == '0' && op == '-') {
+      state = state.copyWith(input: '-', isResult: false);
+      return;
+    }
     if (_endsWithOperator(current)) {
       // 마지막이 연산자면 교체
-      state = state.copyWith(input: current.substring(0, current.length - 1) + displayOp);
+      state = state.copyWith(input: current.substring(0, current.length - 1) + op);
     } else {
-      state = state.copyWith(input: current + displayOp, isResult: false);
+      state = state.copyWith(input: current + op, isResult: false);
     }
   }
 
   // ── = 입력 ───────────────────────────────────────────────────────────────────
 
   void _onEquals() {
+    // 반복 = : 결과 상태에서 = 를 누르면 마지막 연산 반복
+    if (state.isResult && _repeatOperator.isNotEmpty) {
+      final expr = state.input +
+          _repeatOperator.replaceAll('÷', '/').replaceAll('×', '*') +
+          _repeatOperand;
+      final result = _useCase.execute(expr);
+      state = CalculatorState(
+        input: _formatResult(result),
+        expression: state.input + _repeatOperator + _repeatOperand,
+        isResult: true,
+      );
+      return;
+    }
+
     final raw = state.input;
     if (_endsWithOperator(raw)) return;
 
-    final expr = raw.replaceAll('÷', '/').replaceAll('×', '*');
-    final result = _useCase.execute(expr);
+    final resolved = _resolvePercent(raw);
 
-    final resultStr = _formatResult(result);
+    // 반복 = 용: resolved 기준으로 마지막 연산자/피연산자 저장
+    final lastSeg = _lastNumberSegment(resolved);
+    final prefix = resolved.substring(0, resolved.length - lastSeg.length);
+    if (prefix.isNotEmpty) {
+      _repeatOperator = prefix[prefix.length - 1];
+      _repeatOperand = lastSeg;
+    } else {
+      _repeatOperator = '';
+      _repeatOperand = '';
+    }
+
+    final result = _useCase.execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
     state = CalculatorState(
-      input: resultStr,
-      expression: '$raw=',
+      input: _formatResult(result),
+      expression: raw,
       isResult: true,
     );
+  }
+
+  // ── 클리어 ───────────────────────────────────────────────────────────────────
+
+  void _onClear() {
+    if (state.isResult) {
+      state = const CalculatorState();
+      _repeatOperator = '';
+      _repeatOperand = '';
+      return;
+    }
+    final current = state.input;
+
+    // 음수 대기 상태(-0): 전체 초기화
+    if (current == '-0') {
+      state = const CalculatorState();
+      _repeatOperator = '';
+      _repeatOperand = '';
+      return;
+    }
+
+    final lastSeg = _lastNumberSegment(current);
+    final prefix = current.substring(0, current.length - lastSeg.length);
+
+    // 단독 음수(-X): 숫자만 지우고 - 유지 (AC 상태로 복귀)
+    if (prefix.isEmpty && lastSeg.startsWith('-') && lastSeg.length > 1) {
+      state = state.copyWith(input: '-', isResult: false);
+      return;
+    }
+
+    // 연산자 뒤 숫자(0+X): 숫자만 지우고 연산자까지 유지 (AC 상태로 복귀)
+    if (prefix.isNotEmpty && lastSeg.isNotEmpty) {
+      state = state.copyWith(input: prefix, isResult: false);
+      return;
+    }
+
+    // 기타: 전체 초기화
+    state = const CalculatorState();
+    _repeatOperator = '';
+    _repeatOperand = '';
   }
 
   // ── 백스페이스 ───────────────────────────────────────────────────────────────
@@ -178,15 +255,9 @@ class BasicCalculatorViewModel extends Notifier<CalculatorState> {
 
   void _onPercent() {
     final current = state.input;
-    final lastSegment = _lastNumberSegment(current);
-    if (lastSegment.isEmpty) return;
-
-    final val = double.tryParse(lastSegment);
-    if (val == null) return;
-
-    final percentStr = _formatResult(val / 100);
-    final prefix = current.substring(0, current.length - lastSegment.length);
-    state = state.copyWith(input: prefix + percentStr, isResult: false);
+    if (current.endsWith('%')) return;   // 이미 % 있음
+    if (_endsWithOperator(current)) return; // 연산자 바로 뒤는 불가
+    state = state.copyWith(input: current + '%', isResult: false);
   }
 
   // ── +/- ───────────────────────────────────────────────────────────────────────
@@ -223,6 +294,29 @@ class BasicCalculatorViewModel extends Notifier<CalculatorState> {
       i--;
     }
     return s.substring(i + 1);
+  }
+
+  // % 기호를 실제 값으로 변환
+  // + / - 뒤: 앞 숫자 기준 퍼센트 (200+50% → 200+100)
+  // × / ÷ 또는 단독: ÷ 100 (200×50% → 200×0.5, 50% → 0.5)
+  String _resolvePercent(String raw) {
+    var expr = raw;
+    expr = expr.replaceAllMapped(
+      RegExp(r'(-?\d+(?:\.\d*)?)([+\-])(\d+(?:\.\d*)?)%'),
+      (m) {
+        final left = double.tryParse(m.group(1)!) ?? 0;
+        final right = double.tryParse(m.group(3)!) ?? 0;
+        return '${m.group(1)}${m.group(2)}${left * right / 100}';
+      },
+    );
+    expr = expr.replaceAllMapped(
+      RegExp(r'(\d+(?:\.\d*)?)%'),
+      (m) {
+        final val = double.tryParse(m.group(1)!) ?? 0;
+        return '${val / 100}';
+      },
+    );
+    return expr;
   }
 
   String _formatResult(double value) {

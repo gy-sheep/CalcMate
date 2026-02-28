@@ -108,8 +108,75 @@ class _DisplayPanel extends StatelessWidget {
 
   const _DisplayPanel({required this.state});
 
+  // 음수를 괄호로 감싸기: -3 → (-3), 100+-3 → 100+(-3)
+  static String _wrapNegatives(String raw) {
+    return raw.replaceAllMapped(
+      RegExp(r'(^|[+×÷*/])-(\d+(?:\.\d*)?)'),
+      (match) => '${match.group(1)}(-${match.group(2)})',
+    );
+  }
+
+  // 천 단위 콤마 삽입
+  static String _formatWithCommas(String raw) {
+    return raw.replaceAllMapped(RegExp(r'\d+'), (match) {
+      final str = match.group(0)!;
+      if (str.length <= 3) return str;
+      final buf = StringBuffer();
+      for (int i = 0; i < str.length; i++) {
+        if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+        buf.write(str[i]);
+      }
+      return buf.toString();
+    });
+  }
+
+  static String _formatDisplay(String raw) {
+    // 음수 대기 상태(-0): 숫자 입력 전까지 0으로 표시
+    if (raw == '-0') return '0';
+    return _formatWithCommas(_wrapNegatives(raw));
+  }
+
+  static const _baseStyle = TextStyle(
+    fontSize: 56,
+    color: Color(0xFF333333),
+    fontWeight: FontWeight.w300,
+    height: 1.1,
+  );
+
+  // 실제 텍스트를 직접 측정해 꽉 차는 최대 폰트 반환
+  // minSize: '12,345,678,323'이 화면에 꽉 차는 크기 (하한선)
+  static double _adaptiveFontSize(String text, double maxWidth) {
+    double _maxFittingSize(String ref) {
+      for (double size = 80.0; size >= 10; size -= 1) {
+        final p = TextPainter(
+          text: TextSpan(text: ref, style: _baseStyle.copyWith(fontSize: size)),
+          textDirection: TextDirection.ltr,
+          maxLines: 1,
+        )..layout();
+        if (p.width <= maxWidth) return size;
+      }
+      return 10;
+    }
+
+    final maxSize = _maxFittingSize('123,456,789');
+    final minSize = _maxFittingSize('12,345,678,323');
+
+    for (double size = maxSize; size >= minSize; size -= 1) {
+      final p = TextPainter(
+        text: TextSpan(text: text, style: _baseStyle.copyWith(fontSize: size)),
+        textDirection: TextDirection.ltr,
+        maxLines: 1,
+      )..layout();
+      if (p.width <= maxWidth) return size;
+    }
+    return minSize;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final displayInput = _formatDisplay(state.input);
+    final displayExpression = _formatDisplay(state.expression);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: _NeumorphicContainer(
@@ -123,32 +190,36 @@ class _DisplayPanel extends StatelessWidget {
               Visibility(
                 visible: state.isResult && state.expression.isNotEmpty,
                 child: Text(
-                  state.expression,
+                  displayExpression,
                   textAlign: TextAlign.right,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 22,
                     color: Color(0xFFAAAAAA),
                     fontWeight: FontWeight.w400,
                     height: 1.4,
                   ),
                 ),
               ),
-              // 입력값 / 결과
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerRight,
-                child: Text(
-                  state.input,
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontSize: 48,
-                    color: Color(0xFF333333),
-                    fontWeight: FontWeight.w300,
-                    height: 1.1,
-                  ),
-                ),
+              // 입력값 / 결과 — 56→54→52→50 단계 축소, 이후 50 고정
+              // reverse: true → 오른쪽(최신 입력) 고정, 넘치면 왼쪽이 밀려남
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final fontSize =
+                      _adaptiveFontSize(displayInput, constraints.maxWidth);
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: Text(
+                      displayInput,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: _baseStyle.copyWith(fontSize: fontSize),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -178,6 +249,10 @@ class _ButtonPad extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.read(basicCalculatorViewModelProvider.notifier);
+    final state = ref.watch(basicCalculatorViewModelProvider);
+    // AC 상태: 의미 있는 입력이 없는 초기-like 상태
+    // '0', '-', '0+', '0-', '0×', '0÷' → AC / 그 외 → C
+    final clearLabel = _isAcState(state.input) ? 'AC' : 'C';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -199,9 +274,11 @@ class _ButtonPad extends ConsumerWidget {
                         SizedBox(
                           width: cellW,
                           child: _CalcButton(
-                            label: row[i].$1,
+                            label: row[i].$1 == 'AC' ? clearLabel : row[i].$1,
                             type: row[i].$2,
-                            onTap: () => vm.handleIntent(_intentFor(row[i].$1)),
+                            onTap: () => vm.handleIntent(
+                              _intentFor(row[i].$1 == 'AC' ? clearLabel : row[i].$1),
+                            ),
                           ),
                         ),
                       ],
@@ -260,10 +337,18 @@ class _ButtonPad extends ConsumerWidget {
     );
   }
 
+  static bool _isAcState(String input) {
+    if (input == '0' || input == '-') return true;
+    if (input.length == 2 && input[0] == '0') {
+      return const {'+', '-', '×', '÷'}.contains(input[1]);
+    }
+    return false;
+  }
+
   CalculatorIntent _intentFor(String label) {
     return switch (label) {
       '⌫' => const CalculatorIntent.backspacePressed(),
-      'AC' => const CalculatorIntent.clearPressed(),
+      'AC' || 'C' => const CalculatorIntent.clearPressed(),
       '%' => const CalculatorIntent.percentPressed(),
       '÷' || '×' || '-' || '+' => CalculatorIntent.operatorPressed(label),
       _ => CalculatorIntent.numberPressed(label),

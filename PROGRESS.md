@@ -33,11 +33,12 @@
 
 ### Phase 1: 기본 계산기 — `feat/basic-calculator` 완료
 - [x] 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
-- [x] `docs/dev/basic_calculator.md` — 구현 명세 작성
+- [x] `docs/dev/BASIC_CALCULATOR.md` — 구현 명세 작성
 - [x] `domain/models/calculator_state.dart` — CalculatorState (Freezed) 정의
 - [x] `domain/usecases/evaluate_expression_usecase.dart` — TDD 작성 후 구현 (14케이스)
 - [x] `presentation/calculator/basic_calculator_viewmodel.dart` — CalculatorViewModel (Notifier + sealed Intent)
 - [x] `presentation/calculator/basic_calculator_screen.dart` — ConsumerWidget 전환 및 ViewModel 연결
+- [x] 아이폰 계산기 동작 방식으로 UX 개선: 천 단위 콤마, 음수 괄호 표시, 동적 폰트 사이즈, 오버플로우 시 오른쪽 고정 스크롤, % 기호 표시 및 컨텍스트 계산, = 반복, AC/C 동적 전환, 스마트 클리어, 음수 입력 모드
 
 ---
 
