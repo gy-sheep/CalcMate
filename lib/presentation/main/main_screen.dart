@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:calcmate/presentation/calculator/basic_calculator_screen.dart';
+import 'package:calcmate/presentation/calculator/basic_calculator_screen_v2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/calc_mode_card.dart';
@@ -61,7 +61,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 scrolledUnderElevation: 0,
-                title: const Text('Calcmate'),
+                title: const Text('CalcMate'),
                 centerTitle: true,
                 actions: [
                   IconButton(
@@ -95,7 +95,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          BasicCalculatorScreen(
+                          BasicCalculatorScreenV2(
                         title: entry.title,
                         icon: entry.icon,
                         color: entry.id == 'basic_calculator'

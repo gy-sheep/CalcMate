@@ -81,6 +81,7 @@ lib/
 │   │   └── main_screen_viewmodel.dart   # MainScreenViewModel (Notifier)
 │   ├── calculator/
 │   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget)
+│   │   ├── basic_calculator_screen_v2.dart  # 다크 테마 프로토타입 (비교용)
 │   │   └── basic_calculator_viewmodel.dart  # BasicCalculatorViewModel (Notifier)
 │   └── widgets/
 │       └── calc_mode_card.dart          # 공통 계산기 카드 위젯
