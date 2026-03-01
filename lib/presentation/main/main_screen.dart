@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:calcmate/presentation/calculator/basic_calculator_screen_v2.dart';
+import 'package:calcmate/presentation/currency/currency_calculator_screen_v2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/calc_mode_card.dart';
@@ -90,18 +91,25 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               icon: entry.icon,
               imagePath: entry.imagePath,
               onTap: () {
-                if (entry.id == 'basic_calculator' ||
-                    entry.id == 'exchange_rate') {
+                if (entry.id == 'basic_calculator') {
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           BasicCalculatorScreenV2(
                         title: entry.title,
                         icon: entry.icon,
-                        color: entry.id == 'basic_calculator'
-                            ? Colors.black.withOpacity(0.2)
-                            : Colors.green,
+                        color: Colors.black.withOpacity(0.2),
                       ),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              child,
+                    ),
+                  );
+                } else if (entry.id == 'exchange_rate') {
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const CurrencyCalculatorScreenV2(),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) =>
                               child,

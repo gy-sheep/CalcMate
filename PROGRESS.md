@@ -48,9 +48,14 @@
 
 > 구현 명세: (작성 예정)
 
+- [x] `presentation/currency/currency_calculator_screen.dart` — 목업 데이터 기반 테스트 스크린 구현
+  - 기준 통화(KRW) 고정, 다중 변환 통화 선택 UI
+  - 숫자 키패드 입력 → 실시간 환산 결과 표시
+  - 통화 추가(Bottom Sheet + 검색) / 삭제 기능
+  - `main_screen.dart` — exchange_rate 카드 탭 시 연결
 - [ ] **Data**: Retrofit API 인터페이스, 환율 DTO, Repository 구현체
 - [ ] **Domain**: `ExchangeRateEntity`, `GetExchangeRateUseCase`
-- [ ] **Presentation**: 통화 선택 UI, 금액 입력, 환산 결과 표시
+- [ ] **Presentation**: 목업 → 실제 API 연동, ViewModel 분리
 - [ ] **ViewModel**: `ExchangeRateViewModel` (AsyncNotifier — API 상태 관리)
 - [ ] 오프라인 fallback: 마지막 조회 환율 `shared_preferences` 캐싱
 
@@ -83,6 +88,9 @@ lib/
 │   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget)
 │   │   ├── basic_calculator_screen_v2.dart  # 다크 테마 프로토타입 (비교용)
 │   │   └── basic_calculator_viewmodel.dart  # BasicCalculatorViewModel (Notifier)
+│   ├── currency/
+│   │   ├── currency_calculator_screen.dart    # 환율 계산기 테스트 스크린 (목업 v1)
+│   │   └── currency_calculator_screen_v2.dart # 환율 계산기 테스트 스크린 (목업 v2, 현재 사용)
 │   └── widgets/
 │       └── calc_mode_card.dart          # 공통 계산기 카드 위젯
 └── main.dart
