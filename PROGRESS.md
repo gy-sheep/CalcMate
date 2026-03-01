@@ -49,6 +49,7 @@
 ### Phase 2: 환율 계산기 — `feat/exchange-rate`
 
 > 구현 명세: `docs/dev/EXCHANGE_RATE_CALCULATOR.md`
+> Firebase 백엔드: `docs/dev/FIREBASE_EXCHANGE_RATE_BACKEND.md`
 
 - [x] `presentation/currency/currency_calculator_screen.dart` — 목업 기반 환율 계산기 UI 구현
   - From/To 1:1 환율 변환, 통화 선택 Bottom Sheet(검색 포함), 스왑 버튼
@@ -57,12 +58,17 @@
   - 다크 그라디언트 테마 (딥 네이비 → 틸)
 - [x] `core/navigation/calc_page_route.dart` — 화면 전환 공통 라우트 (기본 Fade, 메뉴별 커스텀 지원)
 - [x] `main_screen.dart` — CalcPageRoute 적용, 환율 계산기 Hero 애니메이션 연결
-- [x] `docs/dev/EXCHANGE_RATE_CALCULATOR.md` — 환율 계산기 구현 명세 작성
+- [x] `docs/dev/EXCHANGE_RATE_CALCULATOR.md` — 환율 계산기 구현 명세 (Firebase 연동 구조로 업데이트)
+- [x] `docs/dev/FIREBASE_EXCHANGE_RATE_BACKEND.md` — Firebase 서버리스 백엔드 구현 명세 작성
+  - Open Exchange Rates (무료 1,000회/월, Hourly) + Firestore 캐싱 + HTTP 트리거 Function
+  - 구조 B: 앱이 Firestore 직접 읽기, TTL 만료 시에만 Function 호출
+  - Spark 플랜 완전 무료 운영, 교차환율 계산은 앱에서 수행
 - [x] `docs/specs/` — 스펙 문서 디렉토리 신설 (템플릿, 기본/환율 계산기 스펙)
-- [ ] **Data**: Retrofit API 인터페이스, 환율 DTO, Repository 구현체
+- [ ] **Firebase**: 프로젝트 생성, Function 배포, Firestore 보안 규칙
+- [ ] **Data**: Firestore 연동 RemoteDataSource, 환율 DTO, Repository 구현체
 - [ ] **Domain**: `ExchangeRateEntity`, `GetExchangeRateUseCase`
-- [ ] **Presentation**: 목업 → 실제 API 연동, ViewModel 분리
-- [ ] **ViewModel**: `ExchangeRateViewModel` (Notifier — API + 입력 상태 통합 관리)
+- [ ] **Presentation**: 목업 → 실제 Firestore 연동, ViewModel 분리
+- [ ] **ViewModel**: `ExchangeRateViewModel` (Notifier — Firestore + 입력 상태 통합 관리)
 - [ ] 오프라인 fallback: 마지막 조회 환율 `shared_preferences` 캐싱 (유효 기간 1시간)
 
 ---
