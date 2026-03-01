@@ -39,6 +39,8 @@
 - [x] `presentation/calculator/basic_calculator_viewmodel.dart` — CalculatorViewModel (Notifier + sealed Intent)
 - [x] `presentation/calculator/basic_calculator_screen.dart` — ConsumerWidget 전환 및 ViewModel 연결
 - [x] 아이폰 계산기 동작 방식으로 UX 개선: 천 단위 콤마, 음수 괄호 표시, 동적 폰트 사이즈, 오버플로우 시 오른쪽 고정 스크롤, % 기호 표시 및 컨텍스트 계산, = 반복, AC/C 동적 전환, 스마트 클리어, 음수 입력 모드
+- [x] `basic_calculator_screen.dart` — 다크 그라디언트 테마로 디자인 교체 (v2 프로토타입 검증 후 통합), 아이콘·타이틀 Hero 애니메이션 유지
+- [x] `main_screen.dart` — 화면 전환 Fade 애니메이션 추가 (진입 400ms / 복귀 300ms)
 
 ---
 
@@ -46,18 +48,22 @@
 
 ### Phase 2: 환율 계산기 — `feat/exchange-rate`
 
-> 구현 명세: (작성 예정)
+> 구현 명세: `docs/dev/EXCHANGE_RATE_CALCULATOR.md`
 
-- [x] `presentation/currency/currency_calculator_screen.dart` — 목업 데이터 기반 테스트 스크린 구현
-  - 기준 통화(KRW) 고정, 다중 변환 통화 선택 UI
-  - 숫자 키패드 입력 → 실시간 환산 결과 표시
-  - 통화 추가(Bottom Sheet + 검색) / 삭제 기능
-  - `main_screen.dart` — exchange_rate 카드 탭 시 연결
+- [x] `presentation/currency/currency_calculator_screen.dart` — 목업 기반 환율 계산기 UI 구현
+  - From/To 1:1 환율 변환, 통화 선택 Bottom Sheet(검색 포함), 스왑 버튼
+  - 앱바 Hero 애니메이션 (`calc_icon_$title`, `calc_title_$title`)
+  - 기본 계산기와 동일한 5×4 키패드 (연산자·수식·% 지원, `EvaluateExpressionUseCase` 재사용)
+  - 다크 그라디언트 테마 (딥 네이비 → 틸)
+- [x] `core/navigation/calc_page_route.dart` — 화면 전환 공통 라우트 (기본 Fade, 메뉴별 커스텀 지원)
+- [x] `main_screen.dart` — CalcPageRoute 적용, 환율 계산기 Hero 애니메이션 연결
+- [x] `docs/dev/EXCHANGE_RATE_CALCULATOR.md` — 환율 계산기 구현 명세 작성
+- [x] `docs/specs/` — 스펙 문서 디렉토리 신설 (템플릿, 기본/환율 계산기 스펙)
 - [ ] **Data**: Retrofit API 인터페이스, 환율 DTO, Repository 구현체
 - [ ] **Domain**: `ExchangeRateEntity`, `GetExchangeRateUseCase`
 - [ ] **Presentation**: 목업 → 실제 API 연동, ViewModel 분리
-- [ ] **ViewModel**: `ExchangeRateViewModel` (AsyncNotifier — API 상태 관리)
-- [ ] 오프라인 fallback: 마지막 조회 환율 `shared_preferences` 캐싱
+- [ ] **ViewModel**: `ExchangeRateViewModel` (Notifier — API + 입력 상태 통합 관리)
+- [ ] 오프라인 fallback: 마지막 조회 환율 `shared_preferences` 캐싱 (유효 기간 1시간)
 
 ---
 
@@ -70,6 +76,8 @@ lib/
 │   │   └── calc_mode_config.dart        # 13개 항목 상수 (kCalcModeEntries)
 │   ├── di/
 │   │   └── providers.dart               # dioProvider
+│   ├── navigation/
+│   │   └── calc_page_route.dart         # 화면 전환 공통 라우트 (Fade 기본, 커스텀 지원)
 │   ├── network/
 │   │   └── error_interceptor.dart       # 공통 오류 처리
 │   └── theme/
@@ -85,12 +93,10 @@ lib/
 │   │   ├── main_screen.dart             # 메인 화면 (ConsumerStatefulWidget)
 │   │   └── main_screen_viewmodel.dart   # MainScreenViewModel (Notifier)
 │   ├── calculator/
-│   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget)
-│   │   ├── basic_calculator_screen_v2.dart  # 다크 테마 프로토타입 (비교용)
+│   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget, 다크 테마)
 │   │   └── basic_calculator_viewmodel.dart  # BasicCalculatorViewModel (Notifier)
 │   ├── currency/
-│   │   ├── currency_calculator_screen.dart    # 환율 계산기 테스트 스크린 (목업 v1)
-│   │   └── currency_calculator_screen_v2.dart # 환율 계산기 테스트 스크린 (목업 v2, 현재 사용)
+│   │   └── currency_calculator_screen.dart    # 환율 계산기 (목업, Hero 애니메이션, 5×4 키패드)
 │   └── widgets/
 │       └── calc_mode_card.dart          # 공통 계산기 카드 위젯
 └── main.dart
