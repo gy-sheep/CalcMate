@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:calcmate/presentation/calculator/basic_calculator_screen_v2.dart';
+import 'package:calcmate/presentation/calculator/basic_calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/calc_mode_card.dart';
@@ -95,16 +95,24 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
-                          BasicCalculatorScreenV2(
+                          BasicCalculatorScreen(
                         title: entry.title,
                         icon: entry.icon,
                         color: entry.id == 'basic_calculator'
                             ? Colors.black.withOpacity(0.2)
                             : Colors.green,
                       ),
+                      transitionDuration: const Duration(milliseconds: 400),
+                      reverseTransitionDuration: const Duration(milliseconds: 300),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) =>
-                              child,
+                              FadeTransition(
+                                opacity: CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeInOut,
+                                ),
+                                child: child,
+                              ),
                     ),
                   );
                 } else {

@@ -39,6 +39,8 @@
 - [x] `presentation/calculator/basic_calculator_viewmodel.dart` — CalculatorViewModel (Notifier + sealed Intent)
 - [x] `presentation/calculator/basic_calculator_screen.dart` — ConsumerWidget 전환 및 ViewModel 연결
 - [x] 아이폰 계산기 동작 방식으로 UX 개선: 천 단위 콤마, 음수 괄호 표시, 동적 폰트 사이즈, 오버플로우 시 오른쪽 고정 스크롤, % 기호 표시 및 컨텍스트 계산, = 반복, AC/C 동적 전환, 스마트 클리어, 음수 입력 모드
+- [x] `basic_calculator_screen.dart` — 다크 그라디언트 테마로 디자인 교체 (v2 프로토타입 검증 후 통합), 아이콘·타이틀 Hero 애니메이션 유지
+- [x] `main_screen.dart` — 화면 전환 Fade 애니메이션 추가 (진입 400ms / 복귀 300ms)
 
 ---
 
@@ -80,8 +82,7 @@ lib/
 │   │   ├── main_screen.dart             # 메인 화면 (ConsumerStatefulWidget)
 │   │   └── main_screen_viewmodel.dart   # MainScreenViewModel (Notifier)
 │   ├── calculator/
-│   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget)
-│   │   ├── basic_calculator_screen_v2.dart  # 다크 테마 프로토타입 (비교용)
+│   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget, 다크 테마)
 │   │   └── basic_calculator_viewmodel.dart  # BasicCalculatorViewModel (Notifier)
 │   └── widgets/
 │       └── calc_mode_card.dart          # 공통 계산기 카드 위젯
