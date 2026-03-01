@@ -71,69 +71,55 @@ test/
 
 Freezed 불변 객체로 계산기 전체 UI 상태를 표현한다.
 
-```dart
-@freezed
-class CalculatorState with _$CalculatorState {
-  const factory CalculatorState({
-    @Default('0') String input,      // 메인 디스플레이 (입력값 또는 결과)
-    @Default('') String expression,  // 수식 표시 (계산 완료 후에만 표시)
-    @Default(false) bool isResult,   // true: 계산 완료 상태
-  }) = _CalculatorState;
-}
-```
+**주요 구성 요소**
+
+- `input` (String, 기본값 `'0'`): 메인 디스플레이에 표시되는 입력값 또는 결과
+- `expression` (String, 기본값 `''`): 계산 완료 후 서브 디스플레이에 표시되는 수식
+- `isResult` (bool, 기본값 `false`): 계산 완료 상태 여부
 
 **설계 결정**
 
-- `input`: 현재 입력 중인 숫자 또는 계산 결과를 하나의 필드로 관리 — iOS 계산기와 동일한 단일 디스플레이 방식
-- `expression`: 계산 완료 후 수식(예: `265+35`)을 표시, `isResult`가 false이면 View에서 숨김 처리
-- `isResult`: 계산 완료 여부 — 이 상태에서 숫자 입력 시 새 수식 시작 여부 판단에 사용
+- `input` 단일 필드로 입력과 결과를 모두 표현: iOS 계산기와 동일한 단일 디스플레이 방식
+- `expression`은 `isResult`가 `false`이면 View에서 숨김 처리
+- `isResult` 플래그: 계산 완료 후 숫자 탭 시 새 수식 시작 여부 판단에 사용
 
 ---
 
 ### 2. `presentation/calculator/basic_calculator_viewmodel.dart` — ViewModel + Intent
 
-```dart
-sealed class CalculatorIntent {
-  const factory CalculatorIntent.numberPressed(String digit) = _NumberPressed;
-  const factory CalculatorIntent.operatorPressed(String op) = _OperatorPressed;
-  const factory CalculatorIntent.equalsPressed() = _EqualsPressed;
-  const factory CalculatorIntent.clearPressed() = _ClearPressed;
-  const factory CalculatorIntent.backspacePressed() = _BackspacePressed;
-  const factory CalculatorIntent.decimalPressed() = _DecimalPressed;
-  const factory CalculatorIntent.percentPressed() = _PercentPressed;
-  const factory CalculatorIntent.negatePressed() = _NegatePressed;
-}
+**주요 구성 요소**
 
-class BasicCalculatorViewModel extends Notifier<CalculatorState> {
-  @override
-  CalculatorState build() => const CalculatorState();
-
-  void handleIntent(CalculatorIntent intent) { ... }
-}
-```
+- `CalculatorIntent` (sealed class): 아래 Intent 목록 정의
+  - `numberPressed(String digit)`: 숫자 버튼 탭
+  - `operatorPressed(String op)`: 연산자 버튼 탭
+  - `equalsPressed()`: = 버튼 탭
+  - `clearPressed()`: AC 버튼 탭
+  - `backspacePressed()`: ⌫ 버튼 탭
+  - `decimalPressed()`: . 버튼 탭
+  - `percentPressed()`: % 버튼 탭
+  - `negatePressed()`: +/- 버튼 탭
+- `BasicCalculatorViewModel` (Notifier): `handleIntent()`에서 각 Intent별 `CalculatorState` 전이 처리
 
 **설계 결정**
 
-- `CalculatorIntent`는 `sealed class` + factory constructor 패턴 — `MainScreenViewModel`과 동일한 방식으로 일관성 유지
-- 연산자는 `String`으로 받아 내부에서 수식 문자열에 누적 — `÷`·`×`는 UseCase 진입 전에 `/`·`*`로 변환
+- `CalculatorIntent`는 sealed class + factory constructor 패턴 — `MainScreenViewModel`과 동일한 방식으로 일관성 유지
+- 연산자는 `String`으로 받아 수식 문자열에 누적 — `÷`·`×`는 UseCase 진입 전 `/`·`*`로 변환
 
 ---
 
 ### 3. `domain/usecases/evaluate_expression_usecase.dart` — 계산 로직
 
-수식 문자열을 입력받아 계산 결과를 반환한다. 외부 라이브러리 없이 순수 Dart로 구현한다.
+수식 문자열을 입력받아 `double` 계산 결과를 반환한다. 외부 라이브러리 없이 순수 Dart로 구현한다.
 
-```dart
-class EvaluateExpressionUseCase {
-  double execute(String expression);
-}
-```
+**주요 구성 요소**
+
+- `execute(String expression) → double`: 공개 인터페이스. 수식 문자열을 파싱해 결과 반환
 
 **설계 결정**
 
-- 사칙연산(`+`, `-`, `*`, `/`) 우선순위를 직접 파싱 — `math_expressions` 같은 외부 패키지 미사용 (의존성 최소화)
+- 외부 패키지 미사용: `math_expressions` 등 의존성 최소화
 - 파싱 방식: 두 단계 — ① `*`·`/` 먼저 처리, ② `+`·`-` 처리 (연산자 우선순위 반영)
-- 0 나누기 등 예외는 `double.infinity` 또는 별도 `CalculatorException`으로 처리
+- 0 나누기 등 예외: `double.infinity` 또는 별도 `CalculatorException`으로 처리
 
 ---
 
@@ -141,16 +127,10 @@ class EvaluateExpressionUseCase {
 
 `StatelessWidget` → `ConsumerWidget` 전환 후 버튼 탭 이벤트를 Intent로 위임한다.
 
-```dart
-class BasicCalculatorScreen extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(basicCalculatorViewModelProvider);
-    // 디스플레이: state.input, state.expression, state.isResult
-    // 버튼 탭: ref.read(...).handleIntent(intent)
-  }
-}
-```
+**주요 구성 요소**
+
+- `ref.watch(basicCalculatorViewModelProvider)`: 상태 구독 — `state.input`, `state.expression`, `state.isResult`를 디스플레이에 반영
+- 버튼 `onTap`: `ref.read(...).handleIntent(intent)` 호출로 위임
 
 ---
 

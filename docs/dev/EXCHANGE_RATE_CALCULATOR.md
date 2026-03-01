@@ -85,56 +85,46 @@ lib/
 
 ### 1. `domain/models/exchange_rate_entity.dart` — 환율 Entity
 
-Freezed 불변 객체. `rates`는 기준 통화(KRW) 대비 각 통화의 환율.
+Freezed 불변 객체. 도메인 계층의 환율 데이터 표현.
 
-```dart
-@freezed
-class ExchangeRateEntity with _$ExchangeRateEntity {
-  const factory ExchangeRateEntity({
-    required String base,               // 기준 통화 코드 (KRW)
-    required Map<String, double> rates, // { 'USD': 0.00075, 'JPY': 0.11, ... }
-    required DateTime fetchedAt,        // 조회 시각 (캐시 유효성 판단)
-  }) = _ExchangeRateEntity;
+**주요 구성 요소**
 
-  factory ExchangeRateEntity.fromJson(Map<String, dynamic> json) =>
-      _$ExchangeRateEntityFromJson(json);
-}
-```
+- `base` (String): 기준 통화 코드 (예: `'KRW'`)
+- `rates` (Map\<String, double\>): 기준 통화 대비 각 통화의 환율 (예: `{'USD': 0.00075}`)
+- `fetchedAt` (DateTime): 조회 시각 — 캐시 유효성 판단 기준
 
 **설계 결정**
 
-- `fetchedAt`: Repository에서 직접 주입 — API 응답의 `date` 필드(날짜)가 아닌 조회 시각 기준으로 캐시 만료를 판단한다
+- `fetchedAt`은 Repository에서 직접 주입: API 응답의 `date` 필드(날짜 단위)가 아닌 실제 조회 시각을 기준으로 1시간 캐시 만료를 판단한다
 
 ---
 
 ### 2. `domain/repositories/exchange_rate_repository.dart` — Repository 인터페이스
 
-```dart
-abstract interface class ExchangeRateRepository {
-  /// 최신 환율을 조회한다. 캐시가 유효하면 캐시를 반환한다.
-  Future<ExchangeRateEntity> getLatestRates({String base = 'KRW'});
-}
-```
+Domain 계층이 Data 계층에 의존하지 않도록 인터페이스만 정의한다.
+
+**주요 구성 요소**
+
+- `getLatestRates({String base})` → `Future<ExchangeRateEntity>`: 최신 환율 조회. 캐시가 유효하면 캐시 반환, 만료 시 API 호출
 
 ---
 
 ### 3. `domain/usecases/get_exchange_rate_usecase.dart` — 환율 조회 UseCase
 
-```dart
-class GetExchangeRateUseCase {
-  final ExchangeRateRepository _repository;
-  const GetExchangeRateUseCase(this._repository);
+Repository를 주입받아 `execute()`를 호출하는 단일 책임 UseCase.
 
-  Future<ExchangeRateEntity> execute({String base = 'KRW'}) =>
-      _repository.getLatestRates(base: base);
-}
-```
+**주요 구성 요소**
+
+- `execute({String base})` → `Future<ExchangeRateEntity>`: Repository의 `getLatestRates()`를 위임 호출
 
 ---
 
 ### 4. `data/dto/exchange_rate_dto.dart` — API 응답 DTO
 
-`frankfurter.app` 응답 형식:
+`frankfurter.app` 응답 형식을 Dart 객체로 매핑하고, Entity로 변환하는 책임을 가진다.
+
+**API 응답 형식 (참고)**
+
 ```json
 {
   "amount": 1.0,
@@ -144,117 +134,71 @@ class GetExchangeRateUseCase {
 }
 ```
 
-```dart
-@freezed
-class ExchangeRateDto with _$ExchangeRateDto {
-  const factory ExchangeRateDto({
-    required String base,
-    required String date,
-    required Map<String, double> rates,
-  }) = _ExchangeRateDto;
+**주요 구성 요소**
 
-  factory ExchangeRateDto.fromJson(Map<String, dynamic> json) =>
-      _$ExchangeRateDtoFromJson(json);
-}
-
-extension ExchangeRateDtoMapper on ExchangeRateDto {
-  ExchangeRateEntity toEntity() => ExchangeRateEntity(
-        base: base,
-        rates: { base: 1.0, ...rates }, // 기준 통화 자신은 1.0 추가
-        fetchedAt: DateTime.now(),
-      );
-}
-```
+- `ExchangeRateDto` (Freezed + json_serializable): `base`, `date`, `rates` 필드로 API 응답 매핑
+- `toEntity()` 확장 메서드: DTO → `ExchangeRateEntity` 변환. `rates`에 기준 통화 자신(`base: 1.0`)을 추가하고 `fetchedAt`을 현재 시각으로 주입
 
 ---
 
 ### 5. `data/api/exchange_rate_api.dart` — Retrofit API 인터페이스
 
-```dart
-@RestApi(baseUrl: 'https://api.frankfurter.app')
-abstract class ExchangeRateApi {
-  factory ExchangeRateApi(Dio dio) = _ExchangeRateApi;
+Retrofit을 이용한 HTTP 클라이언트 정의.
 
-  @GET('/latest')
-  Future<ExchangeRateDto> getLatestRates(
-    @Query('from') String base,
-  );
-}
-```
+**주요 구성 요소**
+
+- `getLatestRates(String base)` → `Future<ExchangeRateDto>`: `GET /latest?from={base}` 호출
+
+**설계 결정**
+
+- baseUrl: `https://api.frankfurter.app`
 
 ---
 
 ### 6. `data/repositories/exchange_rate_repository_impl.dart` — Repository 구현체
 
-캐시 전략: 조회 시각 기준 **1시간** 이내면 캐시 반환, 만료 시 API 호출.
-API 실패 시 캐시가 있으면 캐시 반환 (오프라인 fallback).
+캐시 전략과 오프라인 fallback을 담당하는 Repository 구현체.
 
-```dart
-class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
-  static const _cacheKey = 'exchange_rate_cache';
-  static const _cacheDuration = Duration(hours: 1);
+**주요 구성 요소**
 
-  final ExchangeRateApi _api;
-  final SharedPreferences _prefs;
+- `ExchangeRateApi`: Retrofit API 클라이언트 주입
+- `SharedPreferences`: 캐시 저장소 주입
+- 캐시 키: `'exchange_rate_cache'`, 유효 기간: 1시간
 
-  @override
-  Future<ExchangeRateEntity> getLatestRates({String base = 'KRW'}) async {
-    final cached = _loadCache();
-    if (cached != null && _isFresh(cached)) return cached;
+**설계 결정**
 
-    try {
-      final dto = await _api.getLatestRates(base);
-      final entity = dto.toEntity();
-      _saveCache(entity);
-      return entity;
-    } catch (_) {
-      if (cached != null) return cached; // 오프라인 fallback
-      rethrow;
-    }
-  }
-
-  bool _isFresh(ExchangeRateEntity e) =>
-      DateTime.now().difference(e.fetchedAt) < _cacheDuration;
-}
-```
+- 캐시 우선 전략: 조회 시각 기준 1시간 이내면 API 호출 없이 캐시 반환
+- 오프라인 fallback: API 실패 시 만료된 캐시라도 반환. 캐시 자체가 없으면 예외 rethrow
 
 ---
 
 ### 7. `presentation/currency/currency_calculator_viewmodel.dart` — ViewModel
 
-```dart
-// ── State ──────────────────────────────────────────────────────────────────
-@freezed
-class ExchangeRateState with _$ExchangeRateState {
-  const factory ExchangeRateState({
-    @Default({}) Map<String, double> rates,       // 전체 환율 맵 (KRW 기준)
-    @Default('USD') String fromCode,              // 출발 통화 코드
-    @Default('EUR') String toCode,                // 도착 통화 코드
-    @Default('0') String input,                   // 입력값 (수식 포함 가능)
-    @Default(true) bool isFromActive,             // 상단/하단 입력 활성 여부
-    @Default(false) bool isResult,                // = 눌러 결과 표시 중 여부
-    @Default(false) bool isLoading,
-    String? error,
-    DateTime? lastUpdated,
-  }) = _ExchangeRateState;
-}
+**주요 구성 요소**
 
-// ── Intent ─────────────────────────────────────────────────────────────────
-sealed class ExchangeRateIntent {
-  const ExchangeRateIntent();
-  const factory ExchangeRateIntent.keyTapped(String key) = _KeyTapped;
-  const factory ExchangeRateIntent.fromCurrencyChanged(String code) = _FromChanged;
-  const factory ExchangeRateIntent.toCurrencyChanged(String code) = _ToChanged;
-  const factory ExchangeRateIntent.swapped() = _Swapped;
-  const factory ExchangeRateIntent.activeRowChanged(bool isFrom) = _ActiveRowChanged;
-  const factory ExchangeRateIntent.refreshRequested() = _RefreshRequested;
-}
-```
+- `ExchangeRateState` (Freezed): 아래 필드로 구성
+  - `rates` (Map\<String, double\>, 기본값 `{}`): 전체 환율 맵 (KRW 기준)
+  - `fromCode` (String, 기본값 `'USD'`): 출발 통화 코드
+  - `toCode` (String, 기본값 `'EUR'`): 도착 통화 코드
+  - `input` (String, 기본값 `'0'`): 입력값 (수식 포함 가능)
+  - `isFromActive` (bool, 기본값 `true`): 상단/하단 입력 활성 여부
+  - `isResult` (bool, 기본값 `false`): = 눌러 결과 표시 중 여부
+  - `isLoading` (bool, 기본값 `false`)
+  - `error` (String?): 오류 메시지
+  - `lastUpdated` (DateTime?): 마지막 환율 갱신 시각
+
+- `ExchangeRateIntent` (sealed class): 아래 Intent 목록
+  - `keyTapped(String key)`: 키패드 입력
+  - `fromCurrencyChanged(String code)`: 출발 통화 변경
+  - `toCurrencyChanged(String code)`: 도착 통화 변경
+  - `swapped()`: 출발/도착 통화 교체
+  - `activeRowChanged(bool isFrom)`: 활성 입력 행 전환
+  - `refreshRequested()`: 환율 강제 갱신
 
 **설계 결정**
 
-- `Notifier` 사용 (AsyncNotifier 아님): UI 상태(input, isFromActive 등)와 비동기 로딩 상태를 단일 State로 관리. `isLoading` 플래그로 로딩 표현
-- `rates`는 KRW 기준 전체 맵 유지 → 통화 전환 시 API 재호출 없이 즉시 계산 가능
+- `AsyncNotifier` 대신 `Notifier` 사용: UI 상태(input, isFromActive 등)와 비동기 로딩 상태를 단일 State로 관리. `isLoading` 플래그로 로딩 표현
+- `rates`는 KRW 기준 전체 맵 유지: 통화 전환 시 API 재호출 없이 즉시 계산 가능
 
 ---
 

@@ -59,15 +59,6 @@ MainScreen (ConsumerWidget)  ──Intent──▶  ViewModel.handleIntent()
 
 현재 `main_screen.dart`는 13개의 `CalcModeCard` 위젯을 빌드 메서드 내에 직접 나열한다.
 
-```dart
-// 현재: build() 안에 모두 하드코딩
-final calcCards = [
-  CalcModeCard(title: '기본 계산기', ...),
-  CalcModeCard(title: '환율 계산기', ...),
-  ...
-];
-```
-
 **문제점**
 
 | 문제 | 영향 |
@@ -94,46 +85,26 @@ final calcCards = [
 
 Freezed 불변 모델. 카드 한 장을 표현하는 단일 진실 공급원.
 
-```dart
-@freezed
-class CalcModeEntry with _$CalcModeEntry {
-  const factory CalcModeEntry({
-    required String id,           // 라우팅 식별자 (예: 'basic_calculator')
-    required String title,        // 카드 타이틀
-    required String description,  // 카드 서브타이틀
-    required IconData icon,       // 카드 아이콘
-    required String imagePath,    // 배경 이미지 에셋 경로
-    @Default(true) bool isVisible, // 카드 노출 여부
-    required int order,           // 카드 표시 순서
-  }) = _CalcModeEntry;
-}
-```
+**주요 구성 요소**
+
+- `id`: 라우팅 및 Hero 태그의 기준값 (`calc_bg_$id`, `calc_icon_$id`)
+- `title`: 카드 타이틀
+- `description`: 카드 서브타이틀
+- `icon`: 카드 아이콘 (IconData)
+- `imagePath`: 배경 이미지 에셋 경로
+- `isVisible`: 향후 카드 숨김 기능 지원을 위한 선행 필드, 기본값 `true`
+- `order`: 사용자 정렬 지원 시 기준값
 
 **설계 결정**
 
-- `id`: 라우팅 및 Hero 태그의 기준값으로 사용 (`calc_bg_$id`, `calc_icon_$id`)
-- `isVisible`: 향후 설정에서 카드 숨김 기능 지원을 위한 선행 필드
-- `order`: 사용자 정렬 지원 시 기준값으로 활용
+- `id` 기반 Hero 태그: `title`은 중복 가능성이 있어 고유 식별자로 부적합
+- `isVisible`, `order`: 설정 화면 구현 전 선제적으로 포함해 나중에 마이그레이션 없이 사용 가능
 
 ---
 
 ### 2. `core/config/calc_mode_config.dart` — 항목 상수
 
-13개 카드 데이터를 하나의 상수 리스트로 관리.
-
-```dart
-const List<CalcModeEntry> kCalcModeEntries = [
-  CalcModeEntry(
-    id: 'basic_calculator',
-    title: '기본 계산기',
-    description: '사칙연산 및 공학 계산',
-    icon: Icons.calculate,
-    imagePath: 'assets/images/backgrounds/basic_calculator.png',
-    order: 0,
-  ),
-  // ... 12개 더
-];
-```
+13개 카드 데이터를 하나의 불변 상수 리스트(`kCalcModeEntries`)로 관리한다.
 
 **항목 목록 (순서 고정)**
 
@@ -157,58 +128,23 @@ const List<CalcModeEntry> kCalcModeEntries = [
 
 ### 3. `presentation/main/main_screen_viewmodel.dart` — ViewModel
 
-```
-State:  MainScreenState (Freezed)
-Intent: MainScreenIntent (sealed class)
-VM:     MainScreenViewModel (Riverpod Notifier)
-```
+**주요 구성 요소**
 
-**State**
+- `MainScreenState` (Freezed): `entries` — 표시할 카드 목록, `isScrolled` — 스크롤 여부(AppBar 스타일 전환용)
+- `MainScreenIntent` (sealed class): `scrollChanged(bool)` — 스크롤 상태 변경, `cardTapped(String id)` — 카드 탭
+- `MainScreenViewModel` (Notifier): `build()`에서 `kCalcModeEntries`를 초기 상태로 주입, `handleIntent()`로 액션 처리
 
-```dart
-@freezed
-class MainScreenState with _$MainScreenState {
-  const factory MainScreenState({
-    @Default([]) List<CalcModeEntry> entries,
-    @Default(false) bool isScrolled,
-  }) = _MainScreenState;
-}
-```
+**설계 결정**
 
-**Intent**
-
-```dart
-sealed class MainScreenIntent {
-  const factory MainScreenIntent.scrollChanged(bool isScrolled) = _ScrollChanged;
-  const factory MainScreenIntent.cardTapped(String id) = _CardTapped;
-}
-```
-
-**ViewModel**
-
-```dart
-class MainScreenViewModel extends Notifier<MainScreenState> {
-  @override
-  MainScreenState build() => MainScreenState(entries: kCalcModeEntries);
-
-  void handleIntent(MainScreenIntent intent) {
-    switch (intent) {
-      case _ScrollChanged(:final isScrolled):
-        state = state.copyWith(isScrolled: isScrolled);
-      case _CardTapped(:final id):
-        // 라우팅 처리 (Phase 1 이후 확장)
-    }
-  }
-}
-```
+- `cardTapped` Intent: 라우팅 처리는 Phase 1 이후 확장, 현재는 Intent만 정의
 
 ---
 
 ### 4. `presentation/main/main_screen.dart` — View 전환
 
-- `StatefulWidget` → `ConsumerWidget`
-- `ScrollController` 리스너 → ViewModel Intent로 위임
-- `calcCards` 하드코딩 → `ref.watch(mainScreenViewModelProvider).entries` 구독
+- `StatefulWidget` → `ConsumerWidget`으로 전환
+- `ScrollController` 리스너 → `handleIntent(ScrollChanged)` 위임
+- `calcCards` 하드코딩 → `state.entries` 구독
 - Hero 태그 기준: `title` → `entry.id`
 
 **변경 전/후 구조 비교**
