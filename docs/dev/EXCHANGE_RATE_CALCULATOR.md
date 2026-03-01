@@ -7,34 +7,34 @@
 
 ## 프로젝트 구조 및 작업 범위
 
-아래 구조에서 `[신규]`는 새로 생성되는 파일, `[수정]`은 기존 파일 변경을 나타낸다.
+아래 구조에서 `[완료]`는 구현이 완료된 파일을 나타낸다.
 
 ```
 lib/
 ├── core/
 │   ├── di/
-│   │   └── providers.dart                              [수정] exchangeRateRepositoryProvider 추가
+│   │   └── providers.dart                              [완료] 환율 관련 Provider 전체 등록
 │   └── navigation/
 │       └── calc_page_route.dart                        [완료] 공통 라우트
 ├── domain/
 │   ├── models/
-│   │   └── exchange_rate_entity.dart                   [신규] ExchangeRateEntity (Freezed)
+│   │   └── exchange_rate_entity.dart                   [완료] ExchangeRateEntity (Freezed)
 │   ├── repositories/
-│   │   └── exchange_rate_repository.dart               [신규] Repository 인터페이스
+│   │   └── exchange_rate_repository.dart               [완료] Repository 인터페이스
 │   └── usecases/
-│       └── get_exchange_rate_usecase.dart               [신규] 환율 조회 UseCase
+│       └── get_exchange_rate_usecase.dart               [완료] 환율 조회 UseCase
 ├── data/
 │   ├── datasources/
-│   │   ├── exchange_rate_remote_datasource.dart        [신규] Firestore + Firebase Function 호출
-│   │   └── exchange_rate_local_datasource.dart         [신규] SharedPreferences 캐시
+│   │   ├── exchange_rate_remote_datasource.dart        [완료] Firestore + Firebase Function 호출
+│   │   └── exchange_rate_local_datasource.dart         [완료] SharedPreferences 캐시
 │   ├── dto/
-│   │   └── exchange_rate_dto.dart                      [신규] Firestore 문서 → Dart 매핑 DTO
+│   │   └── exchange_rate_dto.dart                      [완료] Firestore 문서 → Dart 매핑 DTO
 │   └── repositories/
-│       └── exchange_rate_repository_impl.dart          [신규] Repository 구현체 (Remote + Local 캐시)
+│       └── exchange_rate_repository_impl.dart          [완료] Repository 구현체 (Remote + Local 캐시)
 └── presentation/
     └── currency/
-        ├── currency_calculator_screen.dart             [수정] StatefulWidget → ConsumerWidget, ViewModel 연결
-        └── currency_calculator_viewmodel.dart          [신규] ExchangeRateViewModel (Notifier)
+        ├── currency_calculator_screen.dart             [완료] ConsumerWidget, ViewModel 연결
+        └── currency_calculator_viewmodel.dart          [완료] ExchangeRateViewModel (Notifier)
 ```
 
 **데이터 흐름 (구조 B: Firestore 직접 읽기)**
@@ -312,7 +312,7 @@ double convert(double amount, String from, String to) {
 ## 구현 순서
 
 ```
-1. Firebase 프로젝트 설정 (별도 문서: FIREBASE_EXCHANGE_RATE_BACKEND.md 참고)
+1. Firebase 프로젝트 설정 (별도 문서: firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md 참고)
    └─ Firebase 프로젝트 생성, FlutterFire 연동, Firestore 보안 규칙
 
 2. Domain 계층
@@ -358,7 +358,7 @@ dependencies:
 
 ## 범위 외 (이번 작업 제외)
 
-- **Firebase Function 구현** — 별도 문서 `FIREBASE_EXCHANGE_RATE_BACKEND.md`에서 다룸
+- **Firebase Function 구현** — 별도 문서 `firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md`에서 다룸
 - **다중 통화 동시 표시** (1 → N 변환 UI) — 현재는 1:1 변환만 지원, 추후 별도 Phase
 - **통화 즐겨찾기/순서 저장** — 설정 화면 구현 이후로 연기
 - **환율 변동 알림** — 별도 Phase

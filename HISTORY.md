@@ -2,6 +2,46 @@
 
 ---
 
+## 2026-03-01 — Phase 2 환율 계산기 Firebase 연동 및 Clean Architecture 구현
+
+### 완료 항목
+
+**Firebase 백엔드**
+- Firebase 프로젝트 생성 (`calcmate-353ed`, Firestore 리전 `asia-northeast3`)
+- `functions/src/index.ts` — `refreshExchangeRates` Function 배포 (Double Check Locking, TTL 1시간)
+- `firestore.rules` — exchange_rates 읽기만 허용, 쓰기 차단 (Admin SDK 우회)
+- Blaze 플랜 전환 (Functions 배포에 필요, 무료 한도 내 운영)
+
+**Data 계층**
+- `data/datasources/exchange_rate_remote_datasource.dart` — Firestore 직접 읽기 + Function HTTP 트리거
+- `data/datasources/exchange_rate_local_datasource.dart` — SharedPreferences 캐시 (TTL 1시간)
+- `data/dto/exchange_rate_dto.dart` — Firestore 문서 DTO (Freezed + json_serializable)
+- `data/repositories/exchange_rate_repository_impl.dart` — 3단계 fallback (로컬→Firestore→Function)
+
+**Domain 계층**
+- `domain/models/exchange_rate_entity.dart` — ExchangeRateEntity (Freezed, base/rates/fetchedAt/timestamp)
+- `domain/repositories/exchange_rate_repository.dart` — Repository 인터페이스
+- `domain/usecases/get_exchange_rate_usecase.dart` — 환율 조회 UseCase
+
+**Presentation 계층**
+- `presentation/currency/currency_calculator_viewmodel.dart` — ExchangeRateViewModel (Notifier + sealed Intent, 교차환율 계산)
+- `presentation/currency/currency_calculator_screen.dart` — StatefulWidget → ConsumerWidget 전환, 24개 통화 지원
+
+**DI 및 초기화**
+- `core/di/providers.dart` — Firestore, SharedPreferences, 환율 DataSource/Repository/UseCase Provider 등록
+- `main.dart` — Firebase.initializeApp() + SharedPreferences override 추가
+- `pubspec.yaml` — firebase_core, cloud_firestore 의존성 추가
+
+**문서**
+- `docs/dev/firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md` — 백엔드 구현 명세 (기존 파일 이동)
+- `docs/dev/firebase/FIREBASE_SETUP_GUIDE.md` — 다른 컴퓨터 개발 환경 셋업 가이드
+- `docs/dev/firebase/FIREBASE_DEPLOY_GUIDE.md` — Function 배포 가이드
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-02-27 — 프로젝트 기반 설정 및 메인 UI 구현
 
 ### 완료 항목

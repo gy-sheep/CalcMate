@@ -42,15 +42,7 @@
 - [x] `basic_calculator_screen.dart` — 다크 그라디언트 테마로 디자인 교체 (v2 프로토타입 검증 후 통합), 아이콘·타이틀 Hero 애니메이션 유지
 - [x] `main_screen.dart` — 화면 전환 Fade 애니메이션 추가 (진입 400ms / 복귀 300ms)
 
----
-
-## 다음 작업
-
-### Phase 2: 환율 계산기 — `feat/exchange-rate`
-
-> 구현 명세: `docs/dev/EXCHANGE_RATE_CALCULATOR.md`
-> Firebase 백엔드: `docs/dev/FIREBASE_EXCHANGE_RATE_BACKEND.md`
-
+### Phase 2: 환율 계산기 — `feat/exchange_rate` 완료
 - [x] `presentation/currency/currency_calculator_screen.dart` — 목업 기반 환율 계산기 UI 구현
   - From/To 1:1 환율 변환, 통화 선택 Bottom Sheet(검색 포함), 스왑 버튼
   - 앱바 Hero 애니메이션 (`calc_icon_$title`, `calc_title_$title`)
@@ -59,17 +51,36 @@
 - [x] `core/navigation/calc_page_route.dart` — 화면 전환 공통 라우트 (기본 Fade, 메뉴별 커스텀 지원)
 - [x] `main_screen.dart` — CalcPageRoute 적용, 환율 계산기 Hero 애니메이션 연결
 - [x] `docs/dev/EXCHANGE_RATE_CALCULATOR.md` — 환율 계산기 구현 명세 (Firebase 연동 구조로 업데이트)
-- [x] `docs/dev/FIREBASE_EXCHANGE_RATE_BACKEND.md` — Firebase 서버리스 백엔드 구현 명세 작성
-  - Open Exchange Rates (무료 1,000회/월, Hourly) + Firestore 캐싱 + HTTP 트리거 Function
-  - 구조 B: 앱이 Firestore 직접 읽기, TTL 만료 시에만 Function 호출
-  - Spark 플랜 완전 무료 운영, 교차환율 계산은 앱에서 수행
 - [x] `docs/specs/` — 스펙 문서 디렉토리 신설 (템플릿, 기본/환율 계산기 스펙)
-- [ ] **Firebase**: 프로젝트 생성, Function 배포, Firestore 보안 규칙
-- [ ] **Data**: Firestore 연동 RemoteDataSource, 환율 DTO, Repository 구현체
-- [ ] **Domain**: `ExchangeRateEntity`, `GetExchangeRateUseCase`
-- [ ] **Presentation**: 목업 → 실제 Firestore 연동, ViewModel 분리
-- [ ] **ViewModel**: `ExchangeRateViewModel` (Notifier — Firestore + 입력 상태 통합 관리)
-- [ ] 오프라인 fallback: 마지막 조회 환율 `shared_preferences` 캐싱 (유효 기간 1시간)
+- [x] **Firebase 백엔드** — 프로젝트 생성(calcmate-353ed), Function 배포, Firestore 보안 규칙
+  - `docs/dev/firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md` — 구현 명세
+  - `docs/dev/firebase/FIREBASE_SETUP_GUIDE.md` — 개발 환경 셋업 가이드
+  - `docs/dev/firebase/FIREBASE_DEPLOY_GUIDE.md` — 배포 가이드
+  - `functions/src/index.ts` — refreshExchangeRates (Double Check Locking, TTL 1시간)
+  - `firestore.rules` — exchange_rates 읽기만 허용
+- [x] **Data 계층** — Firestore 연동 RemoteDataSource, 환율 DTO, Repository 구현체
+  - `data/datasources/exchange_rate_remote_datasource.dart` — Firestore 직접 읽기 + Function 트리거
+  - `data/datasources/exchange_rate_local_datasource.dart` — SharedPreferences 캐시 (TTL 1시간)
+  - `data/dto/exchange_rate_dto.dart` — Firestore 문서 DTO (Freezed + json_serializable)
+  - `data/repositories/exchange_rate_repository_impl.dart` — 3단계 fallback (로컬→Firestore→Function)
+- [x] **Domain 계층** — ExchangeRateEntity, GetExchangeRateUseCase
+  - `domain/models/exchange_rate_entity.dart` — ExchangeRateEntity (Freezed)
+  - `domain/repositories/exchange_rate_repository.dart` — Repository 인터페이스
+  - `domain/usecases/get_exchange_rate_usecase.dart` — 환율 조회 UseCase
+- [x] **Presentation 계층** — 목업 → 실제 Firestore 연동, ViewModel 분리
+  - `presentation/currency/currency_calculator_viewmodel.dart` — ExchangeRateViewModel (Notifier + sealed Intent, 교차환율 계산)
+  - `presentation/currency/currency_calculator_screen.dart` — StatefulWidget → ConsumerWidget 전환
+- [x] **DI** — `core/di/providers.dart` 환율 관련 Provider 전체 등록
+- [x] **Firebase 초기화** — `main.dart`에 Firebase.initializeApp() + SharedPreferences override
+- [x] **오프라인 fallback** — 마지막 조회 환율 SharedPreferences 캐싱 (유효 기간 1시간)
+
+---
+
+## 다음 작업
+
+### Phase 3 이후 — 추가 계산기 구현 예정
+
+> 로드맵: `docs/plans/ROADMAP.md`
 
 ---
 
@@ -81,19 +92,31 @@ lib/
 │   ├── config/
 │   │   └── calc_mode_config.dart        # 13개 항목 상수 (kCalcModeEntries)
 │   ├── di/
-│   │   └── providers.dart               # dioProvider
+│   │   └── providers.dart               # Dio, Firestore, SharedPreferences, 환율 DataSource/Repository/UseCase Provider
 │   ├── navigation/
 │   │   └── calc_page_route.dart         # 화면 전환 공통 라우트 (Fade 기본, 커스텀 지원)
 │   ├── network/
 │   │   └── error_interceptor.dart       # 공통 오류 처리
 │   └── theme/
 │       └── app_theme.dart               # 라이트/다크 테마
+├── data/
+│   ├── datasources/
+│   │   ├── exchange_rate_remote_datasource.dart  # Firestore 읽기 + Function 트리거
+│   │   └── exchange_rate_local_datasource.dart   # SharedPreferences 캐시
+│   ├── dto/
+│   │   └── exchange_rate_dto.dart                # Firestore DTO (Freezed)
+│   └── repositories/
+│       └── exchange_rate_repository_impl.dart    # 3단계 fallback Repository
 ├── domain/
 │   ├── models/
 │   │   ├── calc_mode_entry.dart         # CalcModeEntry (Freezed)
-│   │   └── calculator_state.dart        # CalculatorState (Freezed)
+│   │   ├── calculator_state.dart        # CalculatorState (Freezed)
+│   │   └── exchange_rate_entity.dart    # ExchangeRateEntity (Freezed)
+│   ├── repositories/
+│   │   └── exchange_rate_repository.dart # Repository 인터페이스
 │   └── usecases/
-│       └── evaluate_expression_usecase.dart  # 사칙연산 파서
+│       ├── evaluate_expression_usecase.dart  # 사칙연산 파서
+│       └── get_exchange_rate_usecase.dart    # 환율 조회 UseCase
 ├── presentation/
 │   ├── main/
 │   │   ├── main_screen.dart             # 메인 화면 (ConsumerStatefulWidget)
@@ -102,10 +125,18 @@ lib/
 │   │   ├── basic_calculator_screen.dart     # 기본 계산기 (ConsumerWidget, 다크 테마)
 │   │   └── basic_calculator_viewmodel.dart  # BasicCalculatorViewModel (Notifier)
 │   ├── currency/
-│   │   └── currency_calculator_screen.dart    # 환율 계산기 (목업, Hero 애니메이션, 5×4 키패드)
+│   │   ├── currency_calculator_screen.dart      # 환율 계산기 (ConsumerWidget, Firestore 연동)
+│   │   └── currency_calculator_viewmodel.dart   # ExchangeRateViewModel (Notifier)
 │   └── widgets/
 │       └── calc_mode_card.dart          # 공통 계산기 카드 위젯
-└── main.dart
+├── firebase_options.dart                # FlutterFire 설정 (자동 생성)
+└── main.dart                            # Firebase + SharedPreferences 초기화
+
+functions/                               # Firebase Functions (TypeScript)
+├── src/
+│   └── index.ts                         # refreshExchangeRates (환율 캐싱 Function)
+├── package.json
+└── tsconfig.json
 ```
 
 **상세 작업 이력**: `HISTORY.md` 참조

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384022640781",
+    "project_id": "calcmate-353ed",
+    "storage_bucket": "calcmate-353ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384022640781:android:835eec0b61f3d171d80ac4",
+        "android_client_info": {
+          "package_name": "com.gy.calcmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuWkO2t464Qsz2rsyh53upVQK2nAjk_WY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

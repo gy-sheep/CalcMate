@@ -2,7 +2,7 @@
 
 > **분류**: Firebase 서버리스 백엔드
 > **목적**: Firebase Spark 플랜 기반으로 환율 캐싱 레이어를 구축한다. Open Exchange Rates API를 통해 1시간마다 환율을 갱신하고, Firestore를 캐시 저장소로 사용하여 앱 사용자 수에 무관하게 API 호출을 최소화한다.
-> **관련 문서**: [`EXCHANGE_RATE_CALCULATOR.md`](EXCHANGE_RATE_CALCULATOR.md) — Flutter 앱 측 환율 계산기 구현 명세. 본 문서의 Firebase 백엔드를 데이터 소스로 사용한다.
+> **관련 문서**: [`EXCHANGE_RATE_CALCULATOR.md`](../EXCHANGE_RATE_CALCULATOR.md) — Flutter 앱 측 환율 계산기 구현 명세. 본 문서의 Firebase 백엔드를 데이터 소스로 사용한다.
 
 ---
 
@@ -632,7 +632,7 @@ curl https://asia-northeast3-{PROJECT_ID}.cloudfunctions.net/refreshExchangeRate
 
 ## 6. Flutter 앱 연동
 
-> 상세 구현은 [`EXCHANGE_RATE_CALCULATOR.md`](EXCHANGE_RATE_CALCULATOR.md)에서 다룬다.
+> 상세 구현은 [`EXCHANGE_RATE_CALCULATOR.md`](../EXCHANGE_RATE_CALCULATOR.md)에서 다룬다.
 > 여기서는 Firebase 연동에 필요한 최소한의 설정만 기술한다.
 
 ### 필요 패키지

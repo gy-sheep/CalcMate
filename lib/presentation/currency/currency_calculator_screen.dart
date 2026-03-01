@@ -1,32 +1,48 @@
-import 'package:calcmate/domain/usecases/evaluate_expression_usecase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'currency_calculator_viewmodel.dart';
 
 // ──────────────────────────────────────────
-// 테스트용 목업 데이터
+// 통화 정보 (코드, 이름, 국기)
 // ──────────────────────────────────────────
-class _CurrencyItem {
+class CurrencyInfo {
   final String code;
   final String name;
   final String flag;
-  final double rate; // 1 KRW 기준 환율 (목업)
 
-  const _CurrencyItem({
+  const CurrencyInfo({
     required this.code,
     required this.name,
     required this.flag,
-    required this.rate,
   });
 }
 
-const _mockCurrencies = [
-  _CurrencyItem(code: 'KRW', name: '한국 원', flag: '🇰🇷', rate: 1.0),
-  _CurrencyItem(code: 'USD', name: '미국 달러', flag: '🇺🇸', rate: 0.00075),
-  _CurrencyItem(code: 'JPY', name: '일본 엔', flag: '🇯🇵', rate: 0.110),
-  _CurrencyItem(code: 'EUR', name: '유로', flag: '🇪🇺', rate: 0.00069),
-  _CurrencyItem(code: 'CNY', name: '중국 위안', flag: '🇨🇳', rate: 0.0054),
-  _CurrencyItem(code: 'GBP', name: '영국 파운드', flag: '🇬🇧', rate: 0.00059),
-  _CurrencyItem(code: 'AUD', name: '호주 달러', flag: '🇦🇺', rate: 0.0011),
-  _CurrencyItem(code: 'CAD', name: '캐나다 달러', flag: '🇨🇦', rate: 0.0010),
+const _currencyList = [
+  CurrencyInfo(code: 'KRW', name: '한국 원', flag: '\u{1F1F0}\u{1F1F7}'),
+  CurrencyInfo(code: 'USD', name: '미국 달러', flag: '\u{1F1FA}\u{1F1F8}'),
+  CurrencyInfo(code: 'JPY', name: '일본 엔', flag: '\u{1F1EF}\u{1F1F5}'),
+  CurrencyInfo(code: 'EUR', name: '유로', flag: '\u{1F1EA}\u{1F1FA}'),
+  CurrencyInfo(code: 'CNY', name: '중국 위안', flag: '\u{1F1E8}\u{1F1F3}'),
+  CurrencyInfo(code: 'GBP', name: '영국 파운드', flag: '\u{1F1EC}\u{1F1E7}'),
+  CurrencyInfo(code: 'AUD', name: '호주 달러', flag: '\u{1F1E6}\u{1F1FA}'),
+  CurrencyInfo(code: 'CAD', name: '캐나다 달러', flag: '\u{1F1E8}\u{1F1E6}'),
+  CurrencyInfo(code: 'CHF', name: '스위스 프랑', flag: '\u{1F1E8}\u{1F1ED}'),
+  CurrencyInfo(code: 'HKD', name: '홍콩 달러', flag: '\u{1F1ED}\u{1F1F0}'),
+  CurrencyInfo(code: 'SGD', name: '싱가포르 달러', flag: '\u{1F1F8}\u{1F1EC}'),
+  CurrencyInfo(code: 'TWD', name: '대만 달러', flag: '\u{1F1F9}\u{1F1FC}'),
+  CurrencyInfo(code: 'THB', name: '태국 바트', flag: '\u{1F1F9}\u{1F1ED}'),
+  CurrencyInfo(code: 'VND', name: '베트남 동', flag: '\u{1F1FB}\u{1F1F3}'),
+  CurrencyInfo(code: 'PHP', name: '필리핀 페소', flag: '\u{1F1F5}\u{1F1ED}'),
+  CurrencyInfo(code: 'INR', name: '인도 루피', flag: '\u{1F1EE}\u{1F1F3}'),
+  CurrencyInfo(code: 'MXN', name: '멕시코 페소', flag: '\u{1F1F2}\u{1F1FD}'),
+  CurrencyInfo(code: 'BRL', name: '브라질 레알', flag: '\u{1F1E7}\u{1F1F7}'),
+  CurrencyInfo(code: 'SEK', name: '스웨덴 크로나', flag: '\u{1F1F8}\u{1F1EA}'),
+  CurrencyInfo(code: 'NOK', name: '노르웨이 크로네', flag: '\u{1F1F3}\u{1F1F4}'),
+  CurrencyInfo(code: 'NZD', name: '뉴질랜드 달러', flag: '\u{1F1F3}\u{1F1FF}'),
+  CurrencyInfo(code: 'TRY', name: '터키 리라', flag: '\u{1F1F9}\u{1F1F7}'),
+  CurrencyInfo(code: 'RUB', name: '러시아 루블', flag: '\u{1F1F7}\u{1F1FA}'),
+  CurrencyInfo(code: 'ZAR', name: '남아공 랜드', flag: '\u{1F1FF}\u{1F1E6}'),
 ];
 
 // ──────────────────────────────────────────
@@ -41,9 +57,9 @@ const _colorFunction = Color(0xCCFFFFFF);
 const _colorEquals = Color(0xFFFF6B4A);
 
 // ──────────────────────────────────────────
-// 메인 화면 V2
+// 메인 화면
 // ──────────────────────────────────────────
-class CurrencyCalculatorScreen extends StatefulWidget {
+class CurrencyCalculatorScreen extends ConsumerWidget {
   final String title;
   final IconData icon;
 
@@ -54,226 +70,13 @@ class CurrencyCalculatorScreen extends StatefulWidget {
   });
 
   @override
-  State<CurrencyCalculatorScreen> createState() =>
-      _CurrencyCalculatorScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(exchangeRateViewModelProvider);
+    final vm = ref.read(exchangeRateViewModelProvider.notifier);
 
-class _CurrencyCalculatorScreenState
-    extends State<CurrencyCalculatorScreen> {
-  _CurrencyItem _fromCurrency = _mockCurrencies[1]; // USD
-  _CurrencyItem _toCurrency = _mockCurrencies[3];   // EUR
-  String _fromInput = '120';
-  bool _isFromActive = true; // true: 상단 입력 중, false: 하단 입력 중
-  bool _isResult = false;
+    final fromDisplay = state.isFromActive ? state.input : vm.reverseConvertedDisplay;
+    final toDisplay = state.isFromActive ? vm.convertedDisplay : state.input;
 
-  final _useCase = EvaluateExpressionUseCase();
-
-  // 입력값을 수치로 평가 (수식 포함)
-  double get _evaluatedInput {
-    if (_fromInput == '오류') return 0;
-    final simple = double.tryParse(_fromInput);
-    if (simple != null) return simple;
-    if (_endsWithOperator(_fromInput)) return 0;
-    try {
-      final resolved = _resolvePercent(_fromInput);
-      final result = _useCase.execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
-      return (result.isNaN || result.isInfinite) ? 0 : result;
-    } catch (_) {
-      return 0;
-    }
-  }
-
-  // 환산 결과 (역방향 포함)
-  String get _toInput {
-    if (!_isFromActive) return _fromInput; // 하단 직접 입력 시 원본 반환
-    final inKrw = _evaluatedInput / _fromCurrency.rate;
-    final result = inKrw * _toCurrency.rate;
-    return _formatAmount(result);
-  }
-
-  String get _fromCalculated {
-    if (_isFromActive) return _fromInput;
-    final to = double.tryParse(_fromInput) ?? 0;
-    final inKrw = to / _toCurrency.rate;
-    final result = inKrw * _fromCurrency.rate;
-    return _formatAmount(result);
-  }
-
-  String _formatAmount(double value) {
-    if (value == 0) return '0';
-    if (value >= 1000) return value.toStringAsFixed(0);
-    if (value >= 1) return value.toStringAsFixed(2);
-    return value.toStringAsFixed(4);
-  }
-
-  bool _isAcState() {
-    if (_fromInput == '0' || _fromInput == '-') return true;
-    if (_fromInput.length == 2 && _fromInput[0] == '0') {
-      return const {'+', '-', '×', '÷'}.contains(_fromInput[1]);
-    }
-    return false;
-  }
-
-  void _onKeyTap(String key) {
-    setState(() {
-      switch (key) {
-        case 'AC' || 'C':
-          _fromInput = '0';
-          _isResult = false;
-
-        case '⌫':
-          if (_isResult) {
-            _fromInput = '0';
-            _isResult = false;
-            return;
-          }
-          if (_fromInput.length > 1) {
-            _fromInput = _fromInput.substring(0, _fromInput.length - 1);
-          } else {
-            _fromInput = '0';
-          }
-
-        case '%':
-          if (_fromInput.endsWith('%')) return;
-          if (_endsWithOperator(_fromInput)) return;
-          _fromInput += '%';
-
-        case '÷' || '×' || '-' || '+':
-          if (_isResult) _isResult = false;
-          if (_endsWithOperator(_fromInput)) {
-            _fromInput = _fromInput.substring(0, _fromInput.length - 1) + key;
-          } else if (_fromInput == '0' && key == '-') {
-            _fromInput = '-';
-          } else if (_fromInput != '0') {
-            _fromInput += key;
-          }
-
-        case '=':
-          if (_endsWithOperator(_fromInput)) return;
-          final resolved = _resolvePercent(_fromInput);
-          final result = _useCase.execute(
-              resolved.replaceAll('÷', '/').replaceAll('×', '*'));
-          _fromInput = _formatResult(result);
-          _isResult = true;
-
-        case '+/-':
-          final last = _lastNumberSegment(_fromInput);
-          if (last.isEmpty) return;
-          final prefix = _fromInput.substring(0, _fromInput.length - last.length);
-          _fromInput = last.startsWith('-')
-              ? prefix + last.substring(1)
-              : '$prefix-$last';
-
-        case '.':
-          if (_isResult) {
-            _fromInput = '0.';
-            _isResult = false;
-            return;
-          }
-          final last = _lastNumberSegment(_fromInput);
-          if (!last.contains('.')) {
-            if (_endsWithOperator(_fromInput) || _fromInput.isEmpty) {
-              _fromInput += '0.';
-            } else {
-              _fromInput += '.';
-            }
-          }
-
-        default: // 숫자
-          if (_isResult) {
-            _fromInput = key == '0' ? '0' : key;
-            _isResult = false;
-            return;
-          }
-          if (_fromInput == '0') {
-            _fromInput = key;
-          } else if (_fromInput == '-0') {
-            _fromInput = key == '0' ? '-0' : '-$key';
-          } else {
-            _fromInput += key;
-          }
-      }
-    });
-  }
-
-  bool _endsWithOperator(String s) {
-    if (s.isEmpty) return false;
-    final last = s[s.length - 1];
-    return last == '+' || last == '-' || last == '×' || last == '÷';
-  }
-
-  String _lastNumberSegment(String s) {
-    final ops = {'+', '×', '÷'};
-    int i = s.length - 1;
-    while (i >= 0) {
-      final ch = s[i];
-      if (ops.contains(ch)) break;
-      if (ch == '-' && i > 0 && !ops.contains(s[i - 1])) break;
-      i--;
-    }
-    return s.substring(i + 1);
-  }
-
-  String _resolvePercent(String raw) {
-    var expr = raw;
-    expr = expr.replaceAllMapped(
-      RegExp(r'(-?\d+(?:\.\d*)?)([+\-])(\d+(?:\.\d*)?)%'),
-      (m) {
-        final left = double.tryParse(m.group(1)!) ?? 0;
-        final right = double.tryParse(m.group(3)!) ?? 0;
-        return '${m.group(1)}${m.group(2)}${left * right / 100}';
-      },
-    );
-    expr = expr.replaceAllMapped(
-      RegExp(r'(\d+(?:\.\d*)?)%'),
-      (m) {
-        final val = double.tryParse(m.group(1)!) ?? 0;
-        return '${val / 100}';
-      },
-    );
-    return expr;
-  }
-
-  String _formatResult(double value) {
-    if (value == double.infinity || value == double.negativeInfinity) return '오류';
-    if (value.isNaN) return '오류';
-    if (value == value.truncateToDouble()) return value.toInt().toString();
-    final str = value.toStringAsFixed(10);
-    return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-  }
-
-  void _swap() {
-    setState(() {
-      final temp = _fromCurrency;
-      _fromCurrency = _toCurrency;
-      _toCurrency = temp;
-      _fromInput = '0';
-    });
-  }
-
-  Future<void> _selectCurrency({required bool isFrom}) async {
-    final result = await showModalBottomSheet<_CurrencyItem>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _CurrencyPickerSheet(
-        currencies: _mockCurrencies,
-        selected: isFrom ? _fromCurrency : _toCurrency,
-      ),
-    );
-    if (result == null) return;
-    setState(() {
-      if (isFrom) {
-        _fromCurrency = result;
-      } else {
-        _toCurrency = result;
-      }
-      _fromInput = '0';
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -286,36 +89,79 @@ class _CurrencyCalculatorScreenState
         child: SafeArea(
           child: Column(
             children: [
-              _buildAppBar(),
+              _buildAppBar(context),
               Expanded(
                 child: Column(
                   children: [
                     const Spacer(),
+                    if (state.isLoading)
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 8),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white54,
+                          ),
+                        ),
+                      ),
+                    if (state.error != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Text(
+                          state.error!,
+                          style: const TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     // 상단 통화 (FROM)
                     _CurrencyRow(
-                      item: _fromCurrency,
-                      amount: _isFromActive ? _fromInput : _fromCalculated,
-                      isActive: _isFromActive,
-                      onCurrencyTap: () => _selectCurrency(isFrom: true),
-                      onAmountTap: () => setState(() => _isFromActive = true),
+                      currencyCode: state.fromCode,
+                      amount: fromDisplay,
+                      isActive: state.isFromActive,
+                      onCurrencyTap: () => _selectCurrency(
+                        context,
+                        ref,
+                        isFrom: true,
+                        selectedCode: state.fromCode,
+                        rates: state.rates,
+                      ),
+                      onAmountTap: () =>
+                          vm.handleIntent(const ActiveRowChanged(true)),
                     ),
                     const SizedBox(height: 12),
                     // 스왑 버튼
-                    _SwapButton(onTap: _swap),
+                    _SwapButton(
+                      onTap: () => vm.handleIntent(const Swapped()),
+                    ),
                     const SizedBox(height: 12),
                     // 하단 통화 (TO)
                     _CurrencyRow(
-                      item: _toCurrency,
-                      amount: _isFromActive ? _toInput : _fromInput,
-                      isActive: !_isFromActive,
-                      onCurrencyTap: () => _selectCurrency(isFrom: false),
-                      onAmountTap: () => setState(() => _isFromActive = false),
+                      currencyCode: state.toCode,
+                      amount: toDisplay,
+                      isActive: !state.isFromActive,
+                      onCurrencyTap: () => _selectCurrency(
+                        context,
+                        ref,
+                        isFrom: false,
+                        selectedCode: state.toCode,
+                        rates: state.rates,
+                      ),
+                      onAmountTap: () =>
+                          vm.handleIntent(const ActiveRowChanged(false)),
                     ),
                     const Spacer(),
                     // 구분선
-                    Divider(color: _dividerColor, thickness: 0.5, height: 1),
+                    const Divider(
+                        color: _dividerColor, thickness: 0.5, height: 1),
                     // 숫자 키패드
-                    _NumberPad(onKeyTap: _onKeyTap, isAcState: _isAcState()),
+                    _NumberPad(
+                      onKeyTap: (key) => vm.handleIntent(KeyTapped(key)),
+                      isAcState: vm.isAcState,
+                    ),
                     const SizedBox(height: 8),
                   ],
                 ),
@@ -327,7 +173,7 @@ class _CurrencyCalculatorScreenState
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Stack(
@@ -336,7 +182,8 @@ class _CurrencyCalculatorScreenState
           Align(
             alignment: Alignment.centerLeft,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+              icon: const Icon(Icons.arrow_back_ios,
+                  color: Colors.white, size: 20),
               onPressed: () => Navigator.maybePop(context),
             ),
           ),
@@ -344,7 +191,7 @@ class _CurrencyCalculatorScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               Hero(
-                tag: 'calc_icon_${widget.title}',
+                tag: 'calc_icon_$title',
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
@@ -354,17 +201,17 @@ class _CurrencyCalculatorScreenState
                       color: Colors.white24,
                       borderRadius: BorderRadius.circular(7),
                     ),
-                    child: Icon(widget.icon, color: Colors.white, size: 15),
+                    child: Icon(icon, color: Colors.white, size: 15),
                   ),
                 ),
               ),
               const SizedBox(width: 8),
               Hero(
-                tag: 'calc_title_${widget.title}',
+                tag: 'calc_title_$title',
                 child: Material(
                   color: Colors.transparent,
                   child: Text(
-                    widget.title,
+                    title,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -379,20 +226,53 @@ class _CurrencyCalculatorScreenState
       ),
     );
   }
+
+  Future<void> _selectCurrency(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isFrom,
+    required String selectedCode,
+    required Map<String, double> rates,
+  }) async {
+    // rates에 있는 통화만 필터링하여 표시
+    final available = rates.isEmpty
+        ? _currencyList
+        : _currencyList
+            .where((c) => rates.containsKey(c.code))
+            .toList();
+
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _CurrencyPickerSheet(
+        currencies: available,
+        selectedCode: selectedCode,
+      ),
+    );
+    if (result == null) return;
+
+    final vm = ref.read(exchangeRateViewModelProvider.notifier);
+    if (isFrom) {
+      vm.handleIntent(FromCurrencyChanged(result));
+    } else {
+      vm.handleIntent(ToCurrencyChanged(result));
+    }
+  }
 }
 
 // ──────────────────────────────────────────
 // 통화 행 (코드 + 금액 표시)
 // ──────────────────────────────────────────
 class _CurrencyRow extends StatelessWidget {
-  final _CurrencyItem item;
+  final String currencyCode;
   final String amount;
   final bool isActive;
   final VoidCallback onCurrencyTap;
   final VoidCallback onAmountTap;
 
   const _CurrencyRow({
-    required this.item,
+    required this.currencyCode,
     required this.amount,
     required this.isActive,
     required this.onCurrencyTap,
@@ -413,7 +293,7 @@ class _CurrencyRow extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  item.code,
+                  currencyCode,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -502,11 +382,36 @@ class _NumberPad extends StatelessWidget {
   const _NumberPad({required this.onKeyTap, required this.isAcState});
 
   static const _rows = [
-    [('⌫', _BtnType.function), ('AC', _BtnType.function), ('%', _BtnType.function), ('÷', _BtnType.operator)],
-    [('7', _BtnType.number),   ('8', _BtnType.number),    ('9', _BtnType.number),   ('×', _BtnType.operator)],
-    [('4', _BtnType.number),   ('5', _BtnType.number),    ('6', _BtnType.number),   ('-', _BtnType.operator)],
-    [('1', _BtnType.number),   ('2', _BtnType.number),    ('3', _BtnType.number),   ('+', _BtnType.operator)],
-    [('+/-', _BtnType.function), ('0', _BtnType.number),  ('.', _BtnType.number),   ('=', _BtnType.equals)],
+    [
+      ('\u{232B}', _BtnType.function),
+      ('AC', _BtnType.function),
+      ('%', _BtnType.function),
+      ('\u{00F7}', _BtnType.operator)
+    ],
+    [
+      ('7', _BtnType.number),
+      ('8', _BtnType.number),
+      ('9', _BtnType.number),
+      ('\u{00D7}', _BtnType.operator)
+    ],
+    [
+      ('4', _BtnType.number),
+      ('5', _BtnType.number),
+      ('6', _BtnType.number),
+      ('-', _BtnType.operator)
+    ],
+    [
+      ('1', _BtnType.number),
+      ('2', _BtnType.number),
+      ('3', _BtnType.number),
+      ('+', _BtnType.operator)
+    ],
+    [
+      ('+/-', _BtnType.function),
+      ('0', _BtnType.number),
+      ('.', _BtnType.number),
+      ('=', _BtnType.equals)
+    ],
   ];
 
   @override
@@ -516,7 +421,8 @@ class _NumberPad extends StatelessWidget {
       children: _rows.map((row) {
         return Row(
           children: row.map((cell) {
-            final label = cell.$1 == 'AC' ? (isAcState ? 'AC' : 'C') : cell.$1;
+            final label =
+                cell.$1 == 'AC' ? (isAcState ? 'AC' : 'C') : cell.$1;
             return Expanded(
               child: _KeypadButton(
                 label: label,
@@ -563,14 +469,16 @@ class _KeypadButton extends StatelessWidget {
         child: SizedBox(
           height: 68,
           child: Center(
-            child: label == '⌫'
+            child: label == '\u{232B}'
                 ? Icon(Icons.backspace_outlined, color: _textColor, size: 26)
                 : Text(
                     label,
                     style: TextStyle(
-                      fontSize: const ['÷', '×', '-', '+', '='].contains(label)
-                          ? 28
-                          : 22,
+                      fontSize:
+                          const ['\u{00F7}', '\u{00D7}', '-', '+', '=']
+                                  .contains(label)
+                              ? 28
+                              : 22,
                       fontWeight: FontWeight.w400,
                       color: _textColor,
                     ),
@@ -586,12 +494,12 @@ class _KeypadButton extends StatelessWidget {
 // 통화 선택 Bottom Sheet
 // ──────────────────────────────────────────
 class _CurrencyPickerSheet extends StatefulWidget {
-  final List<_CurrencyItem> currencies;
-  final _CurrencyItem selected;
+  final List<CurrencyInfo> currencies;
+  final String selectedCode;
 
   const _CurrencyPickerSheet({
     required this.currencies,
-    required this.selected,
+    required this.selectedCode,
   });
 
   @override
@@ -655,17 +563,16 @@ class _CurrencyPickerSheetState extends State<_CurrencyPickerSheet> {
               itemCount: filtered.length,
               itemBuilder: (context, index) {
                 final item = filtered[index];
-                final isSelected = item.code == widget.selected.code;
+                final isSelected = item.code == widget.selectedCode;
                 return ListTile(
-                  leading: Text(item.flag,
-                      style: const TextStyle(fontSize: 24)),
+                  leading:
+                      Text(item.flag, style: const TextStyle(fontSize: 24)),
                   title: Text(
                     item.code,
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                   subtitle: Text(item.name,
@@ -673,7 +580,7 @@ class _CurrencyPickerSheetState extends State<_CurrencyPickerSheet> {
                   trailing: isSelected
                       ? const Icon(Icons.check, color: Colors.white)
                       : null,
-                  onTap: () => Navigator.pop(context, item),
+                  onTap: () => Navigator.pop(context, item.code),
                 );
               },
             ),
