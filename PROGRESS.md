@@ -73,6 +73,17 @@
 - [x] **DI** — `core/di/providers.dart` 환율 관련 Provider 전체 등록
 - [x] **Firebase 초기화** — `main.dart`에 Firebase.initializeApp() + SharedPreferences override
 - [x] **오프라인 fallback** — 마지막 조회 환율 SharedPreferences 캐싱 (유효 기간 1시간)
+- [x] **Cloud Scheduler 도입** — Blaze 플랜 전환, `scheduledExchangeRateRefresh` 매 정각 자동 갱신
+  - `functions/src/index.ts` — `fetchAndStoreRates()` 공통 함수 분리, `onSchedule` 추가 (`0 * * * *`, `Asia/Seoul`)
+  - 앱 클라이언트 Firebase Function 트리거 로직 제거 → 2단계 fallback으로 단순화 (로컬캐시→Firestore)
+- [x] **기본/환율 계산기 autoDispose 적용** — 화면 재진입 시 이전 입력값 초기화 버그 수정
+  - `basic_calculator_viewmodel.dart`, `currency_calculator_viewmodel.dart` — `NotifierProvider.autoDispose`
+- [x] **환율 계산기 UX 개선**
+  - 기본 통화 KRW/USD (기존 USD/KRW에서 변경)
+  - 스왑 버튼 두 통화 행 사이 중앙 → 좌측 통화 코드 아래로 이동
+  - 금액 텍스트 오버플로우 수정 (`FittedBox(fit: BoxFit.scaleDown)`)
+  - Progress indicator Stack 오버레이로 화면 정중앙 배치
+- [x] `.claude/commands/deploy-functions.md` — `/deploy-functions` 슬래시 커맨드 추가
 
 ---
 

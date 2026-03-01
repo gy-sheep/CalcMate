@@ -53,13 +53,13 @@ class _NegatePressed extends CalculatorIntent {
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 final basicCalculatorViewModelProvider =
-    NotifierProvider<BasicCalculatorViewModel, CalculatorState>(
+    NotifierProvider.autoDispose<BasicCalculatorViewModel, CalculatorState>(
   BasicCalculatorViewModel.new,
 );
 
 // ── ViewModel ─────────────────────────────────────────────────────────────────
 
-class BasicCalculatorViewModel extends Notifier<CalculatorState> {
+class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   final _useCase = EvaluateExpressionUseCase();
 
   // 반복 = 를 위한 마지막 연산자/피연산자 (resolved 값)

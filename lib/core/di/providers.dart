@@ -48,7 +48,6 @@ final exchangeRateRemoteDataSourceProvider =
     Provider<ExchangeRateRemoteDataSource>((ref) {
   return ExchangeRateRemoteDataSource(
     firestore: ref.read(firestoreProvider),
-    dio: ref.read(dioProvider),
   );
 });
 

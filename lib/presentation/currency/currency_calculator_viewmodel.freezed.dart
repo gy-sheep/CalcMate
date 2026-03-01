@@ -217,8 +217,8 @@ class __$$ExchangeRateStateImplCopyWithImpl<$Res>
 class _$ExchangeRateStateImpl implements _ExchangeRateState {
   const _$ExchangeRateStateImpl({
     final Map<String, double> rates = const {},
-    this.fromCode = 'USD',
-    this.toCode = 'KRW',
+    this.fromCode = 'KRW',
+    this.toCode = 'USD',
     this.input = '0',
     this.isFromActive = true,
     this.isResult = false,

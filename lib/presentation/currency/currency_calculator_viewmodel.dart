@@ -14,8 +14,8 @@ part 'currency_calculator_viewmodel.freezed.dart';
 class ExchangeRateState with _$ExchangeRateState {
   const factory ExchangeRateState({
     @Default({}) Map<String, double> rates,
-    @Default('USD') String fromCode,
-    @Default('KRW') String toCode,
+    @Default('KRW') String fromCode,
+    @Default('USD') String toCode,
     @Default('0') String input,
     @Default(true) bool isFromActive,
     @Default(false) bool isResult,
@@ -64,14 +64,14 @@ class RefreshRequested extends ExchangeRateIntent {
 // Provider
 // ──────────────────────────────────────────
 final exchangeRateViewModelProvider =
-    NotifierProvider<ExchangeRateViewModel, ExchangeRateState>(
+    NotifierProvider.autoDispose<ExchangeRateViewModel, ExchangeRateState>(
   ExchangeRateViewModel.new,
 );
 
 // ──────────────────────────────────────────
 // ViewModel
 // ──────────────────────────────────────────
-class ExchangeRateViewModel extends Notifier<ExchangeRateState> {
+class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   late final GetExchangeRateUseCase _getExchangeRateUseCase;
   final _evaluateUseCase = EvaluateExpressionUseCase();
 

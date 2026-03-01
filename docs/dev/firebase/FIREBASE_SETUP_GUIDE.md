@@ -82,20 +82,44 @@ OXR_APP_ID=여기에_Open_Exchange_Rates_APP_ID_입력
 
 > APP_ID는 팀원에게 직접 전달받거나, [Open Exchange Rates](https://openexchangerates.org/signup/free)에서 새로 발급받는다.
 
-### 6. 셋업 완료 확인
+### 6. 빌드 및 배포
+
+TypeScript를 컴파일한 후 Firebase에 배포한다:
 
 ```bash
-# 빌드 테스트
-cd functions && npm run build && cd ..
+cd functions && npm install && npm run build && cd ..
+firebase deploy --only functions
+```
 
+배포 성공 시 아래와 같이 두 Functions의 URL이 출력된다:
+```
+✓ Function URL (refreshExchangeRates): https://asia-northeast3-calcmate-353ed.cloudfunctions.net/refreshExchangeRates
+✓ Function URL (scheduledExchangeRateRefresh): 매 1시간마다 자동 실행 (HTTP URL 없음)
+```
+
+### 7. 배포 확인
+
+**HTTP 함수 테스트** (수동 갱신 / 디버그용):
+```bash
+curl https://asia-northeast3-calcmate-353ed.cloudfunctions.net/refreshExchangeRates
+```
+
+환율 JSON이 응답되면 배포 완료.
+
+**Cloud Scheduler 확인**:
+Firebase Console → Functions → 스케줄 탭에서 `scheduledExchangeRateRefresh`가 등록되어 있는지 확인한다. 매 1시간마다 자동으로 실행되어 Firestore의 환율 데이터를 최신으로 유지한다.
+
+### (선택) 로컬 에뮬레이터
+
+HTTP 함수(`refreshExchangeRates`)는 에뮬레이터로 테스트할 수 있다. Cloud Scheduler 함수는 에뮬레이터에서 HTTP로 직접 호출할 수 없다.
+
+```bash
 # 에뮬레이터 실행 (Java 필요)
 firebase emulators:start
 
-# 다른 터미널에서 테스트
+# 다른 터미널에서 HTTP 함수 테스트
 curl http://localhost:5001/calcmate-353ed/asia-northeast3/refreshExchangeRates
 ```
-
-환율 JSON이 응답되면 셋업 완료.
 
 > **Java 미설치 시**: `brew install openjdk` 후 심링크 설정 필요
 > ```bash
@@ -113,4 +137,5 @@ curl http://localhost:5001/calcmate-353ed/asia-northeast3/refreshExchangeRates
 | 3 | Firebase 로그인 | `firebase login` |
 | 4 | Functions 의존성 설치 | `cd functions && npm install` |
 | 5 | 환경 변수 생성 | `functions/.env` 파일에 `OXR_APP_ID` 입력 |
-| 6 | (선택) Java 설치 | `brew install openjdk` — 에뮬레이터 사용 시 필요 |
+| 6 | 빌드 및 배포 | `cd functions && npm run build && cd .. && firebase deploy --only functions` |
+| 7 | (선택) Java 설치 | `brew install openjdk` — 에뮬레이터 사용 시 필요 |

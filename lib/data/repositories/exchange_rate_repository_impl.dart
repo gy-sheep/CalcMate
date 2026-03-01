@@ -22,19 +22,14 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
     }
 
     try {
-      // 2단계: Firestore 직접 읽기
+      // 2단계: Firestore 읽기 (Cloud Scheduler가 1시간마다 최신 상태 유지)
       final firestoreDto = await _remote.fetchFromFirestore();
       if (firestoreDto != null) {
         final entity = firestoreDto.toEntity();
         await _local.cacheRates(entity);
         return entity;
       }
-
-      // 3단계: Firebase Function 트리거
-      final refreshedDto = await _remote.triggerRefresh();
-      final entity = refreshedDto.toEntity();
-      await _local.cacheRates(entity);
-      return entity;
+      throw Exception('No exchange rate data available in Firestore');
     } catch (_) {
       // 실패 시: 만료된 로컬 캐시라도 반환
       final expired = _local.getCachedRates();

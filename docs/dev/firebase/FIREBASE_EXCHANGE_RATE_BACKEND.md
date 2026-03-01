@@ -1,7 +1,7 @@
 # Firebase 서버리스 백엔드 — 환율 캐싱 시스템 구현 명세
 
 > **분류**: Firebase 서버리스 백엔드
-> **목적**: Firebase Spark 플랜 기반으로 환율 캐싱 레이어를 구축한다. Open Exchange Rates API를 통해 1시간마다 환율을 갱신하고, Firestore를 캐시 저장소로 사용하여 앱 사용자 수에 무관하게 API 호출을 최소화한다.
+> **목적**: Firebase Blaze 플랜 기반으로 환율 캐싱 레이어를 구축한다. Open Exchange Rates API를 통해 1시간마다 환율을 갱신하고, Firestore를 캐시 저장소로 사용하여 앱 사용자 수에 무관하게 API 호출을 최소화한다.
 > **관련 문서**: [`EXCHANGE_RATE_CALCULATOR.md`](../EXCHANGE_RATE_CALCULATOR.md) — Flutter 앱 측 환율 계산기 구현 명세. 본 문서의 Firebase 백엔드를 데이터 소스로 사용한다.
 
 ---
@@ -219,7 +219,7 @@ firebase deploy --only functions,firestore:rules
 | 외부 HTTP 요청 | ✅ | ✅ |
 | Cloud Scheduler | ❌ | ✅ |
 
-Cloud Scheduler를 쓸 수 없으므로 스케줄 기반 자동 갱신은 불가. 대신 앱 요청 시 TTL을 체크하는 온디맨드 방식으로 설계.
+Blaze 플랜으로 전환하여 Cloud Scheduler를 도입했다. `scheduledExchangeRateRefresh` 함수가 매 정각(`0 * * * *`) 자동으로 실행되어 Firestore 환율 데이터를 갱신한다. 앱 요청 기반 온디맨드 갱신(`refreshExchangeRates`)은 수동 테스트용으로 유지한다.
 
 #### ADR-4: 왜 교차환율 계산은 앱에서 하는가?
 
@@ -235,22 +235,21 @@ USD 기준 데이터 1세트만 있으면 168개 통화 간 모든 조합을 클
 ### 아키텍처 (구조 B: Firestore 직접 읽기)
 
 ```
+[Cloud Scheduler] ──── 매 정각 ────► [scheduledExchangeRateRefresh]
+                                              │
+                                              ├── Open Exchange Rates API 호출
+                                              │     GET https://openexchangerates.org/api/latest.json?app_id={APP_ID}
+                                              │
+                                              └── Firestore 문서 업데이트 (exchange_rates/latest)
+
+
 [Flutter 앱]
      │
-     ├── 1. Firestore 직접 읽기 (exchange_rates/latest)
-     │       → TTL 유효 → 데이터 사용 (Function 호출 없음)
+     ├── 1. 로컬 캐시 확인 (SharedPreferences, TTL 1시간)
+     │       → 유효 → 캐시 데이터 사용
      │
-     └── 2. TTL 만료 시 → Firebase Function 호출 (HTTP 트리거)
-                              │
-                              ├── Firestore Transaction (Double Check Locking)
-                              │     → 다른 요청이 이미 갱신 중이면 대기
-                              │
-                              ├── Open Exchange Rates API 호출
-                              │     GET https://openexchangerates.org/api/latest.json?app_id={APP_ID}
-                              │
-                              ├── Firestore 문서 업데이트
-                              │
-                              └── 갱신된 데이터 반환
+     └── 2. 캐시 만료 → Firestore 직접 읽기 (exchange_rates/latest)
+                              → Cloud Scheduler가 최신 데이터 유지 보장
 ```
 
 ---
@@ -265,7 +264,7 @@ USD 기준 데이터 1세트만 있으면 168개 통화 간 모든 조합을 클
 | HTTP 트리거 Function | ✅ | 본 프로젝트에서 사용하는 방식 |
 | 외부 HTTP 요청 (fetch) | ✅ | Open Exchange Rates API 호출에 필요 |
 | Firestore 읽기/쓰기 | ✅ | 앱의 환율 데이터 조회에 사용 |
-| Cloud Scheduler (스케줄 함수) | ❌ | Blaze 전환 시 사용 가능 |
+| Cloud Scheduler (스케줄 함수) | ❌ | ✅ (Blaze 전환 완료) |
 
 ### 무료 한도 vs 예상 사용량
 
@@ -678,53 +677,32 @@ void main() async {
 
 ```dart
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 
 class ExchangeRateRemoteDataSource {
   final FirebaseFirestore _firestore;
-  final Dio _dio;
 
   static const _collection = 'exchange_rates';
   static const _document = 'latest';
-  static const _ttlMs = 3600000; // 1시간
 
-  // Firebase Function URL (배포 후 확인되는 URL로 교체)
-  static const _functionUrl =
-      'https://asia-northeast3-{PROJECT_ID}.cloudfunctions.net/refreshExchangeRates';
-
-  ExchangeRateRemoteDataSource({
-    required FirebaseFirestore firestore,
-    required Dio dio,
-  })  : _firestore = firestore,
-        _dio = dio;
+  ExchangeRateRemoteDataSource({required FirebaseFirestore firestore})
+      : _firestore = firestore;
 
   /// Firestore에서 환율 데이터를 읽는다.
-  /// 반환값이 null이면 데이터가 없는 것이고,
-  /// isExpired가 true이면 TTL이 만료된 것이다.
-  Future<({Map<String, dynamic>? data, bool isExpired})> fetchFromFirestore() async {
+  /// Cloud Scheduler가 매 정각 최신 데이터를 유지하므로
+  /// 앱에서는 단순히 Firestore를 읽기만 하면 된다.
+  Future<ExchangeRateDto?> fetchFromFirestore() async {
     final doc = await _firestore
         .collection(_collection)
         .doc(_document)
         .get();
 
-    if (!doc.exists || doc.data() == null) {
-      return (data: null, isExpired: true);
-    }
-
-    final data = doc.data()!;
-    final timestamp = data['timestamp'] as int? ?? 0;
-    final isExpired = (DateTime.now().millisecondsSinceEpoch - timestamp) >= _ttlMs;
-
-    return (data: data, isExpired: isExpired);
-  }
-
-  /// TTL 만료 시 Firebase Function을 호출하여 환율을 갱신한다.
-  Future<Map<String, dynamic>> triggerRefresh() async {
-    final response = await _dio.get(_functionUrl);
-    return response.data as Map<String, dynamic>;
+    if (!doc.exists || doc.data() == null) return null;
+    return ExchangeRateDto.fromJson(doc.data()!);
   }
 }
 ```
+
+> **변경 이력**: Cloud Scheduler 도입 이전에는 `triggerRefresh()` 메서드로 앱이 직접 Firebase Function을 호출하여 환율을 갱신했다. Cloud Scheduler가 자동 갱신을 보장하므로 이 로직이 제거되었다.
 
 ---
 
@@ -815,7 +793,7 @@ Firebase Console에서 **예산 알림**을 설정하여, 예상치 못한 사�
 
 ## 10. 범위 외 (향후 작업)
 
-- **Cloud Scheduler 기반 자동 갱신** — Blaze 플랜 전환 시 도입 가능. 현재는 앱 요청 기반 TTL 갱신
+- ~~**Cloud Scheduler 기반 자동 갱신**~~ — ✅ 완료 (Blaze 전환 후 `scheduledExchangeRateRefresh` 도입, 매 정각 자동 갱신)
 - **Firestore 오프라인 영속성** — `cloud_firestore`의 내장 오프라인 캐시 활용 검토
 - **다중 API 소스** — Open Exchange Rates 장애 시 Frankfurter 등으로 자동 전환
 - **환율 히스토리 저장** — Firestore에 일별 환율 기록 저장 (차트 표시용)

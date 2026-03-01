@@ -2,6 +2,43 @@
 
 ---
 
+## 2026-03-02 — Cloud Scheduler 도입 및 환율 계산기 UX 개선
+
+### 완료 항목
+
+**Firebase 백엔드 개선**
+- `functions/src/index.ts` — `fetchAndStoreRates()` 공통 함수 분리
+  - `scheduledExchangeRateRefresh` — Cloud Scheduler (`0 * * * *`, `Asia/Seoul`) 추가
+  - `refreshExchangeRates` — 수동 테스트용 HTTP 트리거로 유지
+
+**Data 계층 단순화**
+- `data/datasources/exchange_rate_remote_datasource.dart` — Function 트리거 로직 제거 (Firestore 직접 읽기만)
+- `data/repositories/exchange_rate_repository_impl.dart` — 3단계 → 2단계 fallback (로컬캐시→Firestore)
+- `core/di/providers.dart` — `ExchangeRateRemoteDataSource` 생성 시 `dio` 파라미터 제거
+
+**버그 수정**
+- `basic_calculator_viewmodel.dart` — `NotifierProvider.autoDispose` 적용 (화면 재진입 시 상태 초기화)
+- `currency_calculator_viewmodel.dart` — `NotifierProvider.autoDispose` 적용, 기본 통화 KRW/USD로 변경
+- `currency_calculator_viewmodel.freezed.dart` — build_runner 재생성 (기본값 변경 반영)
+
+**환율 계산기 UI 개선**
+- `currency_calculator_screen.dart`
+  - 스왑 버튼 좌측 통화 코드 아래로 이동 (기존: 두 통화 행 사이 중앙)
+  - `_CurrencyCodeButton` + `_AmountDisplay`로 Row 구조 개선
+  - 금액 텍스트 `FittedBox(fit: BoxFit.scaleDown)` 적용 (오버플로우 방지)
+  - Progress indicator Stack 오버레이 + Center로 화면 정중앙 배치
+
+**문서 및 커맨드**
+- `.claude/commands/deploy-functions.md` — `/deploy-functions` 슬래시 커맨드 추가
+- `docs/dev/firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md` — Cloud Scheduler 도입 반영, 아키텍처 다이어그램 업데이트
+- `docs/dev/firebase/FIREBASE_SETUP_GUIDE.md` — 빌드/배포/확인 섹션 추가
+- `docs/specs/EXCHANGE_RATE.md` — 수정 요청 4개 항목 완료 체크
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-01 — Phase 2 환율 계산기 Firebase 연동 및 Clean Architecture 구현
 
 ### 완료 항목

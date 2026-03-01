@@ -91,12 +91,104 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
             children: [
               _buildAppBar(context),
               Expanded(
-                child: Column(
+                child: Stack(
                   children: [
-                    const Spacer(),
+                    Column(
+                      children: [
+                        const Spacer(),
+                        if (state.error != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              state.error!,
+                              style: const TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        // 통화 행 + 스왑 버튼
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // From 행: 통화 코드 + 금액 (같은 Row로 정렬)
+                              Row(
+                                children: [
+                                  _CurrencyCodeButton(
+                                    code: state.fromCode,
+                                    onTap: () => _selectCurrency(
+                                      context, ref,
+                                      isFrom: true,
+                                      selectedCode: state.fromCode,
+                                      rates: state.rates,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _AmountDisplay(
+                                      amount: fromDisplay,
+                                      isActive: state.isFromActive,
+                                      onTap: () => vm.handleIntent(
+                                          const ActiveRowChanged(true)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // 스왑 버튼 (좌측 정렬)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: _SwapButton(
+                                    onTap: () =>
+                                        vm.handleIntent(const Swapped()),
+                                  ),
+                                ),
+                              ),
+                              // To 행: 통화 코드 + 금액 (같은 Row로 정렬)
+                              Row(
+                                children: [
+                                  _CurrencyCodeButton(
+                                    code: state.toCode,
+                                    onTap: () => _selectCurrency(
+                                      context, ref,
+                                      isFrom: false,
+                                      selectedCode: state.toCode,
+                                      rates: state.rates,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _AmountDisplay(
+                                      amount: toDisplay,
+                                      isActive: !state.isFromActive,
+                                      onTap: () => vm.handleIntent(
+                                          const ActiveRowChanged(false)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        // 구분선
+                        const Divider(
+                            color: _dividerColor, thickness: 0.5, height: 1),
+                        // 숫자 키패드
+                        _NumberPad(
+                          onKeyTap: (key) => vm.handleIntent(KeyTapped(key)),
+                          isAcState: vm.isAcState,
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                    // 로딩 인디케이터 (화면 중앙 오버레이)
                     if (state.isLoading)
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 8),
+                      const Center(
                         child: SizedBox(
                           width: 20,
                           height: 20,
@@ -106,63 +198,6 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                    if (state.error != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          state.error!,
-                          style: const TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    // 상단 통화 (FROM)
-                    _CurrencyRow(
-                      currencyCode: state.fromCode,
-                      amount: fromDisplay,
-                      isActive: state.isFromActive,
-                      onCurrencyTap: () => _selectCurrency(
-                        context,
-                        ref,
-                        isFrom: true,
-                        selectedCode: state.fromCode,
-                        rates: state.rates,
-                      ),
-                      onAmountTap: () =>
-                          vm.handleIntent(const ActiveRowChanged(true)),
-                    ),
-                    const SizedBox(height: 12),
-                    // 스왑 버튼
-                    _SwapButton(
-                      onTap: () => vm.handleIntent(const Swapped()),
-                    ),
-                    const SizedBox(height: 12),
-                    // 하단 통화 (TO)
-                    _CurrencyRow(
-                      currencyCode: state.toCode,
-                      amount: toDisplay,
-                      isActive: !state.isFromActive,
-                      onCurrencyTap: () => _selectCurrency(
-                        context,
-                        ref,
-                        isFrom: false,
-                        selectedCode: state.toCode,
-                        rates: state.rates,
-                      ),
-                      onAmountTap: () =>
-                          vm.handleIntent(const ActiveRowChanged(false)),
-                    ),
-                    const Spacer(),
-                    // 구분선
-                    const Divider(
-                        color: _dividerColor, thickness: 0.5, height: 1),
-                    // 숫자 키패드
-                    _NumberPad(
-                      onKeyTap: (key) => vm.handleIntent(KeyTapped(key)),
-                      isAcState: vm.isAcState,
-                    ),
-                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -262,74 +297,78 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
 }
 
 // ──────────────────────────────────────────
-// 통화 행 (코드 + 금액 표시)
+// 통화 코드 버튼 (좌측)
 // ──────────────────────────────────────────
-class _CurrencyRow extends StatelessWidget {
-  final String currencyCode;
+class _CurrencyCodeButton extends StatelessWidget {
+  final String code;
+  final VoidCallback onTap;
+
+  const _CurrencyCodeButton({required this.code, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            code,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 4),
+          const Icon(Icons.keyboard_arrow_down,
+              color: Colors.white70, size: 22),
+        ],
+      ),
+    );
+  }
+}
+
+// ──────────────────────────────────────────
+// 금액 표시 (우측)
+// ──────────────────────────────────────────
+class _AmountDisplay extends StatelessWidget {
   final String amount;
   final bool isActive;
-  final VoidCallback onCurrencyTap;
-  final VoidCallback onAmountTap;
+  final VoidCallback onTap;
 
-  const _CurrencyRow({
-    required this.currencyCode,
+  const _AmountDisplay({
     required this.amount,
     required this.isActive,
-    required this.onCurrencyTap,
-    required this.onAmountTap,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // 통화 선택 버튼
-          GestureDetector(
-            onTap: onCurrencyTap,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  currencyCode,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                const Icon(Icons.keyboard_arrow_down,
-                    color: Colors.white70, size: 22),
-              ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              amount,
+              maxLines: 1,
+              softWrap: false,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 48,
+                fontWeight: FontWeight.w300,
+                letterSpacing: -1,
+              ),
             ),
           ),
-          const Spacer(),
-          // 금액 표시 + 밑줄
-          GestureDetector(
-            onTap: onAmountTap,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  amount,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 48,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: -1,
-                  ),
-                ),
-                Container(
-                  height: 1.5,
-                  width: 180,
-                  color: isActive ? Colors.white : Colors.white38,
-                ),
-              ],
-            ),
+          Container(
+            height: 1.5,
+            color: isActive ? Colors.white : Colors.white38,
           ),
         ],
       ),
