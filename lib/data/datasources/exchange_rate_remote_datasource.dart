@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../core/constants/firebase_config.dart';
 import '../dto/exchange_rate_dto.dart';
 
 class ExchangeRateRemoteDataSource {
   final FirebaseFirestore _firestore;
-
-  static const _collection = 'exchange_rates';
-  static const _document = 'latest';
 
   ExchangeRateRemoteDataSource({required FirebaseFirestore firestore})
       : _firestore = firestore;
@@ -16,8 +14,8 @@ class ExchangeRateRemoteDataSource {
   /// 문서가 없으면 null을 반환한다.
   Future<ExchangeRateDto?> fetchFromFirestore() async {
     final doc = await _firestore
-        .collection(_collection)
-        .doc(_document)
+        .collection(FirebaseConfig.exchangeRateCollection)
+        .doc(FirebaseConfig.exchangeRateDocument)
         .get();
 
     if (!doc.exists || doc.data() == null) return null;
