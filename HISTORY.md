@@ -2,6 +2,47 @@
 
 ---
 
+## 2026-03-02 — 단위 변환기 로직 구현 완료 (Phase 3)
+
+### 완료 항목
+
+**Domain 계층**
+- `domain/models/unit_definition.dart` — UnitDef, UnitCategory const 클래스 (Freezed 미사용, 변환 상수)
+- `core/constants/unit_definitions.dart` — 10개 카테고리 단위 상수 (스펙 비율 표 반영)
+- `domain/usecases/convert_unit_usecase.dart` — 비율 기반 변환 + 온도/연비 특수 공식
+- `domain/models/unit_converter_state.dart` — Freezed State (input, isResult, activeUnitCode, convertedValues)
+- `test/domain/usecases/convert_unit_usecase_test.dart` — TDD 24케이스 (일반/온도/연비/엣지)
+
+**Presentation 계층**
+- `presentation/unit_converter/unit_converter_viewmodel.dart` — sealed Intent 4종 (keyTapped, categorySelected, unitTapped, arrowTapped) + Notifier ViewModel + 포맷팅
+- `presentation/unit_converter/unit_converter_screen.dart` — ConsumerStatefulWidget + TabBarView 스와이프 + ViewModel 연결
+  - 카테고리 탭 ↔ 스와이프 양방향 연동 (TabController.animation 실시간 감지)
+  - 카테고리 칩 자동 스크롤 (Scrollable.ensureVisible)
+  - 키패드 입력 → 실시간 변환, 자릿수 제한 (정수 12, 소수 8) + 토스트
+  - 단위 전환 시 isResult 패턴 (첫 키 입력으로 기존 값 대체)
+  - 결과 포맷팅: 천 단위 콤마, 지수 표기법 (극소/극대), 후행 0 제거, 온도 소수점 3자리
+  - 더미 데이터 전체 제거, unitCategories 상수로 대체
+
+**버그 수정**
+- 연비 `L/100km` 입력값 0 → division by zero 방지 (zero guard 추가)
+- `_addCommas` 소수점 포함 문자열 처리 (`273,.15` → `273.15`)
+- `_UnitListState` 스크롤 리스너 해제 누락 수정 (dispose에 removeListener 추가)
+
+**코드 품질 개선 (기존 파일)**
+- `calc_page_route.dart` — 불필요한 material.dart import 제거, 불필요한 `!` 제거
+- `basic_calculator_screen.dart` — 로컬 변수 `_maxFittingSize` → `maxFittingSize` (언더스코어 규칙)
+- `basic_calculator_viewmodel.dart` — 문자열 연결 → interpolation
+- `main_screen.dart` — `withOpacity()` → `withValues(alpha:)`
+- `calc_mode_card.dart` — 다중 언더스코어 정리, `withOpacity()` 5곳 → `withValues(alpha:)`
+
+**문서**
+- `docs/specs/UNIT_CONVERTER.md` — 결과 표시 규칙 현행화 (극대값 지수 표기법, 온도 3자리, isResult 패턴)
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-02 — 단위 변환기 화면 UI 구현 (Phase 3)
 
 ### 완료 항목

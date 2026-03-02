@@ -104,7 +104,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       builder: (_) => BasicCalculatorScreen(
                         title: entry.title,
                         icon: entry.icon,
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                       ),
                     ),
                   );

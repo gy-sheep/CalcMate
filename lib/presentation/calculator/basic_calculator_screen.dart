@@ -171,7 +171,7 @@ class _DisplayPanel extends StatelessWidget {
   );
 
   static double _adaptiveFontSize(String text, double maxWidth) {
-    double _maxFittingSize(String ref) {
+    double maxFittingSize(String ref) {
       for (double size = 80.0; size >= 10; size -= 1) {
         final p = TextPainter(
           text: TextSpan(text: ref, style: _baseStyle.copyWith(fontSize: size)),
@@ -183,8 +183,8 @@ class _DisplayPanel extends StatelessWidget {
       return 10;
     }
 
-    final maxSize = _maxFittingSize('123,456,789');
-    final minSize = _maxFittingSize('12,345,678,323');
+    final maxSize = maxFittingSize('123,456,789');
+    final minSize = maxFittingSize('12,345,678,323');
 
     for (double size = maxSize; size >= minSize; size -= 1) {
       final p = TextPainter(

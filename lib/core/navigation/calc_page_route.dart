@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 /// 계산기 화면 전환에 사용하는 공통 라우트.
 /// [transitionsBuilder]를 생략하면 기본 FadeTransition이 적용됩니다.
@@ -41,7 +40,7 @@ class CalcPageRoute<T> extends PageRoute<T>
       Animation<double> secondaryAnimation, Widget child) {
     // 커스텀 전환 효과 적용 (기본: Fade)
     final transition = _customTransition != null
-        ? _customTransition!(context, animation, secondaryAnimation, child)
+        ? _customTransition(context, animation, secondaryAnimation, child)
         : FadeTransition(
             opacity:
                 CurvedAnimation(parent: animation, curve: Curves.easeInOut),

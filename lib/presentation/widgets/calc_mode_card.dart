@@ -20,7 +20,7 @@ class CalcModeCard extends StatelessWidget {
     return Image.asset(
       imagePath,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(color: Colors.blueGrey),
+      errorBuilder: (_, _, _) => Container(color: Colors.blueGrey),
     );
   }
 
@@ -37,7 +37,7 @@ class CalcModeCard extends StatelessWidget {
           Positioned.fill(
             child: Hero(
               tag: 'calc_bg_$title',
-              flightShuttleBuilder: (_, animation, __, ___, ____) {
+              flightShuttleBuilder: (_, animation, _, _, _) {
                 return FadeTransition(
                   opacity: Tween<double>(begin: 1.0, end: 0.0).animate(animation),
                   child: _buildImage(),
@@ -79,7 +79,7 @@ class CalcModeCard extends StatelessWidget {
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.25),
+                            color: Colors.white.withValues(alpha: 0.25),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Icon(icon, color: Colors.white),
@@ -116,7 +116,7 @@ class CalcModeCard extends StatelessWidget {
                             description,
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.white.withValues(alpha: 0.8),
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -126,10 +126,10 @@ class CalcModeCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     CircleAvatar(
-                      backgroundColor: Colors.white.withOpacity(0.2),
+                      backgroundColor: Colors.white.withValues(alpha: 0.2),
                       child: Icon(
                         Icons.chevron_right,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],

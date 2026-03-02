@@ -257,7 +257,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
     final current = state.input;
     if (current.endsWith('%')) return;   // 이미 % 있음
     if (_endsWithOperator(current)) return; // 연산자 바로 뒤는 불가
-    state = state.copyWith(input: current + '%', isResult: false);
+    state = state.copyWith(input: '$current%', isResult: false);
   }
 
   // ── +/- ───────────────────────────────────────────────────────────────────────

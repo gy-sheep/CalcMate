@@ -56,24 +56,27 @@
 - [x] **스펙 문서** — `docs/specs/EXCHANGE_RATE.md` 현행화 완료
 - [x] **리팩토링 체크리스트** — `docs/plans/REFACTORING_CHECKLIST.md` 작성
 
-### Phase 3: 단위 변환기 — `feat/unit-converter` 진행 중
+### Phase 3: 단위 변환기 — `feat/unit-converter` 완료
 - [x] `docs/specs/UNIT_CONVERTER.md` — 기획 명세 작성 (10개 카테고리, 키패드 4×4, 변환 공식, 스와이프 카테고리 전환)
 - [x] `docs/dev/UNIT_CONVERTER_IMPL.md` — 구현 명세 작성
-- [x] `presentation/unit_converter/unit_converter_screen.dart` — 화면 UI 구현 (정적 더미 데이터)
-  - AppBar (Hero 애니메이션), 카테고리 탭 (10개 가로 스크롤 칩), 단위 리스트 (활성 행 하이라이트), 키패드 (4×4)
+- [x] `domain/models/unit_definition.dart` — UnitDef, UnitCategory const 클래스
+- [x] `core/constants/unit_definitions.dart` — 10개 카테고리 단위 상수 (스펙 비율 표 반영)
+- [x] `domain/usecases/convert_unit_usecase.dart` — 비율 기반 변환 + 온도/연비 특수 공식 (TDD 24케이스)
+- [x] `domain/models/unit_converter_state.dart` — Freezed State (input, isResult, activeUnitCode, convertedValues)
+- [x] `presentation/unit_converter/unit_converter_viewmodel.dart` — sealed Intent 4종 + Notifier ViewModel + 포맷팅
+- [x] `presentation/unit_converter/unit_converter_screen.dart` — ConsumerStatefulWidget + TabBarView 스와이프 + ViewModel 연결
+  - AppBar (Hero 애니메이션), 카테고리 탭 (10개 가로 스크롤 칩 + 자동 스크롤), 단위 리스트 (활성 행 하이라이트), 키패드 (4×4)
   - 다크 그라디언트 테마 (`#1A1A2E` → `#16213E`), 포인트 컬러 `#E94560`
+  - 카테고리 탭 ↔ 스와이프 양방향 연동 (드래그 중 실시간 칩 전환)
+  - 키패드 입력 → 실시간 변환 결과, 자릿수 제한 (정수 12, 소수 8) + 토스트
+  - 단위 전환 시 isResult 패턴 적용 (첫 키 입력 시 기존 값 대체)
+  - 결과 포맷팅: 천 단위 콤마, 지수 표기법 (극소/극대), 후행 0 제거, 온도 소수점 3자리
 - [x] `presentation/main/main_screen.dart` — 단위 변환기 네비게이션 분기 추가
+- [x] 기존 코드 info/warning 전체 해결 (withOpacity → withValues, 언더스코어 규칙 등)
 
 ---
 
 ## 다음 작업
-
-### Phase 3: 단위 변환기 — 로직 구현
-- [x] 구현 명세 작성 (`docs/dev/UNIT_CONVERTER_IMPL.md`)
-- [ ] Domain 계층: 단위 변환 모델, UseCase (비율 기반 + 온도/연비 특수 공식)
-- [ ] Presentation 계층: ViewModel (Notifier + Intent), State (Freezed)
-- [ ] 키패드 입력 연결, 실시간 변환 결과 표시
-- [ ] 자릿수 제한 (정수 12, 소수 8), 결과 포맷팅 규칙 적용
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
