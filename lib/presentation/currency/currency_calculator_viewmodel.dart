@@ -120,7 +120,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   /// 현재 입력값을 수치로 평가 (수식 포함)
   double get evaluatedInput {
     final input = state.input;
-    if (input == '오류') return 0;
+    if (input == '정의되지 않음') return 0;
     final simple = double.tryParse(input);
     if (simple != null) return simple;
     if (_endsWithOperator(input)) return 0;
@@ -137,7 +137,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   /// 입력값에 천 단위 콤마를 적용한 표시 문자열
   String get formattedInput {
     final input = state.input;
-    if (input == '오류') return input;
+    if (input == '정의되지 않음') return input;
     return input.replaceAllMapped(
       RegExp(r'(\d+\.?\d*)'),
       (m) {
@@ -383,9 +383,9 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
 
   String _formatResult(double value) {
     if (value == double.infinity || value == double.negativeInfinity) {
-      return '오류';
+      return '정의되지 않음';
     }
-    if (value.isNaN) return '오류';
+    if (value.isNaN) return '정의되지 않음';
     if (value == value.truncateToDouble()) return value.toInt().toString();
     final str = value.toStringAsFixed(10);
     return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');

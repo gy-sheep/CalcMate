@@ -320,8 +320,8 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   }
 
   String _formatResult(double value) {
-    if (value == double.infinity || value == double.negativeInfinity) return '오류';
-    if (value.isNaN) return '오류';
+    if (value == double.infinity || value == double.negativeInfinity) return '정의되지 않음';
+    if (value.isNaN) return '정의되지 않음';
     // 정수면 소수점 제거
     if (value == value.truncateToDouble()) {
       return value.toInt().toString();
