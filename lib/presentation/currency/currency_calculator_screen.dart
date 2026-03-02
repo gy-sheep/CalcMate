@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:country_flags/country_flags.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +23,7 @@ class CurrencyInfo {
 }
 
 const _currencyList = [
-  CurrencyInfo(code: 'KRW', name: '한국 원', flag: '\u{1F1F0}\u{1F1F7}'),
+  CurrencyInfo(code: 'KRW', name: '대한민국 원', flag: '\u{1F1F0}\u{1F1F7}'),
   CurrencyInfo(code: 'USD', name: '미국 달러', flag: '\u{1F1FA}\u{1F1F8}'),
   CurrencyInfo(code: 'JPY', name: '일본 엔', flag: '\u{1F1EF}\u{1F1F5}'),
   CurrencyInfo(code: 'EUR', name: '유로', flag: '\u{1F1EA}\u{1F1FA}'),
@@ -69,13 +73,62 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
     required this.icon,
   });
 
+  String _formatLastUpdated(DateTime? dt, {required bool hasRates}) {
+    if (dt == null) return hasRates ? '임시 환율 사용 중' : '환율 정보 없음';
+    final isPm = dt.hour >= 12;
+    final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
+    final minute = dt.minute.toString().padLeft(2, '0');
+    final month = dt.month.toString().padLeft(2, '0');
+    final day = dt.day.toString().padLeft(2, '0');
+    return '${dt.year}.$month.$day. ${isPm ? '오후' : '오전'} $hour:$minute 기준';
+  }
+
+  void _showToast(BuildContext context, String message) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => Positioned(
+        bottom: 120,
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+    Future.delayed(const Duration(milliseconds: 1500), () => entry.remove());
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(exchangeRateViewModelProvider);
     final vm = ref.read(exchangeRateViewModelProvider.notifier);
 
-    final fromDisplay = state.isFromActive ? state.input : vm.reverseConvertedDisplay;
-    final toDisplay = state.isFromActive ? vm.convertedDisplay : state.input;
+    ref.listen(
+      exchangeRateViewModelProvider.select((s) => s.toastMessage),
+      (_, message) {
+        if (message != null) {
+          _showToast(context, message);
+          vm.clearToast();
+        }
+      },
+    );
+
+    final fromDisplay = vm.formattedInput;
 
     return Scaffold(
       body: Container(
@@ -86,123 +139,181 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
             colors: [_gradientTop, _gradientBottom],
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(context),
-              Expanded(
-                child: Stack(
-                  children: [
-                    Column(
-                      children: [
-                        const Spacer(),
-                        if (state.error != null)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              state.error!,
-                              style: const TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        // 통화 행 + 스왑 버튼
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
+        child: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBar(context),
+                  if (state.error != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        state.error!,
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  // 통화 행들 — 부모 높이를 전부 사용
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // From 행
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // From 행: 통화 코드 + 금액 (같은 Row로 정렬)
-                              Row(
-                                children: [
-                                  _CurrencyCodeButton(
-                                    code: state.fromCode,
-                                    onTap: () => _selectCurrency(
-                                      context, ref,
-                                      isFrom: true,
-                                      selectedCode: state.fromCode,
-                                      rates: state.rates,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: _AmountDisplay(
-                                      amount: fromDisplay,
-                                      isActive: state.isFromActive,
-                                      onTap: () => vm.handleIntent(
-                                          const ActiveRowChanged(true)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              // 스왑 버튼 (좌측 정렬)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: _SwapButton(
-                                    onTap: () =>
-                                        vm.handleIntent(const Swapped()),
-                                  ),
+                              _CurrencyCodeButton(
+                                code: state.fromCode,
+                                onTap: () => _selectCurrency(
+                                  context, ref,
+                                  toIndex: -1,
+                                  selectedCode: state.fromCode,
+                                  rates: state.rates,
                                 ),
                               ),
-                              // To 행: 통화 코드 + 금액 (같은 Row로 정렬)
-                              Row(
-                                children: [
-                                  _CurrencyCodeButton(
-                                    code: state.toCode,
-                                    onTap: () => _selectCurrency(
-                                      context, ref,
-                                      isFrom: false,
-                                      selectedCode: state.toCode,
-                                      rates: state.rates,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: _AmountDisplay(
-                                      amount: toDisplay,
-                                      isActive: !state.isFromActive,
-                                      onTap: () => vm.handleIntent(
-                                          const ActiveRowChanged(false)),
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _AmountDisplay(
+                                  amount: fromDisplay,
+                                  isActive: true,
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        const Spacer(),
-                        // 구분선
-                        const Divider(
-                            color: _dividerColor, thickness: 0.5, height: 1),
-                        // 숫자 키패드
-                        _NumberPad(
-                          onKeyTap: (key) => vm.handleIntent(KeyTapped(key)),
-                          isAcState: vm.isAcState,
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                          // To 행 3개
+                          for (int i = 0; i < state.toCodes.length; i++)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                _CurrencyCodeButton(
+                                  code: state.toCodes[i],
+                                  onTap: () => _selectCurrency(
+                                    context, ref,
+                                    toIndex: i,
+                                    selectedCode: state.toCodes[i],
+                                    rates: state.rates,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _AmountDisplay(
+                                    amount: vm.convertedDisplayAt(i),
+                                    isActive: false,
+                                    hint: vm.unitRateDisplayAt(i),
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
-                    // 로딩 인디케이터 (화면 중앙 오버레이)
-                    if (state.isLoading)
-                      const Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white54,
+                  ),
+                  // 업데이트 시간 + 새로고침
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 6),
+                    child: Row(
+                      children: [
+                        Text(
+                          _formatLastUpdated(
+                            state.lastUpdated,
+                            hasRates: state.rates.isNotEmpty,
+                          ),
+                          style: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 11,
                           ),
                         ),
+                        const Spacer(),
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: state.isRefreshing
+                              ? null
+                              : () => vm.handleIntent(const RefreshRequested()),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: state.isRefreshing
+                                ? const CupertinoActivityIndicator(
+                                    radius: 10,
+                                    color: Colors.white54,
+                                  )
+                                : const Icon(
+                                    Icons.refresh,
+                                    color: Colors.white54,
+                                    size: 20,
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // 구분선
+                  const Divider(
+                      color: _dividerColor, thickness: 0.5, height: 1),
+                  // 숫자 키패드
+                  _NumberPad(
+                    onKeyTap: (key) => vm.handleIntent(KeyTapped(key)),
+                    isAcState: vm.isAcState,
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+            // 로딩 오버레이 (화면 전체 dim + 인디케이터)
+            if (state.isLoading)
+              Container(
+                color: Colors.black45,
+              ),
+            if (state.isLoading)
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
                       ),
-                  ],
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.24),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          SizedBox(width: 14),
+                          Text(
+                            '환율 정보를 가져오는 중...',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -262,10 +373,11 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
     );
   }
 
+  /// [toIndex] -1이면 From, 0/1/2이면 해당 To 행
   Future<void> _selectCurrency(
     BuildContext context,
     WidgetRef ref, {
-    required bool isFrom,
+    required int toIndex,
     required String selectedCode,
     required Map<String, double> rates,
   }) async {
@@ -276,6 +388,13 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
             .where((c) => rates.containsKey(c.code))
             .toList();
 
+    final state = ref.read(exchangeRateViewModelProvider);
+    // From 선택: 현재 fromCode만 제외 (To 통화 선택 시 swap)
+    // To 선택: fromCode + 나머지 toCodes 전체 제외
+    final usedCodes = toIndex < 0
+        ? {state.fromCode}
+        : {state.fromCode, ...state.toCodes};
+
     final result = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
@@ -283,21 +402,23 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
       builder: (_) => _CurrencyPickerSheet(
         currencies: available,
         selectedCode: selectedCode,
+        usedCodes: usedCodes,
+        fromCode: toIndex >= 0 ? state.fromCode : null,
       ),
     );
     if (result == null) return;
 
     final vm = ref.read(exchangeRateViewModelProvider.notifier);
-    if (isFrom) {
+    if (toIndex < 0) {
       vm.handleIntent(FromCurrencyChanged(result));
     } else {
-      vm.handleIntent(ToCurrencyChanged(result));
+      vm.handleIntent(ToCurrencyChanged(toIndex, result));
     }
   }
 }
 
 // ──────────────────────────────────────────
-// 통화 코드 버튼 (좌측)
+// 통화 코드 버튼 (좌측) — 원형 국기 + 코드 세로 배치
 // ──────────────────────────────────────────
 class _CurrencyCodeButton extends StatelessWidget {
   final String code;
@@ -309,21 +430,30 @@ class _CurrencyCodeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            code,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+      child: SizedBox(
+        width: 48,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CountryFlag.fromCurrencyCode(
+              code,
+              theme: const ImageTheme(
+                width: 32,
+                height: 32,
+                shape: Circle(),
+              ),
             ),
-          ),
-          const SizedBox(width: 4),
-          const Icon(Icons.keyboard_arrow_down,
-              color: Colors.white70, size: 22),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              code,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -335,73 +465,62 @@ class _CurrencyCodeButton extends StatelessWidget {
 class _AmountDisplay extends StatelessWidget {
   final String amount;
   final bool isActive;
-  final VoidCallback onTap;
+  final String? hint;
 
   const _AmountDisplay({
     required this.amount,
     required this.isActive,
-    required this.onTap,
+    this.hint,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerRight,
-            child: Text(
-              amount,
-              maxLines: 1,
-              softWrap: false,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 48,
-                fontWeight: FontWeight.w300,
-                letterSpacing: -1,
-              ),
-            ),
-          ),
-          Container(
-            height: 1.5,
-            color: isActive ? Colors.white : Colors.white38,
-          ),
-        ],
+    final amountWidget = FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerRight,
+      child: Text(
+        amount,
+        maxLines: 1,
+        softWrap: false,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 28,
+          fontWeight: FontWeight.w300,
+          letterSpacing: -1,
+        ),
       ),
     );
-  }
-}
 
-// ──────────────────────────────────────────
-// 스왑 버튼
-// ──────────────────────────────────────────
-class _SwapButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _SwapButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.white12,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white24),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (hint != null && hint!.isNotEmpty)
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              amountWidget,
+              Positioned(
+                top: -16,
+                right: 0,
+                child: Text(
+                  hint!,
+                  style: const TextStyle(
+                    color: Colors.white38,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          )
+        else
+          amountWidget,
+        Container(
+          height: 1.5,
+          color: isActive ? Colors.white : Colors.white38,
         ),
-        child: const Icon(
-          Icons.swap_vert,
-          color: Colors.white,
-          size: 22,
-        ),
-      ),
+      ],
     );
   }
 }
@@ -446,8 +565,8 @@ class _NumberPad extends StatelessWidget {
       ('+', _BtnType.operator)
     ],
     [
-      ('+/-', _BtnType.function),
       ('0', _BtnType.number),
+      ('00', _BtnType.number),
       ('.', _BtnType.number),
       ('=', _BtnType.equals)
     ],
@@ -535,10 +654,14 @@ class _KeypadButton extends StatelessWidget {
 class _CurrencyPickerSheet extends StatefulWidget {
   final List<CurrencyInfo> currencies;
   final String selectedCode;
+  final Set<String> usedCodes;
+  final String? fromCode;
 
   const _CurrencyPickerSheet({
     required this.currencies,
     required this.selectedCode,
+    required this.usedCodes,
+    this.fromCode,
   });
 
   @override
@@ -547,6 +670,31 @@ class _CurrencyPickerSheet extends StatefulWidget {
 
 class _CurrencyPickerSheetState extends State<_CurrencyPickerSheet> {
   String _query = '';
+
+  void _showCenterToast(BuildContext context, String message) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => Center(
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
+    Future.delayed(const Duration(seconds: 1), () => entry.remove());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -603,23 +751,43 @@ class _CurrencyPickerSheetState extends State<_CurrencyPickerSheet> {
               itemBuilder: (context, index) {
                 final item = filtered[index];
                 final isSelected = item.code == widget.selectedCode;
+                final isUsed = widget.usedCodes.contains(item.code);
                 return ListTile(
-                  leading:
-                      Text(item.flag, style: const TextStyle(fontSize: 24)),
+                  leading: CountryFlag.fromCurrencyCode(
+                    item.code,
+                    theme: const ImageTheme(
+                      width: 32,
+                      height: 32,
+                      shape: Circle(),
+                    ),
+                  ),
                   title: Text(
                     item.code,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: isUsed ? Colors.white38 : Colors.white,
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  subtitle: Text(item.name,
-                      style: const TextStyle(color: Colors.white60)),
+                  subtitle: Text(
+                    item.name,
+                    style: TextStyle(
+                      color: isUsed ? Colors.white24 : Colors.white60,
+                    ),
+                  ),
                   trailing: isSelected
                       ? const Icon(Icons.check, color: Colors.white)
                       : null,
-                  onTap: () => Navigator.pop(context, item.code),
+                  onTap: () {
+                    if (isUsed) {
+                      final message = item.code == widget.fromCode
+                          ? '기준 통화로 사용 중입니다'
+                          : '이미 선택된 통화입니다';
+                      _showCenterToast(context, message);
+                      return;
+                    }
+                    Navigator.pop(context, item.code);
+                  },
                 );
               },
             ),

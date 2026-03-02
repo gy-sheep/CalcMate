@@ -48,7 +48,7 @@ class BasicCalculatorScreen extends ConsumerWidget {
               Expanded(child: _DisplayPanel(state: state)),
               const Divider(color: Color(0x33FFFFFF), thickness: 0.5, height: 1),
               const _ButtonPad(),
-              SizedBox(height: MediaQuery.of(context).padding.bottom + 8),
+              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -144,6 +144,25 @@ class _DisplayPanel extends StatelessWidget {
     return _formatWithCommas(_wrapNegatives(raw));
   }
 
+  /// 텍스트가 주어진 너비 안에 한 줄로 들어가는지 확인한다.
+  static bool _fitsInWidth(String text, TextStyle style, double maxWidth) {
+    final p = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    )..layout();
+    return p.width <= maxWidth;
+  }
+
+  /// 연산 기호 앞에 줄바꿈 문자를 삽입한다.
+  /// 예: "100+200×3" → "100\n+200\n×3"
+  static String _breakAtOperators(String raw) {
+    return raw.replaceAllMapped(
+      RegExp(r'(?<=[^(])([+\-×÷])'),
+      (m) => '\n${m.group(1)}',
+    );
+  }
+
   static const _baseStyle = TextStyle(
     fontSize: 56,
     color: Colors.white,
@@ -192,17 +211,32 @@ class _DisplayPanel extends StatelessWidget {
           // 수식 — 계산 완료 후에만 표시
           Visibility(
             visible: state.isResult && state.expression.isNotEmpty,
-            child: Text(
-              displayExpression,
-              textAlign: TextAlign.right,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.white54,
-                fontWeight: FontWeight.w400,
-                height: 1.4,
-              ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                const exprStyle = TextStyle(
+                  fontSize: 20,
+                  color: Colors.white54,
+                  fontWeight: FontWeight.w400,
+                  height: 1.4,
+                );
+                final fitsOneLine = _fitsInWidth(
+                  displayExpression, exprStyle, constraints.maxWidth,
+                );
+                final exprText = fitsOneLine
+                    ? displayExpression
+                    : _breakAtOperators(displayExpression);
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  physics: const BouncingScrollPhysics(),
+                  child: Text(
+                    exprText,
+                    textAlign: TextAlign.right,
+                    maxLines: 2,
+                    style: exprStyle,
+                  ),
+                );
+              },
             ),
           ),
           // 입력값 / 결과
@@ -213,7 +247,7 @@ class _DisplayPanel extends StatelessWidget {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 reverse: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Text(
                   displayInput,
                   maxLines: 1,

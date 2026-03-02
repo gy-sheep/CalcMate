@@ -2,6 +2,58 @@
 
 ---
 
+## 2026-03-02 — 환율 계산기 UX 대폭 개선 및 목업 환율 fallback 구현
+
+### 완료 항목
+
+**환율 계산기 구조 변경**
+- From 1개 + To 3개 구조로 전환 (기존 1:1, 스왑 버튼 제거)
+- From 통화 변경 시 To에 이미 있으면 swap, To 통화 중복 선택 차단 + 토스트
+- State: `toCode` → `toCodes` (List), `isFromActive`/`Swapped`/`ActiveRowChanged` 제거
+
+**목업 환율 Fallback**
+- `data/datasources/exchange_rate_fallback.dart` — USD 기준 24개 통화 근사 환율 상수
+- `exchange_rate_repository_impl.dart` — 모든 소스 실패 시 fallback 반환 (`timestamp: 0`)
+- ViewModel: fallback 감지 시 토스트 "임시 환율을 사용 중입니다", `lastUpdated: null`
+- Screen: `_formatLastUpdated()` — fallback 시 "임시 환율 사용 중" 표시
+
+**키패드 레이아웃 변경**
+- `+/-` 버튼 제거, `0` / `00` 레이아웃으로 변경
+- `00` 키 처리: 선행 0 방지, 자릿수 제한(정수 12, 소수 8)에 따라 0 1~2개 추가
+
+**환율 계산기 UI 개선**
+- 새로고침 버튼 + 업데이트 시간 표시 (CupertinoActivityIndicator, 최소 800ms)
+- 1단위 환율 힌트 (`1 KRW = 0.0007 USD`) — Positioned로 금액 위에 표시
+- 원형 국기 표시 (`country_flags` 패키지), 국기+코드 세로 배치
+- 로딩 오버레이 (BackdropFilter blur + "환율 정보를 가져오는 중...")
+- 입력값 천 단위 콤마 자동 적용, 자릿수 제한 토스트
+- 국기 사이즈 32, 코드 폰트 12, 금액 폰트 28로 축소 (행 간격 확보)
+- 좌우 여백 균형 조정 (`left: 16, right: 24`)
+
+**기본 계산기 개선**
+- 수식 표시 영역: 너비 초과 시 연산 기호 기준 줄바꿈 + 좌우 스크롤
+- 입력값/결과 영역: BouncingScrollPhysics 적용
+- 하단 SafeArea 중복 패딩 제거
+
+**문서**
+- `docs/specs/EXCHANGE_RATE.md` — 현행 구현에 맞춰 전면 업데이트
+- `docs/specs/BASIC_CALCULATOR.md` — 수정 요청 형식 변경, 완료 항목 기록
+- `docs/specs/_SPEC_TEMPLATE.md` — 수정 요청 형식 통일
+- `docs/dev/REFACTORING_CHECKLIST.md` — 리팩토링 점검 체크리스트 작성
+- `docs/prompts/PROPMTS.md` — 답변 완료/중복 질문 정리
+- `docs/DOC_MAP.md` — 문서 맵 추가
+- `docs/prompts/answers/Q0005.md` — 앱 등록 절차 답변
+
+**기타**
+- `pubspec.yaml` — `country_flags: ^4.1.2` 의존성 추가
+- `README.md` — 미구현 계산기(연봉) 제거
+- 스크린샷 이미지 업데이트
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-02 — Cloud Scheduler 도입 및 환율 계산기 UX 개선
 
 ### 완료 항목

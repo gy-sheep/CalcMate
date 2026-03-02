@@ -39,57 +39,31 @@
 - [x] `presentation/calculator/basic_calculator_viewmodel.dart` — CalculatorViewModel (Notifier + sealed Intent)
 - [x] `presentation/calculator/basic_calculator_screen.dart` — ConsumerWidget 전환 및 ViewModel 연결
 - [x] 아이폰 계산기 동작 방식으로 UX 개선: 천 단위 콤마, 음수 괄호 표시, 동적 폰트 사이즈, 오버플로우 시 오른쪽 고정 스크롤, % 기호 표시 및 컨텍스트 계산, = 반복, AC/C 동적 전환, 스마트 클리어, 음수 입력 모드
-- [x] `basic_calculator_screen.dart` — 다크 그라디언트 테마로 디자인 교체 (v2 프로토타입 검증 후 통합), 아이콘·타이틀 Hero 애니메이션 유지
+- [x] `basic_calculator_screen.dart` — 다크 그라디언트 테마로 디자인 교체, 수식 줄바꿈/좌우 스크롤
 - [x] `main_screen.dart` — 화면 전환 Fade 애니메이션 추가 (진입 400ms / 복귀 300ms)
 
 ### Phase 2: 환율 계산기 — `feat/exchange_rate` 완료
-- [x] `presentation/currency/currency_calculator_screen.dart` — 목업 기반 환율 계산기 UI 구현
-  - From/To 1:1 환율 변환, 통화 선택 Bottom Sheet(검색 포함), 스왑 버튼
-  - 앱바 Hero 애니메이션 (`calc_icon_$title`, `calc_title_$title`)
-  - 기본 계산기와 동일한 5×4 키패드 (연산자·수식·% 지원, `EvaluateExpressionUseCase` 재사용)
-  - 다크 그라디언트 테마 (딥 네이비 → 틸)
-- [x] `core/navigation/calc_page_route.dart` — 화면 전환 공통 라우트 (기본 Fade, 메뉴별 커스텀 지원)
-- [x] `main_screen.dart` — CalcPageRoute 적용, 환율 계산기 Hero 애니메이션 연결
-- [x] `docs/dev/EXCHANGE_RATE_CALCULATOR.md` — 환율 계산기 구현 명세 (Firebase 연동 구조로 업데이트)
-- [x] `docs/specs/` — 스펙 문서 디렉토리 신설 (템플릿, 기본/환율 계산기 스펙)
-- [x] **Firebase 백엔드** — 프로젝트 생성(calcmate-353ed), Function 배포, Firestore 보안 규칙
-  - `docs/dev/firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md` — 구현 명세
-  - `docs/dev/firebase/FIREBASE_GUIDE.md` — 셋업 및 배포 가이드
-  - `functions/src/index.ts` — refreshExchangeRates (Double Check Locking, TTL 1시간)
-  - `firestore.rules` — exchange_rates 읽기만 허용
-- [x] **Data 계층** — Firestore 연동 RemoteDataSource, 환율 DTO, Repository 구현체
-  - `data/datasources/exchange_rate_remote_datasource.dart` — Firestore 직접 읽기 + Function 트리거
-  - `data/datasources/exchange_rate_local_datasource.dart` — SharedPreferences 캐시 (TTL 1시간)
-  - `data/dto/exchange_rate_dto.dart` — Firestore 문서 DTO (Freezed + json_serializable)
-  - `data/repositories/exchange_rate_repository_impl.dart` — 3단계 fallback (로컬→Firestore→Function)
+- [x] From 1개 + To 3개 구조, 통화 선택 Bottom Sheet (검색, 중복 차단, swap)
+- [x] 키패드 5×4 (`0/00` 레이아웃), 수식 입력 지원 (`EvaluateExpressionUseCase` 재사용)
+- [x] 1단위 환율 힌트, 새로고침 (CupertinoActivityIndicator, 최소 800ms), 업데이트 시간 표시
+- [x] 자릿수 제한 (정수 12, 소수 8) + 토스트, 입력값 천 단위 콤마
+- [x] 원형 국기 표시 (`country_flags`), 다크 그라디언트 테마 (딥 네이비 → 틸)
+- [x] `core/navigation/calc_page_route.dart` — 화면 전환 공통 라우트
+- [x] **Firebase 백엔드** — Cloud Scheduler 매 정각 자동 갱신, Firestore 캐싱
+- [x] **Data 계층** — Firestore 연동, 로컬 캐시 (TTL 1시간), 목업 환율 fallback
 - [x] **Domain 계층** — ExchangeRateEntity, GetExchangeRateUseCase
-  - `domain/models/exchange_rate_entity.dart` — ExchangeRateEntity (Freezed)
-  - `domain/repositories/exchange_rate_repository.dart` — Repository 인터페이스
-  - `domain/usecases/get_exchange_rate_usecase.dart` — 환율 조회 UseCase
-- [x] **Presentation 계층** — 목업 → 실제 Firestore 연동, ViewModel 분리
-  - `presentation/currency/currency_calculator_viewmodel.dart` — ExchangeRateViewModel (Notifier + sealed Intent, 교차환율 계산)
-  - `presentation/currency/currency_calculator_screen.dart` — StatefulWidget → ConsumerWidget 전환
-- [x] **DI** — `core/di/providers.dart` 환율 관련 Provider 전체 등록
-- [x] **Firebase 초기화** — `main.dart`에 Firebase.initializeApp() + SharedPreferences override
-- [x] **오프라인 fallback** — 마지막 조회 환율 SharedPreferences 캐싱 (유효 기간 1시간)
-- [x] **Cloud Scheduler 도입** — Blaze 플랜 전환, `scheduledExchangeRateRefresh` 매 정각 자동 갱신
-  - `functions/src/index.ts` — `fetchAndStoreRates()` 공통 함수 분리, `onSchedule` 추가 (`0 * * * *`, `Asia/Seoul`)
-  - 앱 클라이언트 Firebase Function 트리거 로직 제거 → 2단계 fallback으로 단순화 (로컬캐시→Firestore)
-- [x] **기본/환율 계산기 autoDispose 적용** — 화면 재진입 시 이전 입력값 초기화 버그 수정
-  - `basic_calculator_viewmodel.dart`, `currency_calculator_viewmodel.dart` — `NotifierProvider.autoDispose`
-- [x] **환율 계산기 UX 개선**
-  - 기본 통화 KRW/USD (기존 USD/KRW에서 변경)
-  - 스왑 버튼 두 통화 행 사이 중앙 → 좌측 통화 코드 아래로 이동
-  - 금액 텍스트 오버플로우 수정 (`FittedBox(fit: BoxFit.scaleDown)`)
-  - Progress indicator Stack 오버레이로 화면 정중앙 배치
-- [x] `.claude/commands/deploy-functions.md` — `/deploy-functions` 슬래시 커맨드 추가
+- [x] **Presentation 계층** — ExchangeRateViewModel (Notifier + Intent, 교차환율 계산)
+- [x] **스펙 문서** — `docs/specs/EXCHANGE_RATE.md` 현행화 완료
+- [x] **리팩토링 체크리스트** — `docs/dev/REFACTORING_CHECKLIST.md` 작성
 
 ---
 
 ## 다음 작업
 
-### Phase 3 이후 — 추가 계산기 구현 예정
+### 리팩토링 (Phase 2 후속)
+> 체크리스트: `docs/dev/REFACTORING_CHECKLIST.md`
 
+### Phase 3 이후 — 추가 계산기 구현 예정
 > 로드맵: `docs/plans/ROADMAP.md`
 
 ---

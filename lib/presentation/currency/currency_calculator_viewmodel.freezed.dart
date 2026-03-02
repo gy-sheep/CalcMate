@@ -19,12 +19,13 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ExchangeRateState {
   Map<String, double> get rates => throw _privateConstructorUsedError;
   String get fromCode => throw _privateConstructorUsedError;
-  String get toCode => throw _privateConstructorUsedError;
+  List<String> get toCodes => throw _privateConstructorUsedError;
   String get input => throw _privateConstructorUsedError;
-  bool get isFromActive => throw _privateConstructorUsedError;
   bool get isResult => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isRefreshing => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  String? get toastMessage => throw _privateConstructorUsedError;
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
 
   /// Create a copy of ExchangeRateState
@@ -44,12 +45,13 @@ abstract class $ExchangeRateStateCopyWith<$Res> {
   $Res call({
     Map<String, double> rates,
     String fromCode,
-    String toCode,
+    List<String> toCodes,
     String input,
-    bool isFromActive,
     bool isResult,
     bool isLoading,
+    bool isRefreshing,
     String? error,
+    String? toastMessage,
     DateTime? lastUpdated,
   });
 }
@@ -71,12 +73,13 @@ class _$ExchangeRateStateCopyWithImpl<$Res, $Val extends ExchangeRateState>
   $Res call({
     Object? rates = null,
     Object? fromCode = null,
-    Object? toCode = null,
+    Object? toCodes = null,
     Object? input = null,
-    Object? isFromActive = null,
     Object? isResult = null,
     Object? isLoading = null,
+    Object? isRefreshing = null,
     Object? error = freezed,
+    Object? toastMessage = freezed,
     Object? lastUpdated = freezed,
   }) {
     return _then(
@@ -89,18 +92,14 @@ class _$ExchangeRateStateCopyWithImpl<$Res, $Val extends ExchangeRateState>
                 ? _value.fromCode
                 : fromCode // ignore: cast_nullable_to_non_nullable
                       as String,
-            toCode: null == toCode
-                ? _value.toCode
-                : toCode // ignore: cast_nullable_to_non_nullable
-                      as String,
+            toCodes: null == toCodes
+                ? _value.toCodes
+                : toCodes // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
             input: null == input
                 ? _value.input
                 : input // ignore: cast_nullable_to_non_nullable
                       as String,
-            isFromActive: null == isFromActive
-                ? _value.isFromActive
-                : isFromActive // ignore: cast_nullable_to_non_nullable
-                      as bool,
             isResult: null == isResult
                 ? _value.isResult
                 : isResult // ignore: cast_nullable_to_non_nullable
@@ -109,9 +108,17 @@ class _$ExchangeRateStateCopyWithImpl<$Res, $Val extends ExchangeRateState>
                 ? _value.isLoading
                 : isLoading // ignore: cast_nullable_to_non_nullable
                       as bool,
+            isRefreshing: null == isRefreshing
+                ? _value.isRefreshing
+                : isRefreshing // ignore: cast_nullable_to_non_nullable
+                      as bool,
             error: freezed == error
                 ? _value.error
                 : error // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            toastMessage: freezed == toastMessage
+                ? _value.toastMessage
+                : toastMessage // ignore: cast_nullable_to_non_nullable
                       as String?,
             lastUpdated: freezed == lastUpdated
                 ? _value.lastUpdated
@@ -135,12 +142,13 @@ abstract class _$$ExchangeRateStateImplCopyWith<$Res>
   $Res call({
     Map<String, double> rates,
     String fromCode,
-    String toCode,
+    List<String> toCodes,
     String input,
-    bool isFromActive,
     bool isResult,
     bool isLoading,
+    bool isRefreshing,
     String? error,
+    String? toastMessage,
     DateTime? lastUpdated,
   });
 }
@@ -161,12 +169,13 @@ class __$$ExchangeRateStateImplCopyWithImpl<$Res>
   $Res call({
     Object? rates = null,
     Object? fromCode = null,
-    Object? toCode = null,
+    Object? toCodes = null,
     Object? input = null,
-    Object? isFromActive = null,
     Object? isResult = null,
     Object? isLoading = null,
+    Object? isRefreshing = null,
     Object? error = freezed,
+    Object? toastMessage = freezed,
     Object? lastUpdated = freezed,
   }) {
     return _then(
@@ -179,18 +188,14 @@ class __$$ExchangeRateStateImplCopyWithImpl<$Res>
             ? _value.fromCode
             : fromCode // ignore: cast_nullable_to_non_nullable
                   as String,
-        toCode: null == toCode
-            ? _value.toCode
-            : toCode // ignore: cast_nullable_to_non_nullable
-                  as String,
+        toCodes: null == toCodes
+            ? _value._toCodes
+            : toCodes // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
         input: null == input
             ? _value.input
             : input // ignore: cast_nullable_to_non_nullable
                   as String,
-        isFromActive: null == isFromActive
-            ? _value.isFromActive
-            : isFromActive // ignore: cast_nullable_to_non_nullable
-                  as bool,
         isResult: null == isResult
             ? _value.isResult
             : isResult // ignore: cast_nullable_to_non_nullable
@@ -199,9 +204,17 @@ class __$$ExchangeRateStateImplCopyWithImpl<$Res>
             ? _value.isLoading
             : isLoading // ignore: cast_nullable_to_non_nullable
                   as bool,
+        isRefreshing: null == isRefreshing
+            ? _value.isRefreshing
+            : isRefreshing // ignore: cast_nullable_to_non_nullable
+                  as bool,
         error: freezed == error
             ? _value.error
             : error // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        toastMessage: freezed == toastMessage
+            ? _value.toastMessage
+            : toastMessage // ignore: cast_nullable_to_non_nullable
                   as String?,
         lastUpdated: freezed == lastUpdated
             ? _value.lastUpdated
@@ -214,18 +227,22 @@ class __$$ExchangeRateStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ExchangeRateStateImpl implements _ExchangeRateState {
+class _$ExchangeRateStateImpl
+    with DiagnosticableTreeMixin
+    implements _ExchangeRateState {
   const _$ExchangeRateStateImpl({
     final Map<String, double> rates = const {},
     this.fromCode = 'KRW',
-    this.toCode = 'USD',
+    final List<String> toCodes = const ['USD', 'EUR', 'JPY'],
     this.input = '0',
-    this.isFromActive = true,
     this.isResult = false,
     this.isLoading = false,
+    this.isRefreshing = false,
     this.error,
+    this.toastMessage,
     this.lastUpdated,
-  }) : _rates = rates;
+  }) : _rates = rates,
+       _toCodes = toCodes;
 
   final Map<String, double> _rates;
   @override
@@ -239,15 +256,18 @@ class _$ExchangeRateStateImpl implements _ExchangeRateState {
   @override
   @JsonKey()
   final String fromCode;
+  final List<String> _toCodes;
   @override
   @JsonKey()
-  final String toCode;
+  List<String> get toCodes {
+    if (_toCodes is EqualUnmodifiableListView) return _toCodes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_toCodes);
+  }
+
   @override
   @JsonKey()
   final String input;
-  @override
-  @JsonKey()
-  final bool isFromActive;
   @override
   @JsonKey()
   final bool isResult;
@@ -255,13 +275,35 @@ class _$ExchangeRateStateImpl implements _ExchangeRateState {
   @JsonKey()
   final bool isLoading;
   @override
+  @JsonKey()
+  final bool isRefreshing;
+  @override
   final String? error;
+  @override
+  final String? toastMessage;
   @override
   final DateTime? lastUpdated;
 
   @override
-  String toString() {
-    return 'ExchangeRateState(rates: $rates, fromCode: $fromCode, toCode: $toCode, input: $input, isFromActive: $isFromActive, isResult: $isResult, isLoading: $isLoading, error: $error, lastUpdated: $lastUpdated)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'ExchangeRateState(rates: $rates, fromCode: $fromCode, toCodes: $toCodes, input: $input, isResult: $isResult, isLoading: $isLoading, isRefreshing: $isRefreshing, error: $error, toastMessage: $toastMessage, lastUpdated: $lastUpdated)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ExchangeRateState'))
+      ..add(DiagnosticsProperty('rates', rates))
+      ..add(DiagnosticsProperty('fromCode', fromCode))
+      ..add(DiagnosticsProperty('toCodes', toCodes))
+      ..add(DiagnosticsProperty('input', input))
+      ..add(DiagnosticsProperty('isResult', isResult))
+      ..add(DiagnosticsProperty('isLoading', isLoading))
+      ..add(DiagnosticsProperty('isRefreshing', isRefreshing))
+      ..add(DiagnosticsProperty('error', error))
+      ..add(DiagnosticsProperty('toastMessage', toastMessage))
+      ..add(DiagnosticsProperty('lastUpdated', lastUpdated));
   }
 
   @override
@@ -272,15 +314,17 @@ class _$ExchangeRateStateImpl implements _ExchangeRateState {
             const DeepCollectionEquality().equals(other._rates, _rates) &&
             (identical(other.fromCode, fromCode) ||
                 other.fromCode == fromCode) &&
-            (identical(other.toCode, toCode) || other.toCode == toCode) &&
+            const DeepCollectionEquality().equals(other._toCodes, _toCodes) &&
             (identical(other.input, input) || other.input == input) &&
-            (identical(other.isFromActive, isFromActive) ||
-                other.isFromActive == isFromActive) &&
             (identical(other.isResult, isResult) ||
                 other.isResult == isResult) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.isRefreshing, isRefreshing) ||
+                other.isRefreshing == isRefreshing) &&
             (identical(other.error, error) || other.error == error) &&
+            (identical(other.toastMessage, toastMessage) ||
+                other.toastMessage == toastMessage) &&
             (identical(other.lastUpdated, lastUpdated) ||
                 other.lastUpdated == lastUpdated));
   }
@@ -290,12 +334,13 @@ class _$ExchangeRateStateImpl implements _ExchangeRateState {
     runtimeType,
     const DeepCollectionEquality().hash(_rates),
     fromCode,
-    toCode,
+    const DeepCollectionEquality().hash(_toCodes),
     input,
-    isFromActive,
     isResult,
     isLoading,
+    isRefreshing,
     error,
+    toastMessage,
     lastUpdated,
   );
 
@@ -315,12 +360,13 @@ abstract class _ExchangeRateState implements ExchangeRateState {
   const factory _ExchangeRateState({
     final Map<String, double> rates,
     final String fromCode,
-    final String toCode,
+    final List<String> toCodes,
     final String input,
-    final bool isFromActive,
     final bool isResult,
     final bool isLoading,
+    final bool isRefreshing,
     final String? error,
+    final String? toastMessage,
     final DateTime? lastUpdated,
   }) = _$ExchangeRateStateImpl;
 
@@ -329,17 +375,19 @@ abstract class _ExchangeRateState implements ExchangeRateState {
   @override
   String get fromCode;
   @override
-  String get toCode;
+  List<String> get toCodes;
   @override
   String get input;
-  @override
-  bool get isFromActive;
   @override
   bool get isResult;
   @override
   bool get isLoading;
   @override
+  bool get isRefreshing;
+  @override
   String? get error;
+  @override
+  String? get toastMessage;
   @override
   DateTime? get lastUpdated;
 

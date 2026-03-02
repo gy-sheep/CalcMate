@@ -1,5 +1,6 @@
 import '../../domain/models/exchange_rate_entity.dart';
 import '../../domain/repositories/exchange_rate_repository.dart';
+import '../datasources/exchange_rate_fallback.dart';
 import '../datasources/exchange_rate_local_datasource.dart';
 import '../datasources/exchange_rate_remote_datasource.dart';
 import '../dto/exchange_rate_dto.dart';
@@ -34,7 +35,14 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
       // 실패 시: 만료된 로컬 캐시라도 반환
       final expired = _local.getCachedRates();
       if (expired != null) return expired;
-      rethrow;
+
+      // 모든 소스 실패: 목업 환율 fallback (timestamp 0으로 식별)
+      return ExchangeRateEntity(
+        base: 'USD',
+        rates: fallbackRatesUsd,
+        fetchedAt: DateTime.now(),
+        timestamp: 0,
+      );
     }
   }
 }
