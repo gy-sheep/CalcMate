@@ -127,15 +127,17 @@ class _DisplayPanel extends StatelessWidget {
   }
 
   static String _formatWithCommas(String raw) {
-    return raw.replaceAllMapped(RegExp(r'\d+'), (match) {
+    return raw.replaceAllMapped(RegExp(r'\d+\.?\d*'), (match) {
       final str = match.group(0)!;
-      if (str.length <= 3) return str;
+      final parts = str.split('.');
+      if (parts[0].length <= 3) return str;
       final buf = StringBuffer();
-      for (int i = 0; i < str.length; i++) {
-        if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
-        buf.write(str[i]);
+      final digits = parts[0];
+      for (int i = 0; i < digits.length; i++) {
+        if (i > 0 && (digits.length - i) % 3 == 0) buf.write(',');
+        buf.write(digits[i]);
       }
-      return buf.toString();
+      return parts.length > 1 ? '${buf.toString()}.${parts[1]}' : buf.toString();
     });
   }
 

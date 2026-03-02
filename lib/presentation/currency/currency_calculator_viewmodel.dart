@@ -7,6 +7,7 @@ import '../../core/di/providers.dart';
 import '../../domain/models/exchange_rate_entity.dart';
 import '../../domain/usecases/evaluate_expression_usecase.dart';
 import '../../domain/usecases/get_exchange_rate_usecase.dart';
+import '../../domain/utils/calculator_input_utils.dart';
 
 part 'currency_calculator_viewmodel.freezed.dart';
 
@@ -123,9 +124,9 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
     if (input == '정의되지 않음') return 0;
     final simple = double.tryParse(input);
     if (simple != null) return simple;
-    if (_endsWithOperator(input)) return 0;
+    if (CalculatorInputUtils.endsWithOperator(input)) return 0;
     try {
-      final resolved = _resolvePercent(input);
+      final resolved = CalculatorInputUtils.resolvePercent(input);
       final result = _evaluateUseCase
           .execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
       return (result.isNaN || result.isInfinite) ? 0 : result;
@@ -142,7 +143,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
       RegExp(r'(\d+\.?\d*)'),
       (m) {
         final parts = m.group(0)!.split('.');
-        parts[0] = _addCommas(parts[0]);
+        parts[0] = CalculatorInputUtils.addCommas(parts[0]);
         return parts.join('.');
       },
     );
@@ -242,12 +243,12 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
 
       case '%':
         if (input.endsWith('%')) return;
-        if (_endsWithOperator(input)) return;
+        if (CalculatorInputUtils.endsWithOperator(input)) return;
         input += '%';
 
       case '÷' || '×' || '-' || '+':
         if (isResult) isResult = false;
-        if (_endsWithOperator(input)) {
+        if (CalculatorInputUtils.endsWithOperator(input)) {
           input = input.substring(0, input.length - 1) + key;
         } else if (input == '0' && key == '-') {
           input = '-';
@@ -256,11 +257,11 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         }
 
       case '=':
-        if (_endsWithOperator(input)) return;
-        final resolved = _resolvePercent(input);
+        if (CalculatorInputUtils.endsWithOperator(input)) return;
+        final resolved = CalculatorInputUtils.resolvePercent(input);
         final result = _evaluateUseCase
             .execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
-        input = _formatResult(result);
+        input = CalculatorInputUtils.formatResult(result);
         isResult = true;
 
       case '.':
@@ -269,9 +270,9 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
           isResult = false;
           break;
         }
-        final last = _lastNumberSegment(input);
+        final last = CalculatorInputUtils.lastNumberSegment(input);
         if (!last.contains('.')) {
-          if (_endsWithOperator(input) || input.isEmpty) {
+          if (CalculatorInputUtils.endsWithOperator(input) || input.isEmpty) {
             input += '0.';
           } else {
             input += '.';
@@ -286,7 +287,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         }
         // 선행 0 방지: 마지막 세그먼트가 '0'이면 무시
         if (input == '0' || input == '-0') break;
-        final seg00 = _lastNumberSegment(input);
+        final seg00 = CalculatorInputUtils.lastNumberSegment(input);
         if (seg00 == '0' || seg00 == '-0') break;
         // 자릿수 제한 체크
         final clean00 = seg00.startsWith('-') ? seg00.substring(1) : seg00;
@@ -314,7 +315,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
           break;
         }
         // 자릿수 제한 체크
-        final seg = _lastNumberSegment(input);
+        final seg = CalculatorInputUtils.lastNumberSegment(input);
         final segClean = seg.startsWith('-') ? seg.substring(1) : seg;
         if (segClean.contains('.')) {
           if (segClean.split('.')[1].length >= 8) {
@@ -343,71 +344,12 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
 
   // ── 유틸리티 ──
 
-  bool _endsWithOperator(String s) {
-    if (s.isEmpty) return false;
-    final last = s[s.length - 1];
-    return last == '+' || last == '-' || last == '×' || last == '÷';
-  }
-
-  String _lastNumberSegment(String s) {
-    final ops = {'+', '×', '÷'};
-    int i = s.length - 1;
-    while (i >= 0) {
-      final ch = s[i];
-      if (ops.contains(ch)) break;
-      if (ch == '-' && i > 0 && !ops.contains(s[i - 1])) break;
-      i--;
-    }
-    return s.substring(i + 1);
-  }
-
-  String _resolvePercent(String raw) {
-    var expr = raw;
-    expr = expr.replaceAllMapped(
-      RegExp(r'(-?\d+(?:\.\d*)?)([+\-])(\d+(?:\.\d*)?)%'),
-      (m) {
-        final left = double.tryParse(m.group(1)!) ?? 0;
-        final right = double.tryParse(m.group(3)!) ?? 0;
-        return '${m.group(1)}${m.group(2)}${left * right / 100}';
-      },
-    );
-    expr = expr.replaceAllMapped(
-      RegExp(r'(\d+(?:\.\d*)?)%'),
-      (m) {
-        final val = double.tryParse(m.group(1)!) ?? 0;
-        return '${val / 100}';
-      },
-    );
-    return expr;
-  }
-
-  String _formatResult(double value) {
-    if (value == double.infinity || value == double.negativeInfinity) {
-      return '정의되지 않음';
-    }
-    if (value.isNaN) return '정의되지 않음';
-    if (value == value.truncateToDouble()) return value.toInt().toString();
-    final str = value.toStringAsFixed(10);
-    return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-  }
-
   String _formatAmount(double value) {
     if (value == 0) return '0';
     if (value >= 1000) {
-      return _addCommas(value.toStringAsFixed(0));
+      return CalculatorInputUtils.addCommas(value.toStringAsFixed(0));
     }
     if (value >= 1) return value.toStringAsFixed(2);
     return value.toStringAsFixed(4);
-  }
-
-  String _addCommas(String intStr) {
-    final isNegative = intStr.startsWith('-');
-    final digits = isNegative ? intStr.substring(1) : intStr;
-    final buf = StringBuffer();
-    for (int i = 0; i < digits.length; i++) {
-      if (i > 0 && (digits.length - i) % 3 == 0) buf.write(',');
-      buf.write(digits[i]);
-    }
-    return isNegative ? '-${buf.toString()}' : buf.toString();
   }
 }
