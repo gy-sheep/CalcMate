@@ -285,6 +285,11 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
           isResult = false;
           break;
         }
+        // 연산자 직후: 0 하나만 추가
+        if (CalculatorInputUtils.endsWithOperator(input)) {
+          input += '0';
+          break;
+        }
         // 선행 0 방지: 마지막 세그먼트가 '0'이면 무시
         if (input == '0' || input == '-0') break;
         final seg00 = CalculatorInputUtils.lastNumberSegment(input);
