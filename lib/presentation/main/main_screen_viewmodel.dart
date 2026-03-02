@@ -18,16 +18,17 @@ class MainScreenState with _$MainScreenState {
 // --- Intent ---
 
 sealed class MainScreenIntent {
+  const MainScreenIntent();
   const factory MainScreenIntent.scrollChanged(bool isScrolled) = _ScrollChanged;
   const factory MainScreenIntent.cardTapped(String id) = _CardTapped;
 }
 
-class _ScrollChanged implements MainScreenIntent {
+class _ScrollChanged extends MainScreenIntent {
   final bool isScrolled;
   const _ScrollChanged(this.isScrolled);
 }
 
-class _CardTapped implements MainScreenIntent {
+class _CardTapped extends MainScreenIntent {
   final String id;
   const _CardTapped(this.id);
 }
