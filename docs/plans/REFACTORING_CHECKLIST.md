@@ -2,7 +2,7 @@
 
 > **작성일**: 2026-03-02
 > **대상**: 환율 계산기 중심, 기본 계산기와의 공통화 포함
-> **상태**: 미착수
+> **상태**: 진행 중
 
 ---
 
@@ -35,11 +35,12 @@
 
 ### R-03. Intent 패턴 통일 ✅
 
-- **브랜치**: `refactor/sealed-intent`
-- **완료**: 환율 Intent를 Sealed 클래스 + Factory 패턴으로 통일
+- **브랜치**: `refactor/sealed-intent`, `refactor/sealed-intent-v2`
+- **완료**: 모든 Intent를 Sealed 클래스 + Factory 패턴으로 통일
   - 서브클래스 private 전환 (`_KeyTapped`, `_FromCurrencyChanged` 등)
   - Factory constructor 추가 (`ExchangeRateIntent.keyTapped()` 등)
-  - Screen 호출부 4곳 Factory 방식으로 변경
+  - Screen 호출부 Factory 방식으로 변경
+  - `MainScreenIntent` 서브클래스 `implements` → `extends` 통일
 
 ---
 
@@ -82,13 +83,14 @@
 
 ---
 
-### R-07. 캐시 TTL / Firestore 경로 상수화
+### R-07. 캐시 TTL / Firestore 경로 상수화 ✅
 
 - **브랜치**: `refactor/config-constants`
-- **현재 상태**:
-  - 캐시 TTL: `exchange_rate_local_datasource.dart:9` — `_ttlMs = 3600000`
-  - Firestore 경로: `exchange_rate_remote_datasource.dart:8-9` — `_collection`, `_document`
-- **개선 방향**: `lib/core/constants/cache_config.dart`, `firebase_config.dart`로 분리
+- **완료**:
+  - `lib/core/constants/cache_config.dart` — `CacheConfig.exchangeRateCacheKey`, `exchangeRateTtlMs`
+  - `lib/core/constants/firebase_config.dart` — `FirebaseConfig.exchangeRateCollection`, `exchangeRateDocument`
+  - `exchange_rate_local_datasource.dart` — 로컬 상수 → `CacheConfig` 참조
+  - `exchange_rate_remote_datasource.dart` — 로컬 상수 → `FirebaseConfig` 참조
 
 ---
 
@@ -138,3 +140,5 @@
 | 2026-03-02 | R-03. Intent 패턴 통일 | 완료 |
 | 2026-03-02 | R-11. 통화 목록 외부화 | 완료 |
 | 2026-03-02 | R-04. 에러 처리 강화 | 완료 |
+| 2026-03-03 | R-03. Intent 패턴 통일 (MainScreenIntent 보완) | 완료 |
+| 2026-03-03 | R-07. 캐시 TTL / Firestore 경로 상수화 | 완료 |
