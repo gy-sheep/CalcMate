@@ -59,15 +59,14 @@
 
 ## 중간 우선순위
 
-### R-05. 입력 유틸리티 공용화
+### R-05. 입력 유틸리티 공용화 ✅
 
 - **브랜치**: `refactor/input-utils`
-- **현재 상태**: 아래 메서드들이 양쪽 ViewModel에 동일하게 구현됨
-  - `_endsWithOperator()` — 환율 `viewmodel.dart:337`, 기본 `viewmodel.dart:280`
-  - `_lastNumberSegment()` — 환율 `viewmodel.dart:343`, 기본 `viewmodel.dart:286`
-  - `_resolvePercent()` — 환율 `viewmodel.dart:355`, 기본 `viewmodel.dart:302`
-  - `_addCommas()` — 환율 `viewmodel.dart:394`, 기본 `screen.dart`에서 유사 구현
-- **개선 방향**: `lib/domain/utils/calculator_input_utils.dart`로 추출
+- **완료**:
+  - `lib/domain/utils/calculator_input_utils.dart` — `CalculatorInputUtils` 클래스 생성
+  - `endsWithOperator()`, `lastNumberSegment()`, `resolvePercent()`, `formatResult()`, `addCommas()` 5개 메서드 공용화
+  - `currency_calculator_viewmodel.dart` — 중복 5개 메서드 제거, `_formatAmount`만 유지
+  - `basic_calculator_viewmodel.dart` — 중복 4개 메서드 제거
 - **재사용 대상**: 수식 입력이 있는 모든 계산기
 
 ---
@@ -142,3 +141,4 @@
 | 2026-03-02 | R-04. 에러 처리 강화 | 완료 |
 | 2026-03-03 | R-03. Intent 패턴 통일 (MainScreenIntent 보완) | 완료 |
 | 2026-03-03 | R-07. 캐시 TTL / Firestore 경로 상수화 | 완료 |
+| 2026-03-03 | R-05. 입력 유틸리티 공용화 | 완료 |

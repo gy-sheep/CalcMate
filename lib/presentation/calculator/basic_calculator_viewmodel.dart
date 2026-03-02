@@ -1,5 +1,6 @@
 import 'package:calcmate/domain/models/calculator_state.dart';
 import 'package:calcmate/domain/usecases/evaluate_expression_usecase.dart';
+import 'package:calcmate/domain/utils/calculator_input_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ── Intent ────────────────────────────────────────────────────────────────────
@@ -128,7 +129,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
       state = state.copyWith(input: '-', isResult: false);
       return;
     }
-    if (_endsWithOperator(current)) {
+    if (CalculatorInputUtils.endsWithOperator(current)) {
       // 마지막이 연산자면 교체
       state = state.copyWith(input: current.substring(0, current.length - 1) + op);
     } else {
@@ -146,7 +147,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
           _repeatOperand;
       final result = _useCase.execute(expr);
       state = CalculatorState(
-        input: _formatResult(result),
+        input: CalculatorInputUtils.formatResult(result),
         expression: state.input + _repeatOperator + _repeatOperand,
         isResult: true,
       );
@@ -154,12 +155,12 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
     }
 
     final raw = state.input;
-    if (_endsWithOperator(raw)) return;
+    if (CalculatorInputUtils.endsWithOperator(raw)) return;
 
-    final resolved = _resolvePercent(raw);
+    final resolved = CalculatorInputUtils.resolvePercent(raw);
 
     // 반복 = 용: resolved 기준으로 마지막 연산자/피연산자 저장
-    final lastSeg = _lastNumberSegment(resolved);
+    final lastSeg = CalculatorInputUtils.lastNumberSegment(resolved);
     final prefix = resolved.substring(0, resolved.length - lastSeg.length);
     if (prefix.isNotEmpty) {
       _repeatOperator = prefix[prefix.length - 1];
@@ -171,7 +172,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
 
     final result = _useCase.execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
     state = CalculatorState(
-      input: _formatResult(result),
+      input: CalculatorInputUtils.formatResult(result),
       expression: raw,
       isResult: true,
     );
@@ -196,7 +197,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
       return;
     }
 
-    final lastSeg = _lastNumberSegment(current);
+    final lastSeg = CalculatorInputUtils.lastNumberSegment(current);
     final prefix = current.substring(0, current.length - lastSeg.length);
 
     // 단독 음수(-X): 숫자만 지우고 - 유지 (AC 상태로 복귀)
@@ -241,9 +242,9 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
     }
     final current = state.input;
     // 마지막 숫자 세그먼트에 소수점이 없을 때만 추가
-    final lastSegment = _lastNumberSegment(current);
+    final lastSegment = CalculatorInputUtils.lastNumberSegment(current);
     if (!lastSegment.contains('.')) {
-      if (_endsWithOperator(current) || current.isEmpty) {
+      if (CalculatorInputUtils.endsWithOperator(current) || current.isEmpty) {
         state = state.copyWith(input: '${current}0.');
       } else {
         state = state.copyWith(input: '$current.');
@@ -256,7 +257,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   void _onPercent() {
     final current = state.input;
     if (current.endsWith('%')) return;   // 이미 % 있음
-    if (_endsWithOperator(current)) return; // 연산자 바로 뒤는 불가
+    if (CalculatorInputUtils.endsWithOperator(current)) return; // 연산자 바로 뒤는 불가
     state = state.copyWith(input: '$current%', isResult: false);
   }
 
@@ -264,7 +265,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
 
   void _onNegate() {
     final current = state.input;
-    final lastSegment = _lastNumberSegment(current);
+    final lastSegment = CalculatorInputUtils.lastNumberSegment(current);
     if (lastSegment.isEmpty) return;
 
     final prefix = current.substring(0, current.length - lastSegment.length);
@@ -275,59 +276,4 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
     }
   }
 
-  // ── 헬퍼 ─────────────────────────────────────────────────────────────────────
-
-  bool _endsWithOperator(String s) {
-    if (s.isEmpty) return false;
-    final last = s[s.length - 1];
-    return last == '+' || last == '-' || last == '×' || last == '÷' || last == '*' || last == '/';
-  }
-
-  String _lastNumberSegment(String s) {
-    final ops = {'+', '×', '÷', '*', '/'};
-    // '-' 는 부호로도 쓰이므로 연산자 뒤 '-' 는 숫자 세그먼트에 포함
-    int i = s.length - 1;
-    while (i >= 0) {
-      final ch = s[i];
-      if (ops.contains(ch)) break;
-      if (ch == '-' && i > 0 && !ops.contains(s[i - 1])) break;
-      i--;
-    }
-    return s.substring(i + 1);
-  }
-
-  // % 기호를 실제 값으로 변환
-  // + / - 뒤: 앞 숫자 기준 퍼센트 (200+50% → 200+100)
-  // × / ÷ 또는 단독: ÷ 100 (200×50% → 200×0.5, 50% → 0.5)
-  String _resolvePercent(String raw) {
-    var expr = raw;
-    expr = expr.replaceAllMapped(
-      RegExp(r'(-?\d+(?:\.\d*)?)([+\-])(\d+(?:\.\d*)?)%'),
-      (m) {
-        final left = double.tryParse(m.group(1)!) ?? 0;
-        final right = double.tryParse(m.group(3)!) ?? 0;
-        return '${m.group(1)}${m.group(2)}${left * right / 100}';
-      },
-    );
-    expr = expr.replaceAllMapped(
-      RegExp(r'(\d+(?:\.\d*)?)%'),
-      (m) {
-        final val = double.tryParse(m.group(1)!) ?? 0;
-        return '${val / 100}';
-      },
-    );
-    return expr;
-  }
-
-  String _formatResult(double value) {
-    if (value == double.infinity || value == double.negativeInfinity) return '정의되지 않음';
-    if (value.isNaN) return '정의되지 않음';
-    // 정수면 소수점 제거
-    if (value == value.truncateToDouble()) {
-      return value.toInt().toString();
-    }
-    // 소수점 이하 최대 10자리, 불필요한 0 제거
-    final str = value.toStringAsFixed(10);
-    return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-  }
 }
