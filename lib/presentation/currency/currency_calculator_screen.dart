@@ -90,6 +90,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
     final fromDisplay = vm.formattedInput;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -686,7 +687,7 @@ class _CurrencyPickerSheetState extends State<_CurrencyPickerSheet> {
             ),
           ),
           TextField(
-            autofocus: true,
+            autofocus: false,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: '통화 검색 (USD, 달러...)',

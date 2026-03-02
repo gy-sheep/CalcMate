@@ -369,19 +369,44 @@ class _CalcButton extends StatelessWidget {
           child: Center(
             child: label == '⌫'
                 ? Icon(Icons.backspace_outlined, color: _textColor, size: 26)
-                : Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: const ['÷', '×', '-', '+', '='].contains(label)
-                          ? 28
-                          : 22,
-                      fontWeight: FontWeight.w400,
-                      color: _textColor,
-                    ),
-                  ),
+                : label == '+/-'
+                    ? _buildPlusMinusLabel(_textColor)
+                    : Text(
+                        label,
+                        style: TextStyle(
+                          fontSize: const ['÷', '×', '-', '+', '='].contains(label)
+                              ? 28
+                              : 22,
+                          fontWeight: FontWeight.w400,
+                          color: _textColor,
+                        ),
+                      ),
           ),
         ),
       ),
+    );
+  }
+
+  static Widget _buildPlusMinusLabel(Color color) {
+    const style = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      height: 1,
+    );
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Transform.translate(
+          offset: const Offset(0, -2),
+          child: Text('+', style: style.copyWith(color: color)),
+        ),
+        Text('/', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300, color: color)),
+        Transform.translate(
+          offset: const Offset(0, 2),
+          child: Text('-', style: style.copyWith(color: color, fontSize: 24)),
+        ),
+      ],
     );
   }
 }

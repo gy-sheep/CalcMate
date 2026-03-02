@@ -58,7 +58,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               color: state.isScrolled
-                  ? Colors.white.withValues(alpha: 0.75)
+                  ? (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black.withValues(alpha: 0.75)
+                      : Colors.white.withValues(alpha: 0.75))
                   : Theme.of(context).colorScheme.surface,
               child: AppBar(
                 backgroundColor: Colors.transparent,
