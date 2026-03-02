@@ -7,51 +7,17 @@
 
 ## 프로젝트 구조 및 작업 범위
 
-아래 구조에서 `[신규]`는 새로 생성되는 파일, `[수정]`은 기존 파일 변경을 나타낸다.
+> 기본 아키텍처: [`docs/architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md) 참고
 
-```
-lib/
-├── core/
-│   ├── config/
-│   │   └── calc_mode_config.dart       [신규] 13개 항목 상수
-│   ├── di/
-│   │   └── providers.dart
-│   ├── network/
-│   │   └── error_interceptor.dart
-│   └── theme/
-│       └── app_theme.dart
-│
-├── domain/
-│   └── models/
-│       └── calc_mode_entry.dart        [신규] CalcModeEntry Freezed 모델
-│           calc_mode_entry.freezed.dart [자동생성] build_runner
-│
-├── presentation/
-│   ├── main/
-│   │   ├── main_screen.dart            [수정] ConsumerWidget 전환
-│   │   └── main_screen_viewmodel.dart  [신규] Notifier + State + Intent
-│   ├── calculator/
-│   │   └── basic_calculator_screen.dart
-│   └── widgets/
-│       └── calc_mode_card.dart         [변경 없음] props만 entry에서 주입
-│
-└── main.dart
-```
+**작업 파일**
 
-**데이터 흐름 (리팩터링 후)**
-
-```
-kCalcModeEntries (config)
-        │
-        ▼
-MainScreenViewModel (Notifier)
-  └─ state: MainScreenState { entries, isScrolled }
-        │
-        ▼
-MainScreen (ConsumerWidget)  ──Intent──▶  ViewModel.handleIntent()
-  └─ ListView
-       └─ CalcModeCard(entry)
-```
+| 파일 | 작업 |
+|------|------|
+| `core/config/calc_mode_config.dart` | [신규] 13개 항목 상수 |
+| `domain/models/calc_mode_entry.dart` | [신규] CalcModeEntry Freezed 모델 |
+| `presentation/main/main_screen.dart` | [수정] ConsumerWidget 전환 |
+| `presentation/main/main_screen_viewmodel.dart` | [신규] Notifier + State + Intent |
+| `presentation/widgets/calc_mode_card.dart` | [변경 없음] props만 entry에서 주입 |
 
 ---
 
@@ -157,18 +123,6 @@ setState(_isScrolled)            handleIntent(ScrollChanged)
 calcCards = [ CalcModeCard() ]   entries = state.entries
 Hero tag: 'calc_bg_$title'       Hero tag: 'calc_bg_${entry.id}'
 ```
-
----
-
-## 파일 변경 목록
-
-| 파일 | 작업 |
-|------|------|
-| `domain/models/calc_mode_entry.dart` | 신규 생성 |
-| `domain/models/calc_mode_entry.freezed.dart` | 자동 생성 (build_runner) |
-| `core/config/calc_mode_config.dart` | 신규 생성 |
-| `presentation/main/main_screen_viewmodel.dart` | 신규 생성 |
-| `presentation/main/main_screen.dart` | 수정 (ConsumerWidget 전환) |
 
 ---
 

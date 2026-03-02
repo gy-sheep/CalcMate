@@ -7,39 +7,17 @@
 
 ## 프로젝트 구조 및 작업 범위
 
-아래 구조에서 `[신규]`는 새로 생성되는 파일, `[수정]`은 기존 파일 변경을 나타낸다.
+> 기본 아키텍처: [`docs/architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md) 참고
 
-```
-lib/
-├── domain/
-│   ├── models/
-│   │   └── calculator_state.dart          [신규] Freezed State
-│   └── usecases/
-│       └── evaluate_expression_usecase.dart  [신규] 계산 로직
-├── presentation/
-│   └── calculator/
-│       ├── basic_calculator_screen.dart   [수정] ConsumerWidget 전환, ViewModel 연결
-│       └── basic_calculator_viewmodel.dart  [신규] Notifier + Intent
-test/
-└── domain/
-    └── usecases/
-        └── evaluate_expression_usecase_test.dart  [신규] TDD 테스트
-```
+**작업 파일**
 
-**데이터 흐름**
-
-```
-[BasicCalculatorScreen]
-        │  handleIntent(intent)
-        ▼
-[BasicCalculatorViewModel]
-        │  EvaluateExpressionUseCase.execute(expression)
-        ▼
-[EvaluateExpressionUseCase]
-        │  double result
-        ▼
-[CalculatorState] ──→ [BasicCalculatorScreen] 리렌더
-```
+| 파일 | 작업 |
+|------|------|
+| `domain/models/calculator_state.dart` | [신규] Freezed State |
+| `domain/usecases/evaluate_expression_usecase.dart` | [신규] 계산 로직 |
+| `presentation/calculator/basic_calculator_screen.dart` | [수정] ConsumerWidget 전환 |
+| `presentation/calculator/basic_calculator_viewmodel.dart` | [신규] Notifier + Intent |
+| `test/domain/usecases/evaluate_expression_usecase_test.dart` | [신규] TDD 테스트 |
 
 ---
 
@@ -131,19 +109,6 @@ Freezed 불변 객체로 계산기 전체 UI 상태를 표현한다.
 
 - `ref.watch(basicCalculatorViewModelProvider)`: 상태 구독 — `state.input`, `state.expression`, `state.isResult`를 디스플레이에 반영
 - 버튼 `onTap`: `ref.read(...).handleIntent(intent)` 호출로 위임
-
----
-
-## 파일 변경 목록
-
-| 파일 | 작업 |
-|------|------|
-| `domain/models/calculator_state.dart` | 신규 생성 |
-| `domain/models/calculator_state.freezed.dart` | 자동 생성 (build_runner) |
-| `domain/usecases/evaluate_expression_usecase.dart` | 신규 생성 |
-| `presentation/calculator/basic_calculator_viewmodel.dart` | 신규 생성 |
-| `presentation/calculator/basic_calculator_screen.dart` | 수정 (ConsumerWidget 전환, ViewModel 연결) |
-| `test/domain/usecases/evaluate_expression_usecase_test.dart` | 신규 생성 (TDD) |
 
 ---
 

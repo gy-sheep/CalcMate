@@ -15,22 +15,8 @@
 
 ## 아키텍처
 
-Clean Architecture — 3계층을 엄격히 분리한다.
-
-```
-lib/
-├── core/           # 공통 유틸리티, 테마, DI 설정
-├── data/           # API 클라이언트, DTO, Repository 구현체
-├── domain/         # Entity, Repository 인터페이스, UseCase (순수 Dart)
-└── presentation/   # Widget(View), ViewModel(Riverpod Notifier), State
-```
-
-### 패턴: MVVM + Intent
-
-- **View**: `ConsumerWidget` — 상태를 구독하고 Intent를 전달하는 역할만 한다
-- **ViewModel**: `Riverpod Notifier` — `handleIntent()`로 액션을 받아 State를 계산
-- **Intent**: `sealed class` — 가능한 모든 사용자 액션을 타입으로 정의
-- **State**: `Freezed` 불변 객체 — UI 상태 전체를 담는 단일 진실 공급원
+Clean Architecture 3계층 + MVVM + Intent 패턴.
+상세 설명은 [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md) 참고.
 
 ## 개발 원칙
 

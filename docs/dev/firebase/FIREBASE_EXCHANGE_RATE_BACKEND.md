@@ -18,153 +18,9 @@
 
 ---
 
-## 0. 개발 환경 구축 가이드
+## 0. 개발 환경 및 배포
 
-### 개발 언어
-
-**TypeScript** — JavaScript에 타입 안전성을 추가한 언어. Dart와 문법이 유사하다.
-
-```typescript
-// TypeScript                          // Dart 비교
-const message: string = "hello";       // final String message = "hello";
-const count: number = 42;              // final int count = 42;
-const rates: Record<string, number>    // final Map<String, double> rates
-  = { "KRW": 1320, "JPY": 150 };      //   = {"KRW": 1320, "JPY": 150};
-
-// 비동기 처리
-async function fetchData(): Promise<string> {  // Future<String> fetchData() async {
-  const res = await fetch(url);                //   final res = await dio.get(url);
-  return res.json();                           //   return res.data;
-}                                              // }
-```
-
-### 필수 설치 도구
-
-| 도구 | 용도 | 설치 명령 |
-|-----|-----|---------|
-| **Node.js** | TypeScript 실행 환경 (Dart VM에 해당) | `brew install node` |
-| **Firebase CLI** | 프로젝트 초기화, 에뮬레이터, 배포 | `npm install -g firebase-tools` |
-
-> Flutter 개발 환경이 이미 있다면 위 2가지만 추가 설치하면 된다.
-> IDE는 VS Code 또는 Android Studio를 그대로 사용한다.
-
-### 설치 확인
-
-```bash
-node --version      # v20.x.x 이상
-firebase --version  # 13.x.x 이상
-```
-
-### Firebase 로그인
-
-```bash
-firebase login      # 브라우저에서 Google 계정 로그인
-```
-
-### 프로젝트 초기화 (Step-by-Step)
-
-```bash
-# 1. CalcMate 프로젝트 루트로 이동
-cd /path/to/CalcMate
-
-# 2. Firebase 초기화 실행
-firebase init
-```
-
-대화형 프롬프트가 나타난다. 아래와 같이 선택:
-
-```
-? Which Firebase features do you want to set up?
-  ✅ Firestore: Configure security rules and indexes files for Firestore
-  ✅ Functions: Configure a Cloud Functions directory and its files
-  (나머지는 선택하지 않음)
-
-? Please select an option:
-  → Use an existing project (이미 Firebase Console에서 생성한 경우)
-  → Create a new project (아직 없는 경우)
-
-? Select a default Firebase project:
-  → calcmate-xxxxx (본인 프로젝트 선택)
-
-=== Firestore Setup ===
-? What file should be used for Firestore Rules?
-  → firestore.rules (기본값 Enter)
-? What file should be used for Firestore indexes?
-  → firestore.indexes.json (기본값 Enter)
-
-=== Functions Setup ===
-? What language would you like to use to write Cloud Functions?
-  → TypeScript
-
-? Do you want to use ESLint to catch probable bugs and enforce style?
-  → Yes
-
-? Do you want to install dependencies with npm now?
-  → Yes
-```
-
-초기화 완료 후 생성되는 구조:
-
-```
-CalcMate/                           ← Flutter 프로젝트 루트 (별도 프로젝트 아님)
-├── lib/                            # Flutter 앱 코드 (기존)
-├── functions/                      # Firebase Functions 코드 (신규 생성됨)
-│   ├── src/
-│   │   └── index.ts                ← 유일하게 직접 작성하는 파일
-│   ├── package.json                # Node.js 의존성 (자동 생성)
-│   ├── tsconfig.json               # TypeScript 설정 (자동 생성)
-│   └── .eslintrc.js                # ESLint 설정 (자동 생성)
-├── firestore.rules                 # Firestore 보안 규칙 (직접 작성)
-├── firestore.indexes.json          # Firestore 인덱스 (자동 생성, 수정 불필요)
-├── firebase.json                   # Firebase 프로젝트 설정 (자동 생성)
-├── .firebaserc                     # 프로젝트 연결 정보 (자동 생성)
-├── pubspec.yaml                    # Flutter 의존성 (기존)
-└── ...
-```
-
-### 로컬 개발 및 테스트
-
-```bash
-# 1. Functions 빌드 (TypeScript → JavaScript 변환)
-cd functions && npm run build
-
-# 2. 프로젝트 루트로 돌아와서 에뮬레이터 실행
-cd ..
-firebase emulators:start
-
-# Emulator UI: http://localhost:4000
-# → Functions 로그 확인, Firestore 데이터 확인 가능
-# → 실제 Firebase 서버에 영향 없음
-```
-
-### 배포
-
-```bash
-# Functions 배포
-firebase deploy --only functions
-
-# Firestore 보안 규칙 배포
-firebase deploy --only firestore:rules
-
-# 또는 한번에 배포
-firebase deploy --only functions,firestore:rules
-```
-
-배포 성공 시 터미널에 Function URL이 출력된다:
-```
-✓ Function URL (refreshExchangeRates): https://asia-northeast3-calcmate-xxxxx.cloudfunctions.net/refreshExchangeRates
-```
-이 URL을 Flutter 앱에서 사용한다.
-
-### 난이도 비교
-
-| 항목 | Firebase 서버리스 | 일반 서버 개발 |
-|-----|----------------|-------------|
-| 서버 설치 | 없음 | Linux, Nginx, DB 등 |
-| 네트워크 설정 | 없음 | 포트, SSL, 도메인 |
-| 배포 | `firebase deploy` 한 줄 | Docker, CI/CD 파이프라인 |
-| 직접 작성 코드량 | **~50줄** | 수백~수천 줄 |
-| 서버 유지보수 | Google이 관리 | 직접 관리 |
+셋업, 빌드, 배포 절차는 [`FIREBASE_GUIDE.md`](FIREBASE_GUIDE.md) 참고.
 
 ---
 
@@ -322,15 +178,7 @@ GET https://openexchangerates.org/api/latest.json?app_id=YOUR_APP_ID
 }
 ```
 
-**교차환율 계산** (앱 클라이언트에서 수행 — ADR-4 참고)
-
-```
-A → B = rates[B] / rates[A]
-
-KRW → JPY = 150.23 / 1320.45 = 0.1138
-EUR → KRW = 1320.45 / 0.9215 = 1432.87
-JPY → USD = 1 / 150.23 = 0.00666
-```
+**교차환율 계산**: 앱 클라이언트에서 수행 (ADR-4 참고). 상세 공식은 [`EXCHANGE_RATE_CALCULATOR.md`](../EXCHANGE_RATE_CALCULATOR.md)의 "핵심 설계: 교차환율 계산" 참고.
 
 ---
 
@@ -451,15 +299,7 @@ functions/
 
 ### Step 2: 환경 변수 설정
 
-`functions/.env` 파일을 생성하고 Open Exchange Rates APP_ID를 입력한다:
-
-```bash
-# functions/.env
-OXR_APP_ID=여기에_발급받은_APP_ID_입력
-```
-
-> **보안 주의**: 이 파일은 Firebase Functions 서버에만 배포된다. Flutter 앱 코드에 APP_ID를 포함하지 않는다.
-> `.gitignore`에 `functions/.env`를 추가하여 Git에 커밋되지 않도록 한다.
+[`FIREBASE_GUIDE.md`](FIREBASE_GUIDE.md) 1-5 참고. `functions/.env`에 `OXR_APP_ID`를 설정한다.
 
 ### Step 3: index.ts 작성 (배포 가능한 완성 코드)
 
@@ -595,37 +435,9 @@ export const refreshExchangeRates = onRequest(
 );
 ```
 
-### Step 4: 빌드 및 로컬 테스트
+### Step 4-5: 빌드, 테스트, 배포
 
-```bash
-# 1. 빌드
-cd functions && npm run build
-
-# 2. 프로젝트 루트에서 에뮬레이터 실행
-cd ..
-firebase emulators:start
-
-# 3. 다른 터미널에서 Function 테스트 호출
-curl http://localhost:5001/{PROJECT_ID}/asia-northeast3/refreshExchangeRates
-
-# 정상 응답 예시:
-# {"base":"USD","rates":{"KRW":1320.45,...},"timestamp":1709308800000,"source":"open_exchange_rates","cached":false}
-```
-
-### Step 5: 배포
-
-```bash
-firebase deploy --only functions,firestore:rules
-
-# 배포 성공 시 출력:
-# ✓ Function URL (refreshExchangeRates): https://asia-northeast3-calcmate-xxxxx.cloudfunctions.net/refreshExchangeRates
-```
-
-배포 후 Function URL로 직접 테스트:
-
-```bash
-curl https://asia-northeast3-{PROJECT_ID}.cloudfunctions.net/refreshExchangeRates
-```
+[`FIREBASE_GUIDE.md`](FIREBASE_GUIDE.md) Section 2 참고.
 
 ---
 
@@ -706,44 +518,10 @@ class ExchangeRateRemoteDataSource {
 
 ---
 
-## 7. 구축 순서
+## 7. 구축 및 배포 순서
 
-```
-Phase A: 사전 준비
-  ├─ 1. Node.js 설치: brew install node
-  ├─ 2. Firebase CLI 설치: npm install -g firebase-tools
-  ├─ 3. Firebase 로그인: firebase login
-  ├─ 4. Firebase Console (https://console.firebase.google.com) 에서 프로젝트 생성
-  ├─ 5. Firestore Database 생성 (리전: asia-northeast3)
-  └─ 6. Open Exchange Rates 가입 (https://openexchangerates.org/signup/free) → APP_ID 발급
-
-Phase B: Firebase 프로젝트 초기화
-  ├─ 1. CalcMate 루트에서 firebase init (Firestore + Functions 선택, TypeScript)
-  ├─ 2. functions/.env 생성 → OXR_APP_ID=발급받은키
-  ├─ 3. .gitignore에 functions/.env 추가
-  └─ 4. firestore.rules 작성 (섹션 4 참고)
-
-Phase C: Firebase Function 개발
-  ├─ 1. functions/src/index.ts 작성 (섹션 5 Step 3의 완성 코드 복사)
-  ├─ 2. cd functions && npm run build (빌드 오류 확인)
-  ├─ 3. firebase emulators:start (로컬 테스트)
-  ├─ 4. curl로 Function 호출 테스트
-  └─ 5. firebase deploy --only functions,firestore:rules (배포)
-
-Phase D: 배포 검증
-  ├─ 1. 배포된 Function URL로 curl 테스트
-  ├─ 2. Firebase Console → Firestore에서 exchange_rates/latest 문서 확인
-  └─ 3. 1시간 후 재호출하여 timestamp 갱신 확인
-
-Phase E: Flutter 앱 연동 (→ EXCHANGE_RATE_CALCULATOR.md로 이동)
-  ├─ 1. flutterfire configure → firebase_options.dart 생성
-  ├─ 2. pubspec.yaml에 firebase_core, cloud_firestore 추가
-  ├─ 3. main.dart에 Firebase.initializeApp() 추가
-  ├─ 4. RemoteDataSource 구현
-  ├─ 5. LocalDataSource 구현 (SharedPreferences)
-  ├─ 6. Repository 구현체 (3단계 fallback)
-  └─ 7. 통합 테스트
-```
+셋업부터 배포까지의 전체 절차는 [`FIREBASE_GUIDE.md`](FIREBASE_GUIDE.md) 참고.
+Flutter 앱 연동은 [`EXCHANGE_RATE_CALCULATOR.md`](../EXCHANGE_RATE_CALCULATOR.md) 참고.
 
 ---
 
@@ -774,20 +552,9 @@ Phase E: Flutter 앱 연동 (→ EXCHANGE_RATE_CALCULATOR.md로 이동)
 
 ### 트러블슈팅
 
-| 증상 | 원인 | 해결 |
-|-----|-----|-----|
-| `firebase deploy` 시 권한 오류 | Firebase 로그인 만료 | `firebase login --reauth` |
-| Function 배포 후 404 | 리전 불일치 | URL의 리전이 `asia-northeast3`인지 확인 |
-| API 응답이 `{ "error": true }` | APP_ID 누락 또는 잘못됨 | `functions/.env`의 OXR_APP_ID 확인 |
-| Firestore 읽기 시 권한 오류 | 보안 규칙 미배포 | `firebase deploy --only firestore:rules` |
-| 에뮬레이터에서 외부 API 호출 실패 | 네트워크 문제 | 인터넷 연결 확인, `.env` 파일 위치 확인 |
-| `npm run build` 타입 오류 | TypeScript 버전 불일치 | `cd functions && npm install` 재실행 |
-| Function 응답이 항상 cached: true | refreshing이 true로 고착 | Firebase Console → Firestore에서 `refreshing`을 `false`로 수동 변경 |
+빌드/배포 관련 트러블슈팅은 [`FIREBASE_GUIDE.md`](FIREBASE_GUIDE.md) Section 3 참고.
 
-### 무료 한도 알림
-
-Firebase Console에서 **예산 알림**을 설정하여, 예상치 못한 사용량 증가를 감지한다.
-(Spark 플랜은 과금 자체가 없지만, 향후 Blaze 전환 시를 대비)
+**무료 한도 알림**: Firebase Console에서 예산 알림을 설정하여 예상치 못한 사용량 증가를 감지한다.
 
 ---
 

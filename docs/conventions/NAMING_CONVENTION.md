@@ -64,27 +64,7 @@ CalcMate 프로젝트의 네이밍 규칙을 정리한 문서.
 ## 디렉토리명
 
 - **규칙**: `snake_case`
-
-```
-lib/
-├── core/
-│   ├── constants/    # 상수
-│   ├── di/           # 의존성 주입
-│   ├── network/      # 네트워크 설정
-│   ├── router/       # 라우팅
-│   └── theme/        # 테마
-├── data/
-│   ├── api/          # Retrofit API
-│   ├── dto/          # DTO
-│   └── repository/   # Repository 구현체
-├── domain/
-│   ├── entity/       # Entity
-│   ├── repository/   # Repository 인터페이스
-│   └── use_case/     # UseCase
-└── presentation/
-    ├── {기능명}/      # 화면별 디렉토리
-    └── widgets/      # 공통 위젯
-```
+- 전체 디렉토리 구조: [`docs/architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md) 참고
 
 ---
 

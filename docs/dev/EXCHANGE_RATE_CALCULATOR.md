@@ -7,35 +7,23 @@
 
 ## 프로젝트 구조 및 작업 범위
 
-아래 구조에서 `[완료]`는 구현이 완료된 파일을 나타낸다.
+> 기본 아키텍처: [`docs/architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md) 참고
 
-```
-lib/
-├── core/
-│   ├── di/
-│   │   └── providers.dart                              [완료] 환율 관련 Provider 전체 등록
-│   └── navigation/
-│       └── calc_page_route.dart                        [완료] 공통 라우트
-├── domain/
-│   ├── models/
-│   │   └── exchange_rate_entity.dart                   [완료] ExchangeRateEntity (Freezed)
-│   ├── repositories/
-│   │   └── exchange_rate_repository.dart               [완료] Repository 인터페이스
-│   └── usecases/
-│       └── get_exchange_rate_usecase.dart               [완료] 환율 조회 UseCase
-├── data/
-│   ├── datasources/
-│   │   ├── exchange_rate_remote_datasource.dart        [완료] Firestore + Firebase Function 호출
-│   │   └── exchange_rate_local_datasource.dart         [완료] SharedPreferences 캐시
-│   ├── dto/
-│   │   └── exchange_rate_dto.dart                      [완료] Firestore 문서 → Dart 매핑 DTO
-│   └── repositories/
-│       └── exchange_rate_repository_impl.dart          [완료] Repository 구현체 (Remote + Local 캐시)
-└── presentation/
-    └── currency/
-        ├── currency_calculator_screen.dart             [완료] ConsumerWidget, ViewModel 연결
-        └── currency_calculator_viewmodel.dart          [완료] ExchangeRateViewModel (Notifier)
-```
+**작업 파일** (모두 완료)
+
+| 파일 | 역할 |
+|------|------|
+| `core/di/providers.dart` | 환율 관련 Provider 전체 등록 |
+| `core/navigation/calc_page_route.dart` | 공통 라우트 |
+| `domain/models/exchange_rate_entity.dart` | ExchangeRateEntity (Freezed) |
+| `domain/repositories/exchange_rate_repository.dart` | Repository 인터페이스 |
+| `domain/usecases/get_exchange_rate_usecase.dart` | 환율 조회 UseCase |
+| `data/datasources/exchange_rate_remote_datasource.dart` | Firestore + Firebase Function 호출 |
+| `data/datasources/exchange_rate_local_datasource.dart` | SharedPreferences 캐시 |
+| `data/dto/exchange_rate_dto.dart` | Firestore 문서 → Dart 매핑 DTO |
+| `data/repositories/exchange_rate_repository_impl.dart` | Repository 구현체 (Remote + Local 캐시) |
+| `presentation/currency/currency_calculator_screen.dart` | ConsumerWidget, ViewModel 연결 |
+| `presentation/currency/currency_calculator_viewmodel.dart` | ExchangeRateViewModel (Notifier) |
 
 **데이터 흐름 (구조 B: Firestore 직접 읽기)**
 
@@ -161,16 +149,7 @@ Repository를 주입받아 `execute()`를 호출하는 단일 책임 UseCase.
 
 Firestore 문서 데이터를 Dart 객체로 매핑하고, Entity로 변환하는 책임을 가진다.
 
-**Firestore 문서 구조 (참고)**
-
-```json
-{
-  "base": "USD",
-  "rates": { "KRW": 1320, "JPY": 150, "EUR": 0.92, ... },
-  "timestamp": 1709308800000,
-  "source": "open_exchange_rates"
-}
-```
+**Firestore 문서 구조**: [`firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md`](firebase/FIREBASE_EXCHANGE_RATE_BACKEND.md) Section 4 참고.
 
 **주요 구성 요소**
 
@@ -283,29 +262,6 @@ double convert(double amount, String from, String to) {
 - 모든 상태 참조를 `ref.watch(exchangeRateViewModelProvider)`로 교체
 - 모든 사용자 액션을 `handleIntent()`로 위임
 - 기존 Hero 애니메이션, 키패드 레이아웃 그대로 유지
-
----
-
-## 파일 변경 목록
-
-| 파일 | 작업 |
-|------|------|
-| `domain/models/exchange_rate_entity.dart` | 신규 생성 |
-| `domain/models/exchange_rate_entity.freezed.dart` | 자동 생성 (build_runner) |
-| `domain/models/exchange_rate_entity.g.dart` | 자동 생성 (build_runner) |
-| `domain/repositories/exchange_rate_repository.dart` | 신규 생성 |
-| `domain/usecases/get_exchange_rate_usecase.dart` | 신규 생성 |
-| `data/dto/exchange_rate_dto.dart` | 신규 생성 |
-| `data/dto/exchange_rate_dto.freezed.dart` | 자동 생성 (build_runner) |
-| `data/dto/exchange_rate_dto.g.dart` | 자동 생성 (build_runner) |
-| `data/datasources/exchange_rate_remote_datasource.dart` | 신규 생성 |
-| `data/datasources/exchange_rate_local_datasource.dart` | 신규 생성 |
-| `data/repositories/exchange_rate_repository_impl.dart` | 신규 생성 |
-| `presentation/currency/currency_calculator_viewmodel.dart` | 신규 생성 |
-| `presentation/currency/currency_calculator_viewmodel.freezed.dart` | 자동 생성 (build_runner) |
-| `presentation/currency/currency_calculator_screen.dart` | 수정 (ViewModel 연결) |
-| `core/di/providers.dart` | 수정 (Provider 등록) |
-| `pubspec.yaml` | 수정 (firebase_core, cloud_firestore 의존성 추가) |
 
 ---
 
