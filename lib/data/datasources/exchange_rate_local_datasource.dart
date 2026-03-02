@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/exchange_rate_entity.dart';
@@ -20,7 +21,8 @@ class ExchangeRateLocalDataSource {
     try {
       final json = jsonDecode(jsonStr) as Map<String, dynamic>;
       return ExchangeRateEntity.fromJson(json);
-    } catch (_) {
+    } catch (e) {
+      debugPrint('[ExchangeRateLocal] cache parse failed: $e');
       return null;
     }
   }

@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+
+import '../../domain/exceptions/app_exceptions.dart';
 import '../../domain/models/exchange_rate_entity.dart';
 import '../../domain/repositories/exchange_rate_repository.dart';
 import '../datasources/exchange_rate_fallback.dart';
@@ -30,8 +33,11 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
         await _local.cacheRates(entity);
         return entity;
       }
-      throw Exception('No exchange rate data available in Firestore');
-    } catch (_) {
+      throw const DataNotFoundException(
+        'No exchange rate data available in Firestore',
+      );
+    } catch (e) {
+      debugPrint('[ExchangeRateRepo] getLatestRates failed: $e');
       // 실패 시: 만료된 로컬 캐시라도 반환
       final expired = _local.getCachedRates();
       if (expired != null) return expired;

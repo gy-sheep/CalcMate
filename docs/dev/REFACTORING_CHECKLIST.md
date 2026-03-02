@@ -43,17 +43,16 @@
 
 ---
 
-### R-04. 에러 처리 강화
+### R-04. 에러 처리 강화 ✅
 
 - **브랜치**: `refactor/error-handling`
-- **현재 상태**:
-  - 에러 메시지 하드코딩 (`currency_calculator_viewmodel.dart:208` — `'환율 정보를 불러올 수 없습니다'`)
-  - `_refreshRates()`에서 예외 무시 (catch 블록 비어있음, `viewmodel.dart:179`)
-  - 예외 로깅 없음
-- **개선 방향**:
-  - `lib/core/constants/error_messages.dart` — 에러 메시지 상수화
-  - `lib/domain/exceptions/` — 예외 클래스 정의 (`NetworkException`, `CacheException`)
-  - catch 블록에 로깅 추가
+- **완료**:
+  - `lib/core/constants/error_messages.dart` — 에러 메시지 상수화 (`ErrorMessages`)
+  - `lib/domain/exceptions/app_exceptions.dart` — `AppException` sealed class 계층 (`NetworkException`, `CacheException`, `DataNotFoundException`)
+  - `error_interceptor.dart` — 하드코딩 메시지 → `ErrorMessages` 상수 참조
+  - `exchange_rate_repository_impl.dart` — `Exception` → `DataNotFoundException`, catch에 `debugPrint` 추가
+  - `exchange_rate_local_datasource.dart` — catch에 `debugPrint` 추가
+  - `currency_calculator_viewmodel.dart` — 하드코딩 메시지 → `ErrorMessages` 상수, catch에 `debugPrint` 추가
 
 ---
 
@@ -138,3 +137,4 @@
 |------|------|------|
 | 2026-03-02 | R-03. Intent 패턴 통일 | 완료 |
 | 2026-03-02 | R-11. 통화 목록 외부화 | 완료 |
+| 2026-03-02 | R-04. 에러 처리 강화 | 완료 |

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../core/constants/error_messages.dart';
 import '../../core/di/providers.dart';
 import '../../domain/models/exchange_rate_entity.dart';
 import '../../domain/usecases/evaluate_expression_usecase.dart';
@@ -183,8 +184,8 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         _getExchangeRateUseCase.execute().then((e) => entity = e),
         Future.delayed(const Duration(milliseconds: 800)),
       ]);
-    } catch (_) {
-      // 실패 시 기존 상태 유지
+    } catch (e) {
+      debugPrint('[ExchangeRateVM] refreshRates failed: $e');
     }
 
     state = state.copyWith(
@@ -207,12 +208,13 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         lastUpdated: isFallback
             ? null
             : DateTime.fromMillisecondsSinceEpoch(entity.timestamp * 1000),
-        toastMessage: isFallback ? '임시 환율을 사용 중입니다' : null,
+        toastMessage: isFallback ? ErrorMessages.exchangeRateUsingFallback : null,
       );
     } catch (e) {
+      debugPrint('[ExchangeRateVM] loadRates failed: $e');
       state = state.copyWith(
         isLoading: false,
-        error: '환율 정보를 불러올 수 없습니다',
+        error: ErrorMessages.exchangeRateLoadFailed,
       );
     }
   }
