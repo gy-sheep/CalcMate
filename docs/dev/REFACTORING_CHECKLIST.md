@@ -123,11 +123,12 @@
 
 ---
 
-### R-11. 통화 목록 외부화
+### R-11. 통화 목록 외부화 ✅
 
 - **브랜치**: `refactor/currency-data`
-- **현재 상태**: 24개 `CurrencyInfo` 리스트가 Screen 파일에 하드코딩 (`screen.dart:25-50`)
-- **개선 방향**: 향후 다국어 대응 시 JSON 파일 분리 (현재는 낮은 우선순위)
+- **완료**: `CurrencyInfo` 클래스 + `kSupportedCurrencies` 상수를 `lib/domain/models/currency_info.dart`로 분리
+  - Screen 파일에서 클래스 정의(13-23행) 및 하드코딩 목록(25-50행) 제거
+  - import 추가 후 `_currencyList` → `kSupportedCurrencies`로 변경
 
 ---
 
@@ -136,3 +137,4 @@
 | 날짜 | 항목 | 상태 |
 |------|------|------|
 | 2026-03-02 | R-03. Intent 패턴 통일 | 완료 |
+| 2026-03-02 | R-11. 통화 목록 외부화 | 완료 |
