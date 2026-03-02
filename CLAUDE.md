@@ -32,12 +32,19 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 - **질문/답변 로그**: `docs/prompts/PROPMTS.md`
 - **세션 시작 시 반드시 읽기**: `PROGRESS.md` (현재 상태 및 다음 작업 — 구현에 필요한 정보 포함)
 
-## 구현 명세 작성 규칙
+## 기능 개발 문서 작성 규칙
 
-기능 개발 전 구현 명세 문서 작성을 요청받으면 아래 규칙을 따른다.
+기능 개발 전 아래 순서로 문서를 작성한다.
 
+### 1단계: 기획 명세 (Spec)
+- **저장 위치**: `docs/specs/{FEATURE_NAME}.md`
+- **템플릿**: `docs/specs/_SPEC_TEMPLATE.md`
+- **내용**: 요구사항, 화면 구성, 예외 케이스 등 **무엇을** 만들지 정의
+
+### 2단계: 구현 명세 (Impl Spec)
 - **저장 위치**: `docs/dev/{FEATURE_NAME}.md`
-- **템플릿**: `docs/dev/_IMPL_SPEC_TEMPLATE.md`를 반드시 따른다
+- **템플릿**: `docs/dev/_IMPL_SPEC_TEMPLATE.md`
+- **내용**: 파일 구조, 클래스 설계, 구현 순서 등 **어떻게** 만들지 정의
 
 ## 문서 관리
 
