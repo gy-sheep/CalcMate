@@ -234,7 +234,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                           behavior: HitTestBehavior.opaque,
                           onTap: state.isRefreshing
                               ? null
-                              : () => vm.handleIntent(const RefreshRequested()),
+                              : () => vm.handleIntent(const ExchangeRateIntent.refreshRequested()),
                           child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: state.isRefreshing
@@ -257,7 +257,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                       color: _dividerColor, thickness: 0.5, height: 1),
                   // 숫자 키패드
                   _NumberPad(
-                    onKeyTap: (key) => vm.handleIntent(KeyTapped(key)),
+                    onKeyTap: (key) => vm.handleIntent(ExchangeRateIntent.keyTapped(key)),
                     isAcState: vm.isAcState,
                   ),
                   const SizedBox(height: 8),
@@ -410,9 +410,9 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
 
     final vm = ref.read(exchangeRateViewModelProvider.notifier);
     if (toIndex < 0) {
-      vm.handleIntent(FromCurrencyChanged(result));
+      vm.handleIntent(ExchangeRateIntent.fromCurrencyChanged(result));
     } else {
-      vm.handleIntent(ToCurrencyChanged(toIndex, result));
+      vm.handleIntent(ExchangeRateIntent.toCurrencyChanged(toIndex, result));
     }
   }
 }

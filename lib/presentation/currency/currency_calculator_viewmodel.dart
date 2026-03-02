@@ -33,26 +33,33 @@ class ExchangeRateState with _$ExchangeRateState {
 // ──────────────────────────────────────────
 sealed class ExchangeRateIntent {
   const ExchangeRateIntent();
+
+  const factory ExchangeRateIntent.keyTapped(String key) = _KeyTapped;
+  const factory ExchangeRateIntent.fromCurrencyChanged(String code) =
+      _FromCurrencyChanged;
+  const factory ExchangeRateIntent.toCurrencyChanged(int index, String code) =
+      _ToCurrencyChanged;
+  const factory ExchangeRateIntent.refreshRequested() = _RefreshRequested;
 }
 
-class KeyTapped extends ExchangeRateIntent {
+class _KeyTapped extends ExchangeRateIntent {
   final String key;
-  const KeyTapped(this.key);
+  const _KeyTapped(this.key);
 }
 
-class FromCurrencyChanged extends ExchangeRateIntent {
+class _FromCurrencyChanged extends ExchangeRateIntent {
   final String code;
-  const FromCurrencyChanged(this.code);
+  const _FromCurrencyChanged(this.code);
 }
 
-class ToCurrencyChanged extends ExchangeRateIntent {
+class _ToCurrencyChanged extends ExchangeRateIntent {
   final int index;
   final String code;
-  const ToCurrencyChanged(this.index, this.code);
+  const _ToCurrencyChanged(this.index, this.code);
 }
 
-class RefreshRequested extends ExchangeRateIntent {
-  const RefreshRequested();
+class _RefreshRequested extends ExchangeRateIntent {
+  const _RefreshRequested();
 }
 
 // ──────────────────────────────────────────
@@ -79,9 +86,9 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
 
   void handleIntent(ExchangeRateIntent intent) {
     switch (intent) {
-      case KeyTapped(:final key):
+      case _KeyTapped(:final key):
         _onKeyTap(key);
-      case FromCurrencyChanged(:final code):
+      case _FromCurrencyChanged(:final code):
         final swapIndex = state.toCodes.indexOf(code);
         if (swapIndex >= 0) {
           // 선택한 통화가 To에 있으면 swap
@@ -91,11 +98,11 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         } else {
           state = state.copyWith(fromCode: code, input: '0');
         }
-      case ToCurrencyChanged(:final index, :final code):
+      case _ToCurrencyChanged(:final index, :final code):
         final updated = List<String>.from(state.toCodes);
         updated[index] = code;
         state = state.copyWith(toCodes: updated);
-      case RefreshRequested():
+      case _RefreshRequested():
         _refreshRates();
     }
   }

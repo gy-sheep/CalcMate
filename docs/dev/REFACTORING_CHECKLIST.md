@@ -33,14 +33,13 @@
 
 ---
 
-### R-03. Intent 패턴 통일
+### R-03. Intent 패턴 통일 ✅
 
 - **브랜치**: `refactor/sealed-intent`
-- **현재 상태**: 계산기마다 Intent 정의 방식이 다름
-  - 기본: Sealed 클래스 + Factory 패턴 (`CalculatorIntent`)
-  - 환율: 일반 클래스 상속 (`ExchangeRateIntent`)
-- **개선 방향**: 환율 Intent를 Sealed 클래스 방식으로 통일
-- **재사용 대상**: 모든 계산기 ViewModel
+- **완료**: 환율 Intent를 Sealed 클래스 + Factory 패턴으로 통일
+  - 서브클래스 private 전환 (`_KeyTapped`, `_FromCurrencyChanged` 등)
+  - Factory constructor 추가 (`ExchangeRateIntent.keyTapped()` 등)
+  - Screen 호출부 4곳 Factory 방식으로 변경
 
 ---
 
@@ -136,4 +135,4 @@
 
 | 날짜 | 항목 | 상태 |
 |------|------|------|
-| — | — | — |
+| 2026-03-02 | R-03. Intent 패턴 통일 | 완료 |
