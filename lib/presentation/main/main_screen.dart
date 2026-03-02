@@ -85,7 +85,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView.separated(
           controller: _scrollController,
-          padding: EdgeInsets.only(top: topPadding + 16, bottom: 16),
+          padding: EdgeInsets.only(
+            top: topPadding + 16,
+            bottom: 16 + MediaQuery.of(context).padding.bottom,
+          ),
           itemCount: state.entries.length,
           itemBuilder: (context, index) {
             final entry = state.entries[index];
