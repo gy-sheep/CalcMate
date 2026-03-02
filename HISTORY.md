@@ -2,6 +2,26 @@
 
 ---
 
+## 2026-03-02 — 단위 변환기 화면 UI 구현 (Phase 3)
+
+### 완료 항목
+
+**단위 변환기 UI** (`presentation/unit_converter/unit_converter_screen.dart`)
+- AppBar: Hero 애니메이션 (아이콘/타이틀) + 뒤로가기 — CurrencyCalculatorScreen 패턴 동일
+- 카테고리 탭: 10개 카테고리 가로 스크롤 칩 (아이콘 + 이름), 선택 시 하이라이트
+- 단위 리스트: ListView, 활성 행 하이라이트 (배경색 + 테두리), 탭으로 활성 행 전환
+- 키패드: 4×4 레이아웃 (7-9/⌫, 4-6/AC, 1-3/., 0/00/±)
+- 다크 그라디언트 테마 (`#1A1A2E` → `#16213E`), 포인트 컬러 `#E94560`
+- 더미 데이터 기반 정적 UI — 변환 로직 미포함
+
+**메인 화면** (`presentation/main/main_screen.dart`)
+- `entry.id == 'unit_converter'` 네비게이션 분기 추가 (CalcPageRoute + Hero)
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-02 — 환율 계산기 UX 대폭 개선 및 목업 환율 fallback 구현
 
 ### 완료 항목

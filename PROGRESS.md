@@ -56,15 +56,26 @@
 - [x] **스펙 문서** — `docs/specs/EXCHANGE_RATE.md` 현행화 완료
 - [x] **리팩토링 체크리스트** — `docs/dev/REFACTORING_CHECKLIST.md` 작성
 
+### Phase 3: 단위 변환기 — `feat/unit-converter` 진행 중
+- [x] `docs/specs/UNIT_CONVERTER.md` — 기획 명세 작성 (10개 카테고리, 키패드 4×4, 변환 공식)
+- [x] `presentation/unit_converter/unit_converter_screen.dart` — 화면 UI 구현 (정적 더미 데이터)
+  - AppBar (Hero 애니메이션), 카테고리 탭 (10개 가로 스크롤 칩), 단위 리스트 (활성 행 하이라이트), 키패드 (4×4)
+  - 다크 그라디언트 테마 (`#1A1A2E` → `#16213E`), 포인트 컬러 `#E94560`
+- [x] `presentation/main/main_screen.dart` — 단위 변환기 네비게이션 분기 추가
+
 ---
 
 ## 다음 작업
 
+### Phase 3: 단위 변환기 — 로직 구현
+- [ ] 구현 명세 작성 (`docs/dev/UNIT_CONVERTER.md`)
+- [ ] Domain 계층: 단위 변환 모델, UseCase (비율 기반 + 온도/연비 특수 공식)
+- [ ] Presentation 계층: ViewModel (Notifier + Intent), State (Freezed)
+- [ ] 키패드 입력 연결, 실시간 변환 결과 표시
+- [ ] 자릿수 제한 (정수 12, 소수 8), 결과 포맷팅 규칙 적용
+
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/dev/REFACTORING_CHECKLIST.md`
-
-### Phase 3 이후 — 추가 계산기 구현 예정
-> 로드맵: `docs/plans/ROADMAP.md`
 
 ---
 
