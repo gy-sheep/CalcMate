@@ -4,6 +4,7 @@ import 'package:calcmate/core/navigation/calc_page_route.dart';
 import 'package:calcmate/presentation/calculator/basic_calculator_screen.dart';
 import 'package:calcmate/presentation/currency/currency_calculator_screen.dart';
 import 'package:calcmate/presentation/unit_converter/unit_converter_screen.dart';
+import 'package:calcmate/presentation/age_calculator/age_calculator_screen.dart';
 import 'package:calcmate/presentation/vat_calculator/vat_calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -131,6 +132,15 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   Navigator.of(context).push(
                     CalcPageRoute(
                       builder: (_) => VatCalculatorScreen(
+                        title: entry.title,
+                        icon: entry.icon,
+                      ),
+                    ),
+                  );
+                } else if (entry.id == 'age_calculator') {
+                  Navigator.of(context).push(
+                    CalcPageRoute(
+                      builder: (_) => AgeCalculatorScreen(
                         title: entry.title,
                         icon: entry.icon,
                       ),

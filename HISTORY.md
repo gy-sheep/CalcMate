@@ -2,6 +2,42 @@
 
 ---
 
+## 2026-03-04 — 나이 계산기 스펙 문서 및 화면 구현
+
+### 완료 항목
+
+**기획 명세**
+- `docs/specs/AGE_CALCULATOR.md` — 나이 계산기 기획 명세 작성
+  - 양력/음력 입력 모드, 드럼롤 피커 UX, 결과 카드 그룹 설계
+  - 설날 기준 띠 보정, 윤달 처리, 음력 변환 정책 정의
+  - 기존 어두운 계통 테마와 차별화된 크림/복숭아 라이트 테마 선정
+
+**Domain 계층**
+- `core/constants/lunar_new_year_dates.dart` — 설날 양력 날짜 룩업 테이블 (1900~2050)
+- `domain/models/age_calculator_state.dart` — AgeCalculatorState (Freezed), AgeCalendarType enum
+- `domain/usecases/age_calculate_usecase.dart` — AgeCalculateUseCase
+  - 만 나이, 세는 나이, 연 나이
+  - 설날 기준 띠 보정 (출생일이 설날 이전이면 전년도 띠)
+  - 별자리 (MMDD 기반 12궁도)
+  - 살아온 날수, 태어난 요일, 다음 생일 D-day
+  - kZodiacs, kConstellations, kWeekdays 정적 데이터
+
+**Presentation 계층**
+- `presentation/age_calculator/age_calculator_viewmodel.dart` — Notifier + sealed Intent 5종
+  - calendarTypeChanged, yearChanged, monthChanged, dayChanged, leapMonthToggled
+  - ageResult getter (연/월 변경 시 일 자동 클램프), refreshToday
+- `presentation/age_calculator/age_calculator_screen.dart` — 화면 구현
+  - 크림(#FFF8F0) → 복숭아(#FFE4CC) 라이트 그라디언트 테마, 웜 앰버(#D4845A) 포인트
+  - 양력/음력 세그먼트 컨트롤
+  - ListWheelScrollView 드럼롤 피커 (연·월·일), 복숭아색 선택 하이라이트 + 상하 페이드
+  - 연/월 변경 시 일 컨트롤러 자동 동기화 (ref.listen + animateToItem)
+  - 나이 카드 (만 나이 56sp 골드 강조), 다음 생일 D-day / 살아온 날 / 띠 / 별자리 / 요일 카드
+  - AppLifecycleObserver 백그라운드 복귀 시 기준일 갱신
+  - 음력 모드 UI 구조 포함, 변환 기능은 다음 업데이트 예정 안내
+- `presentation/main/main_screen.dart` — age_calculator 라우팅 추가
+
+---
+
 ## 2026-03-04 — 부가세 계산기 Clean Architecture 분리
 
 ### 완료 항목
