@@ -2,6 +2,47 @@
 
 ---
 
+## 2026-03-04 — 기본 계산기 키패드 전면 개편
+
+### 완료 항목
+
+**Domain 계층**
+- `domain/usecases/evaluate_expression_usecase.dart` — 2-pass 평탄 평가기 → 재귀 하강 파서로 리라이트
+  - 괄호, 중첩 괄호, 단항 마이너스, mod(`%`) 지원
+  - 문법: `expression → term → atom` (연산자 우선순위 반영)
+- `domain/utils/calculator_input_utils.dart` — 헬퍼 메서드 추가 및 resolvePercent 리라이트
+  - `unclosedParenCount()`, `isNegativePending()`, `hasOperator()` 추가
+  - `resolvePercent()`: 괄호 depth 추적 좌→우 파서로 변경, `)%` 문맥 처리 (base 기준 퍼센트)
+- `domain/utils/number_formatter.dart` — `formatResult` 소수점 최대 9자리로 변경 (아이폰 동일)
+
+**Presentation 계층**
+- `presentation/calculator/basic_calculator_viewmodel.dart` — Intent 변경 및 핸들러 전면 리라이트
+  - `negatePressed` 제거 → `parenthesesPressed` 추가
+  - `_onClear`: 항상 전체 초기화 (AC/C 분기 제거)
+  - `_onParentheses`: 신규 스마트 괄호 핸들러
+  - `_onOperator`: 초기 상태/`(` 뒤 `-`만 허용, 음수 대기 처리
+  - `_onDecimal`: `(` 뒤 `0.`, 음수 대기 `-0.`, `)` 뒤 `×0.`, `%` 뒤 `×0.`
+  - `_onPercent`: 연산자 뒤 교체, `%` 중복 시 마지막 피연산자만 괄호 감싸기, 결과 상태 수식 초기화
+  - `_onNumber`: `)` 뒤 암묵적 `×` 삽입
+  - `_onEquals`: 숫자만/불완전 수식 무시, 미닫힌 괄호 자동 닫기
+- `presentation/calculator/basic_calculator_screen.dart` — UI 업데이트
+  - `+/-` → `()` 버튼 교체, AC 항상 고정, `_buildPlusMinusLabel` 제거, `_wrapNegatives` 제거
+
+**테스트**
+- `test/domain/usecases/evaluate_expression_usecase_test.dart` — 29케이스 (괄호, mod, trailing dot 추가)
+- `test/domain/utils/calculator_input_utils_test.dart` — 35케이스 (신규)
+- `test/presentation/calculator/basic_calculator_viewmodel_test.dart` — 52케이스 (신규)
+
+**문서**
+- `docs/specs/BASIC_CALCULATOR.md` — 스펙 현행화 (괄호, mod, 소수점 9자리, `%` 중복 수식 중간 예시)
+- `docs/dev/BASIC_CALCULATOR_IMPL.md` — 구현 명세 전면 리라이트
+- `docs/DOC_MAP.md` — BASIC_CALCULATOR.md 설명 현행화
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-02 — 단위 변환기 로직 구현 완료 (Phase 3)
 
 ### 완료 항목

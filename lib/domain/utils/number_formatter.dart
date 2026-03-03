@@ -62,7 +62,7 @@ abstract final class NumberFormatter {
     }
     if (value.isNaN) return '정의되지 않음';
     if (value == value.truncateToDouble()) return value.toInt().toString();
-    final str = value.toStringAsFixed(10);
+    final str = value.toStringAsFixed(9);
     return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
   }
 

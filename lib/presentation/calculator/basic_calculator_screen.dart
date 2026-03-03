@@ -119,13 +119,6 @@ class _DisplayPanel extends StatelessWidget {
 
   const _DisplayPanel({required this.state});
 
-  static String _wrapNegatives(String raw) {
-    return raw.replaceAllMapped(
-      RegExp(r'(^|[+×÷*/])-(\d+(?:\.\d*)?)'),
-      (match) => '${match.group(1)}(-${match.group(2)})',
-    );
-  }
-
   static String _formatWithCommas(String raw) {
     return raw.replaceAllMapped(RegExp(r'\d+\.?\d*'), (match) {
       final str = match.group(0)!;
@@ -143,7 +136,7 @@ class _DisplayPanel extends StatelessWidget {
 
   static String _formatDisplay(String raw) {
     if (raw == '-0') return '0';
-    return _formatWithCommas(_wrapNegatives(raw));
+    return _formatWithCommas(raw);
   }
 
   /// 텍스트가 주어진 너비 안에 한 줄로 들어가는지 확인한다.
@@ -157,7 +150,6 @@ class _DisplayPanel extends StatelessWidget {
   }
 
   /// 연산 기호 앞에 줄바꿈 문자를 삽입한다.
-  /// 예: "100+200×3" → "100\n+200\n×3"
   static String _breakAtOperators(String raw) {
     return raw.replaceAllMapped(
       RegExp(r'(?<=[^(])([+\-×÷])'),
@@ -282,25 +274,17 @@ class _ButtonPad extends ConsumerWidget {
     [('7', _BtnType.number), ('8', _BtnType.number), ('9', _BtnType.number), ('×', _BtnType.operator)],
     [('4', _BtnType.number), ('5', _BtnType.number), ('6', _BtnType.number), ('-', _BtnType.operator)],
     [('1', _BtnType.number), ('2', _BtnType.number), ('3', _BtnType.number), ('+', _BtnType.operator)],
-    [('+/-', _BtnType.function), ('0', _BtnType.number), ('.', _BtnType.number), ('=', _BtnType.equals)],
+    [('()', _BtnType.function), ('0', _BtnType.number), ('.', _BtnType.number), ('=', _BtnType.equals)],
   ];
-
-  static bool _isAcState(String input) {
-    if (input == '0' || input == '-') return true;
-    if (input.length == 2 && input[0] == '0') {
-      return const {'+', '-', '×', '÷'}.contains(input[1]);
-    }
-    return false;
-  }
 
   CalculatorIntent _intentFor(String label) {
     return switch (label) {
       '⌫' => const CalculatorIntent.backspacePressed(),
-      'AC' || 'C' => const CalculatorIntent.clearPressed(),
+      'AC' => const CalculatorIntent.clearPressed(),
       '%' => const CalculatorIntent.percentPressed(),
       '÷' || '×' || '-' || '+' => CalculatorIntent.operatorPressed(label),
       '=' => const CalculatorIntent.equalsPressed(),
-      '+/-' => const CalculatorIntent.negatePressed(),
+      '()' => const CalculatorIntent.parenthesesPressed(),
       '.' => const CalculatorIntent.decimalPressed(),
       _ => CalculatorIntent.numberPressed(label),
     };
@@ -309,20 +293,17 @@ class _ButtonPad extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.read(basicCalculatorViewModelProvider.notifier);
-    final state = ref.watch(basicCalculatorViewModelProvider);
-    final clearLabel = _isAcState(state.input) ? 'AC' : 'C';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: _rows.map((row) {
         return Row(
           children: row.map((cell) {
-            final label = cell.$1 == 'AC' ? clearLabel : cell.$1;
             return Expanded(
               child: _CalcButton(
-                label: label,
+                label: cell.$1,
                 type: cell.$2,
-                onTap: () => vm.handleIntent(_intentFor(label)),
+                onTap: () => vm.handleIntent(_intentFor(cell.$1)),
               ),
             );
           }).toList(),
@@ -371,44 +352,19 @@ class _CalcButton extends StatelessWidget {
           child: Center(
             child: label == '⌫'
                 ? Icon(Icons.backspace_outlined, color: _textColor, size: 26)
-                : label == '+/-'
-                    ? _buildPlusMinusLabel(_textColor)
-                    : Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: const ['÷', '×', '-', '+', '='].contains(label)
-                              ? 28
-                              : 22,
-                          fontWeight: FontWeight.w400,
-                          color: _textColor,
-                        ),
-                      ),
+                : Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: const ['÷', '×', '-', '+', '='].contains(label)
+                          ? 28
+                          : 22,
+                      fontWeight: FontWeight.w400,
+                      color: _textColor,
+                    ),
+                  ),
           ),
         ),
       ),
-    );
-  }
-
-  static Widget _buildPlusMinusLabel(Color color) {
-    const style = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-      height: 1,
-    );
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Transform.translate(
-          offset: const Offset(0, -2),
-          child: Text('+', style: style.copyWith(color: color)),
-        ),
-        Text('/', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300, color: color)),
-        Transform.translate(
-          offset: const Offset(0, 2),
-          child: Text('-', style: style.copyWith(color: color, fontSize: 24)),
-        ),
-      ],
     );
   }
 }

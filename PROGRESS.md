@@ -91,10 +91,18 @@
 - [ ] 로케일 기반 기본 세율 자동 설정
 
 ### UX 개선: AC/C 동적 전환 제거 — `refactor/remove-clear-button`
-- [ ] C 버튼 제거, AC만 유지 (백스페이스 ⌫ 와 기능 중복)
-  - 대상: 기본 계산기, 환율 계산기, 부가세 계산기 (단위 변환기는 이미 AC만 사용)
-  - AC/C 판별 로직 제거 (`_isAcState` 등)
-  - ViewModel의 `_onClear()` → 항상 전체 초기화로 단순화
+- [x] 기본 계산기: AC/C 전환 제거, AC 고정 (`refactor/basic_calculator_keypad_function`에서 완료)
+- [ ] 환율 계산기: AC/C 전환 제거, AC 고정
+- [ ] 부가세 계산기: AC/C 전환 제거, AC 고정
+
+### 기본 계산기 키패드 리팩토링 — `refactor/basic_calculator_keypad_function` 완료
+- [x] `+/-` → `()` 스마트 괄호 버튼 교체
+- [x] `EvaluateExpressionUseCase` 재귀 하강 파서로 리라이트 (괄호, mod 지원)
+- [x] `CalculatorInputUtils` 헬퍼 추가 + `resolvePercent` 괄호 문맥 처리
+- [x] ViewModel 핸들러 전면 리라이트 (연산자/소수점/퍼센트 입력 규칙 변경)
+- [x] AC/C 동적 전환 제거, AC 고정
+- [x] `formatResult` 소수점 최대 9자리로 변경 (아이폰 동일)
+- [x] 스펙/구현 명세 현행화, 테스트 116케이스
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
