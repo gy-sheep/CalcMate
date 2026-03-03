@@ -1,6 +1,7 @@
 import 'package:calcmate/domain/models/calculator_state.dart';
 import 'package:calcmate/domain/usecases/evaluate_expression_usecase.dart';
 import 'package:calcmate/domain/utils/calculator_input_utils.dart';
+import 'package:calcmate/domain/utils/number_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ── Intent ────────────────────────────────────────────────────────────────────
@@ -147,7 +148,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
           _repeatOperand;
       final result = _useCase.execute(expr);
       state = CalculatorState(
-        input: CalculatorInputUtils.formatResult(result),
+        input: NumberFormatter.formatResult(result),
         expression: state.input + _repeatOperator + _repeatOperand,
         isResult: true,
       );
@@ -172,7 +173,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
 
     final result = _useCase.execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
     state = CalculatorState(
-      input: CalculatorInputUtils.formatResult(result),
+      input: NumberFormatter.formatResult(result),
       expression: raw,
       isResult: true,
     );

@@ -64,8 +64,8 @@
 - **브랜치**: `refactor/input-utils`
 - **완료**:
   - `lib/domain/utils/calculator_input_utils.dart` — `CalculatorInputUtils` 클래스 생성
-  - `endsWithOperator()`, `lastNumberSegment()`, `resolvePercent()`, `formatResult()`, `addCommas()` 5개 메서드 공용화
-  - `currency_calculator_viewmodel.dart` — 중복 5개 메서드 제거, `_formatAmount`만 유지
+  - `endsWithOperator()`, `lastNumberSegment()`, `resolvePercent()` 3개 메서드 공용화 (`formatResult`, `addCommas`는 R-09에서 `NumberFormatter`로 이동)
+  - `currency_calculator_viewmodel.dart` — 중복 메서드 제거 (`_formatAmount`는 R-09에서 `NumberFormatter`로 이동)
   - `basic_calculator_viewmodel.dart` — 중복 4개 메서드 제거
 - **재사용 대상**: 수식 입력이 있는 모든 계산기
 
@@ -106,11 +106,17 @@
 
 ---
 
-### R-09. 숫자 포맷팅 유틸리티
+### R-09. 숫자 포맷팅 유틸리티 ✅
 
 - **브랜치**: `refactor/number-formatter`
-- **현재 상태**: `_formatAmount()`, `_formatResult()`, `_addCommas()`가 ViewModel에 산재
-- **개선 방향**: `lib/domain/utils/number_formatter.dart`로 통합
+- **완료**:
+  - `lib/domain/utils/number_formatter.dart` — `NumberFormatter` 클래스 생성
+  - 빌딩 블록: `addCommas`, `trimTrailingZeros`, `formatScientific`, `rawFromDouble`
+  - 결과 포맷터: `formatResult`, `formatAmount`, `formatUnitResult`, `formatTemperature`, `formatInput`
+  - `CalculatorInputUtils`에서 `formatResult()`, `addCommas()` 제거 → `NumberFormatter`로 이동
+  - `CurrencyCalculatorViewModel`에서 `_formatAmount()` 제거 → `NumberFormatter.formatAmount()` 사용
+  - `UnitConverterViewModel`에서 7개 private 포맷팅 메서드 제거 → `NumberFormatter` 사용
+  - `BasicCalculatorViewModel` — `NumberFormatter.formatResult()` 사용으로 변경
 - **재사용 대상**: 단위변환, 부가세 등 숫자 표시가 필요한 계산기
 
 ---
@@ -142,3 +148,4 @@
 | 2026-03-03 | R-03. Intent 패턴 통일 (MainScreenIntent 보완) | 완료 |
 | 2026-03-03 | R-07. 캐시 TTL / Firestore 경로 상수화 | 완료 |
 | 2026-03-03 | R-05. 입력 유틸리티 공용화 | 완료 |
+| 2026-03-03 | R-09. 숫자 포맷팅 유틸리티 | 완료 |

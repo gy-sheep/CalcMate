@@ -63,7 +63,7 @@
 - [x] `core/constants/unit_definitions.dart` — 10개 카테고리 단위 상수 (스펙 비율 표 반영)
 - [x] `domain/usecases/convert_unit_usecase.dart` — 비율 기반 변환 + 온도/연비 특수 공식 (TDD 24케이스)
 - [x] `domain/models/unit_converter_state.dart` — Freezed State (input, isResult, activeUnitCode, convertedValues)
-- [x] `presentation/unit_converter/unit_converter_viewmodel.dart` — sealed Intent 4종 + Notifier ViewModel + 포맷팅
+- [x] `presentation/unit_converter/unit_converter_viewmodel.dart` — sealed Intent 4종 + Notifier ViewModel (`NumberFormatter` 사용)
 - [x] `presentation/unit_converter/unit_converter_screen.dart` — ConsumerStatefulWidget + TabBarView 스와이프 + ViewModel 연결
   - AppBar (Hero 애니메이션), 카테고리 탭 (10개 가로 스크롤 칩 + 자동 스크롤), 단위 리스트 (활성 행 하이라이트), 키패드 (4×4)
   - 다크 그라디언트 테마 (`#1A1A2E` → `#16213E`), 포인트 컬러 `#E94560`

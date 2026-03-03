@@ -8,6 +8,7 @@ import '../../domain/models/exchange_rate_entity.dart';
 import '../../domain/usecases/evaluate_expression_usecase.dart';
 import '../../domain/usecases/get_exchange_rate_usecase.dart';
 import '../../domain/utils/calculator_input_utils.dart';
+import '../../domain/utils/number_formatter.dart';
 
 part 'currency_calculator_viewmodel.freezed.dart';
 
@@ -143,7 +144,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
       RegExp(r'(\d+\.?\d*)'),
       (m) {
         final parts = m.group(0)!.split('.');
-        parts[0] = CalculatorInputUtils.addCommas(parts[0]);
+        parts[0] = NumberFormatter.addCommas(parts[0]);
         return parts.join('.');
       },
     );
@@ -153,7 +154,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   String convertedDisplayAt(int index) {
     final result =
         convert(evaluatedInput, state.fromCode, state.toCodes[index]);
-    return _formatAmount(result);
+    return NumberFormatter.formatAmount(result);
   }
 
   /// index번째 To 통화의 1단위 환율 힌트 텍스트 (예: "1 KRW = 0.0007 USD")
@@ -162,7 +163,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
     final toCode = state.toCodes[index];
     final rate = convert(1.0, state.fromCode, toCode);
     if (rate == 0) return '';
-    return '1 ${state.fromCode} = ${_formatAmount(rate)} $toCode';
+    return '1 ${state.fromCode} = ${NumberFormatter.formatAmount(rate)} $toCode';
   }
 
   bool get isAcState {
@@ -261,7 +262,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         final resolved = CalculatorInputUtils.resolvePercent(input);
         final result = _evaluateUseCase
             .execute(resolved.replaceAll('÷', '/').replaceAll('×', '*'));
-        input = CalculatorInputUtils.formatResult(result);
+        input = NumberFormatter.formatResult(result);
         isResult = true;
 
       case '.':
@@ -345,16 +346,5 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
 
   void clearToast() {
     state = state.copyWith(toastMessage: null);
-  }
-
-  // ── 유틸리티 ──
-
-  String _formatAmount(double value) {
-    if (value == 0) return '0';
-    if (value >= 1000) {
-      return CalculatorInputUtils.addCommas(value.toStringAsFixed(0));
-    }
-    if (value >= 1) return value.toStringAsFixed(2);
-    return value.toStringAsFixed(4);
   }
 }

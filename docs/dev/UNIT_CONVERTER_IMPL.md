@@ -145,14 +145,12 @@
 - `_onCategorySelected(int index)`: 카테고리 변경, 입력값 `'0'` 초기화, 기본 활성 단위 설정
 - `_onUnitTapped(String code)`: 활성 단위 전환, 현재 변환 결과를 새 활성 단위의 input으로 역산
 - `_onArrow(int direction)`: 활성 단위 위/아래 이동
-- `_recalculate()`: `ConvertUnitUseCase`를 호출하고 결과를 포맷팅하여 `convertedValues` 갱신
-- `_formatResult(double value)`: 스펙의 결과 표시 규칙에 따른 포맷팅
-- `_formatInput(String raw)`: 천 단위 콤마 적용
+- `_recalculate()`: `ConvertUnitUseCase`를 호출하고 `NumberFormatter`로 결과를 포맷팅하여 `convertedValues` 갱신
 
 **설계 결정**
 
 - 환율 계산기(`CurrencyCalculatorViewModel`)의 키패드 입력 패턴을 재사용: `_onKeyTap` 내 자릿수 제한, `isResult` 리셋 로직 동일
-- 포맷팅은 ViewModel 책임 — View는 `state.convertedValues[code]`를 그대로 표시
+- 포맷팅은 `NumberFormatter` 유틸리티 클래스에 위임 — View는 `state.convertedValues[code]`를 그대로 표시
 
 ---
 

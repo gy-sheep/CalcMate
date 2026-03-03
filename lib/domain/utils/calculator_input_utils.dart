@@ -45,26 +45,4 @@ abstract final class CalculatorInputUtils {
     return expr;
   }
 
-  /// 계산 결과를 표시용 문자열로 변환.
-  static String formatResult(double value) {
-    if (value == double.infinity || value == double.negativeInfinity) {
-      return '정의되지 않음';
-    }
-    if (value.isNaN) return '정의되지 않음';
-    if (value == value.truncateToDouble()) return value.toInt().toString();
-    final str = value.toStringAsFixed(10);
-    return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-  }
-
-  /// 정수 문자열에 천 단위 콤마 추가.
-  static String addCommas(String intStr) {
-    final isNegative = intStr.startsWith('-');
-    final digits = isNegative ? intStr.substring(1) : intStr;
-    final buf = StringBuffer();
-    for (int i = 0; i < digits.length; i++) {
-      if (i > 0 && (digits.length - i) % 3 == 0) buf.write(',');
-      buf.write(digits[i]);
-    }
-    return isNegative ? '-${buf.toString()}' : buf.toString();
-  }
 }
