@@ -78,6 +78,12 @@
 
 ## 다음 작업
 
+### Phase 4: 부가세 계산기 — `feat/vat-calculator`
+- [x] `docs/specs/VAT_CALCULATOR.md` — 기획 명세 작성
+- [ ] `docs/dev/VAT_CALCULATOR_IMPL.md` — 구현 명세 작성
+- [ ] Domain 계층 — `VatCalculateUseCase` (TDD)
+- [ ] Presentation 계층 — ViewModel, Screen UI 구현
+
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
 
