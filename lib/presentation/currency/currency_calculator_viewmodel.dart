@@ -234,9 +234,8 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         }
 
       case '%':
-        if (input.endsWith('%')) return;
-        if (CalculatorInputUtils.endsWithOperator(input)) return;
-        input += '%';
+        if (isResult || CalculatorInputUtils.endsWithOperator(input)) return;
+        input = CalculatorInputUtils.resolvePercent('$input%');
 
       case '÷' || '×' || '-' || '+':
         if (isResult) isResult = false;

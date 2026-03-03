@@ -2,6 +2,43 @@
 
 ---
 
+## 2026-03-04 — 부가세 계산기 Clean Architecture 분리
+
+### 완료 항목
+
+**Domain 계층**
+- `domain/usecases/vat_calculate_usecase.dart` — 부가세 별도/포함 계산 UseCase
+  - `VatMode` enum (exclusive, inclusive), `VatResult` 클래스
+  - 포함 모드: `(total * 100 / (100 + taxRate)).floorToDouble()` (부동소수점 정밀도 보장)
+- `domain/models/vat_calculator_state.dart` — Freezed 불변 상태 (mode, inputTarget, input, isResult, taxRate, taxRateInput, toastMessage)
+- `core/constants/default_tax_rates.dart` — 15개국 세율 매핑 + 로케일 기반 기본 세율 함수
+- `domain/utils/number_formatter.dart` — `formatVatResult` 메서드 추가
+
+**Presentation 계층**
+- `presentation/vat_calculator/vat_calculator_viewmodel.dart` — Notifier + sealed Intent 3종 (keyTapped, modeChanged, taxRateTapped)
+  - 계산 getters: `evaluatedInput`, `vatResult`, `formattedInput`, `displayRate`
+  - Private 핸들러: `_handleAmountKey`, `_handleTaxRateKey`, `_checkDigitLimit`, `_applyTaxRate`
+- `presentation/vat_calculator/vat_calculator_screen.dart` — StatefulWidget → ConsumerStatefulWidget 전환
+  - 인라인 상태 필드 및 비즈니스 로직 전체 제거
+  - `ref.watch()` / `ref.read().handleIntent()` 연결
+  - `ref.listen()` 토스트 처리
+
+**환율 계산기 수정**
+- `presentation/currency/currency_calculator_viewmodel.dart` — `%` 동작을 즉시 계산으로 변경 (부가세 계산기와 동일)
+
+**테스트**
+- `test/domain/usecases/vat_calculate_usecase_test.dart` — 14케이스
+- `test/core/constants/default_tax_rates_test.dart` — 12케이스
+- `test/presentation/vat_calculator/vat_calculator_viewmodel_test.dart` — 40케이스
+
+**문서**
+- `docs/specs/VAT_CALCULATOR.md` — `=` 결과만 표시, 키패드 `00`/`0` 순서 수정
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-04 — 기본 계산기 키패드 전면 개편
 
 ### 완료 항목

@@ -2,16 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/usecases/evaluate_expression_usecase.dart';
-import '../../domain/utils/calculator_input_utils.dart';
+import '../../domain/models/vat_calculator_state.dart';
+import '../../domain/usecases/vat_calculate_usecase.dart';
 import '../../domain/utils/number_formatter.dart';
+import 'vat_calculator_viewmodel.dart';
 
 // ──────────────────────────────────────────
 // 색상 상수
 // ──────────────────────────────────────────
-const _gradientTop = Color(0xFF1A1A2E);
-const _gradientBottom = Color(0xFF2D2B55);
+const _gradientTop = Color(0xFF141218);
+const _gradientBottom = Color(0xFF231F2E);
 const _receiptBg = Color(0xFFF5F5F0);
 const _receiptText = Color(0xFF2C2C2C);
 const _receiptSecondary = Color(0xFF888888);
@@ -23,17 +25,11 @@ const _colorOperator = Color(0xFFA78BFA);
 const _colorFunction = Color(0xCCFFFFFF);
 const _colorEquals = Color(0xFF7C3AED);
 
-// ──────────────────────────────────────────
-// 모드 / 입력 대상
-// ──────────────────────────────────────────
-enum _VatMode { exclusive, inclusive }
-
-enum _InputTarget { amount, taxRate }
 
 // ──────────────────────────────────────────
 // 메인 화면
 // ──────────────────────────────────────────
-class VatCalculatorScreen extends StatefulWidget {
+class VatCalculatorScreen extends ConsumerStatefulWidget {
   final String title;
   final IconData icon;
 
@@ -44,242 +40,11 @@ class VatCalculatorScreen extends StatefulWidget {
   });
 
   @override
-  State<VatCalculatorScreen> createState() => _VatCalculatorScreenState();
+  ConsumerState<VatCalculatorScreen> createState() =>
+      _VatCalculatorScreenState();
 }
 
-class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
-  final _evaluator = EvaluateExpressionUseCase();
-
-  _VatMode _mode = _VatMode.exclusive;
-  _InputTarget _inputTarget = _InputTarget.amount;
-  String _input = '0';
-  String _expression = '';
-  bool _isResult = false;
-  int _taxRate = 10;
-  String _taxRateInput = '';
-
-  // ── 계산 ──
-
-  double get _inputValue {
-    final raw = _input.replaceAll(',', '');
-    if (CalculatorInputUtils.endsWithOperator(raw)) {
-      final trimmed = raw.substring(0, raw.length - 1);
-      if (trimmed.isEmpty) return 0;
-      return _evaluator.execute(
-        trimmed.replaceAll('×', '*').replaceAll('÷', '/'),
-      );
-    }
-    final result = _evaluator.execute(
-      raw.replaceAll('×', '*').replaceAll('÷', '/'),
-    );
-    return result.isNaN ? 0 : result;
-  }
-
-  double get _supplyAmount {
-    final value = _inputValue;
-    if (_mode == _VatMode.exclusive) return value;
-    return (value / (1 + _taxRate / 100)).floorToDouble();
-  }
-
-  double get _vatAmount {
-    if (_mode == _VatMode.exclusive) {
-      return _inputValue * (_taxRate / 100);
-    }
-    return _inputValue - _supplyAmount;
-  }
-
-  double get _totalAmount {
-    if (_mode == _VatMode.exclusive) {
-      return _inputValue + _vatAmount;
-    }
-    return _inputValue;
-  }
-
-  String _formatVatResult(double value) {
-    if (value == 0) return '0';
-    if (value.isNaN || value.isInfinite) return '0';
-    final absVal = value.abs();
-    if (absVal >= 1000) return NumberFormatter.addCommas(value.toStringAsFixed(0));
-    if (value == value.truncateToDouble()) return value.toInt().toString();
-    return NumberFormatter.trimTrailingZeros(value.toStringAsFixed(2));
-  }
-
-  String get _formattedInput {
-    if (_input == '오류') return '오류';
-    final raw = _input;
-    final buf = StringBuffer();
-    final segment = StringBuffer();
-    for (int i = 0; i < raw.length; i++) {
-      final ch = raw[i];
-      if ('+-×÷'.contains(ch) && !(ch == '-' && (i == 0 || '+-×÷'.contains(raw[i - 1])))) {
-        if (segment.isNotEmpty) {
-          buf.write(NumberFormatter.formatInput(segment.toString()));
-          segment.clear();
-        }
-        buf.write(' $ch ');
-      } else {
-        segment.write(ch);
-      }
-    }
-    if (segment.isNotEmpty) {
-      buf.write(NumberFormatter.formatInput(segment.toString()));
-    }
-    return buf.isEmpty ? '0' : buf.toString();
-  }
-
-  // ── 입력 처리 ──
-
-  void _onKeyTap(String key) {
-    if (_inputTarget == _InputTarget.taxRate) {
-      _handleTaxRateKey(key);
-      return;
-    }
-    _handleAmountKey(key);
-  }
-
-  void _handleAmountKey(String key) {
-    setState(() {
-      switch (key) {
-        case 'AC':
-          _input = '0';
-          _expression = '';
-          _isResult = false;
-        case '\u{232B}': // backspace
-          if (_isResult) return;
-          if (_input.length <= 1 || (_input.length == 2 && _input.startsWith('-'))) {
-            _input = '0';
-          } else {
-            _input = _input.substring(0, _input.length - 1);
-          }
-        case '=':
-          final raw = _input.replaceAll(',', '');
-          final resolved = CalculatorInputUtils.resolvePercent(raw);
-          final expr = resolved.replaceAll('×', '*').replaceAll('÷', '/');
-          final result = _evaluator.execute(expr);
-          if (result.isNaN || result.isInfinite) {
-            _expression = '';
-            _input = '오류';
-            _isResult = true;
-            return;
-          }
-          _expression = _formattedInput;
-          _input = NumberFormatter.rawFromDouble(result);
-          _isResult = true;
-        case '+' || '-' || '×' || '÷':
-          if (_isResult) {
-            _expression = '';
-            _isResult = false;
-          }
-          if (CalculatorInputUtils.endsWithOperator(_input)) {
-            _input = _input.substring(0, _input.length - 1) + key;
-          } else {
-            _input += key;
-          }
-        case '%':
-          if (_isResult || CalculatorInputUtils.endsWithOperator(_input)) return;
-          final raw = _input.replaceAll(',', '');
-          final resolved = CalculatorInputUtils.resolvePercent('$raw%');
-          _input = resolved;
-        case '.':
-          if (_isResult) {
-            _input = '0.';
-            _expression = '';
-            _isResult = false;
-            return;
-          }
-          final lastSeg = CalculatorInputUtils.lastNumberSegment(_input);
-          if (lastSeg.contains('.')) return;
-          _input += '.';
-        case '00':
-          if (_isResult) {
-            _input = '0';
-            _expression = '';
-            _isResult = false;
-            return;
-          }
-          if (_input == '0') return;
-          if (CalculatorInputUtils.endsWithOperator(_input)) {
-            return;
-          }
-          final lastSeg = CalculatorInputUtils.lastNumberSegment(_input);
-          if (lastSeg == '0') return;
-          if (!_checkDigitLimit(lastSeg, '00')) return;
-          _input += '00';
-        default: // 숫자 0-9
-          if (_isResult) {
-            _input = key == '0' ? '0' : key;
-            _expression = '';
-            _isResult = false;
-            return;
-          }
-          if (CalculatorInputUtils.endsWithOperator(_input)) {
-            _input += key;
-            return;
-          }
-          final lastSeg = CalculatorInputUtils.lastNumberSegment(_input);
-          if (lastSeg == '0' && key == '0') return;
-          if (lastSeg == '0' && !lastSeg.contains('.')) {
-            final prefix = _input.substring(0, _input.length - 1);
-            _input = prefix + key;
-            return;
-          }
-          if (!_checkDigitLimit(lastSeg, key)) return;
-          _input += key;
-      }
-    });
-  }
-
-  bool _checkDigitLimit(String segment, String adding) {
-    final combined = segment + adding;
-    final noSign = combined.startsWith('-') ? combined.substring(1) : combined;
-    if (noSign.contains('.')) {
-      final parts = noSign.split('.');
-      if (parts[0].length > 12 || parts[1].length > 8) {
-        _showToast('자릿수 제한을 초과했습니다');
-        return false;
-      }
-    } else {
-      if (noSign.length > 12) {
-        _showToast('자릿수 제한을 초과했습니다');
-        return false;
-      }
-    }
-    return true;
-  }
-
-  void _handleTaxRateKey(String key) {
-    setState(() {
-      switch (key) {
-        case 'AC':
-          _taxRateInput = '';
-        case '\u{232B}':
-          if (_taxRateInput.isNotEmpty) {
-            _taxRateInput = _taxRateInput.substring(0, _taxRateInput.length - 1);
-          }
-        case '=' || '+' || '-' || '×' || '÷' || '%' || '.' || '00':
-          // 세율 편집 종료
-          _applyTaxRate();
-          _inputTarget = _InputTarget.amount;
-        default: // 숫자 0-9
-          final newInput = _taxRateInput + key;
-          final parsed = int.tryParse(newInput);
-          if (parsed != null && parsed <= 99) {
-            _taxRateInput = newInput;
-          } else if (parsed != null && parsed > 99) {
-            _showToast('세율은 0~99% 범위로 입력하세요');
-          }
-      }
-    });
-  }
-
-  void _applyTaxRate() {
-    final parsed = int.tryParse(_taxRateInput);
-    if (parsed != null) {
-      _taxRate = parsed;
-    }
-    _taxRateInput = '';
-  }
-
+class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
   void _showToast(String message) {
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
@@ -292,7 +57,8 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
           child: Material(
             color: Colors.transparent,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
                 color: Colors.black87,
                 borderRadius: BorderRadius.circular(20),
@@ -316,6 +82,21 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(vatCalculatorViewModelProvider);
+    final vm = ref.read(vatCalculatorViewModelProvider.notifier);
+
+    ref.listen(
+      vatCalculatorViewModelProvider.select((s) => s.toastMessage),
+      (_, next) {
+        if (next != null) {
+          _showToast(next);
+          vm.clearToast();
+        }
+      },
+    );
+
+    final vatResult = vm.vatResult;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -330,11 +111,14 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
           child: Column(
             children: [
               _buildAppBar(),
-              _buildSegmentControl(),
-              Expanded(child: _buildReceiptCard()),
-              const Divider(color: _dividerColor, thickness: 0.5, height: 1),
+              _buildSegmentControl(state, vm),
+              Expanded(
+                  child: _buildReceiptCard(state, vm, vatResult)),
+              const Divider(
+                  color: _dividerColor, thickness: 0.5, height: 1),
               _NumberPad(
-                onKeyTap: _onKeyTap,
+                onKeyTap: (key) => vm.handleIntent(
+                    VatCalculatorIntent.keyTapped(key)),
               ),
               const SizedBox(height: 8),
             ],
@@ -353,7 +137,8 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+              icon: const Icon(Icons.arrow_back_ios,
+                  color: Colors.white, size: 20),
               onPressed: () => Navigator.maybePop(context),
             ),
           ),
@@ -371,7 +156,8 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
                       color: Colors.white24,
                       borderRadius: BorderRadius.circular(7),
                     ),
-                    child: Icon(widget.icon, color: Colors.white, size: 15),
+                    child:
+                        Icon(widget.icon, color: Colors.white, size: 15),
                   ),
                 ),
               ),
@@ -397,15 +183,16 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
     );
   }
 
-  Widget _buildSegmentControl() {
+  Widget _buildSegmentControl(
+      VatCalculatorState state, VatCalculatorViewModel vm) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: CupertinoSlidingSegmentedControl<_VatMode>(
-        groupValue: _mode,
+      child: CupertinoSlidingSegmentedControl<VatMode>(
+        groupValue: state.mode,
         backgroundColor: Colors.white.withValues(alpha: 0.1),
         thumbColor: _colorEquals.withValues(alpha: 0.9),
         children: const {
-          _VatMode.exclusive: Padding(
+          VatMode.exclusive: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               '부가세 별도',
@@ -416,7 +203,7 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
               ),
             ),
           ),
-          _VatMode.inclusive: Padding(
+          VatMode.inclusive: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               '부가세 포함',
@@ -430,23 +217,14 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
         },
         onValueChanged: (value) {
           if (value == null) return;
-          setState(() {
-            _mode = value;
-            if (_inputTarget == _InputTarget.taxRate) {
-              _applyTaxRate();
-              _inputTarget = _InputTarget.amount;
-            }
-          });
+          vm.handleIntent(VatCalculatorIntent.modeChanged(value));
         },
       ),
     );
   }
 
-  Widget _buildReceiptCard() {
-    final displayRate = _inputTarget == _InputTarget.taxRate && _taxRateInput.isNotEmpty
-        ? int.tryParse(_taxRateInput) ?? _taxRate
-        : _taxRate;
-
+  Widget _buildReceiptCard(VatCalculatorState state,
+      VatCalculatorViewModel vm, VatResult vatResult) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: ClipPath(
@@ -469,24 +247,13 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // ── 입력 디스플레이 ──
-                if (_expression.isNotEmpty)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      _expression,
-                      style: const TextStyle(
-                        color: _receiptSecondary,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerRight,
                     child: Text(
-                      _formattedInput,
+                      vm.formattedInput,
                       style: const TextStyle(
                         color: _receiptText,
                         fontSize: 40,
@@ -506,10 +273,11 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
                 // ── 세액 명세 ──
                 _ReceiptRow(
                   label: '공급가액',
-                  amount: '${_formatVatResult(_supplyAmount)}원',
+                  amount:
+                      '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
                 ),
                 const SizedBox(height: 10),
-                _buildTaxRateRow(displayRate),
+                _buildTaxRateRow(state, vm, vatResult, vm.displayRate),
                 const SizedBox(height: 16),
                 // ── 실선 구분선 ──
                 Container(height: 1.5, color: _receiptDivider),
@@ -527,7 +295,7 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
                       ),
                     ),
                     Text(
-                      '${_formatVatResult(_totalAmount)}원',
+                      '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원',
                       style: const TextStyle(
                         color: _receiptText,
                         fontSize: 22,
@@ -544,10 +312,11 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
     );
   }
 
-  Widget _buildTaxRateRow(int displayRate) {
-    final isEditing = _inputTarget == _InputTarget.taxRate;
-    final rateText = isEditing && _taxRateInput.isNotEmpty
-        ? _taxRateInput
+  Widget _buildTaxRateRow(VatCalculatorState state,
+      VatCalculatorViewModel vm, VatResult vatResult, int displayRate) {
+    final isEditing = state.inputTarget == InputTarget.taxRate;
+    final rateText = isEditing && state.taxRateInput.isNotEmpty
+        ? state.taxRateInput
         : displayRate.toString();
 
     return Row(
@@ -560,21 +329,15 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
               style: TextStyle(color: _receiptSecondary, fontSize: 15),
             ),
             GestureDetector(
-              onTap: () {
-                setState(() {
-                  if (_inputTarget == _InputTarget.taxRate) {
-                    _applyTaxRate();
-                    _inputTarget = _InputTarget.amount;
-                  } else {
-                    _inputTarget = _InputTarget.taxRate;
-                    _taxRateInput = '';
-                  }
-                });
-              },
+              onTap: () => vm.handleIntent(
+                  const VatCalculatorIntent.taxRateTapped()),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: isEditing ? _colorEquals.withValues(alpha: 0.15) : Colors.transparent,
+                  color: isEditing
+                      ? _colorEquals.withValues(alpha: 0.15)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(4),
                   border: isEditing
                       ? Border.all(color: _colorEquals, width: 1.5)
@@ -583,9 +346,11 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
                 child: Text(
                   '$rateText%',
                   style: TextStyle(
-                    color: isEditing ? _colorEquals : _receiptSecondary,
+                    color:
+                        isEditing ? _colorEquals : _receiptSecondary,
                     fontSize: 15,
-                    fontWeight: isEditing ? FontWeight.w700 : FontWeight.w400,
+                    fontWeight:
+                        isEditing ? FontWeight.w700 : FontWeight.w400,
                   ),
                 ),
               ),
@@ -606,8 +371,9 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
           ],
         ),
         Text(
-          '${_formatVatResult(_vatAmount)}원',
-          style: const TextStyle(color: _receiptSecondary, fontSize: 15),
+          '${NumberFormatter.formatVatResult(vatResult.vatAmount)}원',
+          style:
+              const TextStyle(color: _receiptSecondary, fontSize: 15),
         ),
       ],
     );
@@ -729,7 +495,8 @@ class _DashedLinePainter extends CustomPainter {
     const dashSpace = 3.0;
     double x = 0;
     while (x < size.width) {
-      canvas.drawLine(Offset(x, 0), Offset(min(x + dashWidth, size.width), 0), paint);
+      canvas.drawLine(
+          Offset(x, 0), Offset(min(x + dashWidth, size.width), 0), paint);
       x += dashWidth + dashSpace;
     }
   }
@@ -752,11 +519,36 @@ class _NumberPad extends StatelessWidget {
   const _NumberPad({required this.onKeyTap});
 
   static const _rows = [
-    [('\u{232B}', _BtnType.function), ('AC', _BtnType.function), ('%', _BtnType.function), ('\u{00F7}', _BtnType.operator)],
-    [('7', _BtnType.number), ('8', _BtnType.number), ('9', _BtnType.number), ('\u{00D7}', _BtnType.operator)],
-    [('4', _BtnType.number), ('5', _BtnType.number), ('6', _BtnType.number), ('-', _BtnType.operator)],
-    [('1', _BtnType.number), ('2', _BtnType.number), ('3', _BtnType.number), ('+', _BtnType.operator)],
-    [('0', _BtnType.number), ('00', _BtnType.number), ('.', _BtnType.number), ('=', _BtnType.equals)],
+    [
+      ('\u{232B}', _BtnType.function),
+      ('AC', _BtnType.function),
+      ('%', _BtnType.function),
+      ('\u{00F7}', _BtnType.operator)
+    ],
+    [
+      ('7', _BtnType.number),
+      ('8', _BtnType.number),
+      ('9', _BtnType.number),
+      ('\u{00D7}', _BtnType.operator)
+    ],
+    [
+      ('4', _BtnType.number),
+      ('5', _BtnType.number),
+      ('6', _BtnType.number),
+      ('-', _BtnType.operator)
+    ],
+    [
+      ('1', _BtnType.number),
+      ('2', _BtnType.number),
+      ('3', _BtnType.number),
+      ('+', _BtnType.operator)
+    ],
+    [
+      ('00', _BtnType.number),
+      ('0', _BtnType.number),
+      ('.', _BtnType.number),
+      ('=', _BtnType.equals)
+    ],
   ];
 
   @override
@@ -814,11 +606,20 @@ class _KeypadButton extends StatelessWidget {
           height: 68,
           child: Center(
             child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: 26)
+                ? Icon(Icons.backspace_outlined,
+                    color: _textColor, size: 26)
                 : Text(
                     label,
                     style: TextStyle(
-                      fontSize: const ['\u{00F7}', '\u{00D7}', '-', '+', '='].contains(label) ? 28 : 22,
+                      fontSize: const [
+                        '\u{00F7}',
+                        '\u{00D7}',
+                        '-',
+                        '+',
+                        '='
+                      ].contains(label)
+                          ? 28
+                          : 22,
                       fontWeight: FontWeight.w400,
                       color: _textColor,
                     ),
@@ -885,7 +686,8 @@ class _TaxRateInfoSheet extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white54, size: 22),
+                  icon: const Icon(Icons.close,
+                      color: Colors.white54, size: 22),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -894,7 +696,8 @@ class _TaxRateInfoSheet extends StatelessWidget {
           const Divider(color: _dividerColor, thickness: 0.5, height: 1),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 8),
               itemCount: _rates.length,
               separatorBuilder: (_, _) => const Divider(
                 color: _dividerColor,
@@ -907,11 +710,13 @@ class _TaxRateInfoSheet extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
                     children: [
-                      Text(flag, style: const TextStyle(fontSize: 24)),
+                      Text(flag,
+                          style: const TextStyle(fontSize: 24)),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
                             Text(
                               country,

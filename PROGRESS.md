@@ -86,9 +86,13 @@
   - 세율 탭 편집 (0~99%), ⓘ 세율 참고표 Bottom Sheet (18개국)
   - 다크 인디고 퍼플 그라디언트 테마
 - [x] `presentation/main/main_screen.dart` — 부가세 계산기 네비게이션 추가
-- [ ] ViewModel 분리 (Notifier + sealed Intent)
-- [ ] Domain 계층 — `VatCalculateUseCase` (TDD)
-- [ ] 로케일 기반 기본 세율 자동 설정
+- [x] ViewModel 분리 (Notifier + sealed Intent, TDD 40케이스)
+- [x] Domain 계층 — `VatCalculateUseCase` (TDD 14케이스)
+- [x] 로케일 기반 기본 세율 자동 설정 (15개국)
+- [x] `VatCalculatorState` (Freezed) 정의
+- [x] Screen → `ConsumerStatefulWidget` 전환, ViewModel 연결
+- [x] `NumberFormatter.formatVatResult` 추가
+- [x] 환율 계산기 `%` 즉시 계산으로 변경 (부가세 계산기와 동일)
 
 ### UX 개선: AC/C 동적 전환 제거 — 완료
 - [x] 기본 계산기: AC/C 전환 제거, AC 고정 (`refactor/basic_calculator_keypad_function`에서 완료)

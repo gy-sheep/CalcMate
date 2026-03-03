@@ -113,6 +113,16 @@ abstract final class NumberFormatter {
     return addCommas(trimTrailingZeros(value.toStringAsFixed(3)));
   }
 
+  /// 부가세 결과 표시 (1000 이상 콤마+정수, 정수화, 소수 2자리).
+  static String formatVatResult(double value) {
+    if (value == 0) return '0';
+    if (value.isNaN || value.isInfinite) return '0';
+    final absVal = value.abs();
+    if (absVal >= 1000) return addCommas(value.toStringAsFixed(0));
+    if (value == value.truncateToDouble()) return value.toInt().toString();
+    return trimTrailingZeros(value.toStringAsFixed(2));
+  }
+
   /// 단일 숫자 입력값에 콤마 추가 (음수, 소수점 보존).
   static String formatInput(String raw) {
     if (raw.isEmpty) return '0';
