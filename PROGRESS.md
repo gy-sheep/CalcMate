@@ -79,10 +79,16 @@
 ## 다음 작업
 
 ### Phase 4: 부가세 계산기 — `feat/vat-calculator`
-- [x] `docs/specs/VAT_CALCULATOR.md` — 기획 명세 작성
-- [ ] `docs/dev/VAT_CALCULATOR_IMPL.md` — 구현 명세 작성
+- [x] `docs/specs/VAT_CALCULATOR.md` — 기획 명세 작성 및 현행화 (영수증 UI, 세율 설정, 참고표 추가)
+- [x] `presentation/vat_calculator/vat_calculator_screen.dart` — Screen UI 구현
+  - 영수증 스타일 결과 카드 (둥근 스캘럽 톱니, 크림색 배경, 점선/실선 구분선)
+  - 세그먼트 컨트롤 (부가세 별도/포함), 5×4 키패드 (수식 입력 지원)
+  - 세율 탭 편집 (0~99%), ⓘ 세율 참고표 Bottom Sheet (18개국)
+  - 다크 인디고 퍼플 그라디언트 테마
+- [x] `presentation/main/main_screen.dart` — 부가세 계산기 네비게이션 추가
+- [ ] ViewModel 분리 (Notifier + sealed Intent)
 - [ ] Domain 계층 — `VatCalculateUseCase` (TDD)
-- [ ] Presentation 계층 — ViewModel, Screen UI 구현
+- [ ] 로케일 기반 기본 세율 자동 설정
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
