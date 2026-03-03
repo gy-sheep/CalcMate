@@ -194,7 +194,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
       isRefreshing: false,
       rates: entity?.rates ?? state.rates,
       lastUpdated: entity != null
-          ? DateTime.fromMillisecondsSinceEpoch(entity!.timestamp * 1000)
+          ? DateTime.fromMillisecondsSinceEpoch(entity!.timestamp)
           : state.lastUpdated,
     );
   }
@@ -209,7 +209,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         isLoading: false,
         lastUpdated: isFallback
             ? null
-            : DateTime.fromMillisecondsSinceEpoch(entity.timestamp * 1000),
+            : DateTime.fromMillisecondsSinceEpoch(entity.timestamp),
         toastMessage: isFallback ? ErrorMessages.exchangeRateUsingFallback : null,
       );
     } catch (e) {
