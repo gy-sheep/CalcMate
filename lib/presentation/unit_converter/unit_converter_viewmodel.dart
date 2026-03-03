@@ -84,13 +84,6 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
     return NumberFormatter.formatInput(state.input);
   }
 
-  /// AC/C 표시 판별
-  bool get isAcState {
-    if (state.isResult) return true;
-    final input = state.input;
-    return input == '0' || input == '-0' || input == '-';
-  }
-
   // ── 핸들러 ──
 
   void _onKeyTap(String key) {
@@ -98,7 +91,7 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
     var isResult = state.isResult;
 
     switch (key) {
-      case 'AC' || 'C':
+      case 'AC':
         state = _recalculate(state.copyWith(input: '0', isResult: false));
         return;
 
@@ -122,6 +115,31 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
           input = input.substring(1);
         } else {
           input = '-$input';
+        }
+
+      case '00':
+        if (isResult) {
+          input = '0';
+          isResult = false;
+          break;
+        }
+        if (input == '0' || input == '-0') break;
+        // 자릿수 제한 체크
+        final clean00 = input.startsWith('-') ? input.substring(1) : input;
+        if (clean00.contains('.')) {
+          final fracLen = clean00.split('.')[1].length;
+          if (fracLen >= 8) {
+            state = state.copyWith(toastMessage: '소수점 이하 8자리까지 입력 가능해요');
+            return;
+          }
+          input += (fracLen >= 7) ? '0' : '00';
+        } else {
+          final intLen = clean00.replaceFirst(RegExp(r'^0+'), '').length;
+          if (intLen >= 12) {
+            state = state.copyWith(toastMessage: '정수부는 최대 12자리까지 입력 가능해요');
+            return;
+          }
+          input += (intLen >= 11) ? '0' : '00';
         }
 
       case '.':

@@ -127,10 +127,6 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
     return buf.isEmpty ? '0' : buf.toString();
   }
 
-  bool get _isAcState {
-    return _input == '0' || _isResult || CalculatorInputUtils.endsWithOperator(_input);
-  }
-
   // ── 입력 처리 ──
 
   void _onKeyTap(String key) {
@@ -147,9 +143,6 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
         case 'AC':
           _input = '0';
           _expression = '';
-          _isResult = false;
-        case 'C':
-          _input = '0';
           _isResult = false;
         case '\u{232B}': // backspace
           if (_isResult) return;
@@ -257,7 +250,7 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
   void _handleTaxRateKey(String key) {
     setState(() {
       switch (key) {
-        case 'AC' || 'C':
+        case 'AC':
           _taxRateInput = '';
         case '\u{232B}':
           if (_taxRateInput.isNotEmpty) {
@@ -342,7 +335,6 @@ class _VatCalculatorScreenState extends State<VatCalculatorScreen> {
               const Divider(color: _dividerColor, thickness: 0.5, height: 1),
               _NumberPad(
                 onKeyTap: _onKeyTap,
-                isAcState: _isAcState,
               ),
               const SizedBox(height: 8),
             ],
@@ -756,9 +748,8 @@ enum _BtnType { number, operator, function, equals }
 // ──────────────────────────────────────────
 class _NumberPad extends StatelessWidget {
   final void Function(String) onKeyTap;
-  final bool isAcState;
 
-  const _NumberPad({required this.onKeyTap, required this.isAcState});
+  const _NumberPad({required this.onKeyTap});
 
   static const _rows = [
     [('\u{232B}', _BtnType.function), ('AC', _BtnType.function), ('%', _BtnType.function), ('\u{00F7}', _BtnType.operator)],
@@ -775,7 +766,7 @@ class _NumberPad extends StatelessWidget {
       children: _rows.map((row) {
         return Row(
           children: row.map((cell) {
-            final label = cell.$1 == 'AC' ? (isAcState ? 'AC' : 'C') : cell.$1;
+            final label = cell.$1;
             return Expanded(
               child: _KeypadButton(
                 label: label,

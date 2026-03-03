@@ -218,7 +218,6 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                   // 숫자 키패드
                   _NumberPad(
                     onKeyTap: (key) => vm.handleIntent(ExchangeRateIntent.keyTapped(key)),
-                    isAcState: vm.isAcState,
                   ),
                   const SizedBox(height: 8),
                 ],
@@ -495,9 +494,8 @@ enum _BtnType { number, operator, function, equals }
 // ──────────────────────────────────────────
 class _NumberPad extends StatelessWidget {
   final void Function(String) onKeyTap;
-  final bool isAcState;
 
-  const _NumberPad({required this.onKeyTap, required this.isAcState});
+  const _NumberPad({required this.onKeyTap});
 
   static const _rows = [
     [
@@ -525,8 +523,8 @@ class _NumberPad extends StatelessWidget {
       ('+', _BtnType.operator)
     ],
     [
-      ('0', _BtnType.number),
       ('00', _BtnType.number),
+      ('0', _BtnType.number),
       ('.', _BtnType.number),
       ('=', _BtnType.equals)
     ],
@@ -539,8 +537,7 @@ class _NumberPad extends StatelessWidget {
       children: _rows.map((row) {
         return Row(
           children: row.map((cell) {
-            final label =
-                cell.$1 == 'AC' ? (isAcState ? 'AC' : 'C') : cell.$1;
+            final label = cell.$1;
             return Expanded(
               child: _KeypadButton(
                 label: label,

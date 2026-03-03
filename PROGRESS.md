@@ -90,10 +90,11 @@
 - [ ] Domain 계층 — `VatCalculateUseCase` (TDD)
 - [ ] 로케일 기반 기본 세율 자동 설정
 
-### UX 개선: AC/C 동적 전환 제거 — `refactor/remove-clear-button`
+### UX 개선: AC/C 동적 전환 제거 — 완료
 - [x] 기본 계산기: AC/C 전환 제거, AC 고정 (`refactor/basic_calculator_keypad_function`에서 완료)
-- [ ] 환율 계산기: AC/C 전환 제거, AC 고정
-- [ ] 부가세 계산기: AC/C 전환 제거, AC 고정
+- [x] 환율 계산기: AC/C 전환 제거, AC 고정 + `00`/`0` 위치 교체
+- [x] 단위 변환기: AC/C 전환 제거, AC 고정 + 온도 외 카테고리 `+/-` → `00` 교체
+- [x] 부가세 계산기: AC/C 전환 제거, AC 고정
 
 ### 기본 계산기 키패드 리팩토링 — `refactor/basic_calculator_keypad_function` 완료
 - [x] `+/-` → `()` 스마트 괄호 버튼 교체

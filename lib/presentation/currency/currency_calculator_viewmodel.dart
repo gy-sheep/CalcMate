@@ -166,15 +166,6 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
     return '1 ${state.fromCode} = ${NumberFormatter.formatAmount(rate)} $toCode';
   }
 
-  bool get isAcState {
-    final input = state.input;
-    if (input == '0' || input == '-') return true;
-    if (input.length == 2 && input[0] == '0') {
-      return const {'+', '-', '×', '÷'}.contains(input[1]);
-    }
-    return false;
-  }
-
   /// 수동 새로고침: 스피너를 최소 800ms 표시 후 종료
   Future<void> _refreshRates() async {
     if (state.isRefreshing) return;
@@ -226,7 +217,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
     var isResult = state.isResult;
 
     switch (key) {
-      case 'AC' || 'C':
+      case 'AC':
         input = '0';
         isResult = false;
 

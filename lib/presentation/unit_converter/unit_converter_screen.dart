@@ -170,7 +170,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
               ),
               const Divider(color: _dividerColor, thickness: 0.5, height: 1),
               _NumberPad(
-                isAc: vm.isAcState,
+                isTemperature: unitCategories[state.selectedCategoryIndex].name == '온도',
                 onKey: (key) => vm.handleIntent(
                   UnitConverterIntent.keyTapped(key),
                 ),
@@ -566,21 +566,21 @@ enum _BtnType { number, function }
 // 숫자 키패드 (4×4)
 // ──────────────────────────────────────────
 class _NumberPad extends StatelessWidget {
-  final bool isAc;
+  final bool isTemperature;
   final ValueChanged<String> onKey;
   final ValueChanged<int> onArrow;
 
   const _NumberPad({
-    required this.isAc,
+    required this.isTemperature,
     required this.onKey,
     required this.onArrow,
   });
 
   List<List<(String, _BtnType)>> get _rows => [
     [('7', _BtnType.number), ('8', _BtnType.number), ('9', _BtnType.number), ('\u{232B}', _BtnType.function)],
-    [('4', _BtnType.number), ('5', _BtnType.number), ('6', _BtnType.number), (isAc ? 'AC' : 'C', _BtnType.function)],
+    [('4', _BtnType.number), ('5', _BtnType.number), ('6', _BtnType.number), ('AC', _BtnType.function)],
     [('1', _BtnType.number), ('2', _BtnType.number), ('3', _BtnType.number), ('▲', _BtnType.function)],
-    [('+/-', _BtnType.function), ('0', _BtnType.number), ('.', _BtnType.number), ('▼', _BtnType.function)],
+    [(isTemperature ? '+/-' : '00', isTemperature ? _BtnType.function : _BtnType.number), ('0', _BtnType.number), ('.', _BtnType.number), ('▼', _BtnType.function)],
   ];
 
   @override
