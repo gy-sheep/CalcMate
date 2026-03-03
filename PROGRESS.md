@@ -90,6 +90,12 @@
 - [ ] Domain 계층 — `VatCalculateUseCase` (TDD)
 - [ ] 로케일 기반 기본 세율 자동 설정
 
+### UX 개선: AC/C 동적 전환 제거 — `refactor/remove-clear-button`
+- [ ] C 버튼 제거, AC만 유지 (백스페이스 ⌫ 와 기능 중복)
+  - 대상: 기본 계산기, 환율 계산기, 부가세 계산기 (단위 변환기는 이미 AC만 사용)
+  - AC/C 판별 로직 제거 (`_isAcState` 등)
+  - ViewModel의 `_onClear()` → 항상 전체 초기화로 단순화
+
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
 
