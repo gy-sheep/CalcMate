@@ -251,8 +251,6 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         if (isResult) isResult = false;
         if (CalculatorInputUtils.endsWithOperator(input)) {
           input = input.substring(0, input.length - 1) + key;
-        } else if (input == '0' && key == '-') {
-          input = '-';
         } else if (input != '0') {
           input += key;
         }
