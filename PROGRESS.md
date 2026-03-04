@@ -133,6 +133,16 @@
 - [x] `formatResult` 소수점 최대 9자리로 변경 (아이폰 동일)
 - [x] 스펙/구현 명세 현행화, 테스트 116케이스
 
+### Phase 6: 날짜 계산기 — `feat/date-calculator` (진행 중)
+- [x] `docs/specs/DATE_CALCULATOR.md` — 기획 명세 작성 (3모드: 기간 계산 / 날짜 계산 / D-Day)
+- [x] `presentation/date_calculator/date_calculator_prototype_spec.dart` — UI 확정 (`DateCalculatorScreen`)
+  - 탄성 스트레치 탭바: 배경 칩 글로우 + 언더라인 글로우 + 텍스트 스케일 애니메이션
+  - PageView 스와이프 모드 전환 (탭바와 양방향 동기화)
+  - 슬라이드업 키패드 (모드2 전용, 숫자 필드 탭 시 슬라이드업)
+  - 결과 카드 상단 고정, 입력 영역 하단 배치
+- [x] `presentation/main/main_screen.dart` — 날짜 계산기 카드 연동
+- [ ] **다음**: 테마 색상 확정 후 Clean Architecture 구현 시작
+
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
 
