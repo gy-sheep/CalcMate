@@ -65,7 +65,41 @@ class ReceiptCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
+                // ── 점선 구분선 ──
+                CustomPaint(
+                  painter: DashedLinePainter(color: kVatReceiptDash),
+                  size: const Size(double.infinity, 1),
+                ),
+                const SizedBox(height: 8),
+                // ── 부가세 별도 체크박스 ──
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Checkbox(
+                        value: state.mode == VatMode.exclusive,
+                        onChanged: (v) => vm.handleIntent(
+                          VatCalculatorIntent.modeChanged(
+                            v == true ? VatMode.exclusive : VatMode.inclusive,
+                          ),
+                        ),
+                        activeColor: kVatReceiptText,
+                        checkColor: kVatReceiptBg,
+                        side: const BorderSide(color: kVatReceiptSecondary, width: 1.5),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      '부가세 별도',
+                      style: TextStyle(color: kVatReceiptSecondary, fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 // ── 점선 구분선 ──
                 CustomPaint(
                   painter: DashedLinePainter(color: kVatReceiptDash),

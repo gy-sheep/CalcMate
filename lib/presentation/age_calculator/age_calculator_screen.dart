@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/age_calculator_state.dart';
-import '../widgets/app_segment_control.dart';
 import 'age_calculator_colors.dart';
 import 'age_calculator_viewmodel.dart';
 import 'widgets/empty_state.dart';
@@ -125,23 +124,6 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
         child: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
-                child: AppSegmentControl<AgeCalendarType>(
-                  value: state.calendarType,
-                  segments: const [
-                    (AgeCalendarType.solar, '양력'),
-                    (AgeCalendarType.lunar, '음력'),
-                  ],
-                  onChanged: (t) => vm.handleIntent(
-                    AgeCalculatorIntent.calendarTypeChanged(t),
-                  ),
-                  trackColor: kAgePickerHighlight,
-                  thumbColor: Colors.white,
-                  activeTextColor: kAgeAccent,
-                  inactiveTextColor: kAgeSubText,
-                ),
-              ),
               PickerSection(
                 state: state,
                 vm: vm,

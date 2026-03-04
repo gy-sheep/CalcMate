@@ -37,17 +37,51 @@ class PickerSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 6),
-            child: Text(
-              state.calendarType == AgeCalendarType.solar
-                  ? '생년월일'
-                  : '생년월일 (음력)',
-              style: const TextStyle(
-                color: kAgeSubText,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
-              ),
+            padding: const EdgeInsets.only(left: 4, bottom: 6, right: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '생년월일',
+                  style: TextStyle(
+                    color: kAgeSubText,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: Checkbox(
+                        value: state.calendarType == AgeCalendarType.lunar,
+                        onChanged: (v) => vm.handleIntent(
+                          AgeCalculatorIntent.calendarTypeChanged(
+                            v == true ? AgeCalendarType.lunar : AgeCalendarType.solar,
+                          ),
+                        ),
+                        activeColor: kAgeAccent,
+                        checkColor: Colors.white,
+                        side: const BorderSide(color: kAgeSubText, width: 1.5),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Text(
+                      '음력',
+                      style: TextStyle(
+                        color: kAgeSubText,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           Container(

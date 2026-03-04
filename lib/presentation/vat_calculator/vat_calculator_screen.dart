@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/vat_calculator_state.dart';
 import '../../domain/usecases/vat_calculate_usecase.dart';
-import '../widgets/app_segment_control.dart';
 import 'vat_calculator_colors.dart';
 import 'vat_calculator_viewmodel.dart';
 import 'widgets/receipt_card.dart';
@@ -112,7 +111,6 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              _buildSegmentControl(state, vm),
               Expanded(
                 child: ReceiptCard(
                   state: state,
@@ -131,27 +129,6 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSegmentControl(
-      VatCalculatorState state, VatCalculatorViewModel vm) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppTokens.paddingScreenH + 8, vertical: 8),
-      child: AppSegmentControl<VatMode>(
-        value: state.mode,
-        segments: const [
-          (VatMode.exclusive, '부가세 별도'),
-          (VatMode.inclusive, '부가세 포함'),
-        ],
-        onChanged: (value) =>
-            vm.handleIntent(VatCalculatorIntent.modeChanged(value)),
-        trackColor: Colors.white10,
-        thumbColor: kVatColorEquals,
-        activeTextColor: Colors.white,
-        inactiveTextColor: Colors.white60,
       ),
     );
   }
