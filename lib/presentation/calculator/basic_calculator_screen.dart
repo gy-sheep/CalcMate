@@ -1,4 +1,5 @@
 import 'package:calcmate/core/theme/app_design_tokens.dart';
+import 'package:calcmate/core/widgets/ad_banner_placeholder.dart';
 import 'package:calcmate/presentation/calculator/basic_calculator_colors.dart';
 import 'package:calcmate/presentation/calculator/basic_calculator_viewmodel.dart';
 import 'package:calcmate/presentation/calculator/widgets/button_pad.dart';
@@ -52,7 +53,7 @@ class BasicCalculatorScreen extends ConsumerWidget {
               Expanded(child: DisplayPanel(state: state)),
               const Divider(color: Color(0x33FFFFFF), thickness: 0.5, height: 1),
               const ButtonPad(),
-              const SizedBox(height: 8),
+              const AdBannerPlaceholder(),
             ],
           ),
         ),

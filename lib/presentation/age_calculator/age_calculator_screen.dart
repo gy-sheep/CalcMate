@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/age_calculator_state.dart';
 import 'age_calculator_colors.dart';
 import 'age_calculator_viewmodel.dart';
@@ -137,6 +138,7 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
                     ? const EmptyState()
                     : ResultScrollView(state: state, result: result),
               ),
+              const AdBannerPlaceholder(),
             ],
           ),
         ),

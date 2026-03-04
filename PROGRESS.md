@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `dev`
-> **마지막 완료**: AppBar 리팩토링 (Scaffold.appBar 통일, 아이콘 제거)
+> **현재 브랜치**: `feat/ad-placeholder`
+> **마지막 완료**: 광고 배너 플레이스홀더 추가
 
 ### Phase 7: 다음 계산기 — 미정
 - [ ] `docs/specs/` — 기획 명세 작성
@@ -29,6 +29,9 @@
 | — | 위젯 분리 리팩토링 (6개 계산기) | — | 각 구현 명세 참고 |
 | — | Container Transform 전환 애니메이션 | — | — |
 | — | AppBar 리팩토링 (Scaffold.appBar 통일, 아이콘 제거) | — | `docs/architecture/ARCHITECTURE.md` |
+| — | 부가세·나이 계산기 모드 전환 UI 체크박스 교체 | — | — |
+| — | 광고 배너 플레이스홀더 (6개 화면, AppConfig.isPremium 플래그) | — | — |
+| — | 다국어 날짜 피커 (flutter_localizations) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/unit_definitions.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/widgets/ad_banner_placeholder.dart';
 import 'unit_converter_colors.dart';
 import 'unit_converter_viewmodel.dart';
 import 'widgets/category_tabs.dart';
@@ -198,7 +199,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
                   }
                 },
               ),
-              const SizedBox(height: 8),
+              const AdBannerPlaceholder(),
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/currency_info.dart';
 import 'currency_calculator_colors.dart';
 import 'currency_calculator_viewmodel.dart';
@@ -126,60 +127,67 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                  // 통화 행들 — 부모 높이를 전부 사용
+                  // 통화 행들 — 부모 높이를 전부 사용, 넘치면 스크롤
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 24),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // From 행
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CurrencyCodeButton(
-                                code: state.fromCode,
-                                onTap: () => _selectCurrency(
-                                  context, ref,
-                                  toIndex: -1,
-                                  selectedCode: state.fromCode,
-                                  rates: state.rates,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: AmountDisplay(
-                                  amount: fromDisplay,
-                                  isActive: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                          // To 행 3개
-                          for (int i = 0; i < state.toCodes.length; i++)
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: constraints.maxHeight + AdBannerPlaceholder.height),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 24),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CurrencyCodeButton(
-                                  code: state.toCodes[i],
-                                  onTap: () => _selectCurrency(
-                                    context, ref,
-                                    toIndex: i,
-                                    selectedCode: state.toCodes[i],
-                                    rates: state.rates,
-                                  ),
+                                // From 행
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CurrencyCodeButton(
+                                      code: state.fromCode,
+                                      onTap: () => _selectCurrency(
+                                        context, ref,
+                                        toIndex: -1,
+                                        selectedCode: state.fromCode,
+                                        rates: state.rates,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: AmountDisplay(
+                                        amount: fromDisplay,
+                                        isActive: true,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: AmountDisplay(
-                                    amount: vm.convertedDisplayAt(i),
-                                    isActive: false,
-                                    hint: vm.unitRateDisplayAt(i),
+                                // To 행 3개
+                                for (int i = 0; i < state.toCodes.length; i++)
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      CurrencyCodeButton(
+                                        code: state.toCodes[i],
+                                        onTap: () => _selectCurrency(
+                                          context, ref,
+                                          toIndex: i,
+                                          selectedCode: state.toCodes[i],
+                                          rates: state.rates,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: AmountDisplay(
+                                          amount: vm.convertedDisplayAt(i),
+                                          isActive: false,
+                                          hint: vm.unitRateDisplayAt(i),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
                               ],
                             ),
-                        ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -229,7 +237,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                   CurrencyNumberPad(
                     onKeyTap: (key) => vm.handleIntent(ExchangeRateIntent.keyTapped(key)),
                   ),
-                  const SizedBox(height: 8),
+                  const AdBannerPlaceholder(),
                 ],
               ),
             ),

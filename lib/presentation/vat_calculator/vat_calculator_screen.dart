@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/vat_calculator_state.dart';
 import '../../domain/usecases/vat_calculate_usecase.dart';
 import 'vat_calculator_colors.dart';
@@ -125,7 +126,7 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
                 onKeyTap: (key) => vm.handleIntent(
                     VatCalculatorIntent.keyTapped(key)),
               ),
-              const SizedBox(height: 8),
+              const AdBannerPlaceholder(),
             ],
           ),
         ),

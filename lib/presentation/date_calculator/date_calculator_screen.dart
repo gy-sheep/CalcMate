@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/widgets/ad_banner_placeholder.dart';
 import 'date_calculator_colors.dart';
 import 'date_calculator_viewmodel.dart';
 import 'widgets/date_calc_mode_view.dart';
@@ -151,6 +152,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                   ],
                 ),
               ),
+              const AdBannerPlaceholder(),
             ],
           ),
         ),
