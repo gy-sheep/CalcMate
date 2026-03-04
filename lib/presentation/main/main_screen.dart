@@ -6,7 +6,7 @@ import 'package:calcmate/presentation/currency/currency_calculator_screen.dart';
 import 'package:calcmate/presentation/unit_converter/unit_converter_screen.dart';
 import 'package:calcmate/presentation/age_calculator/age_calculator_screen.dart';
 import 'package:calcmate/presentation/vat_calculator/vat_calculator_screen.dart';
-import 'package:calcmate/presentation/date_calculator/date_calculator_prototype_spec.dart' show DateCalculatorScreen;
+import 'package:calcmate/presentation/date_calculator/date_calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/calc_mode_card.dart';

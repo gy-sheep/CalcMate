@@ -1,150 +1,33 @@
 # CalcMate 개발 진행 상황
 
-## 현재 완료 상태
-
-### Phase 0 — 완료
-- [x] `core/theme/app_theme.dart` — 라이트/다크 테마 정의 (Material 3, system 자동 전환)
-- [x] `main.dart` — 앱 진입점, ProviderScope 래핑, MaterialApp 설정
-- [x] `pubspec.yaml` 의존성 추가 (flutter_riverpod, dio, retrofit, freezed, json_serializable, shared_preferences)
-- [x] `core/di/providers.dart` — dioProvider (LogInterceptor + ErrorInterceptor)
-- [x] `core/network/error_interceptor.dart` — 공통 오류 처리 인터셉터
-- [x] `assets/images/backgrounds/` 디렉토리 생성 및 `pubspec.yaml` 자산 경로 등록
-- [x] `docs/git/COMMIT_CONVENTION.md` — 커밋 메시지 규칙 정의
-- [x] `docs/conventions/NAMING_CONVENTION.md` — 파일명·클래스명·에셋 명명 규칙 정의
-- [x] `CLAUDE.md` — Claude 작업 가이드 작성
-
-### UI 기반 작업 (Phase 0 외 선행 구현)
-- [x] `presentation/main/main_screen.dart` — 메인 화면, 13개 카드 리스트 UI
-  - ConsumerStatefulWidget 전환, ScrollController 기반 스크롤 감지
-  - 스크롤 시 BackdropFilter blur(20) + 흰색 75% 투명 AppBar 전환
-- [x] `presentation/widgets/calc_mode_card.dart` — 카드 위젯
-  - 이미지 배경 + Hero fadeout 전환 애니메이션
-  - 그라디언트 오버레이 (좌→우, 60%→20% black)
-  - 라운드 사각형 아이콘 컨테이너, 타이틀 외곽 그림자, 체브론 버튼
-- [x] macOS Impeller 비활성화 (`macos/Runner/Info.plist`)
-- [x] Android Gradle JVM 메모리 최적화 (`android/gradle.properties`)
-
-### 카드 리스트 리팩터링 (Phase 1 선행) — `feat/calc-mode-card-refactor` 완료
-- [x] `domain/models/calc_mode_entry.dart` — CalcModeEntry (Freezed) 모델 정의
-- [x] `core/config/calc_mode_config.dart` — 13개 항목 상수 정의
-- [x] `presentation/main/main_screen_viewmodel.dart` — NotifierProvider, State, Intent
-- [x] `presentation/main/main_screen.dart` — ConsumerStatefulWidget 전환, Provider 구독
-- [x] `pubspec.yaml` — retrofit 버전 충돌 수정 (`>=4.4.1 <4.9.0`)
-
-### Phase 1: 기본 계산기 — `feat/basic-calculator` 완료
-- [x] 기본 계산기 UI 구현 (뉴모피즘 디자인, iOS 동일 버튼 레이아웃)
-- [x] `docs/dev/BASIC_CALCULATOR_IMPL.md` — 구현 명세 작성
-- [x] `domain/models/calculator_state.dart` — CalculatorState (Freezed) 정의
-- [x] `domain/usecases/evaluate_expression_usecase.dart` — TDD 작성 후 구현 (14케이스)
-- [x] `presentation/calculator/basic_calculator_viewmodel.dart` — CalculatorViewModel (Notifier + sealed Intent)
-- [x] `presentation/calculator/basic_calculator_screen.dart` — ConsumerWidget 전환 및 ViewModel 연결
-- [x] 아이폰 계산기 동작 방식으로 UX 개선: 천 단위 콤마, 음수 괄호 표시, 동적 폰트 사이즈, 오버플로우 시 오른쪽 고정 스크롤, % 기호 표시 및 컨텍스트 계산, = 반복, AC/C 동적 전환, 스마트 클리어, 음수 입력 모드
-- [x] `basic_calculator_screen.dart` — 다크 그라디언트 테마로 디자인 교체, 수식 줄바꿈/좌우 스크롤
-- [x] `main_screen.dart` — 화면 전환 Fade 애니메이션 추가 (진입 400ms / 복귀 300ms)
-
-### Phase 2: 환율 계산기 — `feat/exchange_rate` 완료
-- [x] From 1개 + To 3개 구조, 통화 선택 Bottom Sheet (검색, 중복 차단, swap)
-- [x] 키패드 5×4 (`0/00` 레이아웃), 수식 입력 지원 (`EvaluateExpressionUseCase` 재사용)
-- [x] 1단위 환율 힌트, 새로고침 (CupertinoActivityIndicator, 최소 800ms), 업데이트 시간 표시
-- [x] 자릿수 제한 (정수 12, 소수 8) + 토스트, 입력값 천 단위 콤마
-- [x] 원형 국기 표시 (`country_flags`), 다크 그라디언트 테마 (딥 네이비 → 틸)
-- [x] `core/navigation/calc_page_route.dart` — 화면 전환 공통 라우트
-- [x] **Firebase 백엔드** — Cloud Scheduler 매 정각 자동 갱신, Firestore 캐싱
-- [x] **Data 계층** — Firestore 연동, 로컬 캐시 (TTL 1시간), 목업 환율 fallback
-- [x] **Domain 계층** — ExchangeRateEntity, GetExchangeRateUseCase
-- [x] **Presentation 계층** — ExchangeRateViewModel (Notifier + Intent, 교차환율 계산)
-- [x] **스펙 문서** — `docs/specs/EXCHANGE_RATE.md` 현행화 완료
-- [x] **리팩토링 체크리스트** — `docs/plans/REFACTORING_CHECKLIST.md` 작성
-
-### Phase 3: 단위 변환기 — `feat/unit-converter` 완료
-- [x] `docs/specs/UNIT_CONVERTER.md` — 기획 명세 작성 (10개 카테고리, 키패드 4×4, 변환 공식, 스와이프 카테고리 전환)
-- [x] `docs/dev/UNIT_CONVERTER_IMPL.md` — 구현 명세 작성
-- [x] `domain/models/unit_definition.dart` — UnitDef, UnitCategory const 클래스
-- [x] `core/constants/unit_definitions.dart` — 10개 카테고리 단위 상수 (스펙 비율 표 반영)
-- [x] `domain/usecases/convert_unit_usecase.dart` — 비율 기반 변환 + 온도/연비 특수 공식 (TDD 24케이스)
-- [x] `domain/models/unit_converter_state.dart` — Freezed State (input, isResult, activeUnitCode, convertedValues)
-- [x] `presentation/unit_converter/unit_converter_viewmodel.dart` — sealed Intent 4종 + Notifier ViewModel (`NumberFormatter` 사용)
-- [x] `presentation/unit_converter/unit_converter_screen.dart` — ConsumerStatefulWidget + TabBarView 스와이프 + ViewModel 연결
-  - AppBar (Hero 애니메이션), 카테고리 탭 (10개 가로 스크롤 칩 + 자동 스크롤), 단위 리스트 (활성 행 하이라이트), 키패드 (4×4)
-  - 다크 그라디언트 테마 (`#1A1A2E` → `#16213E`), 포인트 컬러 `#E94560`
-  - 카테고리 탭 ↔ 스와이프 양방향 연동 (드래그 중 실시간 칩 전환)
-  - 키패드 입력 → 실시간 변환 결과, 자릿수 제한 (정수 12, 소수 8) + 토스트
-  - 단위 전환 시 isResult 패턴 적용 (첫 키 입력 시 기존 값 대체)
-  - 결과 포맷팅: 천 단위 콤마, 지수 표기법 (극소/극대), 후행 0 제거, 온도 소수점 3자리
-- [x] `presentation/main/main_screen.dart` — 단위 변환기 네비게이션 분기 추가
-- [x] 기존 코드 info/warning 전체 해결 (withOpacity → withValues, 언더스코어 규칙 등)
-
----
-
 ## 다음 작업
 
-### 디자인 통일성 — `feat/design-tokens` (완료)
-- [x] `core/theme/app_design_tokens.dart` — AppTokens 클래스 (Typography, Shape, Spacing, Component 상수 정의)
-- [x] `presentation/widgets/app_segment_control.dart` — AppSegmentControl<T> 공통 세그먼트 위젯 추출
-- [x] 나이 계산기 AppBar fontWeight w700 → w600 통일
-- [x] 단위 변환기 list item borderRadius 12 → 16 통일
-- [x] 전 화면(5개) AppBar 하드코딩 값 → AppTokens 상수 교체
-- [x] 부가세/나이 계산기 세그먼트 컨트롤 → AppSegmentControl 교체
+> **현재 브랜치**: `feat/date-calculator`
+> **마지막 완료**: Phase 6 날짜 계산기
 
-### Phase 5: 나이 계산기 — `feat/age-calculator` (완료)
-- [x] `docs/specs/AGE_CALCULATOR.md` — 기획 명세 작성 및 현행화
-- [x] `docs/dev/AGE_CALCULATOR.md` — 구현 명세 작성
-- [x] `core/constants/lunar_new_year_dates.dart` — 설날 양력 날짜 룩업 테이블 (1900~2050)
-- [x] `domain/models/age_calculator_state.dart` — AgeCalculatorState (Freezed, `convertedSolarDate` 추가)
-- [x] `domain/usecases/lunar_converter.dart` — 음력↔양력 변환 래퍼 (`korean_lunar_utils` 캡슐화)
-- [x] `domain/usecases/age_calculate_usecase.dart` — AgeCalculateUseCase (만 나이, 세는 나이, 연 나이, 설날 기준 띠, 별자리, 살아온 날, 다음 생일)
-- [x] `presentation/age_calculator/age_calculator_viewmodel.dart` — Notifier + sealed Intent 5종 (음력 변환 로직 포함)
-- [x] `presentation/age_calculator/age_calculator_screen.dart` — 화면 구현
-  - 크림/복숭아 라이트 테마, Frosted Glass 드럼롤 피커 (ShaderMask 그라데이션 페이드)
-  - 세는 나이 Primary (56sp), 태어난 요일 나이 카드 통합
-  - 띠/별자리 PNG 아이콘 가로 배치 (`assets/icons/zodiac/`, `assets/icons/constellation/`)
-  - 음력 모드: 변환된 양력 날짜 + 윤달 체크박스, 음력 기준 동적 일 수 피커
-- [x] `presentation/main/main_screen.dart` — 나이 계산기 네비게이션 추가
-- [x] `test/domain/usecases/age_calculate_usecase_test.dart` — 단위 테스트 19케이스
-
-### Phase 4: 부가세 계산기 — `feat/vat-calculator`
-- [x] `docs/specs/VAT_CALCULATOR.md` — 기획 명세 작성 및 현행화 (영수증 UI, 세율 설정, 참고표 추가)
-- [x] `presentation/vat_calculator/vat_calculator_screen.dart` — Screen UI 구현
-  - 영수증 스타일 결과 카드 (둥근 스캘럽 톱니, 크림색 배경, 점선/실선 구분선)
-  - 세그먼트 컨트롤 (부가세 별도/포함), 5×4 키패드 (수식 입력 지원)
-  - 세율 탭 편집 (0~99%), ⓘ 세율 참고표 Bottom Sheet (18개국)
-  - 다크 인디고 퍼플 그라디언트 테마
-- [x] `presentation/main/main_screen.dart` — 부가세 계산기 네비게이션 추가
-- [x] ViewModel 분리 (Notifier + sealed Intent, TDD 40케이스)
-- [x] Domain 계층 — `VatCalculateUseCase` (TDD 14케이스)
-- [x] 로케일 기반 기본 세율 자동 설정 (15개국)
-- [x] `VatCalculatorState` (Freezed) 정의
-- [x] Screen → `ConsumerStatefulWidget` 전환, ViewModel 연결
-- [x] `NumberFormatter.formatVatResult` 추가
-- [x] 환율 계산기 `%` 즉시 계산으로 변경 (부가세 계산기와 동일)
-
-### UX 개선: AC/C 동적 전환 제거 — 완료
-- [x] 기본 계산기: AC/C 전환 제거, AC 고정 (`refactor/basic_calculator_keypad_function`에서 완료)
-- [x] 환율 계산기: AC/C 전환 제거, AC 고정 + `00`/`0` 위치 교체
-- [x] 단위 변환기: AC/C 전환 제거, AC 고정 + 온도 외 카테고리 `+/-` → `00` 교체
-- [x] 부가세 계산기: AC/C 전환 제거, AC 고정
-
-### 기본 계산기 키패드 리팩토링 — `refactor/basic_calculator_keypad_function` 완료
-- [x] `+/-` → `()` 스마트 괄호 버튼 교체
-- [x] `EvaluateExpressionUseCase` 재귀 하강 파서로 리라이트 (괄호, mod 지원)
-- [x] `CalculatorInputUtils` 헬퍼 추가 + `resolvePercent` 괄호 문맥 처리
-- [x] ViewModel 핸들러 전면 리라이트 (연산자/소수점/퍼센트 입력 규칙 변경)
-- [x] AC/C 동적 전환 제거, AC 고정
-- [x] `formatResult` 소수점 최대 9자리로 변경 (아이폰 동일)
-- [x] 스펙/구현 명세 현행화, 테스트 116케이스
-
-### Phase 6: 날짜 계산기 — `feat/date-calculator` (진행 중)
-- [x] `docs/specs/DATE_CALCULATOR.md` — 기획 명세 작성 (3모드: 기간 계산 / 날짜 계산 / D-Day)
-- [x] `presentation/date_calculator/date_calculator_prototype_spec.dart` — UI 확정 (`DateCalculatorScreen`)
-  - 탄성 스트레치 탭바: 배경 칩 글로우 + 언더라인 글로우 + 텍스트 스케일 애니메이션
-  - PageView 스와이프 모드 전환 (탭바와 양방향 동기화)
-  - 슬라이드업 키패드 (모드2 전용, 숫자 필드 탭 시 슬라이드업)
-  - 결과 카드 상단 고정, 입력 영역 하단 배치
-- [x] `presentation/main/main_screen.dart` — 날짜 계산기 카드 연동
-- [ ] **다음**: 테마 색상 확정 후 Clean Architecture 구현 시작
+### Phase 7: 다음 계산기 — 미정
+- [ ] `docs/specs/` — 기획 명세 작성
+- [ ] `docs/dev/` — 구현 명세 작성
+- [ ] Domain / Presentation / Test 구현
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
+
+---
+
+## 완료 기능 현황
+
+| Phase | 기능 | 테스트 | 구현 명세 |
+|-------|------|--------|-----------|
+| 0 | 기반 설정 (테마·DI·에셋·라우트) | — | — |
+| 1 | 기본 계산기 (괄호·수식·뉴모피즘) | 116케이스 | `docs/dev/BASIC_CALCULATOR_IMPL.md` |
+| 2 | 환율 계산기 (Firebase·Firestore) | — | — |
+| 3 | 단위 변환기 (10개 카테고리) | 24케이스 | `docs/dev/UNIT_CONVERTER_IMPL.md` |
+| 4 | 부가세 계산기 (영수증 UI) | 54케이스 | — |
+| 5 | 나이 계산기 (음력·띠·별자리) | 19케이스 | `docs/dev/AGE_CALCULATOR.md` |
+| 6 | 날짜 계산기 (3모드·D-Day) | 28케이스 | `docs/dev/DATE_CALCULATOR_IMPL.md` |
+
+> 상세 작업 이력: `HISTORY.md`
 
 ---
 
@@ -152,4 +35,4 @@
 
 [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md) 참고
 
-**상세 작업 이력**: `HISTORY.md` 참조
+**구현 패턴 템플릿**: `~/.claude/projects/.../memory/patterns.md`
