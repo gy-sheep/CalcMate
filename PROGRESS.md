@@ -2,11 +2,12 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/ad-placeholder`
-> **마지막 완료**: 광고 배너 플레이스홀더 추가
+> **현재 브랜치**: `feat/loan-calculato`
+> **마지막 완료**: 대출 계산기 UI 프로토타입 4종 구현
 
-### Phase 7: 다음 계산기 — 미정
-- [ ] `docs/specs/` — 기획 명세 작성
+### Phase 7: 대출 계산기
+- [x] `docs/specs/LOAN_CALCULATOR.md` — 기획 명세 작성 (4가지 UI안 비교 중)
+- [ ] UI 안(A/B/C/D) 최종 선택
 - [ ] `docs/dev/` — 구현 명세 작성
 - [ ] Domain / Presentation / Test 구현
 
