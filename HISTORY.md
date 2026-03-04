@@ -2,6 +2,39 @@
 
 ---
 
+## 2026-03-04 — 전 화면 위젯 분리 리팩토링
+
+### 완료 항목
+
+**위젯 분리** (ARCHITECTURE.md 위젯 파일 분리 규칙 적용)
+- 6개 계산기 화면의 위젯을 `widgets/` 폴더로 분리, Screen 파일은 레이아웃만 담당
+- 각 화면별 색상 상수를 `{feature}_colors.dart`로 추출
+
+| 계산기 | 분리된 위젯 수 | 색상 파일 |
+|--------|---------------|-----------|
+| 기본 계산기 | 3개 (display_panel, button_pad, calculator_app_bar) | basic_calculator_colors.dart |
+| 환율 계산기 | 5개 (currency_app_bar, amount_display, currency_code_button, currency_number_pad, currency_picker_sheet) | currency_calculator_colors.dart |
+| 단위 변환기 | 4개 (unit_app_bar, category_tabs, unit_list, unit_number_pad) | unit_converter_colors.dart |
+| 부가세 계산기 | 4개 (vat_app_bar, vat_number_pad, receipt_card, tax_rate_info_sheet) | vat_calculator_colors.dart |
+| 나이 계산기 | 12개 (age_card, zodiac_card, constellation_card 등) | age_calculator_colors.dart |
+| 날짜 계산기 | 7개 (date_tab_bar, period_mode_view, dday_mode_view 등) | date_calculator_colors.dart |
+
+**단위 변환기 카테고리 탭 애니메이션 개선**
+- 탄성 스트레치: 좌/우 엣지 별도 커브 (easeInCubic / easeOutCubic)
+- 배경 칩 글로우 (boxShadow + border) 추가
+- 텍스트 스케일 (활성 +8%) 추가
+- 날짜 계산기 DateTabBar와 동일한 애니메이션 효과 통일
+
+**문서 업데이트**
+- `CLAUDE.md` — 위젯 파일 분리 개발 원칙 추가
+- `docs/architecture/ARCHITECTURE.md` — 위젯 파일 분리 규칙 섹션 추가
+- 5개 구현 명세 — 위젯 파일 목록 및 구조 반영
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-04 — 디자인 토큰 도입 및 전 화면 스타일 통일
 
 ### 완료 항목

@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/date-calculator`
-> **마지막 완료**: Phase 6 날짜 계산기
+> **현재 브랜치**: `refactor/widget-separation`
+> **마지막 완료**: 전 화면 위젯 분리 리팩토링 + 단위 변환기 탭 애니메이션 개선
 
 ### Phase 7: 다음 계산기 — 미정
 - [ ] `docs/specs/` — 기획 명세 작성
@@ -26,6 +26,7 @@
 | 4 | 부가세 계산기 (영수증 UI) | 54케이스 | — |
 | 5 | 나이 계산기 (음력·띠·별자리) | 19케이스 | `docs/dev/AGE_CALCULATOR.md` |
 | 6 | 날짜 계산기 (3모드·D-Day) | 28케이스 | `docs/dev/DATE_CALCULATOR_IMPL.md` |
+| — | 위젯 분리 리팩토링 (6개 계산기) | — | 각 구현 명세 참고 |
 
 > 상세 작업 이력: `HISTORY.md`
 

@@ -25,6 +25,7 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 3. **계층 의존 방향**: `Presentation → Domain ← Data` (Domain은 외부에 의존하지 않음)
 4. **UseCase 단위**: 비즈니스 로직은 UseCase 단위로 분리 (e.g. `CalculateResultUseCase`)
 5. **단계별 진행**: Phase별 최소 기능 완성 후 다음 Phase로 이동
+6. **위젯 파일 분리**: 실제 구현 단계에서는 위젯을 `widgets/` 폴더로 분리한다 (상세 규칙은 `docs/architecture/ARCHITECTURE.md` 참고)
 
 ## 주요 문서
 

@@ -17,7 +17,20 @@
 | `lib/domain/models/age_calculator_state.dart` | [수정] `convertedSolarDate` 필드 추가 |
 | `lib/domain/usecases/age_calculate_usecase.dart` | [수정] 음력 모드 나이 계산 반영 |
 | `lib/presentation/age_calculator/age_calculator_viewmodel.dart` | [수정] 음력 모드 ViewModel 로직 |
-| `lib/presentation/age_calculator/age_calculator_screen.dart` | [수정] 음력 UI (윤달 체크박스, 변환된 양력 날짜 표시) |
+| `lib/presentation/age_calculator/age_calculator_screen.dart` | [수정] ConsumerStatefulWidget, 레이아웃만 |
+| `lib/presentation/age_calculator/age_calculator_colors.dart` | [신규] 나이 계산기 전용 색상 상수 |
+| `lib/presentation/age_calculator/widgets/app_bar_row.dart` | [신규] AppBar 행 |
+| `lib/presentation/age_calculator/widgets/picker_section.dart` | [신규] 피커 영역 (연/월/일 + 음력 토글) |
+| `lib/presentation/age_calculator/widgets/picker.dart` | [신규] ListWheelScrollView 개별 피커 |
+| `lib/presentation/age_calculator/widgets/lunar_info.dart` | [신규] 음력 모드: 변환 날짜 + 윤달 체크 |
+| `lib/presentation/age_calculator/widgets/empty_state.dart` | [신규] 초기 상태 UI |
+| `lib/presentation/age_calculator/widgets/result_scroll_view.dart` | [신규] 결과 카드 스크롤 영역 |
+| `lib/presentation/age_calculator/widgets/age_card.dart` | [신규] 세는 나이 메인 카드 |
+| `lib/presentation/age_calculator/widgets/age_info_card.dart` | [신규] 정보 행 (만 나이/연 나이/요일) |
+| `lib/presentation/age_calculator/widgets/zodiac_card.dart` | [신규] 띠 카드 |
+| `lib/presentation/age_calculator/widgets/constellation_card.dart` | [신규] 별자리 카드 |
+| `lib/presentation/age_calculator/widgets/days_lived_card.dart` | [신규] 살아온 날 카드 |
+| `lib/presentation/age_calculator/widgets/next_birthday_card.dart` | [신규] 다음 생일 D-day 카드 |
 | `test/domain/usecases/age_calculate_usecase_test.dart` | [신규] UseCase 단위 테스트 |
 
 **데이터 흐름**

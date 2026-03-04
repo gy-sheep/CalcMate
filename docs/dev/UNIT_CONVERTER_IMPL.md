@@ -18,7 +18,12 @@
 | `domain/usecases/convert_unit_usecase.dart` | [신규] 변환 로직 (비율 기반 + 온도/연비 특수 공식) |
 | `core/constants/unit_definitions.dart` | [신규] 10개 카테고리 단위 상수 정의 |
 | `presentation/unit_converter/unit_converter_viewmodel.dart` | [신규] Notifier + Intent + State |
-| `presentation/unit_converter/unit_converter_screen.dart` | [수정] ConsumerWidget 전환, TabBarView 스와이프 |
+| `presentation/unit_converter/unit_converter_screen.dart` | [수정] ConsumerStatefulWidget, 레이아웃만 |
+| `presentation/unit_converter/unit_converter_colors.dart` | [신규] 단위 변환기 전용 색상 상수 |
+| `presentation/unit_converter/widgets/unit_app_bar.dart` | [신규] AppBar (Hero 애니메이션) |
+| `presentation/unit_converter/widgets/category_tabs.dart` | [신규] 카테고리 칩 탭 (탄성 스트레치 애니메이션) |
+| `presentation/unit_converter/widgets/unit_list.dart` | [신규] 단위 리스트 + TabBarView |
+| `presentation/unit_converter/widgets/unit_number_pad.dart` | [신규] 4×4 키패드 |
 | `test/domain/usecases/convert_unit_usecase_test.dart` | [신규] TDD 테스트 |
 
 **데이터 흐름**
@@ -154,26 +159,43 @@
 
 ---
 
-### 6. `presentation/unit_converter/unit_converter_screen.dart` — UI 리팩터링
+### 6. `presentation/unit_converter/` — UI 리팩터링
 
 기존 StatefulWidget을 ConsumerStatefulWidget으로 전환하고, ViewModel Provider를 구독한다.
+위젯은 `widgets/` 폴더로 분리하여 Screen 파일은 레이아웃만 담당한다.
 
 **주요 변경점**
 
 - 내부 상태 변수(`_selectedCategoryIndex`, `_activeUnitCode`) 제거 → `ref.watch(provider)`로 대체
 - 더미 데이터(`_UnitCategory`, `_UnitItem`, `_categories`) 제거 → `unitCategories` 상수 사용
 - 버튼 `onTap` → `vm.handleIntent(intent)` 호출로 위임
+- 색상 상수를 `unit_converter_colors.dart`로 분리
+
+**위젯 분리 구조**
+
+| 위젯 | 파일 | 역할 |
+|------|------|------|
+| `UnitAppBar` | `widgets/unit_app_bar.dart` | AppBar (Hero 애니메이션) |
+| `CategoryTabs` | `widgets/category_tabs.dart` | 카테고리 칩 탭 (탄성 스트레치 애니메이션) |
+| `UnitList` | `widgets/unit_list.dart` | 단위 리스트 + TabBarView |
+| `UnitNumberPad` | `widgets/unit_number_pad.dart` | 4×4 키패드 |
 
 **스와이프 카테고리 전환 구현**
 
 - `TabController` + `TabBarView`로 단위 리스트 영역을 페이지화
   - `TabController`를 `TickerProviderStateMixin`과 함께 사용
-  - `TabBarView`의 각 페이지에 해당 카테고리의 `_UnitList` 배치
-- 카테고리 탭(`_CategoryTabs`)과 양방향 연동
+  - `TabBarView`의 각 페이지에 해당 카테고리의 `UnitList` 배치
+- 카테고리 탭(`CategoryTabs`)과 양방향 연동
   - `TabController.addListener()`: 스와이프로 페이지 변경 시 ViewModel에 `categorySelected` Intent 전달
   - `ref.listen(provider.select((s) => s.selectedCategoryIndex))`: ViewModel의 카테고리 변경 시 `TabController.animateTo()` 호출
 - 키패드는 `TabBarView` 외부에 배치하여 스와이프 충돌 없음
 - 세로 스크롤(`ListView`)과 수평 스와이프(`TabBarView`)는 Flutter 제스처 시스템이 방향을 자동 판별
+
+**카테고리 탭 애니메이션**
+
+- 탄성 스트레치: 왼쪽 엣지 `easeInCubic`, 오른쪽 엣지 `easeOutCubic`
+- 배경 칩 글로우 (`boxShadow` + `border`) + 언더라인 글로우
+- 텍스트 스케일 (활성 +8%)
 
 ---
 

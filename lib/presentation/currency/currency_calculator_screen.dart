@@ -1,24 +1,17 @@
 import 'dart:ui';
 
-import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/currency_info.dart';
+import 'currency_calculator_colors.dart';
 import 'currency_calculator_viewmodel.dart';
-
-// ──────────────────────────────────────────
-// 색상 상수
-// ──────────────────────────────────────────
-const _gradientTop = Color(0xFF0D1B3E);
-const _gradientBottom = Color(0xFF0A4D52);
-const _dividerColor = Color(0x55FFFFFF);
-const _colorNumber = Colors.white;
-const _colorOperator = Color(0xFFFF9F7A);
-const _colorFunction = Color(0xCCFFFFFF);
-const _colorEquals = Color(0xFFFF6B4A);
+import 'widgets/amount_display.dart';
+import 'widgets/currency_app_bar.dart';
+import 'widgets/currency_code_button.dart';
+import 'widgets/currency_number_pad.dart';
+import 'widgets/currency_picker_sheet.dart';
 
 // ──────────────────────────────────────────
 // 메인 화면
@@ -97,7 +90,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [_gradientTop, _gradientBottom],
+            colors: [kCurrencyGradientTop, kCurrencyGradientBottom],
           ),
         ),
         child: Stack(
@@ -105,7 +98,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
             SafeArea(
               child: Column(
                 children: [
-                  _buildAppBar(context),
+                  CurrencyAppBar(title: title, icon: icon),
                   if (state.error != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -128,7 +121,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              _CurrencyCodeButton(
+                              CurrencyCodeButton(
                                 code: state.fromCode,
                                 onTap: () => _selectCurrency(
                                   context, ref,
@@ -139,7 +132,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: _AmountDisplay(
+                                child: AmountDisplay(
                                   amount: fromDisplay,
                                   isActive: true,
                                 ),
@@ -151,7 +144,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                _CurrencyCodeButton(
+                                CurrencyCodeButton(
                                   code: state.toCodes[i],
                                   onTap: () => _selectCurrency(
                                     context, ref,
@@ -162,7 +155,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
-                                  child: _AmountDisplay(
+                                  child: AmountDisplay(
                                     amount: vm.convertedDisplayAt(i),
                                     isActive: false,
                                     hint: vm.unitRateDisplayAt(i),
@@ -215,9 +208,9 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                   ),
                   // 구분선
                   const Divider(
-                      color: _dividerColor, thickness: 0.5, height: 1),
+                      color: kCurrencyDivider, thickness: 0.5, height: 1),
                   // 숫자 키패드
-                  _NumberPad(
+                  CurrencyNumberPad(
                     onKeyTap: (key) => vm.handleIntent(ExchangeRateIntent.keyTapped(key)),
                   ),
                   const SizedBox(height: 8),
@@ -279,65 +272,6 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppTokens.paddingAppBarH,
-          vertical: AppTokens.paddingAppBarV),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios,
-                  color: Colors.white, size: 20),
-              onPressed: () => Navigator.maybePop(context),
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Hero(
-                tag: 'calc_icon_$title',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    width: AppTokens.sizeAppBarIcon,
-                    height: AppTokens.sizeAppBarIcon,
-                    decoration: BoxDecoration(
-                      color: Colors.white24,
-                      borderRadius:
-                          BorderRadius.circular(AppTokens.radiusAppBarIcon),
-                    ),
-                    child: Icon(icon,
-                        color: Colors.white,
-                        size: AppTokens.sizeAppBarIconInner),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Hero(
-                tag: 'calc_title_$title',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: AppTokens.fontSizeAppBarTitle,
-                      fontWeight: AppTokens.weightAppBarTitle,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   /// [toIndex] -1이면 From, 0/1/2이면 해당 To 행
   Future<void> _selectCurrency(
     BuildContext context,
@@ -364,7 +298,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => _CurrencyPickerSheet(
+      builder: (_) => CurrencyPickerSheet(
         currencies: available,
         selectedCode: selectedCode,
         usedCodes: usedCodes,
@@ -379,384 +313,5 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
     } else {
       vm.handleIntent(ExchangeRateIntent.toCurrencyChanged(toIndex, result));
     }
-  }
-}
-
-// ──────────────────────────────────────────
-// 통화 코드 버튼 (좌측) — 원형 국기 + 코드 세로 배치
-// ──────────────────────────────────────────
-class _CurrencyCodeButton extends StatelessWidget {
-  final String code;
-  final VoidCallback onTap;
-
-  const _CurrencyCodeButton({required this.code, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        width: 48,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CountryFlag.fromCurrencyCode(
-              code,
-              theme: const ImageTheme(
-                width: 32,
-                height: 32,
-                shape: Circle(),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              code,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ──────────────────────────────────────────
-// 금액 표시 (우측)
-// ──────────────────────────────────────────
-class _AmountDisplay extends StatelessWidget {
-  final String amount;
-  final bool isActive;
-  final String? hint;
-
-  const _AmountDisplay({
-    required this.amount,
-    required this.isActive,
-    this.hint,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final amountWidget = FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerRight,
-      child: Text(
-        amount,
-        maxLines: 1,
-        softWrap: false,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 28,
-          fontWeight: FontWeight.w300,
-          letterSpacing: -1,
-        ),
-      ),
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (hint != null && hint!.isNotEmpty)
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              amountWidget,
-              Positioned(
-                top: -16,
-                right: 0,
-                child: Text(
-                  hint!,
-                  style: const TextStyle(
-                    color: Colors.white38,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ],
-          )
-        else
-          amountWidget,
-        Container(
-          height: 1.5,
-          color: isActive ? Colors.white : Colors.white38,
-        ),
-      ],
-    );
-  }
-}
-
-// ──────────────────────────────────────────
-// 버튼 타입
-// ──────────────────────────────────────────
-enum _BtnType { number, operator, function, equals }
-
-// ──────────────────────────────────────────
-// 숫자 키패드
-// ──────────────────────────────────────────
-class _NumberPad extends StatelessWidget {
-  final void Function(String) onKeyTap;
-
-  const _NumberPad({required this.onKeyTap});
-
-  static const _rows = [
-    [
-      ('\u{232B}', _BtnType.function),
-      ('AC', _BtnType.function),
-      ('%', _BtnType.function),
-      ('\u{00F7}', _BtnType.operator)
-    ],
-    [
-      ('7', _BtnType.number),
-      ('8', _BtnType.number),
-      ('9', _BtnType.number),
-      ('\u{00D7}', _BtnType.operator)
-    ],
-    [
-      ('4', _BtnType.number),
-      ('5', _BtnType.number),
-      ('6', _BtnType.number),
-      ('-', _BtnType.operator)
-    ],
-    [
-      ('1', _BtnType.number),
-      ('2', _BtnType.number),
-      ('3', _BtnType.number),
-      ('+', _BtnType.operator)
-    ],
-    [
-      ('00', _BtnType.number),
-      ('0', _BtnType.number),
-      ('.', _BtnType.number),
-      ('=', _BtnType.equals)
-    ],
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: _rows.map((row) {
-        return Row(
-          children: row.map((cell) {
-            final label = cell.$1;
-            return Expanded(
-              child: _KeypadButton(
-                label: label,
-                type: cell.$2,
-                onTap: () => onKeyTap(label),
-              ),
-            );
-          }).toList(),
-        );
-      }).toList(),
-    );
-  }
-}
-
-// ──────────────────────────────────────────
-// 단일 버튼
-// ──────────────────────────────────────────
-class _KeypadButton extends StatelessWidget {
-  final String label;
-  final _BtnType type;
-  final VoidCallback onTap;
-
-  const _KeypadButton({
-    required this.label,
-    required this.type,
-    required this.onTap,
-  });
-
-  Color get _textColor => switch (type) {
-        _BtnType.number => _colorNumber,
-        _BtnType.operator => _colorOperator,
-        _BtnType.function => _colorFunction,
-        _BtnType.equals => Colors.white,
-      };
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: type == _BtnType.equals ? _colorEquals : Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        splashColor: Colors.white24,
-        highlightColor: Colors.white10,
-        child: SizedBox(
-          height: 68,
-          child: Center(
-            child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: 26)
-                : Text(
-                    label,
-                    style: TextStyle(
-                      fontSize:
-                          const ['\u{00F7}', '\u{00D7}', '-', '+', '=']
-                                  .contains(label)
-                              ? 28
-                              : 22,
-                      fontWeight: FontWeight.w400,
-                      color: _textColor,
-                    ),
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ──────────────────────────────────────────
-// 통화 선택 Bottom Sheet
-// ──────────────────────────────────────────
-class _CurrencyPickerSheet extends StatefulWidget {
-  final List<CurrencyInfo> currencies;
-  final String selectedCode;
-  final Set<String> usedCodes;
-  final String? fromCode;
-
-  const _CurrencyPickerSheet({
-    required this.currencies,
-    required this.selectedCode,
-    required this.usedCodes,
-    this.fromCode,
-  });
-
-  @override
-  State<_CurrencyPickerSheet> createState() => _CurrencyPickerSheetState();
-}
-
-class _CurrencyPickerSheetState extends State<_CurrencyPickerSheet> {
-  String _query = '';
-
-  void _showCenterToast(BuildContext context, String message) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => Center(
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(seconds: 1), () => entry.remove());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final filtered = widget.currencies
-        .where((c) =>
-            c.code.toLowerCase().contains(_query.toLowerCase()) ||
-            c.name.contains(_query))
-        .toList();
-
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [_gradientTop, _gradientBottom],
-        ),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      padding: const EdgeInsets.all(16),
-      height: MediaQuery.of(context).size.height * 0.6,
-      child: Column(
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: Colors.white38,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          TextField(
-            autofocus: false,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: '통화 검색 (USD, 달러...)',
-              hintStyle: const TextStyle(color: Colors.white54),
-              prefixIcon: const Icon(Icons.search, color: Colors.white54),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.white30),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.white70),
-              ),
-            ),
-            onChanged: (v) => setState(() => _query = v),
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filtered.length,
-              itemBuilder: (context, index) {
-                final item = filtered[index];
-                final isSelected = item.code == widget.selectedCode;
-                final isUsed = widget.usedCodes.contains(item.code);
-                return ListTile(
-                  leading: CountryFlag.fromCurrencyCode(
-                    item.code,
-                    theme: const ImageTheme(
-                      width: 32,
-                      height: 32,
-                      shape: Circle(),
-                    ),
-                  ),
-                  title: Text(
-                    item.code,
-                    style: TextStyle(
-                      color: isUsed ? Colors.white38 : Colors.white,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                  subtitle: Text(
-                    item.name,
-                    style: TextStyle(
-                      color: isUsed ? Colors.white24 : Colors.white60,
-                    ),
-                  ),
-                  trailing: isSelected
-                      ? const Icon(Icons.check, color: Colors.white)
-                      : null,
-                  onTap: () {
-                    if (isUsed) {
-                      final message = item.code == widget.fromCode
-                          ? '기준 통화로 사용 중입니다'
-                          : '이미 선택된 통화입니다';
-                      _showCenterToast(context, message);
-                      return;
-                    }
-                    Navigator.pop(context, item.code);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -19,7 +19,16 @@ lib/
   presentation/
     date_calculator/
       date_calculator_viewmodel.dart      # AutoDisposeNotifier + sealed Intent
-      date_calculator_screen.dart         # ConsumerStatefulWidget
+      date_calculator_screen.dart         # ConsumerStatefulWidget, 레이아웃만
+      date_calculator_colors.dart         # 날짜 계산기 전용 색상 상수
+      widgets/
+        date_tab_bar.dart                 # 3개 모드 탭 (탄성 스트레치 애니메이션)
+        period_mode_view.dart             # "기간 계산" 모드 UI
+        date_calc_mode_view.dart          # "날짜 계산" 모드 UI
+        dday_mode_view.dart               # "D-Day" 모드 UI
+        date_keypad.dart                  # 키패드 + 방향 토글
+        date_card.dart                    # 날짜 표시 카드
+        result_card.dart                  # 결과 카드
 
 test/
   domain/

@@ -22,8 +22,14 @@
 | `data/datasources/exchange_rate_local_datasource.dart` | SharedPreferences 캐시 |
 | `data/dto/exchange_rate_dto.dart` | Firestore 문서 → Dart 매핑 DTO |
 | `data/repositories/exchange_rate_repository_impl.dart` | Repository 구현체 (Remote + Local 캐시) |
-| `presentation/currency/currency_calculator_screen.dart` | ConsumerWidget, ViewModel 연결 |
+| `presentation/currency/currency_calculator_screen.dart` | ConsumerWidget, 레이아웃만 |
 | `presentation/currency/currency_calculator_viewmodel.dart` | ExchangeRateViewModel (Notifier) |
+| `presentation/currency/currency_calculator_colors.dart` | 환율 계산기 전용 색상 상수 |
+| `presentation/currency/widgets/currency_app_bar.dart` | AppBar (Hero 애니메이션) |
+| `presentation/currency/widgets/amount_display.dart` | 금액 표시 영역 |
+| `presentation/currency/widgets/currency_code_button.dart` | 통화 코드 + 국기 버튼 |
+| `presentation/currency/widgets/currency_number_pad.dart` | 숫자 키패드 |
+| `presentation/currency/widgets/currency_picker_sheet.dart` | 통화 선택 BottomSheet |
 
 **데이터 흐름 (구조 B: Firestore 직접 읽기)**
 
