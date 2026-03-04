@@ -83,7 +83,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   @override
   ExchangeRateState build() {
     _getExchangeRateUseCase = ref.read(getExchangeRateUseCaseProvider);
-    Future.microtask(_loadRates);
+    Future.delayed(const Duration(milliseconds: 400), _loadRates);
     return const ExchangeRateState();
   }
 

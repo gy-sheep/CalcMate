@@ -68,14 +68,6 @@ CalcMate 프로젝트의 네이밍 규칙을 정리한 문서.
 
 ---
 
-## Hero 태그
-
-- **배경**: `calc_bg_{title}`
-- **아이콘**: `calc_icon_{title}`
-- **타이틀**: `calc_title_{title}`
-
----
-
 ## 브랜치명
 
 - **규칙**: `{type}/{kebab-case-기능명}`

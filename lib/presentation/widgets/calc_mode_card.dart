@@ -5,7 +5,7 @@ class CalcModeCard extends StatelessWidget {
   final String description;
   final IconData icon;
   final String imagePath;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const CalcModeCard({
     super.key,
@@ -13,7 +13,7 @@ class CalcModeCard extends StatelessWidget {
     required this.description,
     required this.icon,
     required this.imagePath,
-    required this.onTap,
+    this.onTap,
   });
 
   Widget _buildImage() {
@@ -33,20 +33,9 @@ class CalcModeCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // 배경 Hero: 이미지가 확장되며 fadeout
           Positioned.fill(
-            child: Hero(
-              tag: 'calc_bg_$title',
-              flightShuttleBuilder: (_, animation, _, _, _) {
-                return FadeTransition(
-                  opacity: Tween<double>(begin: 1.0, end: 0.0).animate(animation),
-                  child: _buildImage(),
-                );
-              },
-              child: _buildImage(),
-            ),
+            child: _buildImage(),
           ),
-          // 그라디언트 오버레이: 이미지 위에 씌워 텍스트 가독성 확보
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -54,14 +43,13 @@ class CalcModeCard extends StatelessWidget {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Color(0x99000000), // 60% black
-                    Color(0x33000000), // 20% black
+                    Color(0x99000000),
+                    Color(0x33000000),
                   ],
                 ),
               ),
             ),
           ),
-          // 콘텐츠: 아이콘/텍스트 Hero는 배경 Hero와 형제 관계
           Material(
             color: Colors.transparent,
             child: InkWell(
@@ -71,20 +59,14 @@ class CalcModeCard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Hero(
-                      tag: 'calc_icon_$title',
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.25),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(icon, color: Colors.white),
-                        ),
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      child: Icon(icon, color: Colors.white),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -92,24 +74,18 @@ class CalcModeCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Hero(
-                            tag: 'calc_title_$title',
-                            child: Material(
-                              color: Colors.transparent,
-                              child: Text(
-                                title,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(offset: Offset(-1.5, -1.5), color: Colors.black26),
-                                    Shadow(offset: Offset( 1.5, -1.5), color: Colors.black26),
-                                    Shadow(offset: Offset(-1.5,  1.5), color: Colors.black26),
-                                    Shadow(offset: Offset( 1.5,  1.5), color: Colors.black26),
-                                  ],
-                                ),
-                              ),
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(offset: Offset(-1.5, -1.5), color: Colors.black26),
+                                Shadow(offset: Offset( 1.5, -1.5), color: Colors.black26),
+                                Shadow(offset: Offset(-1.5,  1.5), color: Colors.black26),
+                                Shadow(offset: Offset( 1.5,  1.5), color: Colors.black26),
+                              ],
                             ),
                           ),
                           Text(

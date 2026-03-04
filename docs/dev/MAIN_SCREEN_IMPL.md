@@ -53,7 +53,7 @@ Freezed 불변 모델. 카드 한 장을 표현하는 단일 진실 공급원.
 
 **주요 구성 요소**
 
-- `id`: 라우팅 및 Hero 태그의 기준값 (`calc_bg_$id`, `calc_icon_$id`)
+- `id`: 라우팅 및 화면 매핑의 기준값
 - `title`: 카드 타이틀
 - `description`: 카드 서브타이틀
 - `icon`: 카드 아이콘 (IconData)
@@ -63,7 +63,7 @@ Freezed 불변 모델. 카드 한 장을 표현하는 단일 진실 공급원.
 
 **설계 결정**
 
-- `id` 기반 Hero 태그: `title`은 중복 가능성이 있어 고유 식별자로 부적합
+- `id` 기반 화면 매핑: `title`은 중복 가능성이 있어 고유 식별자로 부적합
 - `isVisible`, `order`: 설정 화면 구현 전 선제적으로 포함해 나중에 마이그레이션 없이 사용 가능
 
 ---
@@ -111,7 +111,8 @@ Freezed 불변 모델. 카드 한 장을 표현하는 단일 진실 공급원.
 - `StatefulWidget` → `ConsumerWidget`으로 전환
 - `ScrollController` 리스너 → `handleIntent(ScrollChanged)` 위임
 - `calcCards` 하드코딩 → `state.entries` 구독
-- Hero 태그 기준: `title` → `entry.id`
+- 화면 전환: `OpenContainer`(animations 패키지) Container Transform 적용
+- `EdgeSwipeBack` 위젯으로 iOS 엣지 스와이프 뒤로가기 지원
 
 **변경 전/후 구조 비교**
 
@@ -121,7 +122,7 @@ Freezed 불변 모델. 카드 한 장을 표현하는 단일 진실 공급원.
 StatefulWidget                   ConsumerWidget
 setState(_isScrolled)            handleIntent(ScrollChanged)
 calcCards = [ CalcModeCard() ]   entries = state.entries
-Hero tag: 'calc_bg_$title'       Hero tag: 'calc_bg_${entry.id}'
+Hero + CalcPageRoute             OpenContainer + EdgeSwipeBack
 ```
 
 ---

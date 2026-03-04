@@ -2,6 +2,26 @@
 
 ---
 
+## 2026-03-04 — Container Transform 화면 전환 애니메이션
+
+### 완료 항목
+
+**화면 전환 방식 교체**
+- Hero + CalcPageRoute → OpenContainer (animations 패키지) Container Transform으로 전환
+- 카드가 상세 화면으로 확장되는 전환 효과 구현 (전체 6개 화면 적용)
+- EdgeSwipeBack 위젯 신규 생성 (iOS 엣지 스와이프 뒤로가기 지원)
+- 환율 계산기 API 호출을 전환 애니메이션 완료 후(400ms)로 지연하여 버벅임 방지
+
+**Hero 관련 코드 정리**
+- CalcModeCard, CalculatorAppBar, CurrencyAppBar, UnitAppBar, VatAppBar에서 Hero 위젯 제거
+- 각 화면의 useHero 파라미터 제거
+
+**문서 업데이트**
+- NAMING_CONVENTION.md — Hero 태그 섹션 제거
+- MAIN_SCREEN_IMPL.md — Hero/CalcPageRoute 언급을 OpenContainer/EdgeSwipeBack으로 갱신
+
+---
+
 ## 2026-03-04 — 전 화면 위젯 분리 리팩토링
 
 ### 완료 항목

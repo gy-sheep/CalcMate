@@ -31,36 +31,30 @@ class CalculatorAppBar extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Hero(
-                tag: 'calc_icon_$title',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    width: AppTokens.sizeAppBarIcon,
-                    height: AppTokens.sizeAppBarIcon,
-                    decoration: BoxDecoration(
-                      color: Colors.white24,
-                      borderRadius:
-                          BorderRadius.circular(AppTokens.radiusAppBarIcon),
-                    ),
-                    child: Icon(icon,
-                        color: Colors.white,
-                        size: AppTokens.sizeAppBarIconInner),
+              Material(
+                color: Colors.transparent,
+                child: Container(
+                  width: AppTokens.sizeAppBarIcon,
+                  height: AppTokens.sizeAppBarIcon,
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius:
+                        BorderRadius.circular(AppTokens.radiusAppBarIcon),
                   ),
+                  child: Icon(icon,
+                      color: Colors.white,
+                      size: AppTokens.sizeAppBarIconInner),
                 ),
               ),
               const SizedBox(width: 8),
-              Hero(
-                tag: 'calc_title_$title',
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: AppTokens.fontSizeAppBarTitle,
-                      fontWeight: AppTokens.weightAppBarTitle,
-                    ),
+              Material(
+                color: Colors.transparent,
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: AppTokens.fontSizeAppBarTitle,
+                    fontWeight: AppTokens.weightAppBarTitle,
                   ),
                 ),
               ),

@@ -1,6 +1,8 @@
 import 'dart:ui';
 
-import 'package:calcmate/core/navigation/calc_page_route.dart';
+import 'package:animations/animations.dart';
+import 'package:calcmate/domain/models/calc_mode_entry.dart';
+import 'package:calcmate/core/navigation/edge_swipe_back.dart';
 import 'package:calcmate/presentation/calculator/basic_calculator_screen.dart';
 import 'package:calcmate/presentation/currency/currency_calculator_screen.dart';
 import 'package:calcmate/presentation/unit_converter/unit_converter_screen.dart';
@@ -95,69 +97,42 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           itemCount: state.entries.length,
           itemBuilder: (context, index) {
             final entry = state.entries[index];
+
+            final screen = _buildScreen(entry);
+            if (screen != null) {
+              return OpenContainer(
+                transitionDuration: const Duration(milliseconds: 400),
+                closedShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                closedElevation: 2,
+                openElevation: 0,
+                closedColor: Colors.transparent,
+                openColor: Colors.transparent,
+                closedBuilder: (context, openContainer) {
+                  return CalcModeCard(
+                    title: entry.title,
+                    description: entry.description,
+                    icon: entry.icon,
+                    imagePath: entry.imagePath,
+                    onTap: openContainer,
+                  );
+                },
+                openBuilder: (context, _) {
+                  return EdgeSwipeBack(child: screen);
+                },
+              );
+            }
+
             return CalcModeCard(
               title: entry.title,
               description: entry.description,
               icon: entry.icon,
               imagePath: entry.imagePath,
               onTap: () {
-                if (entry.id == 'basic_calculator') {
-                  Navigator.of(context).push(
-                    CalcPageRoute(
-                      builder: (_) => BasicCalculatorScreen(
-                        title: entry.title,
-                        icon: entry.icon,
-                        color: Colors.black.withValues(alpha: 0.2),
-                      ),
-                    ),
-                  );
-                } else if (entry.id == 'exchange_rate') {
-                  Navigator.of(context).push(
-                    CalcPageRoute(
-                      builder: (_) => CurrencyCalculatorScreen(
-                        title: entry.title,
-                        icon: entry.icon,
-                      ),
-                    ),
-                  );
-                } else if (entry.id == 'unit_converter') {
-                  Navigator.of(context).push(
-                    CalcPageRoute(
-                      builder: (_) => UnitConverterScreen(
-                        title: entry.title,
-                        icon: entry.icon,
-                      ),
-                    ),
-                  );
-                } else if (entry.id == 'vat_calculator') {
-                  Navigator.of(context).push(
-                    CalcPageRoute(
-                      builder: (_) => VatCalculatorScreen(
-                        title: entry.title,
-                        icon: entry.icon,
-                      ),
-                    ),
-                  );
-                } else if (entry.id == 'age_calculator') {
-                  Navigator.of(context).push(
-                    CalcPageRoute(
-                      builder: (_) => AgeCalculatorScreen(
-                        title: entry.title,
-                        icon: entry.icon,
-                      ),
-                    ),
-                  );
-                } else if (entry.id == 'date_calculator') {
-                  Navigator.of(context).push(
-                    CalcPageRoute(
-                      builder: (_) => const DateCalculatorScreen(),
-                    ),
-                  );
-                } else {
-                  ref
-                      .read(mainScreenViewModelProvider.notifier)
-                      .handleIntent(MainScreenIntent.cardTapped(entry.id));
-                }
+                ref
+                    .read(mainScreenViewModelProvider.notifier)
+                    .handleIntent(MainScreenIntent.cardTapped(entry.id));
               },
             );
           },
@@ -165,5 +140,40 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         ),
       ),
     );
+  }
+
+  Widget? _buildScreen(CalcModeEntry entry) {
+    switch (entry.id) {
+      case 'basic_calculator':
+        return BasicCalculatorScreen(
+          title: entry.title,
+          icon: entry.icon,
+          color: Colors.black.withValues(alpha: 0.2),
+        );
+      case 'exchange_rate':
+        return CurrencyCalculatorScreen(
+          title: entry.title,
+          icon: entry.icon,
+        );
+      case 'unit_converter':
+        return UnitConverterScreen(
+          title: entry.title,
+          icon: entry.icon,
+        );
+      case 'vat_calculator':
+        return VatCalculatorScreen(
+          title: entry.title,
+          icon: entry.icon,
+        );
+      case 'age_calculator':
+        return AgeCalculatorScreen(
+          title: entry.title,
+          icon: entry.icon,
+        );
+      case 'date_calculator':
+        return const DateCalculatorScreen();
+      default:
+        return null;
+    }
   }
 }

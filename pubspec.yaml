@@ -55,6 +55,9 @@ dependencies:
   # Lunar Calendar
   korean_lunar_utils: ^1.0.1
 
+  # Animation
+  animations: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
