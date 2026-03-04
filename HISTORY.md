@@ -2,6 +2,29 @@
 
 ---
 
+## 2026-03-04 — 디자인 토큰 도입 및 전 화면 스타일 통일
+
+### 완료 항목
+
+**디자인 토큰**
+- `core/theme/app_design_tokens.dart` — AppTokens abstract 클래스 신규 생성
+  - Typography: fontSizeAppBarTitle(18), weightAppBarTitle(w600), fontSizeLabel(12), fontSizeBody(14), fontSizeValue(16)
+  - Shape: radiusCard(16), radiusBottomSheet(20), radiusChip(20), radiusTag(6), radiusAppBarIcon(7), radiusInput(12)
+  - Spacing: paddingScreenH(16), paddingCardInner(16), paddingAppBarH(16), paddingAppBarV(12)
+  - Component: sizeAppBarIcon(28), sizeAppBarIconInner(15), heightButtonLarge(68), heightButtonMedium(56), heightSegment(36)
+
+**공통 위젯**
+- `presentation/widgets/app_segment_control.dart` — AppSegmentControl<T> 신규 생성
+  - trackColor, thumbColor, activeTextColor, inactiveTextColor 파라미터로 테마 주입
+  - 부가세 계산기 CupertinoSlidingSegmentedControl 교체 + _CalendarSegment(나이 계산기) 교체
+
+**스타일 통일**
+- 나이 계산기 AppBar fontWeight w700 → AppTokens.weightAppBarTitle(w600) 통일
+- 단위 변환기 list item borderRadius 12 → AppTokens.radiusCard(16) 통일
+- 전 화면(기본·환율·단위·부가세·나이) AppBar 하드코딩 값 → AppTokens 상수 교체
+
+---
+
 ## 2026-03-04 — 나이 계산기 음력 변환 및 UI 개선
 
 ### 완료 항목

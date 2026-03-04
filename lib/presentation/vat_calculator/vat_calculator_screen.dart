@@ -1,12 +1,13 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/vat_calculator_state.dart';
 import '../../domain/usecases/vat_calculate_usecase.dart';
 import '../../domain/utils/number_formatter.dart';
+import '../widgets/app_segment_control.dart';
 import 'vat_calculator_viewmodel.dart';
 
 // ──────────────────────────────────────────
@@ -130,7 +131,9 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
 
   Widget _buildAppBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.paddingAppBarH,
+          vertical: AppTokens.paddingAppBarV),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -150,14 +153,16 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    width: 28,
-                    height: 28,
+                    width: AppTokens.sizeAppBarIcon,
+                    height: AppTokens.sizeAppBarIcon,
                     decoration: BoxDecoration(
                       color: Colors.white24,
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius:
+                          BorderRadius.circular(AppTokens.radiusAppBarIcon),
                     ),
-                    child:
-                        Icon(widget.icon, color: Colors.white, size: 15),
+                    child: Icon(widget.icon,
+                        color: Colors.white,
+                        size: AppTokens.sizeAppBarIconInner),
                   ),
                 ),
               ),
@@ -170,8 +175,8 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
                     widget.title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: AppTokens.fontSizeAppBarTitle,
+                      fontWeight: AppTokens.weightAppBarTitle,
                     ),
                   ),
                 ),
@@ -186,39 +191,20 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
   Widget _buildSegmentControl(
       VatCalculatorState state, VatCalculatorViewModel vm) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: CupertinoSlidingSegmentedControl<VatMode>(
-        groupValue: state.mode,
-        backgroundColor: Colors.white.withValues(alpha: 0.1),
-        thumbColor: _colorEquals.withValues(alpha: 0.9),
-        children: const {
-          VatMode.exclusive: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              '부가세 별도',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          VatMode.inclusive: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              '부가세 포함',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        },
-        onValueChanged: (value) {
-          if (value == null) return;
-          vm.handleIntent(VatCalculatorIntent.modeChanged(value));
-        },
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.paddingScreenH + 8, vertical: 8),
+      child: AppSegmentControl<VatMode>(
+        value: state.mode,
+        segments: const [
+          (VatMode.exclusive, '부가세 별도'),
+          (VatMode.inclusive, '부가세 포함'),
+        ],
+        onChanged: (value) =>
+            vm.handleIntent(VatCalculatorIntent.modeChanged(value)),
+        trackColor: Colors.white10,
+        thumbColor: _colorEquals,
+        activeTextColor: Colors.white,
+        inactiveTextColor: Colors.white60,
       ),
     );
   }

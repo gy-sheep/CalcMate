@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/currency_info.dart';
 import 'currency_calculator_viewmodel.dart';
 
@@ -280,7 +281,9 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
 
   Widget _buildAppBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.paddingAppBarH,
+          vertical: AppTokens.paddingAppBarV),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -300,13 +303,16 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    width: 28,
-                    height: 28,
+                    width: AppTokens.sizeAppBarIcon,
+                    height: AppTokens.sizeAppBarIcon,
                     decoration: BoxDecoration(
                       color: Colors.white24,
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius:
+                          BorderRadius.circular(AppTokens.radiusAppBarIcon),
                     ),
-                    child: Icon(icon, color: Colors.white, size: 15),
+                    child: Icon(icon,
+                        color: Colors.white,
+                        size: AppTokens.sizeAppBarIconInner),
                   ),
                 ),
               ),
@@ -319,8 +325,8 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: AppTokens.fontSizeAppBarTitle,
+                      fontWeight: AppTokens.weightAppBarTitle,
                     ),
                   ),
                 ),

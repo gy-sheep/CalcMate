@@ -78,6 +78,14 @@
 
 ## 다음 작업
 
+### 디자인 통일성 — `feat/design-tokens` (완료)
+- [x] `core/theme/app_design_tokens.dart` — AppTokens 클래스 (Typography, Shape, Spacing, Component 상수 정의)
+- [x] `presentation/widgets/app_segment_control.dart` — AppSegmentControl<T> 공통 세그먼트 위젯 추출
+- [x] 나이 계산기 AppBar fontWeight w700 → w600 통일
+- [x] 단위 변환기 list item borderRadius 12 → 16 통일
+- [x] 전 화면(5개) AppBar 하드코딩 값 → AppTokens 상수 교체
+- [x] 부가세/나이 계산기 세그먼트 컨트롤 → AppSegmentControl 교체
+
 ### Phase 5: 나이 계산기 — `feat/age-calculator` (완료)
 - [x] `docs/specs/AGE_CALCULATOR.md` — 기획 명세 작성 및 현행화
 - [x] `docs/dev/AGE_CALCULATOR.md` — 구현 명세 작성

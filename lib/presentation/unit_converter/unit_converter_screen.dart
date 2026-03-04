@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/unit_definitions.dart';
+import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/unit_converter_state.dart';
 import '../../domain/models/unit_definition.dart';
 import 'unit_converter_viewmodel.dart';
@@ -200,7 +201,9 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
 
   Widget _buildAppBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.paddingAppBarH,
+          vertical: AppTokens.paddingAppBarV),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -220,14 +223,16 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    width: 28,
-                    height: 28,
+                    width: AppTokens.sizeAppBarIcon,
+                    height: AppTokens.sizeAppBarIcon,
                     decoration: BoxDecoration(
                       color: Colors.white24,
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius:
+                          BorderRadius.circular(AppTokens.radiusAppBarIcon),
                     ),
-                    child:
-                        Icon(widget.icon, color: Colors.white, size: 15),
+                    child: Icon(widget.icon,
+                        color: Colors.white,
+                        size: AppTokens.sizeAppBarIconInner),
                   ),
                 ),
               ),
@@ -240,8 +245,8 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
                     widget.title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: AppTokens.fontSizeAppBarTitle,
+                      fontWeight: AppTokens.weightAppBarTitle,
                     ),
                   ),
                 ),
@@ -474,7 +479,7 @@ class _UnitListState extends State<_UnitList> {
                   color: (widget.isActive && isActiveUnit)
                       ? _activeRowColor
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusCard),
                   border: (widget.isActive && isActiveUnit)
                       ? Border.all(
                           color: _chipSelectedColor.withValues(alpha: 0.4),

@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/age_calculator_state.dart';
 import '../../domain/utils/number_formatter.dart';
 import '../../domain/usecases/age_calculate_usecase.dart';
+import '../widgets/app_segment_control.dart';
 import 'age_calculator_viewmodel.dart';
 
 // ─────────────────────────────────────────
@@ -118,10 +120,21 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
           child: Column(
             children: [
               _AppBarRow(title: widget.title, icon: widget.icon),
-              _CalendarSegment(
-                selected: state.calendarType,
-                onChanged: (t) => vm.handleIntent(
-                  AgeCalculatorIntent.calendarTypeChanged(t),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+                child: AppSegmentControl<AgeCalendarType>(
+                  value: state.calendarType,
+                  segments: const [
+                    (AgeCalendarType.solar, '양력'),
+                    (AgeCalendarType.lunar, '음력'),
+                  ],
+                  onChanged: (t) => vm.handleIntent(
+                    AgeCalculatorIntent.calendarTypeChanged(t),
+                  ),
+                  trackColor: _kPickerHighlight,
+                  thumbColor: Colors.white,
+                  activeTextColor: _kAccent,
+                  inactiveTextColor: _kSubText,
                 ),
               ),
               _PickerSection(
@@ -170,8 +183,8 @@ class _AppBarRow extends StatelessWidget {
             title,
             style: const TextStyle(
               color: _kText,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+              fontSize: AppTokens.fontSizeAppBarTitle,
+              fontWeight: AppTokens.weightAppBarTitle,
               letterSpacing: -0.3,
             ),
           ),
@@ -181,71 +194,6 @@ class _AppBarRow extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
-// Calendar Type Segment
-// ─────────────────────────────────────────
-class _CalendarSegment extends StatelessWidget {
-  const _CalendarSegment({
-    required this.selected,
-    required this.onChanged,
-  });
-  final AgeCalendarType selected;
-  final ValueChanged<AgeCalendarType> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
-      child: Container(
-        height: 36,
-        decoration: BoxDecoration(
-          color: _kPickerHighlight.withValues(alpha: 0.6),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: AgeCalendarType.values.map((type) {
-            final isSelected = selected == type;
-            final label = type == AgeCalendarType.solar ? '양력' : '음력';
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(type),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.white : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: _kCardShadow.withValues(alpha: 0.15),
-                              blurRadius: 4,
-                              offset: const Offset(0, 1),
-                            )
-                          ]
-                        : null,
-                  ),
-                  child: Center(
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                        color: isSelected ? _kAccent : _kSubText,
-                        fontSize: 14,
-                        fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
 
 // ─────────────────────────────────────────
 // Picker Section

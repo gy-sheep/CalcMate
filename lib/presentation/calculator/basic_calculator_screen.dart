@@ -1,3 +1,4 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:calcmate/domain/models/calculator_state.dart';
 import 'package:calcmate/presentation/calculator/basic_calculator_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,9 @@ class BasicCalculatorScreen extends ConsumerWidget {
 
   Widget _buildAppBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppTokens.paddingAppBarH,
+          vertical: AppTokens.paddingAppBarV),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -78,13 +81,16 @@ class BasicCalculatorScreen extends ConsumerWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    width: 28,
-                    height: 28,
+                    width: AppTokens.sizeAppBarIcon,
+                    height: AppTokens.sizeAppBarIcon,
                     decoration: BoxDecoration(
                       color: Colors.white24,
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius:
+                          BorderRadius.circular(AppTokens.radiusAppBarIcon),
                     ),
-                    child: Icon(icon, color: Colors.white, size: 15),
+                    child: Icon(icon,
+                        color: Colors.white,
+                        size: AppTokens.sizeAppBarIconInner),
                   ),
                 ),
               ),
@@ -97,8 +103,8 @@ class BasicCalculatorScreen extends ConsumerWidget {
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: AppTokens.fontSizeAppBarTitle,
+                      fontWeight: AppTokens.weightAppBarTitle,
                     ),
                   ),
                 ),
