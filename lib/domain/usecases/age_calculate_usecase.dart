@@ -153,11 +153,43 @@ const List<(String, String)> kZodiacs = [
   ('원숭이', '🐵'), ('닭', '🐔'), ('개', '🐶'), ('돼지', '🐷'),
 ];
 
+/// 띠 아이콘 경로 — kZodiacs와 동일 인덱스
+const List<String> kZodiacIcons = [
+  'assets/icons/zodiac/zodiac_rat.png',
+  'assets/icons/zodiac/zodiac_ox.png',
+  'assets/icons/zodiac/zodiac_tiger.png',
+  'assets/icons/zodiac/zodiac_rabbit.png',
+  'assets/icons/zodiac/zodiac_dragon.png',
+  'assets/icons/zodiac/zodiac_snake.png',
+  'assets/icons/zodiac/zodiac_horse.png',
+  'assets/icons/zodiac/zodiac_goat.png',
+  'assets/icons/zodiac/zodiac_monkey.png',
+  'assets/icons/zodiac/zodiac_rooster.png',
+  'assets/icons/zodiac/zodiac_dog.png',
+  'assets/icons/zodiac/zodiac_pig.png',
+];
+
 /// 별자리 (이름, 기호) — 인덱스 0=염소 … 11=사수
 const List<(String, String)> kConstellations = [
   ('염소자리', '♑'), ('물병자리', '♒'), ('물고기자리', '♓'), ('양자리', '♈'),
   ('황소자리', '♉'), ('쌍둥이자리', '♊'), ('게자리', '♋'),  ('사자자리', '♌'),
   ('처녀자리', '♍'), ('천칭자리', '♎'), ('전갈자리', '♏'),  ('사수자리', '♐'),
+];
+
+/// 별자리 아이콘 경로 — kConstellations와 동일 인덱스
+const List<String> kConstellationIcons = [
+  'assets/icons/constellation/constellation_capricorn.png',
+  'assets/icons/constellation/constellation_aquarius.png',
+  'assets/icons/constellation/constellation_pisces.png',
+  'assets/icons/constellation/constellation_aries.png',
+  'assets/icons/constellation/constellation_taurus.png',
+  'assets/icons/constellation/constellation_gemini.png',
+  'assets/icons/constellation/constellation_cancer.png',
+  'assets/icons/constellation/constellation_leo.png',
+  'assets/icons/constellation/constellation_virgo.png',
+  'assets/icons/constellation/constellation_libra.png',
+  'assets/icons/constellation/constellation_scorpio.png',
+  'assets/icons/constellation/constellation_sagittarius.png',
 ];
 
 /// 요일 이름 (weekday 1=월 … 7=일)

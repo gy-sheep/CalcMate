@@ -2,6 +2,51 @@
 
 ---
 
+## 2026-03-04 — 나이 계산기 음력 변환 및 UI 개선
+
+### 완료 항목
+
+**음력 변환 기능**
+- `domain/usecases/lunar_converter.dart` — 음력↔양력 변환 래퍼 (신규)
+  - `korean_lunar_utils` 패키지 캡슐화 (Domain 계층 직접 의존 방지)
+  - `toSolar()`, `hasLeapMonth()`, `daysInMonth()` 정적 메서드
+  - 범위 초과(1900 이전 / 2049 이후) 시 null 반환, 예외 처리
+- `domain/models/age_calculator_state.dart` — `convertedSolarDate: DateTime?` 필드 추가
+- `domain/usecases/age_calculate_usecase.dart` — kZodiacIcons, kConstellationIcons 정적 데이터 추가
+- `pubspec.yaml` — `korean_lunar_utils: ^1.0.1` 의존성 추가
+
+**Presentation 계층**
+- `presentation/age_calculator/age_calculator_viewmodel.dart` — 음력 변환 로직 추가
+  - 각 Intent 핸들러에서 음력 모드 시 `LunarConverter.toSolar()` 호출 → `convertedSolarDate` 갱신
+  - `maxDaysForCurrentMonth()`: 음력 모드 시 `LunarConverter.daysInMonth()` 반환
+  - `hasLeapMonth` getter: 현재 연·월 윤달 존재 여부
+- `presentation/age_calculator/age_calculator_screen.dart` — UI 전면 개선
+  - Frosted Glass 드럼롤 피커 (BackdropFilter blur + ShaderMask 그라데이션 페이드)
+  - 세는 나이 Primary(56sp, 포인트 컬러), 만 나이 보조 행으로 이동
+  - 태어난 요일 나이 카드 내 보조 행으로 통합 (별도 카드 제거)
+  - 띠/별자리 카드: 이모지 → PNG 아이콘 가로 배치 (`Image.asset`, 36×36)
+  - 음력 모드 `_LunarInfo`: 변환된 양력 날짜 표시 + 윤달 체크박스 (윤달 있는 달만)
+  - 일 피커 `itemCount` → `vm.maxDaysForCurrentMonth()` 동적 처리
+
+**아이콘 에셋**
+- `assets/icons/zodiac/` — 12간지 PNG 아이콘 12개 추가
+- `assets/icons/constellation/` — 별자리 PNG 아이콘 12개 추가
+- `pubspec.yaml` — assets 경로 등록
+
+**테스트**
+- `test/domain/usecases/age_calculate_usecase_test.dart` — 단위 테스트 19케이스 (신규)
+  - 만 나이(생일 전후/오늘), 세는 나이/연 나이, 윤년 2/29 생일(비윤년·윤년), 띠(설날 경계), 별자리(4케이스), 살아온 날, 다음 생일 D-day, 태어난 요일
+
+**문서**
+- `docs/dev/AGE_CALCULATOR.md` — 구현 명세 작성 (신규)
+- `docs/specs/AGE_CALCULATOR.md` — UI 변경사항 현행화 (세는 나이 Primary, 아이콘, 음력 UI)
+- `docs/prompts/answers/Q0022.md` — 디자인 통일성 점검 답변
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-04 — 나이 계산기 스펙 문서 및 화면 구현
 
 ### 완료 항목

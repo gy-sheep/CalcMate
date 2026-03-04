@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -266,10 +268,7 @@ class _PickerSection extends StatelessWidget {
   static const int _minYear = 1900;
   static int get _maxYear => DateTime.now().year;
 
-  int get _maxDay {
-    try { return DateTime(state.year, state.month + 1, 0).day; }
-    catch (_) { return 28; }
-  }
+  int get _maxDay => vm.maxDaysForCurrentMonth();
 
   @override
   Widget build(BuildContext context) {
@@ -292,94 +291,118 @@ class _PickerSection extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 176,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // 선택 하이라이트 바
-                Container(
-                  height: 44,
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                  decoration: BoxDecoration(
-                    color: _kPickerHighlight,
-                    borderRadius: BorderRadius.circular(12),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.5),
+                width: 1.0,
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: SizedBox(
+                  height: 136,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // 글라스 틴트 배경
+                      Container(
+                        color: Colors.white.withValues(alpha: 0.22),
+                      ),
+                    // 선택 하이라이트 바 (글라스)
+                    Container(
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: _kPickerHighlight.withValues(alpha: 0.45),
+                        border: Border.symmetric(
+                          horizontal: BorderSide(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            width: 0.8,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // 3개 피커 (ShaderMask로 상하 페이드)
+                    ShaderMask(
+                      shaderCallback: (Rect bounds) => const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.white,
+                          Colors.white,
+                          Colors.transparent,
+                        ],
+                        stops: [0.0, 0.34, 0.66, 1.0],
+                      ).createShader(bounds),
+                      blendMode: BlendMode.dstIn,
+                      child: Row(
+                        children: [
+                          // 연도
+                          Expanded(
+                            flex: 4,
+                            child: _Picker(
+                              controller: yearCtrl,
+                              itemCount: _maxYear - _minYear + 1,
+                              label: (i) => '${_minYear + i}년',
+                              onChanged: (i) => vm.handleIntent(
+                                AgeCalculatorIntent.yearChanged(_minYear + i),
+                              ),
+                            ),
+                          ),
+                          // 월
+                          Expanded(
+                            flex: 3,
+                            child: _Picker(
+                              controller: monthCtrl,
+                              itemCount: 12,
+                              label: (i) => '${i + 1}월',
+                              onChanged: (i) => vm.handleIntent(
+                                AgeCalculatorIntent.monthChanged(i + 1),
+                              ),
+                            ),
+                          ),
+                          // 일
+                          Expanded(
+                            flex: 3,
+                            child: _Picker(
+                              controller: dayCtrl,
+                              itemCount: _maxDay,
+                              label: (i) => '${i + 1}일',
+                              onChanged: (i) => vm.handleIntent(
+                                AgeCalculatorIntent.dayChanged(i + 1),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                      // 스페큘러 하이라이트 (빛 반사)
+                      Positioned(
+                        top: 0, left: 0, right: 0,
+                        child: IgnorePointer(
+                          child: Container(
+                            height: 36,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.4),
+                                  Colors.white.withValues(alpha: 0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                // 3개 피커
-                Row(
-                  children: [
-                    // 연도
-                    Expanded(
-                      flex: 5,
-                      child: _Picker(
-                        controller: yearCtrl,
-                        itemCount: _maxYear - _minYear + 1,
-                        label: (i) => '${_minYear + i}년',
-                        onChanged: (i) => vm.handleIntent(
-                          AgeCalculatorIntent.yearChanged(_minYear + i),
-                        ),
-                      ),
-                    ),
-                    // 월
-                    Expanded(
-                      flex: 3,
-                      child: _Picker(
-                        controller: monthCtrl,
-                        itemCount: 12,
-                        label: (i) => '${i + 1}월',
-                        onChanged: (i) => vm.handleIntent(
-                          AgeCalculatorIntent.monthChanged(i + 1),
-                        ),
-                      ),
-                    ),
-                    // 일
-                    Expanded(
-                      flex: 3,
-                      child: _Picker(
-                        controller: dayCtrl,
-                        itemCount: _maxDay,
-                        label: (i) => '${i + 1}일',
-                        onChanged: (i) => vm.handleIntent(
-                          AgeCalculatorIntent.dayChanged(i + 1),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // 상단 페이드
-                Positioned(
-                  top: 0, left: 0, right: 0,
-                  child: IgnorePointer(
-                    child: Container(
-                      height: 66,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xFFFFF8F0), Colors.transparent],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                // 하단 페이드
-                Positioned(
-                  bottom: 0, left: 0, right: 0,
-                  child: IgnorePointer(
-                    child: Container(
-                      height: 66,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [Color(0xFFFFE4CC), Colors.transparent],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           // 음력 모드 부가 정보
@@ -427,11 +450,11 @@ class _Picker extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListWheelScrollView.useDelegate(
       controller: controller,
-      itemExtent: 44,
+      itemExtent: 40,
       physics: const FixedExtentScrollPhysics(),
-      perspective: 0.002,
-      diameterRatio: 1.6,
-      squeeze: 0.95,
+      perspective: 0.003,
+      diameterRatio: 1.8,
+      squeeze: 1,
       onSelectedItemChanged: onChanged,
       childDelegate: ListWheelChildBuilderDelegate(
         childCount: itemCount,
@@ -446,6 +469,7 @@ class _Picker extends StatelessWidget {
                 fontSize: isSelected ? 18 : 15,
                 fontWeight:
                     isSelected ? FontWeight.w700 : FontWeight.w400,
+                height: 1.0,
               ),
               child: Text(label(index)),
             ),
@@ -466,6 +490,8 @@ class _LunarInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final solarDate = state.convertedSolarDate;
+    final hasLeap = vm.hasLeapMonth;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -475,12 +501,39 @@ class _LunarInfo extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              '음력 변환 기능은 다음 업데이트에 지원됩니다.\n현재는 양력과 동일하게 계산됩니다.',
-              style: const TextStyle(color: _kSubText, fontSize: 12, height: 1.5),
+          // 변환된 양력 날짜
+          Text(
+            '양력  ',
+            style: const TextStyle(
+              color: _kSubText,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
           ),
+          Text(
+            solarDate != null
+                ? '${solarDate.year}년 ${solarDate.month}월 ${solarDate.day}일'
+                : '—',
+            style: const TextStyle(color: _kText, fontSize: 12),
+          ),
+          const Spacer(),
+          // 윤달 체크박스 (해당 연·월에 윤달이 있을 때만)
+          if (hasLeap) ...[
+            const Text('윤달', style: TextStyle(color: _kSubText, fontSize: 12)),
+            const SizedBox(width: 4),
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: Checkbox(
+                value: state.isLeapMonth,
+                onChanged: (v) => vm.handleIntent(
+                  AgeCalculatorIntent.leapMonthToggled(v ?? false),
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -518,8 +571,6 @@ class _ResultScrollView extends StatelessWidget {
               Expanded(child: _ConstellationCard(result: result)),
             ],
           ),
-          const SizedBox(height: 12),
-          _BirthWeekdayRow(result: result),
         ],
       ),
     );
@@ -541,12 +592,12 @@ class _AgeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 만 나이 (primary)
+            // 세는 나이 (primary)
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${result.koreanAge}',
+                  '${result.countingAge}',
                   style: const TextStyle(
                     color: _kAccent,
                     fontSize: 56,
@@ -575,7 +626,7 @@ class _AgeCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Text(
-                    '만 나이',
+                    '세는 나이',
                     style: TextStyle(
                       color: _kAccent,
                       fontSize: 12,
@@ -588,9 +639,11 @@ class _AgeCard extends StatelessWidget {
             const SizedBox(height: 14),
             const Divider(color: _kDivider, height: 1),
             const SizedBox(height: 14),
-            _AgeRow(label: '세는 나이', value: '${result.countingAge}세'),
+            _AgeRow(label: '만 나이', value: '${result.koreanAge}세'),
             const SizedBox(height: 10),
-            _AgeRow(label: '연 나이',   value: '${result.yearAge}세'),
+            _AgeRow(label: '연 나이', value: '${result.yearAge}세'),
+            const SizedBox(height: 10),
+            _AgeRow(label: '태어난 요일', value: kWeekdays[result.birthWeekday]),
           ],
         ),
       ),
@@ -762,34 +815,39 @@ class _ZodiacCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (name, emoji) = kZodiacs[result.zodiacIndex];
+    final (name, _) = kZodiacs[result.zodiacIndex];
     return _Card(
-      child: SizedBox(
-        height: 100,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '띠',
-                style: TextStyle(
-                    color: _kSubText,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600),
-              ),
-              const Spacer(),
-              Text(emoji, style: const TextStyle(fontSize: 28)),
-              const SizedBox(height: 4),
-              Text(
-                '$name띠',
-                style: const TextStyle(
-                    color: _kText,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '띠',
+              style: TextStyle(
+                  color: _kSubText,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Image.asset(
+                  kZodiacIcons[result.zodiacIndex],
+                  width: 36,
+                  height: 36,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '$name띠',
+                  style: const TextStyle(
+                      color: _kText,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -805,42 +863,39 @@ class _ConstellationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (name, symbol) = kConstellations[result.constellationIndex];
+    final (name, _) = kConstellations[result.constellationIndex];
     return _Card(
-      child: SizedBox(
-        height: 100,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '별자리',
-                style: TextStyle(
-                    color: _kSubText,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600),
-              ),
-              const Spacer(),
-              Text(
-                symbol,
-                style: const TextStyle(
-                  color: _kAccentLight,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  height: 1.0,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '별자리',
+              style: TextStyle(
+                  color: _kSubText,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Image.asset(
+                  kConstellationIcons[result.constellationIndex],
+                  width: 36,
+                  height: 36,
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                name,
-                style: const TextStyle(
-                    color: _kText,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
+                const SizedBox(width: 8),
+                Text(
+                  name,
+                  style: const TextStyle(
+                      color: _kText,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -23,6 +23,9 @@ mixin _$AgeCalculatorState {
   int get day => throw _privateConstructorUsedError;
   bool get isLeapMonth => throw _privateConstructorUsedError;
 
+  /// 음력 모드에서 변환된 양력 날짜. 양력 모드에서는 null.
+  DateTime? get convertedSolarDate => throw _privateConstructorUsedError;
+
   /// Create a copy of AgeCalculatorState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -43,6 +46,7 @@ abstract class $AgeCalculatorStateCopyWith<$Res> {
     int month,
     int day,
     bool isLeapMonth,
+    DateTime? convertedSolarDate,
   });
 }
 
@@ -66,6 +70,7 @@ class _$AgeCalculatorStateCopyWithImpl<$Res, $Val extends AgeCalculatorState>
     Object? month = null,
     Object? day = null,
     Object? isLeapMonth = null,
+    Object? convertedSolarDate = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -89,6 +94,10 @@ class _$AgeCalculatorStateCopyWithImpl<$Res, $Val extends AgeCalculatorState>
                 ? _value.isLeapMonth
                 : isLeapMonth // ignore: cast_nullable_to_non_nullable
                       as bool,
+            convertedSolarDate: freezed == convertedSolarDate
+                ? _value.convertedSolarDate
+                : convertedSolarDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
           )
           as $Val,
     );
@@ -110,6 +119,7 @@ abstract class _$$AgeCalculatorStateImplCopyWith<$Res>
     int month,
     int day,
     bool isLeapMonth,
+    DateTime? convertedSolarDate,
   });
 }
 
@@ -132,6 +142,7 @@ class __$$AgeCalculatorStateImplCopyWithImpl<$Res>
     Object? month = null,
     Object? day = null,
     Object? isLeapMonth = null,
+    Object? convertedSolarDate = freezed,
   }) {
     return _then(
       _$AgeCalculatorStateImpl(
@@ -155,6 +166,10 @@ class __$$AgeCalculatorStateImplCopyWithImpl<$Res>
             ? _value.isLeapMonth
             : isLeapMonth // ignore: cast_nullable_to_non_nullable
                   as bool,
+        convertedSolarDate: freezed == convertedSolarDate
+            ? _value.convertedSolarDate
+            : convertedSolarDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
       ),
     );
   }
@@ -169,6 +184,7 @@ class _$AgeCalculatorStateImpl implements _AgeCalculatorState {
     this.month = 1,
     this.day = 1,
     this.isLeapMonth = false,
+    this.convertedSolarDate,
   });
 
   @override
@@ -186,9 +202,13 @@ class _$AgeCalculatorStateImpl implements _AgeCalculatorState {
   @JsonKey()
   final bool isLeapMonth;
 
+  /// 음력 모드에서 변환된 양력 날짜. 양력 모드에서는 null.
+  @override
+  final DateTime? convertedSolarDate;
+
   @override
   String toString() {
-    return 'AgeCalculatorState(calendarType: $calendarType, year: $year, month: $month, day: $day, isLeapMonth: $isLeapMonth)';
+    return 'AgeCalculatorState(calendarType: $calendarType, year: $year, month: $month, day: $day, isLeapMonth: $isLeapMonth, convertedSolarDate: $convertedSolarDate)';
   }
 
   @override
@@ -202,12 +222,21 @@ class _$AgeCalculatorStateImpl implements _AgeCalculatorState {
             (identical(other.month, month) || other.month == month) &&
             (identical(other.day, day) || other.day == day) &&
             (identical(other.isLeapMonth, isLeapMonth) ||
-                other.isLeapMonth == isLeapMonth));
+                other.isLeapMonth == isLeapMonth) &&
+            (identical(other.convertedSolarDate, convertedSolarDate) ||
+                other.convertedSolarDate == convertedSolarDate));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, calendarType, year, month, day, isLeapMonth);
+  int get hashCode => Object.hash(
+    runtimeType,
+    calendarType,
+    year,
+    month,
+    day,
+    isLeapMonth,
+    convertedSolarDate,
+  );
 
   /// Create a copy of AgeCalculatorState
   /// with the given fields replaced by the non-null parameter values.
@@ -228,6 +257,7 @@ abstract class _AgeCalculatorState implements AgeCalculatorState {
     final int month,
     final int day,
     final bool isLeapMonth,
+    final DateTime? convertedSolarDate,
   }) = _$AgeCalculatorStateImpl;
 
   @override
@@ -240,6 +270,10 @@ abstract class _AgeCalculatorState implements AgeCalculatorState {
   int get day;
   @override
   bool get isLeapMonth;
+
+  /// 음력 모드에서 변환된 양력 날짜. 양력 모드에서는 null.
+  @override
+  DateTime? get convertedSolarDate;
 
   /// Create a copy of AgeCalculatorState
   /// with the given fields replaced by the non-null parameter values.

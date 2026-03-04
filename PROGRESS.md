@@ -78,16 +78,21 @@
 
 ## 다음 작업
 
-### Phase 5: 나이 계산기 — `feat/age-calculator` (진행 중)
-- [x] `docs/specs/AGE_CALCULATOR.md` — 기획 명세 작성 (양력/음력, 드럼롤 피커, 라이트 테마)
+### Phase 5: 나이 계산기 — `feat/age-calculator` (완료)
+- [x] `docs/specs/AGE_CALCULATOR.md` — 기획 명세 작성 및 현행화
+- [x] `docs/dev/AGE_CALCULATOR.md` — 구현 명세 작성
 - [x] `core/constants/lunar_new_year_dates.dart` — 설날 양력 날짜 룩업 테이블 (1900~2050)
-- [x] `domain/models/age_calculator_state.dart` — AgeCalculatorState (Freezed) 정의
+- [x] `domain/models/age_calculator_state.dart` — AgeCalculatorState (Freezed, `convertedSolarDate` 추가)
+- [x] `domain/usecases/lunar_converter.dart` — 음력↔양력 변환 래퍼 (`korean_lunar_utils` 캡슐화)
 - [x] `domain/usecases/age_calculate_usecase.dart` — AgeCalculateUseCase (만 나이, 세는 나이, 연 나이, 설날 기준 띠, 별자리, 살아온 날, 다음 생일)
-- [x] `presentation/age_calculator/age_calculator_viewmodel.dart` — Notifier + sealed Intent 5종
-- [x] `presentation/age_calculator/age_calculator_screen.dart` — 화면 구현 (크림/복숭아 라이트 테마, 드럼롤 피커)
+- [x] `presentation/age_calculator/age_calculator_viewmodel.dart` — Notifier + sealed Intent 5종 (음력 변환 로직 포함)
+- [x] `presentation/age_calculator/age_calculator_screen.dart` — 화면 구현
+  - 크림/복숭아 라이트 테마, Frosted Glass 드럼롤 피커 (ShaderMask 그라데이션 페이드)
+  - 세는 나이 Primary (56sp), 태어난 요일 나이 카드 통합
+  - 띠/별자리 PNG 아이콘 가로 배치 (`assets/icons/zodiac/`, `assets/icons/constellation/`)
+  - 음력 모드: 변환된 양력 날짜 + 윤달 체크박스, 음력 기준 동적 일 수 피커
 - [x] `presentation/main/main_screen.dart` — 나이 계산기 네비게이션 추가
-- [ ] 음력 변환 기능 구현 (룩업 테이블 기반)
-- [ ] `AgeCalculateUseCase` 테스트 작성
+- [x] `test/domain/usecases/age_calculate_usecase_test.dart` — 단위 테스트 19케이스
 
 ### Phase 4: 부가세 계산기 — `feat/vat-calculator`
 - [x] `docs/specs/VAT_CALCULATOR.md` — 기획 명세 작성 및 현행화 (영수증 UI, 세율 설정, 참고표 추가)

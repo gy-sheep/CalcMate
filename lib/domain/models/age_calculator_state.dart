@@ -12,5 +12,7 @@ class AgeCalculatorState with _$AgeCalculatorState {
     @Default(1) int month,
     @Default(1) int day,
     @Default(false) bool isLeapMonth,
+    /// 음력 모드에서 변환된 양력 날짜. 양력 모드에서는 null.
+    DateTime? convertedSolarDate,
   }) = _AgeCalculatorState;
 }
