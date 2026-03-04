@@ -9,7 +9,6 @@ import 'vat_calculator_colors.dart';
 import 'vat_calculator_viewmodel.dart';
 import 'widgets/receipt_card.dart';
 import 'widgets/tax_rate_info_sheet.dart';
-import 'widgets/vat_app_bar.dart';
 import 'widgets/vat_number_pad.dart';
 
 // ──────────────────────────────────────────
@@ -17,12 +16,10 @@ import 'widgets/vat_number_pad.dart';
 // ──────────────────────────────────────────
 class VatCalculatorScreen extends ConsumerStatefulWidget {
   final String title;
-  final IconData icon;
 
   const VatCalculatorScreen({
     super.key,
     required this.title,
-    required this.icon,
   });
 
   @override
@@ -85,6 +82,25 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          onPressed: () => Navigator.maybePop(context),
+        ),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: AppTokens.fontSizeAppBarTitle,
+            fontWeight: AppTokens.weightAppBarTitle,
+          ),
+        ),
+        centerTitle: false,
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -96,7 +112,6 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              VatAppBar(title: widget.title, icon: widget.icon),
               _buildSegmentControl(state, vm),
               Expanded(
                 child: ReceiptCard(

@@ -147,28 +147,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       case 'basic_calculator':
         return BasicCalculatorScreen(
           title: entry.title,
-          icon: entry.icon,
-          color: Colors.black.withValues(alpha: 0.2),
         );
       case 'exchange_rate':
         return CurrencyCalculatorScreen(
           title: entry.title,
-          icon: entry.icon,
         );
       case 'unit_converter':
         return UnitConverterScreen(
           title: entry.title,
-          icon: entry.icon,
         );
       case 'vat_calculator':
         return VatCalculatorScreen(
           title: entry.title,
-          icon: entry.icon,
         );
       case 'age_calculator':
         return AgeCalculatorScreen(
           title: entry.title,
-          icon: entry.icon,
         );
       case 'date_calculator':
         return const DateCalculatorScreen();

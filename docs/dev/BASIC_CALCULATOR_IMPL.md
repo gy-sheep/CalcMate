@@ -22,7 +22,7 @@
 | `presentation/calculator/basic_calculator_colors.dart` | 계산기 전용 색상 상수 |
 | `presentation/calculator/widgets/display_panel.dart` | 수식 + 입력값 디스플레이 |
 | `presentation/calculator/widgets/button_pad.dart` | 5×4 키패드 버튼 |
-| `presentation/calculator/widgets/calculator_app_bar.dart` | AppBar (Hero 애니메이션) |
+| `presentation/calculator/basic_calculator_screen.dart` | AppBar 인라인 (`Scaffold.appBar`) |
 | `test/domain/usecases/evaluate_expression_usecase_test.dart` | UseCase TDD (29케이스) |
 | `test/domain/utils/calculator_input_utils_test.dart` | 유틸 TDD (35케이스) |
 | `test/presentation/calculator/basic_calculator_viewmodel_test.dart` | ViewModel TDD (52케이스) |

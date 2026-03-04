@@ -177,7 +177,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
           fontWeight: AppTokens.weightAppBarTitle,
         ),
       ),
-      centerTitle: true,
+      centerTitle: false,
     );
   }
 }

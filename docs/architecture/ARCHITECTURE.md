@@ -88,6 +88,39 @@ lib/
   - 분기 로직이 과도해지면 공용화하지 않고 기능별 위젯으로 유지
   - 예: NumberPad는 키 목록, 콜백, 버튼 스타일을 외부에서 주입받는 구조로 설계
 
+### AppBar 패턴
+
+계산기 화면의 AppBar는 **`Scaffold.appBar`** 슬롯을 사용한다. 커스텀 AppBar 위젯 파일을 별도로 만들지 않는다.
+
+```dart
+Scaffold(
+  extendBodyBehindAppBar: true,
+  appBar: AppBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    scrolledUnderElevation: 0,
+    leading: IconButton(
+      icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+      onPressed: () => Navigator.of(context).pop(),
+    ),
+    title: Text(title, style: TextStyle(...)),
+    centerTitle: false,  // 타이틀 좌측 정렬
+  ),
+  body: Container(
+    decoration: BoxDecoration(gradient: ...),
+    child: SafeArea(
+      child: Column(...),  // AppBar 위젯 없이 콘텐츠만
+    ),
+  ),
+)
+```
+
+- `extendBodyBehindAppBar: true` — 그라디언트가 상태바 뒤까지 자연스럽게 채워진다.
+- `SafeArea`는 body 안에 유지한다. Scaffold가 MediaQuery를 조정하므로 AppBar 높이까지 자동으로 피해준다.
+- 화면마다 색상이 다른 경우(예: 나이 계산기)는 `color` 파라미터로 대응하고, 별도 위젯 파일은 만들지 않는다.
+
+---
+
 ### 계층별 책임
 
 | 계층 | 디렉토리 | 책임 |

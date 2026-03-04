@@ -20,7 +20,7 @@
 | `presentation/unit_converter/unit_converter_viewmodel.dart` | [신규] Notifier + Intent + State |
 | `presentation/unit_converter/unit_converter_screen.dart` | [수정] ConsumerStatefulWidget, 레이아웃만 |
 | `presentation/unit_converter/unit_converter_colors.dart` | [신규] 단위 변환기 전용 색상 상수 |
-| `presentation/unit_converter/widgets/unit_app_bar.dart` | [신규] AppBar (Hero 애니메이션) |
+| `presentation/unit_converter/unit_converter_screen.dart` | AppBar 인라인 (`Scaffold.appBar`) |
 | `presentation/unit_converter/widgets/category_tabs.dart` | [신규] 카테고리 칩 탭 (탄성 스트레치 애니메이션) |
 | `presentation/unit_converter/widgets/unit_list.dart` | [신규] 단위 리스트 + TabBarView |
 | `presentation/unit_converter/widgets/unit_number_pad.dart` | [신규] 4×4 키패드 |
@@ -175,7 +175,7 @@
 
 | 위젯 | 파일 | 역할 |
 |------|------|------|
-| `UnitAppBar` | `widgets/unit_app_bar.dart` | AppBar (Hero 애니메이션) |
+| (인라인) | `unit_converter_screen.dart` | AppBar (`Scaffold.appBar`, 투명) |
 | `CategoryTabs` | `widgets/category_tabs.dart` | 카테고리 칩 탭 (탄성 스트레치 애니메이션) |
 | `UnitList` | `widgets/unit_list.dart` | 단위 리스트 + TabBarView |
 | `UnitNumberPad` | `widgets/unit_number_pad.dart` | 4×4 키패드 |

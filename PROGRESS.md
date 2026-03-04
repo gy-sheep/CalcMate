@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/container-transform`
-> **마지막 완료**: Container Transform 화면 전환 애니메이션 적용
+> **현재 브랜치**: `dev`
+> **마지막 완료**: AppBar 리팩토링 (Scaffold.appBar 통일, 아이콘 제거)
 
 ### Phase 7: 다음 계산기 — 미정
 - [ ] `docs/specs/` — 기획 명세 작성
@@ -28,6 +28,7 @@
 | 6 | 날짜 계산기 (3모드·D-Day) | 28케이스 | `docs/dev/DATE_CALCULATOR_IMPL.md` |
 | — | 위젯 분리 리팩토링 (6개 계산기) | — | 각 구현 명세 참고 |
 | — | Container Transform 전환 애니메이션 | — | — |
+| — | AppBar 리팩토링 (Scaffold.appBar 통일, 아이콘 제거) | — | `docs/architecture/ARCHITECTURE.md` |
 
 > 상세 작업 이력: `HISTORY.md`
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/unit_definitions.dart';
+import '../../core/theme/app_design_tokens.dart';
 import 'unit_converter_colors.dart';
 import 'unit_converter_viewmodel.dart';
 import 'widgets/category_tabs.dart';
-import 'widgets/unit_app_bar.dart';
 import 'widgets/unit_list.dart';
 import 'widgets/unit_number_pad.dart';
 
@@ -14,12 +14,10 @@ import 'widgets/unit_number_pad.dart';
 // ──────────────────────────────────────────
 class UnitConverterScreen extends ConsumerStatefulWidget {
   final String title;
-  final IconData icon;
 
   const UnitConverterScreen({
     super.key,
     required this.title,
-    required this.icon,
   });
 
   @override
@@ -121,6 +119,25 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
     );
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          onPressed: () => Navigator.maybePop(context),
+        ),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: AppTokens.fontSizeAppBarTitle,
+            fontWeight: AppTokens.weightAppBarTitle,
+          ),
+        ),
+        centerTitle: false,
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -132,7 +149,6 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
         child: SafeArea(
           child: Column(
             children: [
-              UnitAppBar(title: widget.title, icon: widget.icon),
               CategoryTabs(
                 tabController: _tabController,
                 tabAnimation: _tabController.animation!,

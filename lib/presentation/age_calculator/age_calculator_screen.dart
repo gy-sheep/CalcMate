@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/age_calculator_state.dart';
 import '../widgets/app_segment_control.dart';
 import 'age_calculator_colors.dart';
 import 'age_calculator_viewmodel.dart';
-import 'widgets/app_bar_row.dart';
 import 'widgets/empty_state.dart';
 import 'widgets/picker_section.dart';
 import 'widgets/result_scroll_view.dart';
@@ -17,11 +17,9 @@ class AgeCalculatorScreen extends ConsumerStatefulWidget {
   const AgeCalculatorScreen({
     super.key,
     required this.title,
-    required this.icon,
   });
 
   final String title;
-  final IconData icon;
 
   @override
   ConsumerState<AgeCalculatorScreen> createState() =>
@@ -95,6 +93,27 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
 
     return Scaffold(
       backgroundColor: kAgeBgStart,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          color: kAgeText,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: kAgeText,
+            fontSize: AppTokens.fontSizeAppBarTitle,
+            fontWeight: AppTokens.weightAppBarTitle,
+            letterSpacing: -0.3,
+          ),
+        ),
+        centerTitle: false,
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -106,7 +125,6 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
         child: SafeArea(
           child: Column(
             children: [
-              AppBarRow(title: widget.title, icon: widget.icon),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
                 child: AppSegmentControl<AgeCalendarType>(

@@ -19,7 +19,7 @@
 | `lib/presentation/age_calculator/age_calculator_viewmodel.dart` | [수정] 음력 모드 ViewModel 로직 |
 | `lib/presentation/age_calculator/age_calculator_screen.dart` | [수정] ConsumerStatefulWidget, 레이아웃만 |
 | `lib/presentation/age_calculator/age_calculator_colors.dart` | [신규] 나이 계산기 전용 색상 상수 |
-| `lib/presentation/age_calculator/widgets/app_bar_row.dart` | [신규] AppBar 행 |
+| `lib/presentation/age_calculator/age_calculator_screen.dart` | AppBar 인라인 (`Scaffold.appBar`) |
 | `lib/presentation/age_calculator/widgets/picker_section.dart` | [신규] 피커 영역 (연/월/일 + 음력 토글) |
 | `lib/presentation/age_calculator/widgets/picker.dart` | [신규] ListWheelScrollView 개별 피커 |
 | `lib/presentation/age_calculator/widgets/lunar_info.dart` | [신규] 음력 모드: 변환 날짜 + 윤달 체크 |
