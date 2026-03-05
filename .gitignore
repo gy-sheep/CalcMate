@@ -44,5 +44,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# iOS build artifacts
+ios/build/
+
 # Firebase
 functions/.env

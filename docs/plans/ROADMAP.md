@@ -68,24 +68,15 @@
 
 ---
 
-## Phase 7: 대출 계산기
+## Phase 7: 더치페이 계산기
 
-- [ ] **Domain**: `LoanCalculateUseCase` — 원리금균등상환, 원금균등상환 (TDD)
-- [ ] **Presentation**: 대출금/금리/기간 입력, 월납입금 및 총이자 결과 표시
-- [ ] **ViewModel**: `LoanViewModel`
-
----
-
-## Phase 8: 실수령액 계산기
-
-- [ ] **Domain**: `SalaryCalculateUseCase` — 연봉 → 세금/4대보험 차감 (TDD)
-- [ ] 세율/요율 상수 파일 분리 (`core/constants/tax_rates.dart`)
-- [ ] **Presentation**: 연봉 입력, 항목별 공제액 및 실수령액 표시
-- [ ] **ViewModel**: `SalaryViewModel`
+- [ ] **Domain**: `DutchPayCalculateUseCase` — 금액 ÷ 인원, 나머지 처리 (TDD)
+- [ ] **Presentation**: 금액/인원 입력, 1인 부담액 표시
+- [ ] **ViewModel**: `DutchPayViewModel`
 
 ---
 
-## Phase 9: 할인 계산기
+## Phase 8: 할인 계산기
 
 - [ ] **Domain**: `DiscountCalculateUseCase` — 정가 + 할인율 → 최종금액 (TDD)
 - [ ] **Presentation**: 정가/할인율 입력, 할인금액 및 최종금액 표시
@@ -93,11 +84,20 @@
 
 ---
 
-## Phase 10: 더치페이 계산기
+## Phase 9: BMI 계산기
 
-- [ ] **Domain**: `DutchPayCalculateUseCase` — 금액 ÷ 인원 (TDD)
-- [ ] **Presentation**: 금액/인원 입력, 1인 부담액 표시
-- [ ] **ViewModel**: `DutchPayViewModel`
+- [ ] **Domain**: `BmiCalculateUseCase` — BMI 계산 및 체중 분류 (TDD)
+- [ ] **Presentation**: 신장/체중 입력, BMI 수치 및 분류(저체중/정상/과체중/비만) 표시
+- [ ] **ViewModel**: `BmiViewModel`
+
+---
+
+## Phase 10: 실수령액 계산기
+
+- [ ] **Domain**: `SalaryCalculateUseCase` — 연봉 → 세금/4대보험 차감 (TDD)
+- [ ] 세율/요율 상수 파일 분리 (`core/constants/tax_rates.dart`)
+- [ ] **Presentation**: 연봉 입력, 항목별 공제액 및 실수령액 표시
+- [ ] **ViewModel**: `SalaryViewModel`
 
 ---
 
@@ -118,11 +118,11 @@
 
 ---
 
-## Phase 13: BMI 계산기
+## Phase 13: 대출 계산기
 
-- [ ] **Domain**: `BmiCalculateUseCase` — BMI 계산 및 체중 분류 (TDD)
-- [ ] **Presentation**: 신장/체중 입력, BMI 수치 및 분류(저체중/정상/과체중/비만) 표시
-- [ ] **ViewModel**: `BmiViewModel`
+- [ ] **Domain**: `LoanCalculateUseCase` — 원리금균등상환, 원금균등상환, 만기일시상환 (TDD)
+- [ ] **Presentation**: 대출금/금리/기간 입력, 월납입금 및 총이자 결과 표시, 상환 일정표
+- [ ] **ViewModel**: `LoanViewModel`
 
 ---
 
