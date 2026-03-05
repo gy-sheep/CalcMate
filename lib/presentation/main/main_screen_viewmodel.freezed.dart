@@ -19,6 +19,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MainScreenState {
   List<CalcModeEntry> get entries => throw _privateConstructorUsedError;
   bool get isScrolled => throw _privateConstructorUsedError;
+  bool get isEditMode => throw _privateConstructorUsedError;
 
   /// Create a copy of MainScreenState
   /// with the given fields replaced by the non-null parameter values.
@@ -34,7 +35,7 @@ abstract class $MainScreenStateCopyWith<$Res> {
     $Res Function(MainScreenState) then,
   ) = _$MainScreenStateCopyWithImpl<$Res, MainScreenState>;
   @useResult
-  $Res call({List<CalcModeEntry> entries, bool isScrolled});
+  $Res call({List<CalcModeEntry> entries, bool isScrolled, bool isEditMode});
 }
 
 /// @nodoc
@@ -51,7 +52,11 @@ class _$MainScreenStateCopyWithImpl<$Res, $Val extends MainScreenState>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? entries = null, Object? isScrolled = null}) {
+  $Res call({
+    Object? entries = null,
+    Object? isScrolled = null,
+    Object? isEditMode = null,
+  }) {
     return _then(
       _value.copyWith(
             entries: null == entries
@@ -61,6 +66,10 @@ class _$MainScreenStateCopyWithImpl<$Res, $Val extends MainScreenState>
             isScrolled: null == isScrolled
                 ? _value.isScrolled
                 : isScrolled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isEditMode: null == isEditMode
+                ? _value.isEditMode
+                : isEditMode // ignore: cast_nullable_to_non_nullable
                       as bool,
           )
           as $Val,
@@ -77,7 +86,7 @@ abstract class _$$MainScreenStateImplCopyWith<$Res>
   ) = __$$MainScreenStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<CalcModeEntry> entries, bool isScrolled});
+  $Res call({List<CalcModeEntry> entries, bool isScrolled, bool isEditMode});
 }
 
 /// @nodoc
@@ -93,7 +102,11 @@ class __$$MainScreenStateImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? entries = null, Object? isScrolled = null}) {
+  $Res call({
+    Object? entries = null,
+    Object? isScrolled = null,
+    Object? isEditMode = null,
+  }) {
     return _then(
       _$MainScreenStateImpl(
         entries: null == entries
@@ -103,6 +116,10 @@ class __$$MainScreenStateImplCopyWithImpl<$Res>
         isScrolled: null == isScrolled
             ? _value.isScrolled
             : isScrolled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isEditMode: null == isEditMode
+            ? _value.isEditMode
+            : isEditMode // ignore: cast_nullable_to_non_nullable
                   as bool,
       ),
     );
@@ -115,6 +132,7 @@ class _$MainScreenStateImpl implements _MainScreenState {
   const _$MainScreenStateImpl({
     final List<CalcModeEntry> entries = const [],
     this.isScrolled = false,
+    this.isEditMode = false,
   }) : _entries = entries;
 
   final List<CalcModeEntry> _entries;
@@ -129,10 +147,13 @@ class _$MainScreenStateImpl implements _MainScreenState {
   @override
   @JsonKey()
   final bool isScrolled;
+  @override
+  @JsonKey()
+  final bool isEditMode;
 
   @override
   String toString() {
-    return 'MainScreenState(entries: $entries, isScrolled: $isScrolled)';
+    return 'MainScreenState(entries: $entries, isScrolled: $isScrolled, isEditMode: $isEditMode)';
   }
 
   @override
@@ -142,7 +163,9 @@ class _$MainScreenStateImpl implements _MainScreenState {
             other is _$MainScreenStateImpl &&
             const DeepCollectionEquality().equals(other._entries, _entries) &&
             (identical(other.isScrolled, isScrolled) ||
-                other.isScrolled == isScrolled));
+                other.isScrolled == isScrolled) &&
+            (identical(other.isEditMode, isEditMode) ||
+                other.isEditMode == isEditMode));
   }
 
   @override
@@ -150,6 +173,7 @@ class _$MainScreenStateImpl implements _MainScreenState {
     runtimeType,
     const DeepCollectionEquality().hash(_entries),
     isScrolled,
+    isEditMode,
   );
 
   /// Create a copy of MainScreenState
@@ -168,12 +192,15 @@ abstract class _MainScreenState implements MainScreenState {
   const factory _MainScreenState({
     final List<CalcModeEntry> entries,
     final bool isScrolled,
+    final bool isEditMode,
   }) = _$MainScreenStateImpl;
 
   @override
   List<CalcModeEntry> get entries;
   @override
   bool get isScrolled;
+  @override
+  bool get isEditMode;
 
   /// Create a copy of MainScreenState
   /// with the given fields replaced by the non-null parameter values.

@@ -6,6 +6,7 @@ class CalcModeCard extends StatelessWidget {
   final IconData icon;
   final String imagePath;
   final VoidCallback? onTap;
+  final Widget? trailingOverride;
 
   const CalcModeCard({
     super.key,
@@ -14,6 +15,7 @@ class CalcModeCard extends StatelessWidget {
     required this.icon,
     required this.imagePath,
     this.onTap,
+    this.trailingOverride,
   });
 
   Widget _buildImage() {
@@ -101,7 +103,7 @@ class CalcModeCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    CircleAvatar(
+                    trailingOverride ?? CircleAvatar(
                       backgroundColor: Colors.white.withValues(alpha: 0.2),
                       child: Icon(
                         Icons.chevron_right,

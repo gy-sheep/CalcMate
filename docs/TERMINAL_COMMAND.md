@@ -8,7 +8,13 @@ flutter run -d all
 open ios/Runner.xcworkspace/
 ```
 
-## 1. Clean Build(iPhone 빌드 안될때)
+## Clean Build(iPhone 빌드 안될때)
 ```
 flutter clean && flutter pub get && cd ios && rm -rf Pods Podfile.lock && pod install
+```
+
+
+## 릴리즈 빌드 명령어는
+```
+flutter build ios --release
 ```
