@@ -2,13 +2,15 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/ad-placeholder`
-> **마지막 완료**: 광고 배너 플레이스홀더 추가
+> **현재 브랜치**: `dev`
+> **마지막 완료**: 대출 계산기 UI 프로토타입 4종 기획 명세 작성
 
-### Phase 7: 다음 계산기 — 미정
-- [ ] `docs/specs/` — 기획 명세 작성
-- [ ] `docs/dev/` — 구현 명세 작성
+### Phase 7: 더치페이 계산기
+- [ ] `docs/specs/DUTCH_PAY_CALCULATOR.md` — 기획 명세 작성
+- [ ] `docs/dev/DUTCH_PAY_CALCULATOR_IMPL.md` — 구현 명세 작성
 - [ ] Domain / Presentation / Test 구현
+
+> **대출 계산기** (Phase 13으로 이동): `docs/specs/LOAN_CALCULATOR.md` 기획 명세 작성 완료, UI 안 선택 및 구현은 추후 진행
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`

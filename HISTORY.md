@@ -2,6 +2,27 @@
 
 ---
 
+## 2026-03-05 — 대출 계산기 UI 프로토타입 4종
+
+### 완료 항목
+
+**기획 명세 (`docs/specs/LOAN_CALCULATOR.md`)**
+- 4가지 UI 안(A~D) 화면 구성 및 기획 의도 정의
+
+**UI 프로토타입 (`lib/presentation/loan_calculator/`)**
+- 안 A: 표준 입력형 — 조건 입력 후 결과 확인 (전통적 흐름)
+- 안 B: 결과 우선형 — 진입 즉시 결과 노출, 슬라이더로 조건 탐색
+- 안 C: 타임라인형 — 연도별 누적 원금/이자 스택 바 차트 시각화
+- 안 D: 목표 역산형 — 월 납입 예산 입력 → 최대 대출 가능금액 역산
+- 허브 화면(`loan_prototype_hub.dart`)으로 4가지 안 선택 진입
+- 공유 계산 헬퍼 및 공유 위젯 분리 (`_loan_calc_helper.dart`, `_loan_shared_widgets.dart`)
+- 원리금균등·원금균등·만기일시 3가지 상환 방식 실시간 계산 지원
+
+**메인 화면 연결**
+- `main_screen.dart` — `loan_calculator` 케이스에 허브 화면 연결
+
+---
+
 ## 2026-03-04 — Container Transform 화면 전환 애니메이션
 
 ### 완료 항목

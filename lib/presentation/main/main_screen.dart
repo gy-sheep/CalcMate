@@ -9,6 +9,7 @@ import 'package:calcmate/presentation/unit_converter/unit_converter_screen.dart'
 import 'package:calcmate/presentation/age_calculator/age_calculator_screen.dart';
 import 'package:calcmate/presentation/vat_calculator/vat_calculator_screen.dart';
 import 'package:calcmate/presentation/date_calculator/date_calculator_screen.dart';
+import 'package:calcmate/presentation/loan_calculator/loan_prototype_hub.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/calc_mode_card.dart';
@@ -166,6 +167,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         );
       case 'date_calculator':
         return const DateCalculatorScreen();
+      case 'loan_calculator':
+        return const LoanPrototypeHub();
       default:
         return null;
     }
