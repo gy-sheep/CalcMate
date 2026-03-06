@@ -122,19 +122,29 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                   controller: _pageController,
                   onPageChanged: _onPageChanged,
                   children: [
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppTokens.paddingScreenH),
-                      child: PeriodModeView(pickDate: _pickDate),
+                    Stack(
+                      children: [
+                        SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppTokens.paddingScreenH),
+                          child: PeriodModeView(pickDate: _pickDate),
+                        ),
+                        _buildBottomFade(),
+                      ],
                     ),
                     SizedBox.expand(
                       child: Column(
                         children: [
                           Expanded(
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: AppTokens.paddingScreenH),
-                              child: DateCalcModeView(pickDate: _pickDate),
+                            child: Stack(
+                              children: [
+                                SingleChildScrollView(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: AppTokens.paddingScreenH),
+                                  child: DateCalcModeView(pickDate: _pickDate),
+                                ),
+                                _buildBottomFade(),
+                              ],
                             ),
                           ),
                           DateKeypad(
@@ -144,10 +154,15 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                         ],
                       ),
                     ),
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppTokens.paddingScreenH),
-                      child: DDayModeView(pickDate: _pickDate),
+                    Stack(
+                      children: [
+                        SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppTokens.paddingScreenH),
+                          child: DDayModeView(pickDate: _pickDate),
+                        ),
+                        _buildBottomFade(),
+                      ],
                     ),
                   ],
                 ),
@@ -161,6 +176,29 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
   }
 
   // ── AppBar ────────────────────────────────────────────────
+
+  Widget _buildBottomFade() {
+    return Positioned(
+      left: 0, right: 0, bottom: 0,
+      height: 48,
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.0, 0.6, 1.0],
+              colors: [
+                kDateBg3.withValues(alpha: 0),
+                kDateBg3.withValues(alpha: 0.7),
+                kDateBg3,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(

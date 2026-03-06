@@ -11,6 +11,8 @@ import 'package:calcmate/presentation/age_calculator/age_calculator_screen.dart'
 import 'package:calcmate/presentation/vat_calculator/vat_calculator_screen.dart';
 import 'package:calcmate/presentation/date_calculator/date_calculator_screen.dart';
 import 'package:calcmate/presentation/loan_calculator/loan_prototype_hub.dart';
+import 'package:calcmate/presentation/dutch_pay/dutch_pay_screen.dart';
+import 'package:calcmate/presentation/discount_calculator/discount_calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -260,6 +262,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         return const DateCalculatorScreen();
       case 'loan_calculator':
         return const LoanPrototypeHub();
+      case 'dutch_pay':
+        return const DutchPayScreen();
+      case 'discount_calculator':
+        return DiscountCalculatorScreen(title: entry.title);
       default:
         return null;
     }

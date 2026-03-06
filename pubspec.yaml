@@ -60,6 +60,10 @@ dependencies:
   # Animation
   animations: ^2.0.0
 
+  # Share
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -76,6 +80,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
+  remove_alpha_ios: true
   macos:
     generate: true
     image_path: "assets/images/app_icon.png"
