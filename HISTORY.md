@@ -2,6 +2,44 @@
 
 ---
 
+## 2026-03-06 — 더치페이 계산기 구현
+
+### 완료 항목
+
+**기획 명세 (`docs/specs/DUTCH_PAY_CALCULATOR.md`)**
+- 균등 분배 / 개별 계산 2탭 구조 기획
+
+**구현 명세 (`docs/dev/DUTCH_PAY_CALCULATOR_IMPL.md`)**
+- 파일 구조, 클래스 설계, 구현 순서 정의
+
+**Domain**
+- `dutch_pay_state.dart` — Freezed 상태 모델 (DutchPayState, EqualSplitState, IndividualSplitState, DutchParticipant, DutchItem, RemUnit)
+- `dutch_pay_equal_split_usecase.dart` — 균등 분배 계산 (나머지 단위, 팁 지원)
+- `dutch_pay_individual_split_usecase.dart` — 개별 계산 (항목별 담당자 배분)
+
+**Presentation**
+- `dutch_pay_screen.dart` — 메인 화면 (탭 전환)
+- `dutch_pay_viewmodel.dart` — Intent 기반 ViewModel (균등/개별 전체 처리)
+- `dutch_pay_tab_bar.dart` — elastic stretch 탭바
+- `equal_split_view.dart` — 균등 분배 UI (키패드, 인원, 나머지 단위, 팁)
+- `individual_split_view.dart` — 개별 계산 UI (바텀시트 메뉴 입력, 참여자 관리)
+- `participant_chip.dart` — 참여자 칩 위젯 (선택/삭제/아이콘)
+- `share_sheet.dart` — 영수증 스타일 공유 (share_plus)
+- `dutch_pay_keypad.dart` — 커스텀 키패드
+- `dutch_pay_colors.dart` — 테마 색상 상수
+
+**주요 UX 결정**
+- 개별 계산 메뉴 입력을 바텀시트로 분리 (키보드 overflow 해결)
+- 참여자 탭 → 이름 변경 다이얼로그 (취소/다음/확인)
+- 편집 모드 칩 탭 → 삭제 확인
+- iOS share_plus sharePositionOrigin 설정
+
+**테스트**
+- `dutch_pay_equal_split_usecase_test.dart`
+- `dutch_pay_individual_split_usecase_test.dart`
+
+---
+
 ## 2026-03-05 — 대출 계산기 UI 프로토타입 4종
 
 ### 완료 항목
