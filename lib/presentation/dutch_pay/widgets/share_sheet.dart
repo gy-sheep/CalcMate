@@ -41,11 +41,13 @@ class IndividualShareData extends ShareData {
   final int totalAmount;
   final List<String> participants;
   final List<int> personAmounts;
+  final List<List<String>> personMenus;
 
   const IndividualShareData({
     required this.totalAmount,
     required this.participants,
     required this.personAmounts,
+    required this.personMenus,
   });
 }
 
@@ -287,10 +289,39 @@ class _ReceiptWidget extends StatelessWidget {
       const SizedBox(height: 12),
       _DashedDivider(),
       const SizedBox(height: 12),
-      ...d.participants.asMap().entries.map((e) => _Row(
-            label: e.value,
-            value: '${_fmt(d.personAmounts[e.key])}원',
-          )),
+      ...d.participants.asMap().entries.map((e) {
+        final menus = d.personMenus[e.key];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(e.value,
+                      style: TextStyle(
+                          color: kDutchTextSecondary, fontSize: 13)),
+                  Text('${_fmt(d.personAmounts[e.key])}원',
+                      style: const TextStyle(
+                          color: kDutchTextPrimary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500)),
+                ],
+              ),
+              if (menus.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(
+                    menus.join(', '),
+                    style: TextStyle(
+                        color: kDutchTextTertiary, fontSize: 11),
+                  ),
+                ),
+            ],
+          ),
+        );
+      }),
     ];
   }
 }
@@ -355,34 +386,54 @@ class _DashedPainter extends CustomPainter {
 }
 
 class _ReceiptClipper extends CustomClipper<Path> {
+  static const _radius = 5.0;
+  static const _gap = 6.0;
+
   @override
   Path getClip(Size size) {
-    const r = 8.0;
-    const step = 16.0;
+    final segmentWidth = _radius * 2 + _gap;
+    final count = (size.width / segmentWidth).floor();
+    final totalWidth = count * _radius * 2 + (count - 1) * _gap;
+    final margin = (size.width - totalWidth) / 2;
+
     final path = Path();
 
-    // 상단 톱니
-    path.moveTo(0, r);
-    double x = 0;
-    while (x < size.width) {
-      path.arcToPoint(Offset(x + r, 0),
-          radius: const Radius.circular(r), clockwise: false);
-      path.arcToPoint(Offset(x + step, r),
-          radius: const Radius.circular(r), clockwise: false);
-      x += step;
+    // 상단 스캘럽
+    path.moveTo(0, _radius);
+    path.lineTo(margin, _radius);
+    for (int i = 0; i < count; i++) {
+      final x = margin + i * segmentWidth;
+      path.arcToPoint(
+        Offset(x + _radius * 2, _radius),
+        radius: const Radius.circular(_radius),
+        clockwise: false,
+      );
+      if (i < count - 1) {
+        path.lineTo(x + _radius * 2 + _gap, _radius);
+      }
     }
-    path.lineTo(size.width, size.height - r);
+    path.lineTo(size.width, _radius);
 
-    // 하단 톱니
-    x = size.width;
-    while (x > 0) {
-      path.arcToPoint(Offset(x - r, size.height),
-          radius: const Radius.circular(r), clockwise: false);
-      path.arcToPoint(Offset(x - step, size.height - r),
-          radius: const Radius.circular(r), clockwise: false);
-      x -= step;
+    // 오른쪽 변
+    path.lineTo(size.width, size.height - _radius);
+
+    // 하단 스캘럽
+    path.lineTo(size.width - margin, size.height - _radius);
+    for (int i = count - 1; i >= 0; i--) {
+      final x = margin + i * segmentWidth;
+      path.arcToPoint(
+        Offset(x, size.height - _radius),
+        radius: const Radius.circular(_radius),
+        clockwise: false,
+      );
+      if (i > 0) {
+        path.lineTo(x - _gap, size.height - _radius);
+      }
     }
-    path.lineTo(0, r);
+    path.lineTo(0, size.height - _radius);
+
+    // 왼쪽 변
+    path.lineTo(0, _radius);
     path.close();
     return path;
   }

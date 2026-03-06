@@ -11,7 +11,7 @@ class DutchPayKeypad extends StatelessWidget {
     ['7', '8', '9'],
     ['4', '5', '6'],
     ['1', '2', '3'],
-    ['⌫', '0', '↵'],
+    ['00', '0', '⌫'],
   ];
 
   @override
@@ -50,19 +50,15 @@ class _KeypadBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isEnter = label == '↵';
     return InkWell(
       onTap: onTap,
       splashColor: kDutchAccent.withValues(alpha: 0.08),
-      child: Container(
+      child: SizedBox(
         height: 58,
-        color: isEnter ? kDutchAccent.withValues(alpha: 0.08) : null,
         child: Center(
           child: switch (label) {
             '⌫' => const Icon(Icons.backspace_outlined,
                 color: kDutchTextSecondary, size: 22),
-            '↵' => const Icon(Icons.keyboard_return,
-                color: kDutchAccent, size: 24),
             _ => Text(
                 label,
                 style: const TextStyle(

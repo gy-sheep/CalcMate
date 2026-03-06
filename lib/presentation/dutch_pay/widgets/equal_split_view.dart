@@ -23,65 +23,34 @@ class EqualSplitView extends ConsumerWidget {
     return Column(
       children: [
         Expanded(
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () => vm.handleIntent(
-                    const DutchPayIntent.keypadToggled(false)),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _AmountCard(eq: eq, vm: vm),
-                      const SizedBox(height: 14),
-                      _PeopleRow(people: eq.people, vm: vm),
-                      const SizedBox(height: 14),
-                      if (state.isKorea) ...[
-                        _RemainderRow(eq: eq, vm: vm, context: context),
-                        const SizedBox(height: 14),
-                      ] else ...[
-                        _TipRow(eq: eq, vm: vm),
-                        const SizedBox(height: 14),
-                      ],
-                      _ResultCard(result: result, isKorea: state.isKorea, vm: vm),
-                    ],
-                  ),
-                ),
-              ),
-              // 스크롤 페이드
-              Positioned(
-                left: 0, right: 0, bottom: 0, height: 48,
-                child: IgnorePointer(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: const [0.0, 0.6, 1.0],
-                        colors: [
-                          kDutchBg2.withValues(alpha: 0),
-                          kDutchBg2.withValues(alpha: 0.7),
-                          kDutchBg2,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _AmountCard(eq: eq, vm: vm),
+                const SizedBox(height: 14),
+                _PeopleRow(people: eq.people, vm: vm),
+                const SizedBox(height: 14),
+                if (state.isKorea) ...[
+                  _RemainderRow(eq: eq, vm: vm, context: context),
+                  const SizedBox(height: 14),
+                ] else ...[
+                  _TipRow(eq: eq, vm: vm),
+                  const SizedBox(height: 14),
+                ],
+                _ResultCard(result: result, isKorea: state.isKorea, vm: vm),
+                const SizedBox(height: 14),
+                _ShareBtn(result: result, isKorea: state.isKorea, eq: eq, vm: vm),
+              ],
+            ),
           ),
         ),
-        // 공유 버튼 (고정)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: _ShareBtn(result: result, isKorea: state.isKorea, eq: eq, vm: vm),
+        const Divider(color: kDutchDivider, thickness: 0.5, height: 1),
+        DutchPayKeypad(
+          onKeyPressed: (key) =>
+              vm.handleIntent(DutchPayIntent.keyPressed(key)),
         ),
-        if (eq.keypadVisible)
-          DutchPayKeypad(
-            onKeyPressed: (key) =>
-                vm.handleIntent(DutchPayIntent.keyPressed(key)),
-          ),
         SizedBox(height: MediaQuery.of(context).padding.bottom),
       ],
     );
@@ -114,20 +83,15 @@ class _AmountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => vm.handleIntent(
-          eq.rawInput.isNotEmpty
-              ? const DutchPayIntent.keyPressed('C')
-              : const DutchPayIntent.keypadToggled(true)),
+      onTap: eq.rawInput.isNotEmpty
+          ? () => vm.handleIntent(const DutchPayIntent.keyPressed('C'))
+          : null,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
           color: kDutchCardBg,
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-          border: Border.all(
-            color: eq.keypadVisible
-                ? kDutchAccent.withValues(alpha: 0.5)
-                : kDutchDivider,
-          ),
+          border: Border.all(color: kDutchDivider),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

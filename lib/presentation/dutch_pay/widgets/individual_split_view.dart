@@ -45,7 +45,9 @@ class IndividualSplitView extends ConsumerWidget {
         ),
         Divider(height: 1, color: kDutchDivider),
         // 결과
-        _ResultSection(s: s, result: result, vm: vm),
+        Expanded(
+          child: _ResultSection(s: s, result: result, vm: vm),
+        ),
         SizedBox(height: MediaQuery.of(context).padding.bottom),
       ],
     );
@@ -376,7 +378,7 @@ class _ItemList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (s.items.isEmpty) {
       return Center(
-        child: Text('메뉴를 추가해 주세요',
+        child: Text('추가한 메뉴가 표시돼요',
             style: TextStyle(
                 color: kDutchTextTertiary,
                 fontSize: AppTokens.fontSizeBody)),
@@ -701,7 +703,7 @@ class _ResultSection extends StatelessWidget {
       );
     }
 
-    return Container(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -725,11 +727,10 @@ class _ResultSection extends StatelessWidget {
               height: 1,
               color: kDutchDivider.withValues(alpha: 0.5)),
           const SizedBox(height: 8),
-          Stack(
-            children: [
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 90),
-                child: SingleChildScrollView(
+          Expanded(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
                   child: Column(
                     children:
                         s.participants.asMap().entries.map((e) => Padding(
@@ -761,8 +762,7 @@ class _ResultSection extends StatelessWidget {
                             )).toList(),
                   ),
                 ),
-              ),
-              if (s.participants.length > 3)
+                if (s.participants.length > 3)
                 Positioned(
                   left: 0,
                   right: 0,
@@ -783,7 +783,8 @@ class _ResultSection extends StatelessWidget {
                     ),
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 12),
           _ShareResultBtn(s: s, result: result),
@@ -851,13 +852,23 @@ class _ShareResultBtn extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => ShareSheet(
-        shareData: IndividualShareData(
-          totalAmount: result.totalAmount,
-          participants: s.participants.map((p) => p.name).toList(),
-          personAmounts: result.personAmounts,
-        ),
-      ),
+      builder: (_) {
+        final personMenus = List.generate(
+          s.participants.length,
+          (i) => s.items
+              .where((item) => item.assignees.contains(i))
+              .map((item) => item.name)
+              .toList(),
+        );
+        return ShareSheet(
+          shareData: IndividualShareData(
+            totalAmount: result.totalAmount,
+            participants: s.participants.map((p) => p.name).toList(),
+            personAmounts: result.personAmounts,
+            personMenus: personMenus,
+          ),
+        );
+      },
     );
   }
 }

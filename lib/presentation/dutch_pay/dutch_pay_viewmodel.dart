@@ -291,12 +291,15 @@ class DutchPayViewModel extends AutoDisposeNotifier<DutchPayState> {
   // ── 균등 분배 키 처리 ───────────────────────────────────
 
   EqualSplitState _handleAmountKey(EqualSplitState s, String key) {
-    if (key == '↵') return s.copyWith(keypadVisible: false);
-    if (key == 'C') return s.copyWith(rawInput: '', keypadVisible: true);
+    if (key == 'C') return s.copyWith(rawInput: '');
     String raw = s.rawInput;
     switch (key) {
       case '⌫':
         raw = raw.isEmpty ? '' : raw.substring(0, raw.length - 1);
+      case '00':
+        if (raw.isEmpty || raw == '0') return s;
+        if (raw.length + 2 > 9) return s;
+        raw += '00';
       default:
         if (key == '0' && raw.isEmpty) return s;
         if (raw.length >= 9) return s;
