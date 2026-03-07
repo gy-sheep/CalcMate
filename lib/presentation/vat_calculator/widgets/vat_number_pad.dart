@@ -1,3 +1,4 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../vat_calculator_colors.dart';
@@ -5,67 +6,72 @@ import '../vat_calculator_colors.dart';
 // ──────────────────────────────────────────
 // 버튼 타입
 // ──────────────────────────────────────────
-enum VatBtnType { number, operator, function, equals }
+enum VatBtnType { number, function, equals }
 
 // ──────────────────────────────────────────
-// 숫자 키패드 (5x4)
+// 숫자 키패드 (4×4, = 버튼 2행 병합)
 // ──────────────────────────────────────────
 class VatNumberPad extends StatelessWidget {
   final void Function(String) onKeyTap;
 
   const VatNumberPad({super.key, required this.onKeyTap});
 
-  static const _rows = [
-    [
-      ('\u{232B}', VatBtnType.function),
-      ('AC', VatBtnType.function),
-      ('%', VatBtnType.function),
-      ('\u{00F7}', VatBtnType.operator)
-    ],
-    [
-      ('7', VatBtnType.number),
-      ('8', VatBtnType.number),
-      ('9', VatBtnType.number),
-      ('\u{00D7}', VatBtnType.operator)
-    ],
-    [
-      ('4', VatBtnType.number),
-      ('5', VatBtnType.number),
-      ('6', VatBtnType.number),
-      ('-', VatBtnType.operator)
-    ],
-    [
-      ('1', VatBtnType.number),
-      ('2', VatBtnType.number),
-      ('3', VatBtnType.number),
-      ('+', VatBtnType.operator)
-    ],
-    [
-      ('00', VatBtnType.number),
-      ('0', VatBtnType.number),
-      ('.', VatBtnType.number),
-      ('=', VatBtnType.equals)
-    ],
-  ];
+  Widget _btn(String label, VatBtnType type) => Expanded(
+        child: VatKeypadButton(
+          label: label,
+          type: type,
+          onTap: () => onKeyTap(label),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: _rows.map((row) {
-        return Row(
-          children: row.map((cell) {
-            final label = cell.$1;
-            return Expanded(
-              child: VatKeypadButton(
-                label: label,
-                type: cell.$2,
-                onTap: () => onKeyTap(label),
+      children: [
+        Row(children: [
+          _btn('7', VatBtnType.number),
+          _btn('8', VatBtnType.number),
+          _btn('9', VatBtnType.number),
+          _btn('\u{232B}', VatBtnType.function),
+        ]),
+        Row(children: [
+          _btn('4', VatBtnType.number),
+          _btn('5', VatBtnType.number),
+          _btn('6', VatBtnType.number),
+          _btn('AC', VatBtnType.function),
+        ]),
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(children: [
+                    _btn('1', VatBtnType.number),
+                    _btn('2', VatBtnType.number),
+                    _btn('3', VatBtnType.number),
+                  ]),
+                  Row(children: [
+                    _btn('00', VatBtnType.number),
+                    _btn('0', VatBtnType.number),
+                    _btn('.', VatBtnType.number),
+                  ]),
+                ],
               ),
-            );
-          }).toList(),
-        );
-      }).toList(),
+            ),
+            Expanded(
+              child: VatKeypadButton(
+                label: '=',
+                type: VatBtnType.equals,
+                onTap: () => onKeyTap('='),
+                height: AppTokens.heightButtonLarge * 2,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -77,17 +83,18 @@ class VatKeypadButton extends StatelessWidget {
   final String label;
   final VatBtnType type;
   final VoidCallback onTap;
+  final double? height;
 
   const VatKeypadButton({
     super.key,
     required this.label,
     required this.type,
     required this.onTap,
+    this.height,
   });
 
   Color get _textColor => switch (type) {
         VatBtnType.number => kVatColorNumber,
-        VatBtnType.operator => kVatColorOperator,
         VatBtnType.function => kVatColorFunction,
         VatBtnType.equals => Colors.white,
       };
@@ -101,27 +108,19 @@ class VatKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: 68,
+          height: height ?? AppTokens.heightButtonLarge,
           child: Center(
-            child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined,
-                    color: _textColor, size: 26)
-                : Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: const [
-                        '\u{00F7}',
-                        '\u{00D7}',
-                        '-',
-                        '+',
-                        '='
-                      ].contains(label)
-                          ? 28
-                          : 22,
-                      fontWeight: FontWeight.w400,
-                      color: _textColor,
-                    ),
-                  ),
+            child: switch (label) {
+              '\u{232B}' => Icon(Icons.backspace_outlined,
+                  color: _textColor, size: AppTokens.sizeKeypadBackspace),
+              '=' => Icon(Icons.keyboard_return,
+                  color: _textColor, size: AppTokens.sizeKeypadBackspace),
+              _ => Text(
+                  label,
+                  style: AppTokens.textStyleKeypadNumber
+                      .copyWith(color: _textColor),
+                ),
+            },
           ),
         ),
       ),

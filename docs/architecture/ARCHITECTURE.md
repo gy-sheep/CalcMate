@@ -129,3 +129,54 @@ Scaffold(
 | **Data** | `data/` | API 클라이언트, DTO, Repository 구현체 |
 | **Domain** | `domain/` | Entity, Repository 인터페이스, UseCase (순수 Dart) |
 | **Presentation** | `presentation/` | Widget(View), ViewModel(Riverpod Notifier), State |
+
+---
+
+## 디자인 토큰 (AppTokens)
+
+`lib/core/theme/app_design_tokens.dart`의 `AppTokens`를 통해 앱 전체 스타일을 통일한다.
+
+### 원칙
+
+- **fontSize를 직접 숫자로 쓰지 않는다.** 반드시 Semantic TextStyle 토큰을 사용한다.
+- **색상은 토큰에 포함하지 않는다.** `.copyWith(color: kXxxColor)` 로 각 화면 컬러파일에서 주입한다.
+- display_panel 등 동적 폰트 계산이 필요한 경우는 예외 허용.
+
+### Semantic TextStyle 토큰
+
+| 토큰 | fontSize | weight | 용도 |
+|------|----------|--------|------|
+| `textStyleSectionTitle` | 13 | w600 | 섹션 헤더 ("기준 금액", "참여자 목록") |
+| `textStyleBody` | 14 | w400 | 일반 본문, 레이블 |
+| `textStyleHint` | 14 | w400 | 입력창 힌트 |
+| `textStyleCaption` | 12 | w400 | 보조 설명, 단위, 소형 레이블 |
+| `textStyleValue` | 16 | w600 | 보조 수치 (AgeRow value 등) |
+| `textStyleResultLarge` | 56 | w300 | 핵심 결과값 (기본 계산기 디스플레이) |
+| `textStyleResultMedium` | 32 | w300 | 중간 결과값 (더치페이 총액 등) |
+| `textStyleResultSmall` | 20 | w400 | 보조 결과값 |
+| `textStyleKeypadNumber` | 22 | w400 | 키패드 숫자 버튼 |
+| `textStyleKeypadOperator` | 28 | w400 | 키패드 연산자/등호 버튼 |
+
+### 사용 패턴
+
+```dart
+// 본문/레이블
+Text(label, style: AppTokens.textStyleBody.copyWith(color: kColor))
+
+// 캡션 (단위, 보조 설명)
+Text('원', style: AppTokens.textStyleCaption.copyWith(color: kColor))
+
+// 키패드 버튼 — 연산자 여부에 따라 분기
+style: (isOperator
+    ? AppTokens.textStyleKeypadOperator
+    : AppTokens.textStyleKeypadNumber
+  ).copyWith(color: _textColor)
+
+// 공통 TextField 래퍼 (body/hint 스타일 자동 적용)
+AppTextField(
+  controller: controller,
+  textColor: kColor,
+  hintColor: kHintColor,
+  hintText: '금액 입력',
+)
+```

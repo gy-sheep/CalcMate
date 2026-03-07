@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
@@ -17,12 +18,12 @@ class ConstellationCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               '별자리',
-              style: TextStyle(
-                  color: kAgeSubText,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600),
+              style: AppTokens.textStyleLabelMedium.copyWith(
+                color: kAgeSubText,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -35,10 +36,10 @@ class ConstellationCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   name,
-                  style: const TextStyle(
-                      color: kAgeText,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700),
+                  style: AppTokens.textStyleValue.copyWith(
+                    color: kAgeText,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),

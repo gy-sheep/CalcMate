@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
@@ -18,14 +19,13 @@ class NextBirthdayCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('🎂', style: TextStyle(fontSize: 28)),
-              SizedBox(height: 6),
+            children: [
+              Text('🎂', style: AppTokens.textStyleResult28.copyWith()),
+              const SizedBox(height: 6),
               Text(
                 '오늘이 생일이에요!',
-                style: TextStyle(
+                style: AppTokens.textStyleSectionTitle.copyWith(
                   color: kAgeAccent,
-                  fontSize: 13,
                   fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.center,
@@ -51,20 +51,18 @@ class NextBirthdayCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '다음 생일',
-                style: TextStyle(
+                style: AppTokens.textStyleLabelMedium.copyWith(
                   color: kAgeSubText,
-                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
               Text(
                 'D-$dDays',
-                style: const TextStyle(
+                style: AppTokens.textStyleResult28.copyWith(
                   color: kAgeAccent,
-                  fontSize: 26,
                   fontWeight: FontWeight.w800,
                   height: 1.0,
                 ),
@@ -72,7 +70,7 @@ class NextBirthdayCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 nextDateStr,
-                style: const TextStyle(color: kAgeSubText, fontSize: 11),
+                style: AppTokens.textStyleLabelSmall.copyWith(color: kAgeSubText),
               ),
             ],
           ),

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/age_calculator_state.dart';
 import '../age_calculator_colors.dart';
 import '../age_calculator_viewmodel.dart';
@@ -41,21 +42,21 @@ class PickerSection extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   '생년월일',
-                  style: TextStyle(
+                  style: AppTokens.textStyleLabelLarge.copyWith(
                     color: kAgeSubText,
-                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.5,
                   ),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 18,
-                      height: 18,
+                      width: AppTokens.sizeCheckboxMedium,
+                      height: AppTokens.sizeCheckboxMedium,
                       child: Checkbox(
                         value: state.calendarType == AgeCalendarType.lunar,
                         onChanged: (v) => vm.handleIntent(
@@ -67,17 +68,13 @@ class PickerSection extends StatelessWidget {
                         checkColor: Colors.white,
                         side: const BorderSide(color: kAgeSubText, width: 1.5),
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        visualDensity: VisualDensity.compact,
+                        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    const Text(
+                    const SizedBox(width: 6),
+                    Text(
                       '음력',
-                      style: TextStyle(
-                        color: kAgeSubText,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTokens.textStyleCheckboxLabelMedium.copyWith(color: kAgeSubText),
                     ),
                   ],
                 ),
@@ -208,10 +205,7 @@ class PickerSection extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10, bottom: 8, left: 4),
             child: Text(
               '${_formatDate(DateTime.now())} 기준',
-              style: const TextStyle(
-                color: kAgeSubText,
-                fontSize: 12,
-              ),
+              style: AppTokens.textStyleLabelLarge.copyWith(color: kAgeSubText),
             ),
           ),
         ],

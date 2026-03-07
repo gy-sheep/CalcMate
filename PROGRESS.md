@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `dev`
-> **마지막 완료**: 더치페이 계산기 구현
+> **현재 브랜치**: `refactor/design-consistency`
+> **마지막 완료**: 디자인 일관성 리팩토링
 
 ### 메인 화면 스크롤 성능 개선 (Android 버벅임)
 - [ ] `initState`에서 카드 배경 이미지 13개 `precacheImage` 사전 디코딩
@@ -40,6 +40,7 @@
 | — | 메인 화면 순서 편집 (드래그 정렬·설정 드롭다운·순서 저장) | — | — |
 | 7 | 더치페이 계산기 (균등 분배·개별 계산·공유) | 2파일 | `docs/dev/DUTCH_PAY_CALCULATOR_IMPL.md` |
 | — | 공통 모듈화: ScrollFadeView·AppAnimatedTabBar·showAppToast + 스크롤 페이드 전체 적용 | — | `docs/plans/REFACTORING_CHECKLIST.md` |
+| — | 디자인 일관성 리팩토링 (토큰 전체 적용·공통 위젯·디자인 문서) | — | `docs/design/` |
 
 > 상세 작업 이력: `HISTORY.md`
 

@@ -85,12 +85,9 @@ class AppAnimatedTabBar extends StatelessWidget {
                             scale: scale,
                             child: Text(
                               labels[i],
-                              style: TextStyle(
-                                color: Color.lerp(accentColor, inactiveColor, distance)!,
-                                fontSize: AppTokens.fontSizeBody,
-                                fontWeight: distance < 0.5
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
+                              style: AppTokens.textStyleChip.copyWith(
+                                color: Color.lerp(accentColor, inactiveColor, distance),
+                                fontWeight: distance < 0.5 ? FontWeight.w600 : FontWeight.w400,
                               ),
                             ),
                           ),

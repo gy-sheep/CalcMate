@@ -3,6 +3,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/unit_definitions.dart';
+import '../../../core/theme/app_design_tokens.dart';
 import '../unit_converter_colors.dart';
 
 class CategoryTabs extends StatefulWidget {
@@ -107,7 +108,7 @@ class _CategoryTabsState extends State<CategoryTabs> {
 
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: AppTokens.paddingScreenH),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -121,7 +122,7 @@ class _CategoryTabsState extends State<CategoryTabs> {
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         color: kUnitChipSelectedColor,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppTokens.radiusChip),
                         border: Border.all(
                           color: kUnitChipSelectedColor.withValues(alpha: 0.25),
                         ),
@@ -205,21 +206,20 @@ class _CategoryTabsState extends State<CategoryTabs> {
         child: Transform.scale(
           scale: scale,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: AppTokens.paddingChip,
             decoration: BoxDecoration(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppTokens.radiusChip),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(category.icon, size: 16, color: color),
+                Icon(category.icon, size: AppTokens.sizeIconXSmall, color: color),
                 const SizedBox(width: 6),
                 Text(
                   category.name,
-                  style: TextStyle(
+                  style: AppTokens.textStyleChip.copyWith(
                     color: color,
-                    fontSize: 13,
                     fontWeight: fontWeight,
                   ),
                 ),

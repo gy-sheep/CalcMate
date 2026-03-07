@@ -100,16 +100,12 @@ class _CurrencyCalculatorScreenState
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: AppTokens.sizeAppBarBackIcon),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           widget.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: AppTokens.fontSizeAppBarTitle,
-            fontWeight: AppTokens.weightAppBarTitle,
-          ),
+          style: AppTokens.textStyleAppBarTitle.copyWith(color: Colors.white),
         ),
         centerTitle: false,
       ),
@@ -152,50 +148,56 @@ class _CurrencyCalculatorScreenState
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     // From 행
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        CurrencyCodeButton(
-                                          code: state.fromCode,
-                                          onTap: () => _selectCurrency(
-                                            context, ref,
-                                            toIndex: -1,
-                                            selectedCode: state.fromCode,
-                                            rates: state.rates,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: AmountDisplay(
-                                            amount: fromDisplay,
-                                            isActive: true,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // To 행 3개
-                                    for (int i = 0; i < state.toCodes.length; i++)
-                                      Row(
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(minHeight: 80),
+                                      child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           CurrencyCodeButton(
-                                            code: state.toCodes[i],
+                                            code: state.fromCode,
                                             onTap: () => _selectCurrency(
                                               context, ref,
-                                              toIndex: i,
-                                              selectedCode: state.toCodes[i],
+                                              toIndex: -1,
+                                              selectedCode: state.fromCode,
                                               rates: state.rates,
                                             ),
                                           ),
                                           const SizedBox(width: 16),
                                           Expanded(
                                             child: AmountDisplay(
-                                              amount: vm.convertedDisplayAt(i),
-                                              isActive: false,
-                                              hint: vm.unitRateDisplayAt(i),
+                                              amount: fromDisplay,
+                                              isActive: true,
                                             ),
                                           ),
                                         ],
+                                      ),
+                                    ),
+                                    // To 행 3개
+                                    for (int i = 0; i < state.toCodes.length; i++)
+                                      ConstrainedBox(
+                                        constraints: const BoxConstraints(minHeight: 80),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            CurrencyCodeButton(
+                                              code: state.toCodes[i],
+                                              onTap: () => _selectCurrency(
+                                                context, ref,
+                                                toIndex: i,
+                                                selectedCode: state.toCodes[i],
+                                                rates: state.rates,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: AmountDisplay(
+                                                amount: vm.convertedDisplayAt(i),
+                                                isActive: false,
+                                                hint: vm.unitRateDisplayAt(i),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                   ],
                                 ),
@@ -240,9 +242,8 @@ class _CurrencyCalculatorScreenState
                             state.lastUpdated,
                             hasRates: state.rates.isNotEmpty,
                           ),
-                          style: const TextStyle(
+                          style: AppTokens.textStyleCaption.copyWith(
                             color: Colors.white38,
-                            fontSize: 11,
                           ),
                         ),
                         const Spacer(),
@@ -255,13 +256,13 @@ class _CurrencyCalculatorScreenState
                             padding: const EdgeInsets.all(8),
                             child: state.isRefreshing
                                 ? const CupertinoActivityIndicator(
-                                    radius: 10,
+                                    radius: AppTokens.radiusActivityIndicator,
                                     color: Colors.white54,
                                   )
                                 : const Icon(
                                     Icons.refresh,
                                     color: Colors.white54,
-                                    size: 20,
+                                    size: AppTokens.sizeIconSmall,
                                   ),
                           ),
                         ),
@@ -302,7 +303,7 @@ class _CurrencyCalculatorScreenState
                           color: Colors.white.withValues(alpha: 0.24),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(
@@ -316,9 +317,8 @@ class _CurrencyCalculatorScreenState
                           SizedBox(width: 14),
                           Text(
                             '환율 정보를 가져오는 중...',
-                            style: TextStyle(
+                            style: AppTokens.textStyleBody.copyWith(
                               color: Colors.white70,
-                              fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

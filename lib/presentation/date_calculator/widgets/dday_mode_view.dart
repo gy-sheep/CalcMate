@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_design_tokens.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/usecases/date_calculate_usecase.dart';
@@ -80,10 +82,9 @@ class DDayModeView extends ConsumerWidget {
       children: [
         Text(
           mainText,
-          style: TextStyle(
-            color: mainColor,
-            fontSize: 48,
+          style: AppTokens.textStyleResult48.copyWith(
             fontWeight: FontWeight.w700,
+            color: mainColor,
             height: 1.0,
           ),
         ),

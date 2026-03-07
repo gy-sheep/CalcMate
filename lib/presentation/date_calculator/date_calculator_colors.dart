@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_design_tokens.dart';
+
 // ── 날짜 계산기 색상 상수 ─────────────────────────────────
 const kDateBg1 = Color(0xFFFBF0F0);
 const kDateBg2 = Color(0xFFF5E2E2);
@@ -26,6 +28,6 @@ String formatDateShort(DateTime d) =>
 Widget buildSubText(String text) {
   return Text(
     text,
-    style: const TextStyle(color: kDateTextSecondary, fontSize: 14),
+    style: AppTokens.textStyleCaption.copyWith(color: kDateTextSecondary),
   );
 }

@@ -1,4 +1,6 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:calcmate/domain/models/calculator_state.dart';
+import 'package:calcmate/presentation/widgets/app_input_underline.dart';
 import 'package:flutter/material.dart';
 
 class DisplayPanel extends StatelessWidget {
@@ -44,11 +46,8 @@ class DisplayPanel extends StatelessWidget {
     );
   }
 
-  static const _baseStyle = TextStyle(
-    fontSize: 56,
+  static final _baseStyle = AppTokens.textStyleResult56.copyWith(
     color: Colors.white,
-    fontWeight: FontWeight.w300,
-    height: 1.1,
   );
 
   static double _adaptiveFontSize(String text, double maxWidth) {
@@ -120,30 +119,29 @@ class DisplayPanel extends StatelessWidget {
               },
             ),
           ),
-          // 입력값 / 결과
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final fontSize =
-                  _adaptiveFontSize(displayInput, constraints.maxWidth);
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                reverse: true,
-                physics: const BouncingScrollPhysics(),
-                child: Text(
-                  displayInput,
-                  maxLines: 1,
-                  softWrap: false,
-                  style: _baseStyle.copyWith(fontSize: fontSize),
-                ),
-              );
-            },
-          ),
-          // 밑줄
-          Container(
-            height: 1.5,
+          // 입력값 / 결과 + 밑줄
+          AppInputUnderline(
+            style: InputUnderlineStyle.full,
             color: Colors.white60,
-            margin: const EdgeInsets.only(top: 6, bottom: 20),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final fontSize =
+                    _adaptiveFontSize(displayInput, constraints.maxWidth);
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  physics: const BouncingScrollPhysics(),
+                  child: Text(
+                    displayInput,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: _baseStyle.copyWith(fontSize: fontSize),
+                  ),
+                );
+              },
+            ),
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
 import '../../../domain/utils/number_formatter.dart';
 import '../age_calculator_colors.dart';
@@ -25,27 +26,25 @@ class DaysLivedCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '살아온 날',
-                style: TextStyle(
+                style: AppTokens.textStyleLabelMedium.copyWith(
                   color: kAgeSubText,
-                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
               Text(
                 '${NumberFormatter.addCommas(days.toString())}일',
-                style: const TextStyle(
+                style: AppTokens.textStyleResult22.copyWith(
                   color: kAgeText,
-                  fontSize: 22,
                   fontWeight: FontWeight.w700,
                   height: 1.0,
                 ),
               ),
               const SizedBox(height: 4),
               Text(sub,
-                  style: const TextStyle(color: kAgeSubText, fontSize: 11)),
+                  style: AppTokens.textStyleLabelSmall.copyWith(color: kAgeSubText)),
             ],
           ),
         ),

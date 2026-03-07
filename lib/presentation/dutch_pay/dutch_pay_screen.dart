@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import 'dutch_pay_colors.dart';
 import 'dutch_pay_viewmodel.dart';
@@ -56,16 +57,13 @@ class _DutchPayScreenState extends ConsumerState<DutchPayScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              color: kDutchTextPrimary, size: 18),
+          icon: Icon(Icons.arrow_back_ios, color: kDutchTextPrimary, size: AppTokens.sizeAppBarBackIcon),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           '더치페이',
-          style: TextStyle(
+          style: AppTokens.textStyleAppBarTitle.copyWith(
             color: kDutchTextPrimary,
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: false,

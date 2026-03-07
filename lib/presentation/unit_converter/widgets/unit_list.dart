@@ -118,33 +118,29 @@ class _UnitListState extends State<UnitList> {
                         unit.code,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: AppTokens.textStyleValue.copyWith(
                           color: (widget.isActive && isActiveUnit)
                               ? kUnitChipSelectedColor
                               : Colors.white70,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     Expanded(
                       child: Text(
                         unit.label,
-                        style: TextStyle(
+                        style: AppTokens.textStyleCaption.copyWith(
                           color: (widget.isActive && isActiveUnit)
                               ? Colors.white
                               : Colors.white54,
-                          fontSize: 13,
                         ),
                       ),
                     ),
                     Text(
                       displayValue,
-                      style: TextStyle(
+                      style: AppTokens.textStyleResult18.copyWith(
                         color: (widget.isActive && isActiveUnit)
                             ? Colors.white
                             : Colors.white70,
-                        fontSize: 18,
                         fontWeight: (widget.isActive && isActiveUnit)
                             ? FontWeight.w500
                             : FontWeight.w300,

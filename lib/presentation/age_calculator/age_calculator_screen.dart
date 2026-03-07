@@ -99,18 +99,12 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-          color: kAgeText,
+          icon: Icon(Icons.arrow_back_ios, color: kAgeText, size: AppTokens.sizeAppBarBackIcon),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           widget.title,
-          style: const TextStyle(
-            color: kAgeText,
-            fontSize: AppTokens.fontSizeAppBarTitle,
-            fontWeight: AppTokens.weightAppBarTitle,
-            letterSpacing: -0.3,
-          ),
+          style: AppTokens.textStyleAppBarTitle.copyWith(color: kAgeText),
         ),
         centerTitle: false,
       ),

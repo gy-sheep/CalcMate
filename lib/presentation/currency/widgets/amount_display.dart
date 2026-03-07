@@ -1,3 +1,5 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
+import 'package:calcmate/presentation/widgets/app_input_underline.dart';
 import 'package:flutter/material.dart';
 
 class AmountDisplay extends StatelessWidget {
@@ -21,45 +23,34 @@ class AmountDisplay extends StatelessWidget {
         amount,
         maxLines: 1,
         softWrap: false,
-        style: const TextStyle(
+        style: AppTokens.textStyleResult28.copyWith(
           color: Colors.white,
-          fontSize: 28,
-          fontWeight: FontWeight.w300,
           letterSpacing: -1,
         ),
       ),
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (hint != null && hint!.isNotEmpty)
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              amountWidget,
-              Positioned(
-                top: -16,
-                right: 0,
-                child: Text(
-                  hint!,
-                  style: const TextStyle(
-                    color: Colors.white38,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
+    return AppInputUnderline(
+      style: InputUnderlineStyle.full,
+      color: isActive ? Colors.white : Colors.white38,
+      child: hint != null && hint!.isNotEmpty
+          ? Stack(
+              clipBehavior: Clip.none,
+              children: [
+                amountWidget,
+                Positioned(
+                  top: -16,
+                  right: 0,
+                  child: Text(
+                    hint!,
+                    style: AppTokens.textStyleCaption.copyWith(
+                      color: Colors.white38,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        else
-          amountWidget,
-        Container(
-          height: 1.5,
-          color: isActive ? Colors.white : Colors.white38,
-        ),
-      ],
+              ],
+            )
+          : amountWidget,
     );
   }
 }

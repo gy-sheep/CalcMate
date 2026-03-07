@@ -58,10 +58,9 @@ class PeriodModeView extends ConsumerWidget {
       children: [
         Text(
           '${r.totalDays}일',
-          style: const TextStyle(
-            color: kDateAccent,
-            fontSize: 56,
+          style: AppTokens.textStyleResult56.copyWith(
             fontWeight: FontWeight.w700,
+            color: kDateAccent,
             height: 1.0,
           ),
         ),
@@ -95,8 +94,7 @@ class PeriodModeView extends ConsumerWidget {
         children: [
           Text(
             '시작일 포함',
-            style: const TextStyle(
-                color: kDateTextSecondary, fontSize: AppTokens.fontSizeBody),
+            style: AppTokens.textStyleBody.copyWith(color: kDateTextSecondary),
           ),
           const SizedBox(width: 8),
           AnimatedContainer(
@@ -125,9 +123,9 @@ class PeriodModeView extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Text(
+          Text(
             '기념일 계산 시 ON 권장',
-            style: TextStyle(color: kDateTextTertiary, fontSize: 11),
+            style: AppTokens.textStyleLabelSmall.copyWith(color: kDateTextTertiary),
           ),
         ],
       ),

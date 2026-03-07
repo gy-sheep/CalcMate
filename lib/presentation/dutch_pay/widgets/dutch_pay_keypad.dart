@@ -1,3 +1,4 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../dutch_pay_colors.dart';
@@ -58,14 +59,11 @@ class _KeypadBtn extends StatelessWidget {
         child: Center(
           child: switch (label) {
             '⌫' => const Icon(Icons.backspace_outlined,
-                color: kDutchTextSecondary, size: 22),
+                color: kDutchTextSecondary, size: AppTokens.sizeKeypadBackspace),
             _ => Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w400,
-                  color: kDutchTextPrimary,
-                ),
+                style: AppTokens.textStyleKeypadNumber
+                    .copyWith(color: kDutchTextPrimary),
               ),
           },
         ),

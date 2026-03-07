@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/utils/app_toast.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../domain/usecases/dutch_pay_individual_split_usecase.dart';
 import '../dutch_pay_colors.dart';
@@ -71,10 +72,61 @@ class IndividualSplitView extends ConsumerWidget {
 
 // ── 인원 컴팩트 바 ───────────────────────────────────────────
 
-class _ParticipantsBar extends StatelessWidget {
+class _ParticipantsBar extends StatefulWidget {
   const _ParticipantsBar({required this.s, required this.vm});
   final IndividualSplitState s;
   final DutchPayViewModel vm;
+
+  @override
+  State<_ParticipantsBar> createState() => _ParticipantsBarState();
+}
+
+class _ParticipantsBarState extends State<_ParticipantsBar> {
+  final _scrollCtrl = ScrollController();
+  int _prevCount = 0;
+
+  IndividualSplitState get s => widget.s;
+  DutchPayViewModel get vm => widget.vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _prevCount = s.participants.length;
+  }
+
+  @override
+  void didUpdateWidget(covariant _ParticipantsBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (s.isParticipantEditMode != oldWidget.s.isParticipantEditMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollCtrl.hasClients) {
+          _scrollCtrl.animateTo(0,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut);
+        }
+      });
+    } else if (s.participants.length > _prevCount) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollCtrl.hasClients) {
+          _scrollCtrl.animateTo(
+            _scrollCtrl.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+          );
+        }
+        if (s.participants.length >= 10 && mounted) {
+          showAppToast(context, '최대 10명까지 추가할 수 있어요');
+        }
+      });
+    }
+    _prevCount = s.participants.length;
+  }
+
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +136,7 @@ class _ParticipantsBar extends StatelessWidget {
         children: [
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollCtrl,
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: s.participants.asMap().entries.map((e) {
@@ -117,10 +170,10 @@ class _ParticipantsBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppTokens.radiusChip),
                 ),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.add, size: 14, color: kDutchAccent),
+                  const Icon(Icons.add, size: AppTokens.sizeIconXSmall, color: kDutchAccent),
                   const SizedBox(width: 2),
                   Text('추가',
-                      style: TextStyle(color: kDutchAccent, fontSize: 13)),
+                      style: AppTokens.textStyleChip.copyWith(color: kDutchAccent)),
                 ]),
               ),
             ),
@@ -129,12 +182,20 @@ class _ParticipantsBar extends StatelessWidget {
           GestureDetector(
             onTap: () => vm.handleIntent(
                 const DutchPayIntent.participantEditModeToggled()),
-            child: Text(
-              s.isParticipantEditMode ? '완료' : '편집',
-              style: TextStyle(
-                  color: kDutchAccent,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500),
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                border:
+                    Border.all(color: kDutchAccent.withValues(alpha: 0.4)),
+                borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+              ),
+              child: Text(
+                s.isParticipantEditMode ? '완료' : '편집',
+                style: AppTokens.textStyleChip.copyWith(
+                    color: kDutchAccent,
+                    fontWeight: FontWeight.w500),
+              ),
             ),
           ),
         ],
@@ -242,13 +303,11 @@ class _AddMenuButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add_circle_outline, color: kDutchAccent, size: 20),
+            Icon(Icons.add_circle_outline, color: kDutchAccent, size: AppTokens.sizeIconSmall),
             const SizedBox(width: 8),
             Text('메뉴 추가',
-                style: TextStyle(
-                    color: kDutchAccent,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600)),
+                style: AppTokens.textStyleValue.copyWith(
+                    color: kDutchAccent)),
           ],
         ),
       ),
@@ -333,10 +392,8 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
             ),
             const SizedBox(height: 16),
             Text(isEditing ? '메뉴 수정' : '메뉴 추가',
-                style: TextStyle(
-                    color: kDutchTextPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
+                style: AppTokens.textStyleSheetTitle.copyWith(
+                    color: kDutchTextPrimary)),
             const SizedBox(height: 16),
             // 입력 필드
             Row(
@@ -354,9 +411,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                     child: TextField(
                       controller: _nameCtrl,
                       focusNode: _nameFocus,
-                      style: TextStyle(
-                          color: kDutchTextPrimary,
-                          fontSize: AppTokens.fontSizeBody),
+                      style: AppTokens.textStyleBody.copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
                         hintText: '메뉴명',
                         hintStyle: TextStyle(color: kDutchTextTertiary),
@@ -383,9 +438,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                     child: TextField(
                       controller: _amtCtrl,
                       keyboardType: TextInputType.number,
-                      style: TextStyle(
-                          color: kDutchTextPrimary,
-                          fontSize: AppTokens.fontSizeBody),
+                      style: AppTokens.textStyleBody.copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
                         hintText: '금액',
                         hintStyle: TextStyle(color: kDutchTextTertiary),
@@ -443,10 +496,8 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                         ),
                         child: Center(
                           child: Text('삭제',
-                              style: TextStyle(
-                                  color: Colors.red.shade400,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600)),
+                              style: AppTokens.textStyleValue.copyWith(
+                                  color: Colors.red.shade400)),
                         ),
                       ),
                     ),
@@ -505,10 +556,8 @@ class _SubmitButton extends StatelessWidget {
         ),
         child: Center(
           child: Text(label,
-              style: TextStyle(
-                  color: enabled ? Colors.white : kDutchTextTertiary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600)),
+              style: AppTokens.textStyleValue.copyWith(
+                  color: enabled ? Colors.white : kDutchTextTertiary)),
         ),
       ),
     );
@@ -528,9 +577,7 @@ class _ItemList extends StatelessWidget {
     if (s.items.isEmpty) {
       return Center(
         child: Text('추가한 메뉴가 표시돼요',
-            style: TextStyle(
-                color: kDutchTextTertiary,
-                fontSize: AppTokens.fontSizeBody)),
+            style: AppTokens.textStyleBody.copyWith(color: kDutchTextTertiary)),
       );
     }
     return Stack(
@@ -576,9 +623,8 @@ class _ItemList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(item.name,
-                              style: TextStyle(
+                              style: AppTokens.textStyleBody.copyWith(
                                   color: kDutchTextPrimary,
-                                  fontSize: AppTokens.fontSizeBody,
                                   fontWeight: FontWeight.w500)),
                           const SizedBox(height: 4),
                           Wrap(
@@ -597,15 +643,14 @@ class _ItemList extends StatelessWidget {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(Icons.person,
-                                              size: 11,
+                                              size: AppTokens.textStyleLabelSmall.fontSize,
                                               color: kDutchChipText[
                                                   idx % kDutchChipText.length]),
                                           Text(
                                             s.participants[idx].name,
-                                            style: TextStyle(
+                                            style: AppTokens.textStyleLabelSmall.copyWith(
                                               color: kDutchChipText[
                                                   idx % kDutchChipText.length],
-                                              fontSize: 11,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -618,10 +663,8 @@ class _ItemList extends StatelessWidget {
                       ),
                     ),
                     Text('${_fmt(item.amount)}원',
-                        style: TextStyle(
-                            color: editing ? kDutchAccent : kDutchTextPrimary,
-                            fontSize: AppTokens.fontSizeValue,
-                            fontWeight: FontWeight.w600)),
+                        style: AppTokens.textStyleValue.copyWith(
+                            color: editing ? kDutchAccent : kDutchTextPrimary)),
                   ],
                 ),
               ),
@@ -681,7 +724,7 @@ class _ResultSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         child: Center(
           child: Text('메뉴를 추가하면 결과가 표시돼요',
-              style: TextStyle(color: kDutchTextTertiary, fontSize: 12)),
+              style: AppTokens.textStyleBody.copyWith(color: kDutchTextTertiary)),
         ),
       );
     }
@@ -696,14 +739,11 @@ class _ResultSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('총 합계',
-                  style: TextStyle(
-                      color: kDutchTextSecondary,
-                      fontSize: AppTokens.fontSizeLabel)),
+                  style: AppTokens.textStyleCaption.copyWith(
+                      color: kDutchTextSecondary)),
               Text('${_fmt(result.totalAmount)}원',
-                  style: const TextStyle(
-                      color: kDutchTextPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600)),
+                  style: AppTokens.textStyleValue.copyWith(
+                      color: kDutchTextPrimary)),
             ],
           ),
           const SizedBox(height: 8),
@@ -758,22 +798,19 @@ class _ResultSection extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.person,
-                        size: 16,
+                        size: AppTokens.sizeIconXSmall,
                         color: kDutchChipText[e.key % kDutchChipText.length]),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(e.value.name,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: AppTokens.textStyleBody.copyWith(
                               color: kDutchTextPrimary,
-                              fontSize: AppTokens.fontSizeBody,
                               fontWeight: FontWeight.w500)),
                     ),
                     Text('${_fmt(result.personAmounts[e.key])}원',
-                        style: const TextStyle(
-                            color: kDutchTextPrimary,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600)),
+                        style: AppTokens.textStyleValue.copyWith(
+                            color: kDutchTextPrimary)),
                   ],
                 ),
               )).toList(),
@@ -819,16 +856,14 @@ class _ShareResultBtn extends StatelessWidget {
             )
           ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.share_outlined, color: Colors.white, size: 18),
-            SizedBox(width: 8),
+            Icon(Icons.share_outlined, color: Colors.white, size: AppTokens.sizeIconSmall),
+            const SizedBox(width: 8),
             Text('결과 공유',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
+                style: AppTokens.textStyleValue.copyWith(
+                    color: Colors.white)),
           ],
         ),
       ),

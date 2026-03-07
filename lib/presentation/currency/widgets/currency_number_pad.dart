@@ -1,3 +1,4 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../currency_calculator_colors.dart';
@@ -94,21 +95,17 @@ class CurrencyKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: 68,
+          height: AppTokens.heightButtonLarge,
           child: Center(
             child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: 26)
+                ? Icon(Icons.backspace_outlined, color: _textColor, size: AppTokens.sizeKeypadBackspace)
                 : Text(
                     label,
-                    style: TextStyle(
-                      fontSize:
-                          const ['\u{00F7}', '\u{00D7}', '-', '+', '=']
-                                  .contains(label)
-                              ? 28
-                              : 22,
-                      fontWeight: FontWeight.w400,
-                      color: _textColor,
-                    ),
+                    style: (const ['\u{00F7}', '\u{00D7}', '-', '+', '=']
+                                .contains(label)
+                            ? AppTokens.textStyleKeypadOperator
+                            : AppTokens.textStyleKeypadNumber)
+                        .copyWith(color: _textColor),
                   ),
           ),
         ),

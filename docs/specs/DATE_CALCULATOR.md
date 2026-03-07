@@ -142,6 +142,8 @@
 - 당일: `D - DAY`
 - 과거: `D + N` (N = 기준일 − 목표일)
 
+> **UI 스타일**: 토큰·색상·위젯 상세는 [`docs/design/DATE_CALCULATOR.md`](../design/DATE_CALCULATOR.md) 참조.
+
 ---
 
 ## 날짜 선택 (바텀 시트 캘린더)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/age_calculator_state.dart';
 import '../age_calculator_colors.dart';
 import '../age_calculator_viewmodel.dart';
@@ -21,13 +22,13 @@ class LunarInfo extends StatelessWidget {
         border: Border.all(color: kAgeDivider),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // 변환된 양력 날짜
           Text(
             '양력  ',
-            style: const TextStyle(
+            style: AppTokens.textStyleLabelMedium.copyWith(
               color: kAgeSubText,
-              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -35,23 +36,26 @@ class LunarInfo extends StatelessWidget {
             solarDate != null
                 ? '${solarDate.year}년 ${solarDate.month}월 ${solarDate.day}일'
                 : '—',
-            style: const TextStyle(color: kAgeText, fontSize: 12),
+            style: AppTokens.textStyleLabelMedium.copyWith(color: kAgeText),
           ),
           const Spacer(),
           // 윤달 체크박스 (해당 연·월에 윤달이 있을 때만)
           if (hasLeap) ...[
-            const Text('윤달', style: TextStyle(color: kAgeSubText, fontSize: 12)),
-            const SizedBox(width: 4),
+            Text('윤달', style: AppTokens.textStyleCheckboxLabelSmall.copyWith(color: kAgeSubText, fontWeight: FontWeight.w600)),
+            const SizedBox(width: 6),
             SizedBox(
-              width: 20,
-              height: 20,
+              width: AppTokens.sizeCheckboxSmall,
+              height: AppTokens.sizeCheckboxSmall,
               child: Checkbox(
                 value: state.isLeapMonth,
                 onChanged: (v) => vm.handleIntent(
                   AgeCalculatorIntent.leapMonthToggled(v ?? false),
                 ),
+                activeColor: kAgeAccent,
+                checkColor: Colors.white,
+                side: const BorderSide(color: kAgeSubText, width: 1.5),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
+                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               ),
             ),
           ],

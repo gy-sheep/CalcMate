@@ -18,6 +18,7 @@ sealed class VatCalculatorIntent {
   const factory VatCalculatorIntent.keyTapped(String key) = _KeyTapped;
   const factory VatCalculatorIntent.modeChanged(VatMode mode) = _ModeChanged;
   const factory VatCalculatorIntent.taxRateTapped() = _TaxRateTapped;
+  const factory VatCalculatorIntent.amountTapped() = _AmountTapped;
 }
 
 class _KeyTapped extends VatCalculatorIntent {
@@ -32,6 +33,10 @@ class _ModeChanged extends VatCalculatorIntent {
 
 class _TaxRateTapped extends VatCalculatorIntent {
   const _TaxRateTapped();
+}
+
+class _AmountTapped extends VatCalculatorIntent {
+  const _AmountTapped();
 }
 
 // ──────────────────────────────────────────
@@ -65,6 +70,8 @@ class VatCalculatorViewModel
         _onModeChanged(mode);
       case _TaxRateTapped():
         _onTaxRateTapped();
+      case _AmountTapped():
+        _onAmountTapped();
     }
   }
 
@@ -146,6 +153,13 @@ class VatCalculatorViewModel
       state = state.copyWith(mode: mode, inputTarget: InputTarget.amount);
     } else {
       state = state.copyWith(mode: mode);
+    }
+  }
+
+  void _onAmountTapped() {
+    if (state.inputTarget == InputTarget.taxRate) {
+      _applyTaxRate();
+      state = state.copyWith(inputTarget: InputTarget.amount);
     }
   }
 

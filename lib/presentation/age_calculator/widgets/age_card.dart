@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
@@ -18,27 +19,23 @@ class AgeCard extends StatelessWidget {
           children: [
             // 세는 나이 (primary)
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
                   '${result.countingAge}',
-                  style: const TextStyle(
-                    color: kAgeAccent,
-                    fontSize: 56,
+                  style: AppTokens.textStyleResult56.copyWith(
                     fontWeight: FontWeight.w800,
+                    color: kAgeAccent,
                     height: 1.0,
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    '세',
-                    style: TextStyle(
-                      color: kAgeAccent,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                    ),
+                Text(
+                  '세',
+                  style: AppTokens.textStyleResult22.copyWith(
+                    color: kAgeAccent,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const Spacer(),
@@ -47,13 +44,12 @@ class AgeCard extends StatelessWidget {
                       horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: kAgeAccent.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(AppTokens.radiusTag),
                   ),
-                  child: const Text(
+                  child: Text(
                     '세는 나이',
-                    style: TextStyle(
+                    style: AppTokens.textStyleLabelMedium.copyWith(
                       color: kAgeAccent,
-                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -86,12 +82,9 @@ class AgeRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label,
-            style: const TextStyle(color: kAgeSubText, fontSize: 14)),
+            style: AppTokens.textStyleBody.copyWith(color: kAgeSubText)),
         Text(value,
-            style: const TextStyle(
-                color: kAgeText,
-                fontSize: 16,
-                fontWeight: FontWeight.w600)),
+            style: AppTokens.textStyleValue.copyWith(color: kAgeText)),
       ],
     );
   }
@@ -109,17 +102,13 @@ class BirthWeekdayRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               '태어난 요일',
-              style: TextStyle(color: kAgeSubText, fontSize: 14),
+              style: AppTokens.textStyleBody.copyWith(color: kAgeSubText),
             ),
             Text(
               kWeekdays[result.birthWeekday],
-              style: const TextStyle(
-                color: kAgeText,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
+              style: AppTokens.textStyleValue.copyWith(color: kAgeText),
             ),
           ],
         ),

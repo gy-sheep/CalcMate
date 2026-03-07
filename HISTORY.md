@@ -2,6 +2,46 @@
 
 ---
 
+## 2026-03-07 — 디자인 일관성 리팩토링
+
+### 완료 항목
+
+**AppTokens 토큰 체계 확장 (`lib/core/theme/app_design_tokens.dart`)**
+- Semantic TextStyle 토큰 도입: `textStyleSectionTitle`(13), `textStyleBody`(14), `textStyleHint`(14), `textStyleCaption`(12), `textStyleValue`(16), `textStyleChip`(14), `textStyleLabelMedium`(12), `textStyleLabelSmall`(10), `textStyleSheetTitle`(18), `textStyleAppBarTitle`(18)
+- Result 크기별 토큰: `textStyleResult18`~`textStyleResult56` (8단계)
+- 키패드 토큰: `textStyleKeypadNumber`(22), `textStyleKeypadOperator`(28)
+- Icon Size 토큰: `sizeIconXSmall`(16), `sizeIconSmall`(20), `sizeIconStep`(18), `sizeIconDropdown`(18)
+
+**8개 계산기 전체 토큰 적용**
+- 기본·환율·단위·부가세·나이·날짜·더치페이·할인 계산기
+- 모든 인라인 `fontSize`, `fontWeight`, icon `size` → AppTokens 상수로 교체
+
+**공통 위젯 추출**
+- `app_text_field.dart` — AppTextField (body/hint 스타일 자동 적용)
+- `app_input_underline.dart` — AppInputUnderline (입력 밑줄 공통화)
+
+**더치페이 UX 개선**
+- 개별 계산 인원 추가 시 자동 스크롤 (신규 인원이 보이도록)
+- 최대 10명 도달 시 `showAppToast` 안내
+- 편집/완료 모드 전환 시 스크롤 처음으로 이동
+
+**디자인 문서 (`docs/design/`)**
+- 8개 계산기 디자인 문서 + 템플릿 신규 작성
+- 토큰명·크기·용도를 표로 정리
+
+**스펙 문서 정리**
+- 8개 스펙 + 템플릿에서 UI 요소 스타일 섹션 제거 (디자인 문서와 중복)
+- `> UI 스타일: 디자인 문서 참조` 한 줄로 대체
+
+**가이드 문서 업데이트**
+- `CLAUDE.md` — UI 구현 시 AppTokens 토큰 사용 원칙 추가
+- `docs/architecture/ARCHITECTURE.md` — 디자인 토큰 섹션 및 사용 패턴 추가
+
+### 커밋
+- (이번 커밋)
+
+---
+
 ## 2026-03-06 — 더치페이 계산기 구현
 
 ### 완료 항목

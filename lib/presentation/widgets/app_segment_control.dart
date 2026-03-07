@@ -85,13 +85,11 @@ class AppSegmentControl<T> extends StatelessWidget {
                 child: Center(
                   child: Text(
                     seg.$2,
-                    style: TextStyle(
+                    style: AppTokens.textStyleBody.copyWith(
                       color: isSelected
                           ? (activeTextColor ?? Colors.black87)
                           : (inactiveTextColor ?? Colors.white60),
-                      fontSize: AppTokens.fontSizeBody,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     ),
                   ),
                 ),

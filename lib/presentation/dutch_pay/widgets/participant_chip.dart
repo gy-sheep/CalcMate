@@ -48,22 +48,21 @@ class ParticipantChip extends StatelessWidget {
             if (showSelectIndicator) ...[
               Icon(
                 isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
-                size: 14,
+                size: AppTokens.sizeIconXSmall,
                 color: isSelected ? fg : fg.withValues(alpha: 0.4),
               ),
               const SizedBox(width: 4),
             ],
             Icon(
               Icons.person,
-              size: 14,
+              size: AppTokens.sizeIconXSmall,
               color: isSelected ? fg : fg.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 2),
             Text(
               label,
-              style: TextStyle(
+              style: AppTokens.textStyleChip.copyWith(
                 color: isSelected ? fg : fg.withValues(alpha: 0.6),
-                fontSize: 13,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -71,7 +70,7 @@ class ParticipantChip extends StatelessWidget {
               const SizedBox(width: 4),
               GestureDetector(
                 onTap: onDelete,
-                child: Icon(Icons.close, size: 14, color: fg),
+                child: Icon(Icons.close, size: AppTokens.sizeIconXSmall, color: fg),
               ),
             ],
           ],

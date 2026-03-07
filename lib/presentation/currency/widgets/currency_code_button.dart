@@ -1,3 +1,4 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 
@@ -23,18 +24,16 @@ class CurrencyCodeButton extends StatelessWidget {
             CountryFlag.fromCurrencyCode(
               code,
               theme: const ImageTheme(
-                width: 32,
-                height: 32,
+                width: AppTokens.sizeFlagMedium,
+                height: AppTokens.sizeFlagMedium,
                 shape: Circle(),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               code,
-              style: const TextStyle(
+              style: AppTokens.textStyleLabelMedium.copyWith(
                 color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
               ),
             ),
           ],

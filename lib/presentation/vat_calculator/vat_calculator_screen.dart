@@ -58,16 +58,12 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: AppTokens.sizeAppBarBackIcon),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           widget.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: AppTokens.fontSizeAppBarTitle,
-            fontWeight: AppTokens.weightAppBarTitle,
-          ),
+          style: AppTokens.textStyleAppBarTitle.copyWith(color: Colors.white),
         ),
         centerTitle: false,
       ),

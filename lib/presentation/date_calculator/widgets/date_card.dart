@@ -22,8 +22,7 @@ class DateCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-              color: kDateTextSecondary, fontSize: AppTokens.fontSizeLabel),
+          style: AppTokens.textStyleCaption.copyWith(color: kDateTextSecondary),
         ),
         const SizedBox(height: 6),
         GestureDetector(
@@ -44,15 +43,14 @@ class DateCard extends StatelessWidget {
                   children: [
                     Text(
                       formatYear(date),
-                      style: const TextStyle(
-                          color: kDateTextSecondary, fontSize: 12),
+                      style: AppTokens.textStyleCaption
+                          .copyWith(color: kDateTextSecondary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       formatMonthDay(date),
-                      style: const TextStyle(
+                      style: AppTokens.textStyleResult22.copyWith(
                         color: kDateAccent,
-                        fontSize: 22,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -61,10 +59,8 @@ class DateCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   formatWeekday(date),
-                  style: const TextStyle(
-                      color: kDateAccent,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
+                  style: AppTokens.textStyleLabelLarge.copyWith(
+                      color: kDateAccent),
                 ),
                 const SizedBox(width: 6),
                 const Icon(Icons.chevron_right,

@@ -1,3 +1,4 @@
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../unit_converter_colors.dart';
@@ -88,7 +89,7 @@ class UnitKeypadButton extends StatelessWidget {
           height: 56,
           child: Center(
             child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: 24)
+                ? Icon(Icons.backspace_outlined, color: _textColor, size: AppTokens.sizeKeypadBackspace)
                 : label == '▲'
                     ? Icon(Icons.keyboard_arrow_up, color: _textColor, size: 28)
                     : label == '▼'
@@ -97,11 +98,8 @@ class UnitKeypadButton extends StatelessWidget {
                             ? _buildPlusMinusLabel(_textColor)
                             : Text(
                                 label,
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w400,
-                                  color: _textColor,
-                                ),
+                                style: AppTokens.textStyleKeypadNumber
+                                    .copyWith(color: _textColor),
                               ),
           ),
         ),

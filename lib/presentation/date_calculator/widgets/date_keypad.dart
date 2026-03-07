@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../date_calculator_colors.dart';
@@ -60,14 +61,11 @@ class DateKeypad extends StatelessWidget {
         child: Center(
           child: label == '⌫'
               ? const Icon(Icons.backspace_outlined,
-                  color: kDateTextSecondary, size: 20)
+                  color: kDateTextSecondary, size: AppTokens.sizeKeypadBackspace)
               : Text(
                   label,
-                  style: const TextStyle(
-                    color: kDateTextPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTokens.textStyleKeypadNumber
+                      .copyWith(color: kDateTextPrimary),
                 ),
         ),
       ),

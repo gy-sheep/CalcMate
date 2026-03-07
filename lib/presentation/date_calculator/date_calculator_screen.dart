@@ -186,16 +186,12 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
       elevation: 0,
       scrolledUnderElevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: kDateTextPrimary, size: 18),
+        icon: Icon(Icons.arrow_back_ios, color: kDateTextPrimary, size: AppTokens.sizeAppBarBackIcon),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: const Text(
+      title: Text(
         '날짜 계산기',
-        style: TextStyle(
-          color: kDateTextPrimary,
-          fontSize: AppTokens.fontSizeAppBarTitle,
-          fontWeight: AppTokens.weightAppBarTitle,
-        ),
+        style: AppTokens.textStyleAppBarTitle.copyWith(color: kDateTextPrimary),
       ),
       centerTitle: false,
     );

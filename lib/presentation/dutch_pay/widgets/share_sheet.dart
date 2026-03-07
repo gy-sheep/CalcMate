@@ -131,9 +131,8 @@ class _ShareSheetState extends State<ShareSheet> {
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Text('닫기',
-                      style: TextStyle(
-                          color: kDutchTextTertiary,
-                          fontSize: AppTokens.fontSizeBody)),
+                      style: AppTokens.textStyleBody.copyWith(
+                          color: kDutchTextTertiary)),
                 ),
               ],
             ),

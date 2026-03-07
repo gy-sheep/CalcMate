@@ -146,16 +146,12 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: AppTokens.sizeAppBarBackIcon),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           widget.title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: AppTokens.fontSizeAppBarTitle,
-            fontWeight: AppTokens.weightAppBarTitle,
-          ),
+          style: AppTokens.textStyleAppBarTitle.copyWith(color: Colors.white),
         ),
         centerTitle: false,
       ),
@@ -278,9 +274,8 @@ class _OriginalPriceField extends StatelessWidget {
         children: [
           Text(
             '원가',
-            style: TextStyle(
+            style: AppTokens.textStyleCaption.copyWith(
               color: kDiscountTextSecondary,
-              fontSize: AppTokens.fontSizeLabel,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.5,
             ),
@@ -316,12 +311,10 @@ class _OriginalPriceField extends StatelessWidget {
                 Expanded(
                   child: Text(
                     value.isEmpty ? '0' : value,
-                    style: TextStyle(
+                    style: AppTokens.textStyleResult24.copyWith(
                       color: value.isEmpty
                           ? kDiscountTextSecondary
                           : kDiscountTextPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w300,
                     ),
                     textAlign: TextAlign.right,
                   ),
@@ -362,9 +355,8 @@ class _DiscountRateSection extends StatelessWidget {
       children: [
         Text(
           '할인율',
-          style: TextStyle(
+          style: AppTokens.textStyleCaption.copyWith(
             color: kDiscountTextSecondary,
-            fontSize: AppTokens.fontSizeLabel,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.5,
           ),
@@ -437,12 +429,10 @@ class _DiscountRateSection extends StatelessWidget {
                 Expanded(
                   child: Text(
                     rateText.isEmpty ? '0' : rateText,
-                    style: TextStyle(
+                    style: AppTokens.textStyleResult24.copyWith(
                       color: rateText.isEmpty
                           ? kDiscountTextSecondary
                           : kDiscountTextPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w300,
                     ),
                     textAlign: TextAlign.right,
                   ),
@@ -589,12 +579,10 @@ class _ExtraDiscountSection extends StatelessWidget {
                   Expanded(
                     child: Text(
                       rateText.isEmpty ? '0' : rateText,
-                      style: TextStyle(
+                      style: AppTokens.textStyleResult24.copyWith(
                         color: rateText.isEmpty
                             ? kDiscountTextSecondary
                             : kDiscountTextPrimary,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w300,
                       ),
                       textAlign: TextAlign.right,
                     ),
@@ -692,18 +680,16 @@ class _ResultCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 '절약액',
-                style: TextStyle(
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSecondary,
-                  fontSize: AppTokens.fontSizeBody,
                 ),
               ),
               Text(
                 '- ₩${formatPrice(savedAmount)}',
-                style: const TextStyle(
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSavings,
-                  fontSize: AppTokens.fontSizeBody,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -716,16 +702,14 @@ class _ResultCard extends StatelessWidget {
             children: [
               Text(
                 hasExtra ? '실질 할인율 ($rateLabel)' : '할인율',
-                style: const TextStyle(
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSecondary,
-                  fontSize: AppTokens.fontSizeBody,
                 ),
               ),
               Text(
                 '${effectiveRate.toStringAsFixed(effectiveRate % 1 == 0 ? 0 : 1)}%',
-                style: const TextStyle(
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSecondary,
-                  fontSize: AppTokens.fontSizeBody,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -736,21 +720,18 @@ class _ResultCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
+              Text(
                 '최종가',
-                style: TextStyle(
+                style: AppTokens.textStyleCaption.copyWith(
                   color: kDiscountTextSecondary,
-                  fontSize: AppTokens.fontSizeLabel,
                   letterSpacing: 0.5,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 '₩${formatPrice(finalPrice)}',
-                style: const TextStyle(
+                style: AppTokens.textStyleResult36.copyWith(
                   color: kDiscountTextFinalPrice,
-                  fontSize: 36,
-                  fontWeight: FontWeight.w300,
                   letterSpacing: -1,
                 ),
                 textAlign: TextAlign.right,
@@ -830,7 +811,7 @@ class _KeypadButton extends StatelessWidget {
           height: AppTokens.heightButtonLarge,
           child: Center(
             child: label == '⌫'
-                ? Icon(Icons.backspace_outlined, color: color, size: 22)
+                ? Icon(Icons.backspace_outlined, color: color, size: AppTokens.sizeKeypadBackspace)
                 : Text(
                     label,
                     style: TextStyle(
