@@ -95,14 +95,23 @@
 
 ## 낮음 우선순위
 
-### R-08. Toast 공용 컴포넌트
+### R-08. Toast 공용 컴포넌트 ✅
 
-- **브랜치**: `refactor/common-toast`
-- **현재 상태**: 2개의 다른 Toast 구현
-  - `_showToast()` — Screen, bottom 위치, 1500ms (`screen.dart:86-114`)
-  - `_showCenterToast()` — PickerSheet, center 위치, 1000ms (`screen.dart:674-697`)
-- **개선 방향**: `lib/presentation/common/widgets/app_toast.dart` — 위치·지연 파라미터화
-- **재사용 대상**: 앱 전체
+- **브랜치**: `dev`
+- **완료**:
+  - `lib/core/utils/app_toast.dart` — `showAppToast(context, message)` 공용 함수
+  - 전체 계산기 Screen에서 중복 `_showToast` 제거 → `showAppToast` 사용
+
+---
+
+### R-12. 스크롤 페이드 그라디언트 공통화 ✅
+
+- **브랜치**: `dev`
+- **완료**:
+  - `lib/presentation/widgets/scroll_fade_view.dart` — `ScrollFadeView` 위젯 (동적 스크롤 감지, GlobalKey 지원)
+  - `lib/presentation/widgets/app_animated_tab_bar.dart` — `AppAnimatedTabBar` 공용 탭바
+  - 전체 계산기(환율·날짜·나이·할인·더치페이)에 동적 스크롤 페이드 적용 (height: 48, stops: [0, 0.6, 1])
+  - `DutchPayTabBar`, `DateTabBar` → `AppAnimatedTabBar` 래퍼로 단순화
 
 ---
 
@@ -149,3 +158,5 @@
 | 2026-03-03 | R-07. 캐시 TTL / Firestore 경로 상수화 | 완료 |
 | 2026-03-03 | R-05. 입력 유틸리티 공용화 | 완료 |
 | 2026-03-03 | R-09. 숫자 포맷팅 유틸리티 | 완료 |
+| 2026-03-07 | R-08. Toast 공용 컴포넌트 | 완료 |
+| 2026-03-07 | R-12. 스크롤 페이드 그라디언트 공통화 + AppAnimatedTabBar | 완료 |

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
+import '../../presentation/widgets/scroll_fade_view.dart';
 import 'discount_calculator_colors.dart';
 
 // ──────────────────────────────────────────
@@ -171,19 +172,18 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
             children: [
               // ── 입력 + 결과 영역 ──
               Expanded(
-                child: Stack(
-                  children: [
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppTokens.paddingScreenH,
-                        vertical: 20,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _OriginalPriceField(
-                            value: _originalPrice,
-                            isActive: _activeField == _ActiveField.originalPrice,
+                child: ScrollFadeView(
+                  fadeColor: kDiscountGradientBottom,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppTokens.paddingScreenH,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _OriginalPriceField(
+                        value: _originalPrice,
+                        isActive: _activeField == _ActiveField.originalPrice,
                         onTap: () => setState(
                             () => _activeField = _ActiveField.originalPrice),
                       ),
@@ -202,8 +202,7 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
                         show: _showExtra,
                         rateText: _extraRate,
                         selectedChip: _selectedExtraChip,
-                        isActive:
-                            _activeField == _ActiveField.extraDiscountRate,
+                        isActive: _activeField == _ActiveField.extraDiscountRate,
                         chips: _chips,
                         onToggle: () => setState(() {
                           _showExtra = !_showExtra;
@@ -236,30 +235,8 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
                           extraRate: _showExtra ? _extra : null,
                           formatPrice: _formatPrice,
                         ),
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      left: 0, right: 0, bottom: 0,
-                      height: 48,
-                      child: IgnorePointer(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: const [0.0, 0.6, 1.0],
-                              colors: [
-                                kDiscountGradientBottom.withValues(alpha: 0),
-                                kDiscountGradientBottom.withValues(alpha: 0.7),
-                                kDiscountGradientBottom,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               // ── 구분선 ──

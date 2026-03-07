@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../domain/usecases/dutch_pay_equal_split_usecase.dart';
+import '../../../presentation/widgets/scroll_fade_view.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
 import 'dutch_pay_keypad.dart';
@@ -23,7 +24,8 @@ class EqualSplitView extends ConsumerWidget {
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
+          child: ScrollFadeView(
+            fadeColor: kDutchBg3,
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -342,62 +344,44 @@ class _TipRow extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: selected
-                            ? kDutchAccent
-                            : kDutchCardBg,
-                        borderRadius: BorderRadius.circular(
-                            AppTokens.radiusChip),
+                        color: selected ? kDutchAccent : kDutchCardBg,
+                        borderRadius: BorderRadius.circular(AppTokens.radiusChip),
                         border: Border.all(
-                          color: selected
-                              ? kDutchAccent
-                              : kDutchDivider,
+                          color: selected ? kDutchAccent : kDutchDivider,
                         ),
                       ),
                       child: Text(
                         _tipLabels[e.key],
                         style: TextStyle(
-                          color: selected
-                              ? Colors.white
-                              : kDutchTextPrimary,
+                          color: selected ? Colors.white : kDutchTextPrimary,
                           fontSize: 14,
-                          fontWeight: selected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
+                          fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                         ),
                       ),
                     ),
                   ),
                 );
               }),
-              // 직접입력 칩
               GestureDetector(
                 onTap: () => vm.handleIntent(
                     const DutchPayIntent.tipRateChanged(-1)),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: eq.isCustomTip
-                        ? kDutchAccent
-                        : kDutchCardBg,
-                    borderRadius:
-                        BorderRadius.circular(AppTokens.radiusChip),
-                    border:
-                        Border.all(color: eq.isCustomTip ? kDutchAccent : kDutchDivider),
+                    color: eq.isCustomTip ? kDutchAccent : kDutchCardBg,
+                    borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+                    border: Border.all(
+                        color: eq.isCustomTip ? kDutchAccent : kDutchDivider),
                   ),
                   child: Text(
                     eq.isCustomTip && eq.tipInput.isNotEmpty
                         ? '${eq.tipInput}%'
                         : '직접입력',
                     style: TextStyle(
-                      color: eq.isCustomTip
-                          ? Colors.white
-                          : kDutchTextPrimary,
+                      color: eq.isCustomTip ? Colors.white : kDutchTextPrimary,
                       fontSize: 14,
-                      fontWeight: eq.isCustomTip
-                          ? FontWeight.w600
-                          : FontWeight.w400,
+                      fontWeight: eq.isCustomTip ? FontWeight.w600 : FontWeight.w400,
                     ),
                   ),
                 ),
@@ -502,9 +486,7 @@ class _ResultCard extends StatelessWidget {
           label: '참여자 ${result!.people - 1}명',
           amount: vm.fmt(result!.rounded),
         ),
-        Divider(
-            height: 20,
-            color: kDutchDivider.withValues(alpha: 0.5)),
+        Divider(height: 20, color: kDutchDivider.withValues(alpha: 0.5)),
         _ResultRow(
           label: '계산한 사람',
           amount: vm.fmt(result!.organizer),
@@ -531,8 +513,7 @@ class _ResultRow extends StatelessWidget {
             style: TextStyle(
                 color: highlight ? kDutchTextPrimary : kDutchTextSecondary,
                 fontSize: AppTokens.fontSizeBody,
-                fontWeight:
-                    highlight ? FontWeight.w600 : FontWeight.w400)),
+                fontWeight: highlight ? FontWeight.w600 : FontWeight.w400)),
         RichText(
           text: TextSpan(children: [
             TextSpan(
@@ -587,8 +568,7 @@ class _ShareBtn extends StatelessWidget {
                     colors: [Color(0xFFF48FB1), kDutchAccent])
                 : null,
             color: hasResult ? null : kDutchDivider,
-            borderRadius:
-                BorderRadius.circular(AppTokens.radiusCard),
+            borderRadius: BorderRadius.circular(AppTokens.radiusCard),
             boxShadow: hasResult
                 ? [
                     BoxShadow(

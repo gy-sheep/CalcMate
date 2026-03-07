@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/vat_calculator_state.dart';
 import '../../domain/usecases/vat_calculate_usecase.dart';
@@ -28,38 +29,7 @@ class VatCalculatorScreen extends ConsumerStatefulWidget {
 }
 
 class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
-  void _showToast(String message) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => Positioned(
-        bottom: 120,
-        left: 0,
-        right: 0,
-        child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (entry.mounted) entry.remove();
-    });
-  }
+  void _showToast(String message) => showAppToast(context, message);
 
   // ── Build ──
 

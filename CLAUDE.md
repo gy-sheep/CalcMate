@@ -44,6 +44,7 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 
 ### 2단계: UI 프리뷰 (선택)
 - 기획 명세 작성 후 사용자가 **"화면만 먼저 개발"** 또는 **"UI 먼저 확인"** 을 요청하면 진행한다
+- **구현 전 `memory/patterns.md` 를 읽고** 공통 UI 패턴(스크롤 페이드, 레이아웃 등)을 확인한다
 - **더미 데이터**로 결과가 표시된 상태로 구현하며, **인터랙션**(버튼/탭 동작)도 포함한다
 - ViewModel / UseCase / 실제 로직은 구현하지 않는다
 - UI 확정 후 3단계로 이동
@@ -52,6 +53,7 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 - **저장 위치**: `docs/dev/{FEATURE_NAME}.md`
 - **템플릿**: `docs/dev/_IMPL_SPEC_TEMPLATE.md`
 - **내용**: 파일 구조, 클래스 설계, 구현 순서 등 **어떻게** 만들지 정의
+- **dev 파일 작성 후 실제 구현 진행 시 `memory/patterns.md` 를 읽고** 공통 패턴을 적용한다
 
 ## 문서 관리
 

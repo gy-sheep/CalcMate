@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/unit_definitions.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import 'unit_converter_colors.dart';
 import 'unit_converter_viewmodel.dart';
@@ -207,32 +208,6 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
     );
   }
 
-  void _showToast(BuildContext context, String message) {
-    final overlay = Overlay.of(context);
-    final entry = OverlayEntry(
-      builder: (context) => Positioned(
-        bottom: 320,
-        left: 40,
-        right: 40,
-        child: Material(
-          color: Colors.transparent,
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white, fontSize: 13),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(seconds: 2), entry.remove);
-  }
+  void _showToast(BuildContext context, String message) =>
+      showAppToast(context, message);
 }

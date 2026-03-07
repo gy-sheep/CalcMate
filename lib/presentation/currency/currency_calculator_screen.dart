@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/currency_info.dart';
 import 'currency_calculator_colors.dart';
@@ -17,13 +18,49 @@ import 'widgets/currency_picker_sheet.dart';
 // ──────────────────────────────────────────
 // 메인 화면
 // ──────────────────────────────────────────
-class CurrencyCalculatorScreen extends ConsumerWidget {
+class CurrencyCalculatorScreen extends ConsumerStatefulWidget {
   final String title;
 
   const CurrencyCalculatorScreen({
     super.key,
     required this.title,
   });
+
+  @override
+  ConsumerState<CurrencyCalculatorScreen> createState() =>
+      _CurrencyCalculatorScreenState();
+}
+
+class _CurrencyCalculatorScreenState
+    extends ConsumerState<CurrencyCalculatorScreen> {
+  final _scrollController = ScrollController();
+  bool _showBottomFade = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkFade());
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() => _checkFade();
+
+  void _checkFade() {
+    if (!_scrollController.hasClients) return;
+    final pos = _scrollController.position;
+    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
+    final canScroll = pos.maxScrollExtent > 0;
+    if (_showBottomFade != (canScroll && !atBottom)) {
+      setState(() => _showBottomFade = canScroll && !atBottom);
+    }
+  }
 
   String _formatLastUpdated(DateTime? dt, {required bool hasRates}) {
     if (dt == null) return hasRates ? '임시 환율 사용 중' : '환율 정보 없음';
@@ -35,38 +72,11 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
     return '${dt.year}.$month.$day. ${isPm ? '오후' : '오전'} $hour:$minute 기준';
   }
 
-  void _showToast(BuildContext context, String message) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-    entry = OverlayEntry(
-      builder: (_) => Positioned(
-        bottom: 120,
-        left: 0,
-        right: 0,
-        child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(milliseconds: 1500), () => entry.remove());
-  }
+  void _showToast(BuildContext context, String message) =>
+      showAppToast(context, message);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final state = ref.watch(exchangeRateViewModelProvider);
     final vm = ref.read(exchangeRateViewModelProvider.notifier);
 
@@ -94,7 +104,7 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
-          title,
+          widget.title,
           style: const TextStyle(
             color: Colors.white,
             fontSize: AppTokens.fontSizeAppBarTitle,
@@ -129,66 +139,94 @@ class CurrencyCalculatorScreen extends ConsumerWidget {
                     ),
                   // 통화 행들 — 부모 높이를 전부 사용, 넘치면 스크롤
                   Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) => SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: constraints.maxHeight + AdBannerPlaceholder.height),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16, right: 24),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // From 행
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Stack(
+                      children: [
+                        LayoutBuilder(
+                          builder: (context, constraints) => SingleChildScrollView(
+                            controller: _scrollController,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(minHeight: constraints.maxHeight + AdBannerPlaceholder.height),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 16, right: 24),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    CurrencyCodeButton(
-                                      code: state.fromCode,
-                                      onTap: () => _selectCurrency(
-                                        context, ref,
-                                        toIndex: -1,
-                                        selectedCode: state.fromCode,
-                                        rates: state.rates,
-                                      ),
+                                    // From 행
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        CurrencyCodeButton(
+                                          code: state.fromCode,
+                                          onTap: () => _selectCurrency(
+                                            context, ref,
+                                            toIndex: -1,
+                                            selectedCode: state.fromCode,
+                                            rates: state.rates,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: AmountDisplay(
+                                            amount: fromDisplay,
+                                            isActive: true,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: AmountDisplay(
-                                        amount: fromDisplay,
-                                        isActive: true,
+                                    // To 행 3개
+                                    for (int i = 0; i < state.toCodes.length; i++)
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          CurrencyCodeButton(
+                                            code: state.toCodes[i],
+                                            onTap: () => _selectCurrency(
+                                              context, ref,
+                                              toIndex: i,
+                                              selectedCode: state.toCodes[i],
+                                              rates: state.rates,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: AmountDisplay(
+                                              amount: vm.convertedDisplayAt(i),
+                                              isActive: false,
+                                              hint: vm.unitRateDisplayAt(i),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
                                   ],
                                 ),
-                                // To 행 3개
-                                for (int i = 0; i < state.toCodes.length; i++)
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      CurrencyCodeButton(
-                                        code: state.toCodes[i],
-                                        onTap: () => _selectCurrency(
-                                          context, ref,
-                                          toIndex: i,
-                                          selectedCode: state.toCodes[i],
-                                          rates: state.rates,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: AmountDisplay(
-                                          amount: vm.convertedDisplayAt(i),
-                                          isActive: false,
-                                          hint: vm.unitRateDisplayAt(i),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        if (_showBottomFade)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            height: 48,
+                            child: IgnorePointer(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: const [0.0, 0.6, 1.0],
+                                    colors: [
+                                      kCurrencyGradientBottom.withValues(alpha: 0),
+                                      kCurrencyGradientBottom.withValues(alpha: 0.7),
+                                      kCurrencyGradientBottom,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   // 업데이트 시간 + 새로고침
