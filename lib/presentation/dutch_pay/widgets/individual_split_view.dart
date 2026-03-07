@@ -21,40 +21,37 @@ class IndividualSplitView extends ConsumerWidget {
 
     return Column(
       children: [
-        // 항목 목록
+        // 1. 인원 컴팩트 바
+        _ParticipantsBar(s: s, vm: vm),
+        Divider(height: 1, color: kDutchDivider),
+        // 2. 항목 목록 (Expanded — 대부분 공간)
         Expanded(
           child: ColoredBox(
             color: kDutchReceiptBg,
             child: _ItemList(
               s: s,
               vm: vm,
-              onItemTapped: () => _showInputSheet(context, ref, s),
+              onItemTapped: () => _showInputSheet(context, ref),
             ),
           ),
         ),
-        Divider(height: 1, color: kDutchDivider),
-        // 인원 추가
-        _ParticipantsSection(s: s, vm: vm),
-        // 메뉴 추가 버튼
+        // 3. 메뉴 추가 버튼 — 항목 목록 바로 아래
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: _AddMenuButton(
             isEditing: s.editingIndex != null,
-            onTap: () => _showInputSheet(context, ref, s),
+            onTap: () => _showInputSheet(context, ref),
           ),
         ),
         Divider(height: 1, color: kDutchDivider),
-        // 결과
-        Expanded(
-          child: _ResultSection(s: s, result: result, vm: vm),
-        ),
+        // 4. 결과 영역 — 하단 고정
+        _ResultSection(s: s, result: result, vm: vm),
         SizedBox(height: MediaQuery.of(context).padding.bottom),
       ],
     );
   }
 
-  void _showInputSheet(
-      BuildContext context, WidgetRef ref, IndividualSplitState s) {
+  void _showInputSheet(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -64,7 +61,163 @@ class IndividualSplitView extends ConsumerWidget {
             top: Radius.circular(AppTokens.radiusBottomSheet)),
       ),
       builder: (_) => _MenuInputSheet(parentRef: ref),
+    ).then((_) {
+      ref
+          .read(dutchPayViewModelProvider.notifier)
+          .handleIntent(const DutchPayIntent.inputCleared());
+    });
+  }
+}
+
+// ── 인원 컴팩트 바 ───────────────────────────────────────────
+
+class _ParticipantsBar extends StatelessWidget {
+  const _ParticipantsBar({required this.s, required this.vm});
+  final IndividualSplitState s;
+  final DutchPayViewModel vm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: s.participants.asMap().entries.map((e) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ParticipantChip(
+                      label: e.value.name,
+                      bg: kDutchChipBg[e.key % kDutchChipBg.length],
+                      fg: kDutchChipText[e.key % kDutchChipText.length],
+                      showDelete: s.isParticipantEditMode,
+                      onTap: s.isParticipantEditMode
+                          ? () => _confirmRemove(context, e.key, s)
+                          : () => _showRenameDialogAt(context, e.key),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          if (s.participants.length < 10) ...[
+            const SizedBox(width: 8),
+            GestureDetector(
+              onTap: () =>
+                  vm.handleIntent(const DutchPayIntent.participantAdded()),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(color: kDutchAccent.withValues(alpha: 0.4)),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+                ),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  const Icon(Icons.add, size: 14, color: kDutchAccent),
+                  const SizedBox(width: 2),
+                  Text('추가',
+                      style: TextStyle(color: kDutchAccent, fontSize: 13)),
+                ]),
+              ),
+            ),
+          ],
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () => vm.handleIntent(
+                const DutchPayIntent.participantEditModeToggled()),
+            child: Text(
+              s.isParticipantEditMode ? '완료' : '편집',
+              style: TextStyle(
+                  color: kDutchAccent,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  void _showRenameDialogAt(BuildContext context, int idx) {
+    final participants = s.participants;
+    if (idx >= participants.length) return;
+
+    final defaultName = participants[idx].name;
+    final ctrl = TextEditingController();
+    final isLast = idx == participants.length - 1;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('$defaultName 이름 변경'),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          maxLength: 10,
+          decoration: InputDecoration(
+            hintText: defaultName,
+            counterText: '',
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
+          if (!isLast)
+            TextButton(
+              onPressed: () {
+                final name = ctrl.text.trim();
+                if (name.isNotEmpty) {
+                  vm.handleIntent(
+                      DutchPayIntent.participantRenamed(idx, name));
+                }
+                Navigator.pop(ctx);
+                _showRenameDialogAt(context, idx + 1);
+              },
+              child: const Text('다음'),
+            ),
+          TextButton(
+            onPressed: () {
+              final name = ctrl.text.trim();
+              if (name.isNotEmpty) {
+                vm.handleIntent(DutchPayIntent.participantRenamed(idx, name));
+              }
+              Navigator.pop(ctx);
+            },
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmRemove(BuildContext context, int idx, IndividualSplitState s) {
+    final hasItems = s.items.any((item) => item.assignees.contains(idx));
+    if (hasItems) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('참여자 삭제'),
+          content: Text('${s.participants[idx].name}의 메뉴가 함께 삭제됩니다.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                vm.handleIntent(DutchPayIntent.participantRemoved(idx));
+              },
+              child: const Text('삭제', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
+      );
+    } else {
+      vm.handleIntent(DutchPayIntent.participantRemoved(idx));
+    }
   }
 }
 
@@ -89,8 +242,7 @@ class _AddMenuButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add_circle_outline,
-                color: kDutchAccent, size: 20),
+            Icon(Icons.add_circle_outline, color: kDutchAccent, size: 20),
             const SizedBox(width: 8),
             Text('메뉴 추가',
                 style: TextStyle(
@@ -254,8 +406,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: s.participants.asMap().entries.map((e) {
-                  final selected =
-                      s.selectedParticipants.contains(e.key);
+                  final selected = s.selectedParticipants.contains(e.key);
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ParticipantChip(
@@ -288,8 +439,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                           color: Colors.red.shade50,
                           borderRadius:
                               BorderRadius.circular(AppTokens.radiusCard),
-                          border: Border.all(
-                              color: Colors.red.shade200),
+                          border: Border.all(color: Colors.red.shade200),
                         ),
                         child: Center(
                           child: Text('삭제',
@@ -308,8 +458,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                       label: '수정',
                       enabled: canSubmit,
                       onTap: () {
-                        _vm.handleIntent(
-                            const DutchPayIntent.itemSubmitted());
+                        _vm.handleIntent(const DutchPayIntent.itemSubmitted());
                         Navigator.pop(context);
                       },
                     ),
@@ -410,6 +559,18 @@ class _ItemList extends StatelessWidget {
                     : null,
                 child: Row(
                   children: [
+                    // 수정 중 표시
+                    if (editing) ...[
+                      Container(
+                        width: 3,
+                        height: 36,
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: BoxDecoration(
+                          color: kDutchAccent,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,7 +619,7 @@ class _ItemList extends StatelessWidget {
                     ),
                     Text('${_fmt(item.amount)}원',
                         style: TextStyle(
-                            color: kDutchTextPrimary,
+                            color: editing ? kDutchAccent : kDutchTextPrimary,
                             fontSize: AppTokens.fontSizeValue,
                             fontWeight: FontWeight.w600)),
                   ],
@@ -504,183 +665,6 @@ class _ItemList extends StatelessWidget {
   }
 }
 
-// ── 인원 추가 ────────────────────────────────────────────────
-
-class _ParticipantsSection extends StatelessWidget {
-  const _ParticipantsSection({required this.s, required this.vm});
-  final IndividualSplitState s;
-  final DutchPayViewModel vm;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('인원 추가',
-              style: TextStyle(
-                  color: kDutchTextSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.3)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: s.participants.asMap().entries.map((e) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ParticipantChip(
-                          label: e.value.name,
-                          bg: kDutchChipBg[e.key % kDutchChipBg.length],
-                          fg: kDutchChipText[e.key % kDutchChipText.length],
-                          showDelete: s.isParticipantEditMode,
-                          onTap: s.isParticipantEditMode
-                              ? () => _confirmRemove(context, e.key, s)
-                              : () => _showRenameDialog(
-                                  context, e.key, e.value.name),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-              if (s.participants.length < 10) ...[
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () => vm
-                      .handleIntent(const DutchPayIntent.participantAdded()),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: kDutchAccent.withValues(alpha: 0.4)),
-                      borderRadius:
-                          BorderRadius.circular(AppTokens.radiusChip),
-                    ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      const Icon(Icons.add, size: 14, color: kDutchAccent),
-                      const SizedBox(width: 2),
-                      Text('추가',
-                          style:
-                              TextStyle(color: kDutchAccent, fontSize: 13)),
-                    ]),
-                  ),
-                ),
-              ],
-              const SizedBox(width: 12),
-              GestureDetector(
-                onTap: () => vm.handleIntent(
-                    const DutchPayIntent.participantEditModeToggled()),
-                child: Text(
-                  s.isParticipantEditMode ? '완료' : '편집',
-                  style: TextStyle(
-                      color: kDutchAccent,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showRenameDialog(BuildContext context, int idx, String currentName) {
-    _showRenameDialogAt(context, idx);
-  }
-
-  void _showRenameDialogAt(BuildContext context, int idx) {
-    final participants = s.participants;
-    if (idx >= participants.length) return;
-
-    final defaultName = participants[idx].name;
-    final ctrl = TextEditingController();
-    final isLast = idx == participants.length - 1;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('$defaultName 이름 변경'),
-        content: TextField(
-          controller: ctrl,
-          autofocus: true,
-          maxLength: 10,
-          decoration: InputDecoration(
-            hintText: defaultName,
-            counterText: '',
-          ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('취소')),
-          if (!isLast)
-            TextButton(
-              onPressed: () {
-                final name = ctrl.text.trim();
-                if (name.isNotEmpty) {
-                  vm.handleIntent(
-                      DutchPayIntent.participantRenamed(idx, name));
-                }
-                Navigator.pop(ctx);
-                _showRenameDialogAt(context, idx + 1);
-              },
-              child: const Text('다음'),
-            ),
-          TextButton(
-            onPressed: () {
-              final name = ctrl.text.trim();
-              if (name.isNotEmpty) {
-                vm.handleIntent(
-                    DutchPayIntent.participantRenamed(idx, name));
-              }
-              Navigator.pop(ctx);
-            },
-            child: const Text('확인'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _confirmRemove(BuildContext context, int idx, IndividualSplitState s) {
-    final hasItems = s.items.any((item) => item.assignees.contains(idx));
-    if (hasItems) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('참여자 삭제'),
-          content:
-              Text('${s.participants[idx].name}의 메뉴가 함께 삭제됩니다.'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: const Text('취소')),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                vm.handleIntent(DutchPayIntent.participantRemoved(idx));
-              },
-              child:
-                  const Text('삭제', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
-      );
-    } else {
-      vm.handleIntent(DutchPayIntent.participantRemoved(idx));
-    }
-  }
-}
-
 // ── 결과 영역 ────────────────────────────────────────────────
 
 class _ResultSection extends StatelessWidget {
@@ -697,15 +681,15 @@ class _ResultSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         child: Center(
           child: Text('메뉴를 추가하면 결과가 표시돼요',
-              style: TextStyle(
-                  color: kDutchTextTertiary, fontSize: 12)),
+              style: TextStyle(color: kDutchTextTertiary, fontSize: 12)),
         ),
       );
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -723,46 +707,16 @@ class _ResultSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Divider(
-              height: 1,
-              color: kDutchDivider.withValues(alpha: 0.5)),
+          Divider(height: 1, color: kDutchDivider.withValues(alpha: 0.5)),
           const SizedBox(height: 8),
-          Expanded(
-            child: Stack(
+          // 참여자별 금액 — 최대 3줄, 스크롤 가능
+          if (s.participants.length > 3)
+            Stack(
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children:
-                        s.participants.asMap().entries.map((e) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 3),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person,
-                                      size: 16,
-                                      color: kDutchChipText[
-                                          e.key % kDutchChipText.length]),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(e.value.name,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: kDutchTextPrimary,
-                                            fontSize: AppTokens.fontSizeBody,
-                                            fontWeight: FontWeight.w500)),
-                                  ),
-                                  Text(
-                                      '${_fmt(result.personAmounts[e.key])}원',
-                                      style: const TextStyle(
-                                          color: kDutchTextPrimary,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
-                                ],
-                              ),
-                            )).toList(),
-                  ),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 88),
+                  child: _participantAmountList(result),
                 ),
-                if (s.participants.length > 3)
                 Positioned(
                   left: 0,
                   right: 0,
@@ -776,7 +730,7 @@ class _ResultSection extends StatelessWidget {
                           end: Alignment.bottomCenter,
                           colors: [
                             kDutchBg3.withValues(alpha: 0),
-                            kDutchBg3.withValues(alpha: 0.9),
+                            kDutchBg3,
                           ],
                         ),
                       ),
@@ -784,11 +738,46 @@ class _ResultSection extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
+            )
+          else
+            _participantAmountList(result),
           const SizedBox(height: 12),
           _ShareResultBtn(s: s, result: result),
         ],
+      ),
+    );
+  }
+
+  Widget _participantAmountList(IndividualSplitResult result) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 88),
+      child: SingleChildScrollView(
+        child: Column(
+          children: s.participants.asMap().entries.map((e) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Row(
+                  children: [
+                    Icon(Icons.person,
+                        size: 16,
+                        color: kDutchChipText[e.key % kDutchChipText.length]),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(e.value.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: kDutchTextPrimary,
+                              fontSize: AppTokens.fontSizeBody,
+                              fontWeight: FontWeight.w500)),
+                    ),
+                    Text('${_fmt(result.personAmounts[e.key])}원',
+                        style: const TextStyle(
+                            color: kDutchTextPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              )).toList(),
+        ),
       ),
     );
   }
@@ -819,8 +808,8 @@ class _ShareResultBtn extends StatelessWidget {
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-              colors: [Color(0xFFF48FB1), kDutchAccent]),
+          gradient:
+              const LinearGradient(colors: [Color(0xFFF48FB1), kDutchAccent]),
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           boxShadow: [
             BoxShadow(

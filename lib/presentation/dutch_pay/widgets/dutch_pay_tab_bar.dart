@@ -13,7 +13,7 @@ class DutchPayTabBar extends StatelessWidget {
   final double pageOffset;
   final ValueChanged<int> onTabSelected;
 
-  static const _labels = ['균등 분배', '개별 계산'];
+  static const _labels = ['1/N 나누기', '각자 계산'];
   static const _tabRowHeight = 40.0;
 
   @override
