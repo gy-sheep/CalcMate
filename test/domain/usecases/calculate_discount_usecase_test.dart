@@ -73,7 +73,7 @@ void main() {
       expect(r.finalPrice, 35000.0);
     });
 
-    test('50,000원 30% 할인 → 절약액 15,000원', () {
+    test('50,000원 30% 할인 → 할인 금액 15,000원', () {
       final r = useCase.calculate(
         originalPrice: '50,000',
         discountRate: '30',
@@ -117,7 +117,7 @@ void main() {
       expect(r.finalPrice, 31500.0);
     });
 
-    test('50,000원 30% + 10% → 절약액 18,500원', () {
+    test('50,000원 30% + 10% → 할인 금액 18,500원', () {
       final r = useCase.calculate(
         originalPrice: '50,000',
         discountRate: '30',

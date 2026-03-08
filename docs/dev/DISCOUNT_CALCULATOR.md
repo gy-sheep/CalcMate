@@ -87,7 +87,7 @@ ref.watch() → rebuild              DiscountResult (순수 계산값)
 | `hasResult` | bool | 원가 > 0 && 할인율 > 0일 때 true |
 | `originalPrice` | double | 파싱된 원가 |
 | `finalPrice` | double | 최종가 (할인 적용) |
-| `savedAmount` | double | 절약액 |
+| `savedAmount` | double | 할인 금액 |
 | `effectiveRate` | double | 실질 할인율 % |
 
 **CalculateDiscountUseCase.calculate()**

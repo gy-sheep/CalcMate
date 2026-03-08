@@ -563,7 +563,7 @@ class _ResultCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '절약액',
+                '할인 금액',
                 style: AppTokens.textStyleBody
                     .copyWith(color: kDiscountTextSecondary),
               ),
