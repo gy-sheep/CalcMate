@@ -390,14 +390,11 @@ class _DiscountRateSection extends StatelessWidget {
                     ),
                     child: Text(
                       chips[i],
-                      style: TextStyle(
+                      style: AppTokens.textStyleChip.copyWith(
                         color: active
                             ? kDiscountChipActiveText
                             : kDiscountChipText,
-                        fontSize: 14,
-                        fontWeight: active
-                            ? FontWeight.w600
-                            : FontWeight.w400,
+                        fontWeight: active ? FontWeight.w600 : null,
                       ),
                     ),
                   ),
@@ -541,14 +538,11 @@ class _ExtraDiscountSection extends StatelessWidget {
                       ),
                       child: Text(
                         chips[i],
-                        style: TextStyle(
+                        style: AppTokens.textStyleChip.copyWith(
                           color: active
                               ? kDiscountChipActiveText
                               : kDiscountChipText,
-                          fontSize: 14,
-                          fontWeight: active
-                              ? FontWeight.w600
-                              : FontWeight.w400,
+                          fontWeight: active ? FontWeight.w600 : null,
                         ),
                       ),
                     ),
@@ -814,9 +808,7 @@ class _KeypadButton extends StatelessWidget {
                 ? Icon(Icons.backspace_outlined, color: color, size: AppTokens.sizeKeypadBackspace)
                 : Text(
                     label,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w400,
+                    style: AppTokens.textStyleKeypadNumber.copyWith(
                       color: color,
                     ),
                   ),
