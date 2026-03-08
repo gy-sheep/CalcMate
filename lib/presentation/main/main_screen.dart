@@ -13,6 +13,7 @@ import 'package:calcmate/presentation/date_calculator/date_calculator_screen.dar
 import 'package:calcmate/presentation/loan_calculator/loan_prototype_hub.dart';
 import 'package:calcmate/presentation/dutch_pay/dutch_pay_screen.dart';
 import 'package:calcmate/presentation/discount_calculator/discount_calculator_screen.dart';
+import 'package:calcmate/presentation/bmi_calculator/bmi_calculator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -266,6 +267,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         return const DutchPayScreen();
       case 'discount_calculator':
         return DiscountCalculatorScreen(title: entry.title);
+      case 'bmi_calculator':
+        return const BmiCalculatorScreen();
       default:
         return null;
     }

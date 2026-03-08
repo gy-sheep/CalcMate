@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_design_tokens.dart';
 
 class CalcModeCard extends StatelessWidget {
   final String title;
@@ -62,11 +63,11 @@ class CalcModeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 44,
-                      height: 44,
+                      width: AppTokens.sizeIconContainer,
+                      height: AppTokens.sizeIconContainer,
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.25),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppTokens.radiusIconContainer),
                       ),
                       child: Icon(icon, color: Colors.white),
                     ),

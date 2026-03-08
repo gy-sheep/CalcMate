@@ -2,15 +2,15 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/discount-calculator`
-> **마지막 완료**: 할인 계산기 Clean Architecture 전환 완료 (ViewModel·UseCase·State·테스트 21케이스)
+> **현재 브랜치**: `feat/bmi-calculator`
+> **마지막 완료**: BMI 계산기 UI 구현 완료 (Phase 9 — 아크 게이지·슬라이더·locale 자동 적용·AppTokens 토큰 6종 추가)
 
 ### 메인 화면 스크롤 성능 개선 (Android 버벅임)
 - [ ] `initState`에서 카드 배경 이미지 13개 `precacheImage` 사전 디코딩
 - [ ] `CalcModeCard` — `Clip.antiAlias` → `Clip.hardEdge` 변경
 - [ ] 각 카드 항목에 `RepaintBoundary` 추가
 
-### Phase 8: 다음 계산기
+### Phase 10: 다음 계산기
 - [ ] 다음 Phase 계산기 선정 및 기획
 
 > **대출 계산기** (Phase 13으로 이동): `docs/specs/LOAN_CALCULATOR.md` 기획 명세 작성 완료, UI 안 선택 및 구현은 추후 진행
@@ -40,6 +40,7 @@
 | — | 메인 화면 순서 편집 (드래그 정렬·설정 드롭다운·순서 저장) | — | — |
 | 7 | 더치페이 계산기 (균등 분배·개별 계산·공유) | 2파일 | `docs/dev/DUTCH_PAY_CALCULATOR_IMPL.md` |
 | 8 | 할인 계산기 (ViewModel·UseCase·State·테스트 21케이스) | 21케이스 | `docs/dev/DISCOUNT_CALCULATOR.md` |
+| 9 | BMI 계산기 (아크 게이지·슬라이더·locale 자동 적용) | — | `docs/design/BMI_CALCULATOR.md` |
 | — | 공통 모듈화: ScrollFadeView·AppAnimatedTabBar·showAppToast + 스크롤 페이드 전체 적용 | — | `docs/plans/REFACTORING_CHECKLIST.md` |
 | — | 디자인 일관성 리팩토링 (토큰 전체 적용·공통 위젯·디자인 문서) | — | `docs/design/` |
 

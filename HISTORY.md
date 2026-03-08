@@ -2,6 +2,36 @@
 
 ---
 
+## 2026-03-08 — BMI 계산기 UI 구현 및 디자인 토큰 정비 (Phase 9)
+
+### 완료 항목
+
+**BMI 계산기 (`lib/presentation/bmi_calculator/bmi_calculator_screen.dart`)**
+- 반원 아크 게이지 (CustomPaint) — 컬러 구간·바늘·easeOutCubic 애니메이션
+- 키·몸무게 슬라이더 카드 — 값 버튼 탭 시 직접 입력 AlertDialog
+- 건강 체중 범위 카드 — 현재 키 기준 정상 체중 역산 표시
+- BMI 범주 안내 그리드 — 4셀 1행(글로벌) / 5셀 3+2행(아시아태평양)
+- WHO 글로벌/아시아태평양 기준 locale 자동 적용 (15개국 아시아태평양)
+- 미터법·야드파운드법 단위 토글 (SharedPreferences 저장)
+- 스크롤 연동 AppBar 블러 처리 (BackdropFilter + AnimatedContainer)
+
+**AppTokens 토큰 6종 추가 (`lib/core/theme/app_design_tokens.dart`)**
+- `textStyleResult52` — BMI 수치 표시 (52sp / w300)
+- `heightSliderTrack` — 슬라이더 트랙 높이 (4)
+- `radiusSliderThumb` — 슬라이더 thumb 반지름 (10)
+- `sizeIconMedium` — 아이콘 중형 (22)
+- `sizeIconContainer` — 아이콘 컨테이너 크기 (44)
+- `radiusIconContainer` — 아이콘 컨테이너 borderRadius (10)
+
+**CalcModeCard 토큰 적용 (`lib/presentation/widgets/calc_mode_card.dart`)**
+- 아이콘 컨테이너 `44×44` / `borderRadius: 10` → `sizeIconContainer` / `radiusIconContainer`
+
+**문서**
+- `docs/specs/BMI_CALCULATOR.md` — 기획 명세 신규 작성
+- `docs/design/BMI_CALCULATOR.md` — 화면 디자인 문서 신규 작성
+
+---
+
 ## 2026-03-08 — 할인 계산기 Clean Architecture 전환 (Phase 8 완료)
 
 ### 완료 항목

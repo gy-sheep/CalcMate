@@ -80,6 +80,13 @@ abstract class AppTokens {
     height: 1.1,
   );
 
+  /// 결과값 표시 — 52sp (BMI 수치)
+  static const TextStyle textStyleResult52 = TextStyle(
+    fontSize: 52,
+    fontWeight: FontWeight.w300,
+    height: 1.0,
+  );
+
   /// 결과값 표시 — 48sp (날짜 D-Day)
   static const TextStyle textStyleResult48 = TextStyle(
     fontSize: 48,
@@ -206,6 +213,12 @@ abstract class AppTokens {
   /// 키패드 입력 영역 밑줄 두께
   static const double thicknessInputUnderline = 1.5;
 
+  /// 슬라이더 트랙 높이
+  static const double heightSliderTrack = 4;
+
+  /// 슬라이더 thumb 반지름
+  static const double radiusSliderThumb = 10;
+
   /// 키패드 백스페이스 아이콘 크기
   static const double sizeKeypadBackspace = 26;
 
@@ -214,6 +227,15 @@ abstract class AppTokens {
 
   /// 아이콘 — 소형
   static const double sizeIconSmall = 20;
+
+  /// 아이콘 — 중형
+  static const double sizeIconMedium = 22;
+
+  /// 아이콘 컨테이너 크기 (메인 카드·건강 정보 카드 등)
+  static const double sizeIconContainer = 44;
+
+  /// 아이콘 컨테이너 borderRadius
+  static const double radiusIconContainer = 10;
 
   /// 아이콘 — 스텝 버튼 (±, ◀▶ 등)
   static const double sizeIconStep = 18;
