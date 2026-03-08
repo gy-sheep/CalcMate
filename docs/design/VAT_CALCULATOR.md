@@ -18,20 +18,21 @@
 
 ## 레이아웃 & 스타일
 
+### 공급가액 모드
+
 ```
 ┌──────────────────────────────────┐
 │  ←  부가세 계산기                │  ← ❶ AppBar
 ├──────────────────────────────────┤
 │  ╭~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~╮  ← ❷ 영수증 카드 (ReceiptCard)
-│  │              120,000          │     상단/하단 스캘럽(톱니) 테두리
+│  │              100,000          │     ← ❷ 입력 디스플레이 (우측 정렬)
 │  │  ····························  │     ← ❸ 점선 구분선
-│  │  ☐  부가세 별도              │     ← ❹ 모드 체크박스
+│  │  공급가액  |  합계금액         │     ← ❹ 인라인 토글 (좌측 정렬)
 │  │  ····························  │     ← ❸ 점선 구분선
-│  │                                │
-│  │  공급가액          109,091    │     ← ❺ 세액 명세 행
-│  │  부가세 (10% ℹ)    10,909    │     ← ❻ 세율 행 (탭하여 직접 편집)
+│  │  공급가액          100,000    │     ← ❺ 공급가액 행 (입력값)
+│  │  부가세 (10% ℹ)    10,000    │     ← ❻ 세율 행
 │  │  ────────────────────────────  │     ← ❼ 실선 구분선
-│  │  합계             120,000    │     ← ❽ 합계 행
+│  │  합계             110,000    │     ← ❽ 합계 행 (강조)
 │  ╰~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~╯
 ├──────────────────────────────────┤  ← ❾ 구분선
 │  7  │   8  │   9  │  ⌫         │  ← ❿ 숫자·기능 버튼
@@ -41,8 +42,29 @@
 └──────────────────────────────────┘
 ```
 
+### 합계금액 모드
+
+```
+┌──────────────────────────────────┐
+│  ←  부가세 계산기                │  ← ❶ AppBar
+├──────────────────────────────────┤
+│  ╭~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~╮  ← ❷ 영수증 카드 (ReceiptCard)
+│  │              110,000          │     ← ❷ 입력 디스플레이 (합계금액)
+│  │  ····························  │     ← ❸ 점선 구분선
+│  │  공급가액  |  합계금액         │     ← ❹ 인라인 토글 (좌측 정렬)
+│  │  ····························  │     ← ❸ 점선 구분선
+│  │  합계              110,000    │     ← ❺ 합계 행 (입력값)
+│  │  부가세 (10% ℹ)    10,000    │     ← ❻ 세율 행
+│  │  ────────────────────────────  │     ← ❼ 실선 구분선
+│  │  공급가액          100,000    │     ← ❽ 공급가액 행 (강조)
+│  ╰~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~╯
+└──────────────────────────────────┘
+```
+
 > **구조 메모**: `ReceiptCard`(Expanded) + `Divider` + `VatNumberPad` + `AdBannerPlaceholder` 의 세로 구성.
 > 영수증 카드는 `ClipPath(ReceiptClipper)`로 상단·하단에 스캘럽(반원 톱니) 효과를 적용한다.
+> 인라인 토글(❹)은 기존 체크박스 자리(점선 구분선 사이)에 좌측 정렬로 위치한다.
+> ❺ 첫 번째 행 라벨·값, ❽ 강조 행 라벨·값이 모드에 따라 변경된다.
 > 세율 행의 `%` 수치를 탭하면 `InputTarget.taxRate`로 전환되어 키패드 입력이 세율을 수정한다.
 > 키패드는 연산자 버튼 없이 숫자·기능 버튼만 구성되며, `=` 버튼이 우측 하단 2행을 병합한다.
 
@@ -77,11 +99,8 @@
 |---|------|------|------|------|
 | ❷ | 입력 디스플레이 | `FittedBox` > `Text` | `textStyleResult40` 40sp / w300 / letterSpacing:-1 | `kVatReceiptText` #2C2C2C |
 | ❸ | 점선 구분선 | `CustomPaint(DashedLinePainter)` | — | `kVatReceiptDash` #CCCCCC / dash:5 space:3 |
-| ❹ | 체크박스 | `Checkbox` (`sizeCheckboxLarge` 20 × 20) | shrinkWrap / visualDensity(-4,-4) | 활성배경: `kVatReceiptText` / 체크: `kVatReceiptBg` / 테두리: `kVatReceiptSecondary` w1.5 |
-| ❹ | 체크박스↔라벨 간격 | `SizedBox` | — | width: 6 |
-| ❹ | 체크박스 레이블 | `Text` | `textStyleCheckboxLabelLarge` 16sp / w400 / height:1.0 | `kVatReceiptSecondary` #888888 |
-| ❺ | 공급가액 라벨 | `ReceiptRow` > `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 |
-| ❺ | 공급가액 금액 | `ReceiptRow` > `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 |
+| ❹ | 인라인 토글 | `VatModeToggle` | `textStyleCheckboxLabelLarge` 16sp | 선택: `kVatReceiptText` w600 / 미선택: `kVatReceiptSecondary` w400 |
+| ❺ | 첫 번째 행 라벨·금액 | `ReceiptRow` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 · **모드에 따라 공급가액 or 합계** |
 | ❻ | 세율 레이블 "부가세 (" ")") | `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 |
 | ❻ | 세율 칩 (비활성) | `Container` > `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` / 배경 transparent |
 | ❻ | 세율 칩 (활성·편집 중) | `Container` > `Text` | `textStyleCaption` 14sp / w700 | `kVatColorEquals` / 배경 `kVatColorEquals` 15% / 실선 테두리 `kVatColorEquals` w1.5 / radius:4 |
@@ -89,8 +108,32 @@
 | ❻ | 세율 정보 아이콘 | `Icon(info_outline)` | `sizeIconSmall` 20 | `kVatReceiptSecondary` #888888 |
 | ❻ | 부가세 금액 | `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 |
 | ❼ | 실선 구분선 | `Container` | h: 1.5 | `kVatReceiptDivider` #444444 |
-| ❽ | 합계 라벨 | `Text` | `textStyleResult18` 18sp / w700 | `kVatReceiptText` #2C2C2C |
-| ❽ | 합계 금액 | `Text` | `textStyleResult22` 22sp / w700 | `kVatReceiptText` #2C2C2C |
+| ❽ | 강조 라벨 | `Text` | `textStyleResult18` 18sp / w700 | `kVatReceiptText` #2C2C2C · **모드에 따라 합계 or 공급가액** |
+| ❽ | 강조 금액 | `Text` | `textStyleResult22` 22sp / w700 | `kVatReceiptText` #2C2C2C |
+
+**모드별 행 구성 요약**
+
+| # | 공급가액 모드 | 합계금액 모드 |
+|---|------------|------------|
+| ❺ | 공급가액 (입력값) | 합계 (입력값) |
+| ❻ | 부가세 | 부가세 |
+| ❽ | **합계** (강조) | **공급가액** (강조) |
+
+---
+
+## ❹ 인라인 토글 (`VatModeToggle`)
+
+```
+공급가액  │  합계금액
+```
+
+| 속성 | 값 |
+|------|----|
+| 레이아웃 | `Row` · `mainAxisAlignment: start` |
+| 선택 텍스트 | `kVatReceiptText` #2C2C2C / w600 |
+| 미선택 텍스트 | `kVatReceiptSecondary` #888888 / w400 |
+| 구분선 | `kVatReceiptDash` #CCCCCC · 세로선 w:1 h:14 · 좌우 margin: 12 |
+| 터치 영역 | `GestureDetector(HitTestBehavior.opaque)` · vertical padding: 4 |
 
 ---
 
@@ -172,8 +215,8 @@
 | `kVatReceiptBg` | `#F5F5F0` | 영수증 카드 배경 (크림색) |
 | `kVatReceiptText` | `#2C2C2C` | 영수증 카드 주 텍스트 |
 | `kVatReceiptSecondary` | `#888888` | 영수증 카드 보조 텍스트 |
-| `kVatReceiptDash` | `#CCCCCC` | 점선 구분선 |
-| `kVatReceiptDivider` | `#444444` | 실선 구분선 (합계 위) |
+| `kVatReceiptDash` | `#CCCCCC` | 점선 구분선 · 토글 세로 구분선 |
+| `kVatReceiptDivider` | `#444444` | 실선 구분선 (강조 행 위) |
 | `kVatDivider` | `Colors.white` 33% | 키패드 구분선 · Bottom Sheet 구분선 |
 | `kVatColorNumber` | `Colors.white` | 숫자 버튼 텍스트 |
 | `kVatColorOperator` | `#A78BFA` | 연산자 버튼 텍스트 (라벤더) — 정의됨, 현재 키패드 미사용 |

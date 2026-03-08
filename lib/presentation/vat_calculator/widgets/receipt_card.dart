@@ -28,6 +28,8 @@ class ReceiptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isExclusive = state.mode == VatMode.exclusive;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: ClipPath(
@@ -75,37 +77,11 @@ class ReceiptCard extends StatelessWidget {
                   size: const Size(double.infinity, 1),
                 ),
                 const SizedBox(height: 8),
-                // ── 부가세 별도 체크박스 ──
-                Transform.translate(
-                  offset: const Offset(-11, 0),
-                  child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: AppTokens.sizeCheckboxLarge,
-                      height: AppTokens.sizeCheckboxLarge,
-                      child: Checkbox(
-                        value: state.mode == VatMode.exclusive,
-                        onChanged: (v) => vm.handleIntent(
-                          VatCalculatorIntent.modeChanged(
-                            v == true ? VatMode.exclusive : VatMode.inclusive,
-                          ),
-                        ),
-                        activeColor: kVatReceiptText,
-                        checkColor: kVatReceiptBg,
-                        side: const BorderSide(color: kVatReceiptSecondary, width: 1.5),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '부가세 별도',
-                      style: AppTokens.textStyleCheckboxLabelLarge
-                          .copyWith(color: kVatReceiptSecondary),
-                    ),
-                  ],
-                  ),
+                // ── 모드 토글 ──
+                VatModeToggle(
+                  mode: state.mode,
+                  onChanged: (mode) =>
+                      vm.handleIntent(VatCalculatorIntent.modeChanged(mode)),
                 ),
                 const SizedBox(height: 8),
                 // ── 점선 구분선 ──
@@ -115,30 +91,40 @@ class ReceiptCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 // ── 세액 명세 ──
-                ReceiptRow(
-                  label: '공급가액',
-                  amount:
-                      '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
-                ),
-                const SizedBox(height: 10),
-                _buildTaxRateRow(),
+                if (isExclusive) ...[
+                  ReceiptRow(
+                    label: '공급가액',
+                    amount: '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
+                  ),
+                  const SizedBox(height: 10),
+                  _buildTaxRateRow(),
+                ] else ...[
+                  ReceiptRow(
+                    label: '합계',
+                    amount: '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원',
+                  ),
+                  const SizedBox(height: 10),
+                  _buildTaxRateRow(),
+                ],
                 const SizedBox(height: 16),
                 // ── 실선 구분선 ──
                 Container(height: 1.5, color: kVatReceiptDivider),
                 const SizedBox(height: 12),
-                // ── 합계 ──
+                // ── 강조 행 ──
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '합계',
+                      isExclusive ? '합계' : '공급가액',
                       style: AppTokens.textStyleResult18.copyWith(
                         color: kVatReceiptText,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
-                      '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원',
+                      isExclusive
+                          ? '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원'
+                          : '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
                       style: AppTokens.textStyleResult22.copyWith(
                         fontWeight: FontWeight.w700,
                         color: kVatReceiptText,
@@ -215,6 +201,57 @@ class ReceiptCard extends StatelessWidget {
           style: AppTokens.textStyleCaption.copyWith(color: kVatReceiptSecondary),
         ),
       ],
+    );
+  }
+}
+
+// ──────────────────────────────────────────
+// 모드 토글
+// ──────────────────────────────────────────
+class VatModeToggle extends StatelessWidget {
+  final VatMode mode;
+  final ValueChanged<VatMode> onChanged;
+
+  const VatModeToggle({
+    super.key,
+    required this.mode,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        _buildOption('공급가액', VatMode.exclusive),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Container(
+            width: 1,
+            height: 14,
+            color: kVatReceiptDash,
+          ),
+        ),
+        _buildOption('합계금액', VatMode.inclusive),
+      ],
+    );
+  }
+
+  Widget _buildOption(String label, VatMode targetMode) {
+    final isSelected = mode == targetMode;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => onChanged(targetMode),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          label,
+          style: AppTokens.textStyleCheckboxLabelLarge.copyWith(
+            color: isSelected ? kVatReceiptText : kVatReceiptSecondary,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
+      ),
     );
   }
 }

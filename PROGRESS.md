@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/splash-screen`
-> **마지막 완료**: 스플래시 화면 추가 (네이티브 배경 + Flutter shimmer 애니메이션)
+> **현재 브랜치**: `fix/vat-checkbox-tap-target`
+> **마지막 완료**: 부가세 계산기 모드 토글 및 결과 카드 UX 개선
 
 ### Phase 10: 다음 계산기
 - [ ] 다음 Phase 계산기 선정 및 기획
@@ -23,13 +23,13 @@
 | 1 | 기본 계산기 (괄호·수식·뉴모피즘) | 116케이스 | `docs/dev/BASIC_CALCULATOR_IMPL.md` |
 | 2 | 환율 계산기 (Firebase·Firestore) | — | — |
 | 3 | 단위 변환기 (10개 카테고리) | 24케이스 | `docs/dev/UNIT_CONVERTER_IMPL.md` |
-| 4 | 부가세 계산기 (영수증 UI) | 54케이스 | — |
+| 4 | 부가세 계산기 (영수증 UI) | 54케이스 | `docs/dev/VAT_CALCULATOR_IMPL.md` |
 | 5 | 나이 계산기 (음력·띠·별자리) | 19케이스 | `docs/dev/AGE_CALCULATOR.md` |
 | 6 | 날짜 계산기 (3모드·D-Day) | 28케이스 | `docs/dev/DATE_CALCULATOR_IMPL.md` |
 | — | 위젯 분리 리팩토링 (6개 계산기) | — | 각 구현 명세 참고 |
 | — | Container Transform 전환 애니메이션 | — | — |
 | — | AppBar 리팩토링 (Scaffold.appBar 통일, 아이콘 제거) | — | `docs/architecture/ARCHITECTURE.md` |
-| — | 부가세·나이 계산기 모드 전환 UI 체크박스 교체 | — | — |
+| — | 부가세 계산기 모드 전환 UI 체크박스 → 인라인 토글 교체 + 결과 카드 UX 개선 | — | `docs/dev/VAT_CALCULATOR_IMPL.md` |
 | — | 광고 배너 플레이스홀더 (6개 화면, AppConfig.isPremium 플래그) | — | — |
 | — | 다국어 날짜 피커 (flutter_localizations) | — | — |
 | — | 메인 화면 순서 편집 (드래그 정렬·설정 드롭다운·순서 저장) | — | — |
