@@ -175,19 +175,21 @@ BMI(Body Mass Index)는 키와 몸무게로 산출하는 체질량지수로, 자
 ## 데이터 모델
 
 ```
-BmiState {
+BmiCalculatorState (Freezed) {
   double heightCm          // 항상 cm로 저장
   double weightKg          // 항상 kg으로 저장
-  UnitSystem unitSystem    // metric | imperial
+  bool isMetric            // true: metric, false: imperial
   BmiStandard standard     // global | asian (locale 자동 감지, 수동 변경 불가)
 }
 
 BmiResult {
   double bmi
-  BmiCategoryDef category  // 기준별 범주 정의 (label, rangeLabel, color, min, max)
-  double healthyWeightMin  // 적용 기준 정상 범주 하한 체중
-  double healthyWeightMax  // 적용 기준 정상 범주 상한 체중
+  BmiCategoryDef category       // 기준별 범주 정의 (label, rangeLabel, color, min, max)
+  List<BmiCategoryDef> categories // 적용 기준의 전체 범주 목록
+  double healthyWeightMinKg     // 적용 기준 정상 범주 하한 체중 (kg)
+  double healthyWeightMaxKg     // 적용 기준 정상 범주 상한 체중 (kg)
   bool isInHealthyRange
+  BmiStandard standard          // 적용 기준
 }
 ```
 

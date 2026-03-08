@@ -2,6 +2,31 @@
 
 ---
 
+## 2026-03-08 — BMI 계산기 ViewModel·UseCase·State 구현 및 위젯 분리
+
+### 완료 항목
+
+**Clean Architecture 전환**
+- `BmiCalculateUseCase` — BMI 계산·범주 판정(글로벌 4범주/아시아 5범주)·건강 체중 역산·locale 헬퍼
+- `BmiCalculatorState` (Freezed) — heightCm, weightKg, isMetric, standard
+- `BmiCalculatorViewModel` — sealed Intent + SharedPreferences 단위 저장/복원
+- Screen: `StatefulWidget` → `ConsumerStatefulWidget` 전환 (886줄 → ~170줄)
+
+**위젯 분리 (4개)**
+- `widgets/bmi_gauge.dart` — 아크 게이지 + GaugePainter
+- `widgets/bmi_input_slider.dart` — 슬라이더 카드
+- `widgets/bmi_healthy_weight_card.dart` — 건강 체중 범위 카드
+- `widgets/bmi_category_grid.dart` — 범주 안내 그리드
+
+**테스트**
+- `test/domain/usecases/bmi_calculate_usecase_test.dart` — 27케이스
+
+**문서**
+- `docs/dev/BMI_CALCULATOR_IMPL.md` — 구현 명세 신규 작성
+- `docs/specs/BMI_CALCULATOR.md` — 데이터 모델 섹션 실제 구현 반영
+
+---
+
 ## 2026-03-08 — BMI 계산기 UI 구현 및 디자인 토큰 정비 (Phase 9)
 
 ### 완료 항목
