@@ -18,3 +18,8 @@ flutter clean && flutter pub get && cd ios && rm -rf Pods Podfile.lock && pod in
 ```
 flutter build ios --release
 ```
+
+## Claude Flutter Dev Plugin Install
+```
+/plugin install /Users/sgy/develop/flutter-dev-plugin
+```

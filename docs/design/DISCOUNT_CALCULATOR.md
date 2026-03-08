@@ -215,7 +215,7 @@
 | ❼ | 버튼 높이 | `SizedBox` | — | `heightButtonLarge` 68 |
 | ❼ | 버튼 터치 효과 | `Material` + `InkWell` | — | splashColor / highlightColor: `Colors.white10` |
 
-> 원가 입력 시 소수점(.) 불가. 할인율 입력 시 소수점 가능 (최대 99.9%).
+> 원가 입력 시 소수점(.) 불가. 할인율 입력 시 정수만 가능 (최대 99).
 
 ---
 

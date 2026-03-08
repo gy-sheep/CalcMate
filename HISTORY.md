@@ -2,6 +2,27 @@
 
 ---
 
+## 2026-03-08 — 할인 계산기 Clean Architecture 전환 (Phase 8 완료)
+
+### 완료 항목
+
+**할인 계산기 아키텍처 전환**
+- `DiscountCalculatorState` (Freezed) — `ActiveField` enum 포함
+- `CalculateDiscountUseCase` — 순수 계산 로직 분리, `formatPrice` static 헬퍼
+- `DiscountCalculatorViewModel` — sealed Intent 패턴 (keyPressed·chipSelected·fieldTapped·toggleExtraDiscount)
+- `DiscountCalculatorScreen` — `StatefulWidget` 인라인 로직 → `ConsumerWidget` 전환
+
+**테스트**
+- `test/domain/usecases/calculate_discount_usecase_test.dart` — 21케이스
+  (hasResult / 기본 할인 / 중첩 할인 복리 / 엣지 케이스 / formatPrice)
+
+**문서**
+- `docs/dev/DISCOUNT_CALCULATOR.md` — 구현 명세 신규 작성
+- `docs/specs/DISCOUNT_CALCULATOR.md` — 키패드 소수점·AC 오기재 수정
+- `docs/design/DISCOUNT_CALCULATOR.md` — 키패드 소수점 설명 수정
+
+---
+
 ## 2026-03-07 — 디자인 일관성 리팩토링
 
 ### 완료 항목
