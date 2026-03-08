@@ -19,10 +19,13 @@ class CalcModeCard extends StatelessWidget {
     this.trailingOverride,
   });
 
-  Widget _buildImage() {
+  Widget _buildImage(BuildContext context) {
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final cacheHeight = (120 * devicePixelRatio).round();
     return Image.asset(
       imagePath,
       fit: BoxFit.cover,
+      cacheHeight: cacheHeight,
       errorBuilder: (_, _, _) => Container(color: Colors.blueGrey),
     );
   }
@@ -30,14 +33,15 @@ class CalcModeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 4,
+      shadowColor: Colors.black,
       color: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: Clip.hardEdge,
       child: Stack(
         children: [
           Positioned.fill(
-            child: _buildImage(),
+            child: _buildImage(context),
           ),
           Positioned.fill(
             child: Container(

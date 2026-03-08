@@ -2,13 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/bmi-calculator`
-> **마지막 완료**: BMI 계산기 ViewModel·UseCase·State 구현 + 위젯 분리 + 테스트 27케이스 (Clean Architecture 전환)
-
-### 메인 화면 스크롤 성능 개선 (Android 버벅임)
-- [ ] `initState`에서 카드 배경 이미지 13개 `precacheImage` 사전 디코딩
-- [ ] `CalcModeCard` — `Clip.antiAlias` → `Clip.hardEdge` 변경
-- [ ] 각 카드 항목에 `RepaintBoundary` 추가
+> **현재 브랜치**: `fix/main-scroll-performance`
+> **마지막 완료**: 메인 화면 스크롤 성능 개선 + 카드 shadow 조정
 
 ### Phase 10: 다음 계산기
 - [ ] 다음 Phase 계산기 선정 및 기획

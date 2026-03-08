@@ -2,6 +2,22 @@
 
 ---
 
+## 2026-03-08 — 메인 화면 스크롤 성능 개선 및 카드 shadow 조정
+
+### 완료 항목
+
+**스크롤 성능 개선**
+- `CalcModeCard._buildImage` — `cacheHeight` 추가 (devicePixelRatio 기반 이미지 디코딩 최적화)
+- `CalcModeCard` — `Clip.antiAlias` → `Clip.hardEdge` 변경
+- 각 카드 항목에 `RepaintBoundary` 추가
+- `initState`에서 `precacheImage`로 배경 이미지 13개 사전 로딩
+
+**카드 shadow 조정**
+- `OpenContainer.closedElevation` 제거 (0으로 변경)
+- `Card.elevation` 4 + `shadowColor: Colors.black`으로 통일
+
+---
+
 ## 2026-03-08 — BMI 계산기 ViewModel·UseCase·State 구현 및 위젯 분리
 
 ### 완료 항목

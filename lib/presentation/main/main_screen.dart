@@ -14,6 +14,7 @@ import 'package:calcmate/presentation/loan_calculator/loan_prototype_hub.dart';
 import 'package:calcmate/presentation/dutch_pay/dutch_pay_screen.dart';
 import 'package:calcmate/presentation/discount_calculator/discount_calculator_screen.dart';
 import 'package:calcmate/presentation/bmi_calculator/bmi_calculator_screen.dart';
+import 'package:calcmate/core/config/calc_mode_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,6 +37,15 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _precacheCardImages();
+  }
+
+  void _precacheCardImages() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final entry in kCalcModeEntries) {
+        precacheImage(AssetImage(entry.imagePath), context);
+      }
+    });
   }
 
   void _onScroll() {
@@ -159,39 +169,43 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         final entry = state.entries[index];
         final screen = _buildScreen(entry);
         if (screen != null) {
-          return OpenContainer(
-            transitionDuration: const Duration(milliseconds: 400),
-            closedShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+          return RepaintBoundary(
+            child: OpenContainer(
+              transitionDuration: const Duration(milliseconds: 400),
+              closedShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              closedElevation: 0,
+              openElevation: 0,
+              closedColor: Colors.transparent,
+              openColor: Colors.transparent,
+              closedBuilder: (context, openContainer) {
+                return CalcModeCard(
+                  title: entry.title,
+                  description: entry.description,
+                  icon: entry.icon,
+                  imagePath: entry.imagePath,
+                  onTap: openContainer,
+                );
+              },
+              openBuilder: (context, _) {
+                return EdgeSwipeBack(child: screen);
+              },
             ),
-            closedElevation: 2,
-            openElevation: 0,
-            closedColor: Colors.transparent,
-            openColor: Colors.transparent,
-            closedBuilder: (context, openContainer) {
-              return CalcModeCard(
-                title: entry.title,
-                description: entry.description,
-                icon: entry.icon,
-                imagePath: entry.imagePath,
-                onTap: openContainer,
-              );
-            },
-            openBuilder: (context, _) {
-              return EdgeSwipeBack(child: screen);
-            },
           );
         }
-        return CalcModeCard(
-          title: entry.title,
-          description: entry.description,
-          icon: entry.icon,
-          imagePath: entry.imagePath,
-          onTap: () {
-            ref
-                .read(mainScreenViewModelProvider.notifier)
-                .handleIntent(MainScreenIntent.cardTapped(entry.id));
-          },
+        return RepaintBoundary(
+          child: CalcModeCard(
+            title: entry.title,
+            description: entry.description,
+            icon: entry.icon,
+            imagePath: entry.imagePath,
+            onTap: () {
+              ref
+                  .read(mainScreenViewModelProvider.notifier)
+                  .handleIntent(MainScreenIntent.cardTapped(entry.id));
+            },
+          ),
         );
       },
     );
@@ -219,16 +233,18 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         return Padding(
           key: ValueKey(entry.id),
           padding: const EdgeInsets.only(bottom: 16),
-          child: CalcModeCard(
-            title: entry.title,
-            description: entry.description,
-            icon: entry.icon,
-            imagePath: entry.imagePath,
-            trailingOverride: Listener(
-              onPointerDown: (_) => HapticFeedback.mediumImpact(),
-              child: ReorderableDragStartListener(
-                index: index,
-                child: const _DragHandleIcon(),
+          child: RepaintBoundary(
+            child: CalcModeCard(
+              title: entry.title,
+              description: entry.description,
+              icon: entry.icon,
+              imagePath: entry.imagePath,
+              trailingOverride: Listener(
+                onPointerDown: (_) => HapticFeedback.mediumImpact(),
+                child: ReorderableDragStartListener(
+                  index: index,
+                  child: const _DragHandleIcon(),
+                ),
               ),
             ),
           ),
