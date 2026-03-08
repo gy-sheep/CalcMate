@@ -89,7 +89,7 @@ class _AmountCard extends StatelessWidget {
           ? () => vm.handleIntent(const DutchPayIntent.keyPressed('C'))
           : null,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        padding: AppTokens.paddingInputField,
         decoration: BoxDecoration(
           color: kDutchCardBg,
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),

@@ -1,9 +1,26 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../presentation/widgets/scroll_fade_view.dart';
 import 'discount_calculator_colors.dart';
+
+String _getCurrencySymbol() {
+  const map = <String, String>{
+    'KR': '₩',
+    'US': '\$', 'CA': '\$',
+    'JP': '¥', 'CN': '¥',
+    'GB': '£',
+    'DE': '€', 'FR': '€', 'IT': '€', 'ES': '€', 'NL': '€',
+    'PT': '€', 'AT': '€', 'BE': '€', 'FI': '€', 'IE': '€',
+    'IN': '₹',
+    'AU': 'A\$',
+  };
+  final code = PlatformDispatcher.instance.locale.countryCode?.toUpperCase();
+  return map[code] ?? '';
+}
 
 // ──────────────────────────────────────────
 // UI 프로토타입 — 실제 ViewModel/UseCase 없음
@@ -180,6 +197,7 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
                       _OriginalPriceField(
                         value: _originalPrice,
                         isActive: _activeField == _ActiveField.originalPrice,
+                        currencySymbol: _getCurrencySymbol(),
                         onTap: () => setState(
                             () => _activeField = _ActiveField.originalPrice),
                       ),
@@ -229,6 +247,7 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
                           effectiveRate: _effectiveRate,
                           discountRate: _rate,
                           extraRate: _showExtra ? _extra : null,
+                          currencySymbol: _getCurrencySymbol(),
                           formatPrice: _formatPrice,
                         ),
                     ],
@@ -257,11 +276,13 @@ class _DiscountCalculatorScreenState extends State<DiscountCalculatorScreen>
 class _OriginalPriceField extends StatelessWidget {
   final String value;
   final bool isActive;
+  final String currencySymbol;
   final VoidCallback onTap;
 
   const _OriginalPriceField({
     required this.value,
     required this.isActive,
+    required this.currencySymbol,
     required this.onTap,
   });
 
@@ -274,9 +295,9 @@ class _OriginalPriceField extends StatelessWidget {
         children: [
           Text(
             '원가',
-            style: AppTokens.textStyleCaption.copyWith(
+            style: AppTokens.textStyleLabelLarge.copyWith(
               color: kDiscountTextSecondary,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
             ),
           ),
@@ -284,7 +305,7 @@ class _OriginalPriceField extends StatelessWidget {
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                AppTokens.paddingInputField,
             decoration: BoxDecoration(
               color: kDiscountFieldBg,
               borderRadius: BorderRadius.circular(AppTokens.radiusInput),
@@ -297,17 +318,18 @@ class _OriginalPriceField extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Text(
-                  '₩',
-                  style: TextStyle(
-                    color: isActive
-                        ? kDiscountAccent
-                        : kDiscountTextSecondary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
+                if (currencySymbol.isNotEmpty) ...[
+                  Text(
+                    currencySymbol,
+                    style: AppTokens.textStyleResult18.copyWith(
+                      color: isActive
+                          ? kDiscountAccent
+                          : kDiscountTextSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
+                  const SizedBox(width: 8),
+                ],
                 Expanded(
                   child: Text(
                     value.isEmpty ? '0' : value,
@@ -355,9 +377,9 @@ class _DiscountRateSection extends StatelessWidget {
       children: [
         Text(
           '할인율',
-          style: AppTokens.textStyleCaption.copyWith(
+          style: AppTokens.textStyleLabelLarge.copyWith(
             color: kDiscountTextSecondary,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
           ),
         ),
@@ -410,7 +432,7 @@ class _DiscountRateSection extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                AppTokens.paddingInputField,
             decoration: BoxDecoration(
               color: kDiscountFieldBg,
               borderRadius: BorderRadius.circular(AppTokens.radiusInput),
@@ -437,11 +459,10 @@ class _DiscountRateSection extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   '%',
-                  style: TextStyle(
+                  style: AppTokens.textStyleResult18.copyWith(
                     color: isActive
                         ? kDiscountAccent
                         : kDiscountTextSecondary,
-                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -493,15 +514,13 @@ class _ExtraDiscountSection extends StatelessWidget {
               Icon(
                 show ? Icons.remove_circle_outline : Icons.add_circle_outline,
                 color: kDiscountAccent,
-                size: 18,
+                size: AppTokens.sizeIconSmall,
               ),
               const SizedBox(width: 6),
               Text(
                 show ? '추가 할인 제거' : '추가 할인 쌓기',
-                style: const TextStyle(
+                style: AppTokens.textStyleSectionTitle.copyWith(
                   color: kDiscountAccent,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -522,8 +541,7 @@ class _ExtraDiscountSection extends StatelessWidget {
                     onTap: () => onChipTap(i),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 180),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                      padding: AppTokens.paddingChip,
                       decoration: BoxDecoration(
                         color: active
                             ? kDiscountChipActiveBg
@@ -557,7 +575,7 @@ class _ExtraDiscountSection extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  AppTokens.paddingInputField,
               decoration: BoxDecoration(
                 color: kDiscountFieldBg,
                 borderRadius: BorderRadius.circular(AppTokens.radiusInput),
@@ -584,11 +602,10 @@ class _ExtraDiscountSection extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     '%',
-                    style: TextStyle(
+                    style: AppTokens.textStyleResult18.copyWith(
                       color: isActive
                           ? kDiscountAccent
                           : kDiscountTextSecondary,
-                      fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -612,6 +629,7 @@ class _ResultCard extends StatelessWidget {
   final double effectiveRate;
   final double discountRate;
   final double? extraRate;
+  final String currencySymbol;
   final String Function(double) formatPrice;
 
   const _ResultCard({
@@ -621,6 +639,7 @@ class _ResultCard extends StatelessWidget {
     required this.effectiveRate,
     required this.discountRate,
     required this.extraRate,
+    required this.currencySymbol,
     required this.formatPrice,
   });
 
@@ -632,7 +651,7 @@ class _ResultCard extends StatelessWidget {
         : '${discountRate.toStringAsFixed(discountRate % 1 == 0 ? 0 : 1)}%';
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: AppTokens.paddingCard,
       decoration: BoxDecoration(
         color: kDiscountCardBg,
         borderRadius: BorderRadius.circular(AppTokens.radiusCard),
@@ -645,23 +664,21 @@ class _ResultCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                '₩${formatPrice(originalPrice)}',
-                style: const TextStyle(
+                '$currencySymbol${formatPrice(originalPrice)}',
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSecondary,
-                  fontSize: 15,
                   decoration: TextDecoration.lineThrough,
                   decorationColor: kDiscountTextSecondary,
                 ),
               ),
               const SizedBox(width: 8),
               const Icon(Icons.arrow_forward,
-                  color: kDiscountTextSecondary, size: 14),
+                  color: kDiscountTextSecondary, size: AppTokens.sizeIconXSmall),
               const SizedBox(width: 8),
               Text(
-                '₩${formatPrice(finalPrice)}',
-                style: const TextStyle(
+                '$currencySymbol${formatPrice(finalPrice)}',
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextPrimary,
-                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -681,7 +698,7 @@ class _ResultCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '- ₩${formatPrice(savedAmount)}',
+                '- $currencySymbol${formatPrice(savedAmount)}',
                 style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSavings,
                   fontWeight: FontWeight.w600,
@@ -716,14 +733,13 @@ class _ResultCard extends StatelessWidget {
             children: [
               Text(
                 '최종가',
-                style: AppTokens.textStyleCaption.copyWith(
+                style: AppTokens.textStyleBody.copyWith(
                   color: kDiscountTextSecondary,
-                  letterSpacing: 0.5,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
-                '₩${formatPrice(finalPrice)}',
+                '$currencySymbol${formatPrice(finalPrice)}',
                 style: AppTokens.textStyleResult36.copyWith(
                   color: kDiscountTextFinalPrice,
                   letterSpacing: -1,

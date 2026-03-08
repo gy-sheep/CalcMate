@@ -175,6 +175,12 @@ abstract class AppTokens {
   /// 칩 내부 패딩 (카테고리 탭, 선택 칩 등)
   static const EdgeInsets paddingChip = EdgeInsets.symmetric(horizontal: 14, vertical: 8);
 
+  /// 숫자 입력 필드 내부 패딩 (더치페이 총금액, 할인 계산기 등)
+  static const EdgeInsets paddingInputField = EdgeInsets.symmetric(horizontal: 20, vertical: 14);
+
+  /// 결과 카드 내부 패딩 (나이 계산기 AgeCard, 할인 계산기 ResultCard 등)
+  static const EdgeInsets paddingCard = EdgeInsets.all(20);
+
   // ── Component ────────────────────────────────────────────────
   /// AppBar 뒤로가기 아이콘 크기
   static const double sizeAppBarBackIcon = 20;

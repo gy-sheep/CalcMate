@@ -13,7 +13,7 @@ class AgeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AgeInfoCard(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: AppTokens.paddingCard,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

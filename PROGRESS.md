@@ -2,8 +2,15 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `refactor/design-consistency`
-> **마지막 완료**: 디자인 일관성 리팩토링
+> **현재 브랜치**: `feat/discount-calculator`
+> **마지막 완료**: 할인 계산기 UI 프로토타입 · 디자인 토큰 전체 적용 · 스펙/디자인 문서 완성
+
+### Phase 8: 할인 계산기 구현 진행
+- UI 프로토타입 완료 (`lib/presentation/discount_calculator/discount_calculator_screen.dart`)
+- 스펙 문서 완성 (`docs/specs/DISCOUNT_CALCULATOR.md`)
+- 디자인 문서 완성 (`docs/design/DISCOUNT_CALCULATOR.md`)
+- [ ] 구현 명세 작성 (`docs/dev/DISCOUNT_CALCULATOR.md`)
+- [ ] ViewModel / UseCase / State 구현 (현재 UI 프로토타입을 실제 아키텍처로 전환)
 
 ### 메인 화면 스크롤 성능 개선 (Android 버벅임)
 - [ ] `initState`에서 카드 배경 이미지 13개 `precacheImage` 사전 디코딩
@@ -39,6 +46,7 @@
 | — | 다국어 날짜 피커 (flutter_localizations) | — | — |
 | — | 메인 화면 순서 편집 (드래그 정렬·설정 드롭다운·순서 저장) | — | — |
 | 7 | 더치페이 계산기 (균등 분배·개별 계산·공유) | 2파일 | `docs/dev/DUTCH_PAY_CALCULATOR_IMPL.md` |
+| 8 | 할인 계산기 — UI 프로토타입 (토큰·통화기호·중첩할인) | — | 구현 명세 미작성 |
 | — | 공통 모듈화: ScrollFadeView·AppAnimatedTabBar·showAppToast + 스크롤 페이드 전체 적용 | — | `docs/plans/REFACTORING_CHECKLIST.md` |
 | — | 디자인 일관성 리팩토링 (토큰 전체 적용·공통 위젯·디자인 문서) | — | `docs/design/` |
 

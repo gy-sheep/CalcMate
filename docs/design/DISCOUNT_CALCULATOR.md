@@ -23,7 +23,7 @@
 │  ←  할인 계산기                  │  ← ❶ AppBar
 ├──────────────────────────────────┤
 │  원가                            │  ← ❷ 원가 입력 필드
-│  [ ₩              120,000 ]      │
+│  [                 120,000 ]     │
 │                                  │
 │  할인율                          │  ← ❸ 할인율 섹션
 │  [ 5% ][ 10% ][ 20% ][ 30% ]...  │     ← 빠른 선택 칩
@@ -71,21 +71,22 @@
 ## ❷ 원가 입력 필드 (`_OriginalPriceField`)
 
 ```
-┌──────────────────────────────────────┐  radius: radiusInput 12 / padding: h16 v14
-│  ₩                        120,000   │
+┌──────────────────────────────────────┐  radius: radiusInput 12 / padding: paddingInputField h20 v14
+│                           120,000   │
 └──────────────────────────────────────┘
 ```
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❷ | 레이블 "원가" | `Text` | `textStyleCaption` 14sp / w500 / letterSpacing:0.5 | `kDiscountTextSecondary` |
+| ❷ | 레이블 "원가" | `Text` | `textStyleLabelLarge` 14sp / w600 / letterSpacing:0.5 | `kDiscountTextSecondary` |
 | ❷ | 필드 배경 | `AnimatedContainer` | — | `kDiscountFieldBg` |
 | ❷ | 필드 테두리 (비활성) | `Border.all` w1 | — | `kDiscountFieldBorder` |
 | ❷ | 필드 테두리 (활성) | `Border.all` w1.5 | — | `kDiscountFieldBorderActive` |
-| ❷ | ₩ 기호 | `Text` | 18sp / w500 | 활성: `kDiscountAccent` / 비활성: `kDiscountTextSecondary` |
+| ❷ | 통화 기호 | `Text` (기호 있을 때만 표시) | `textStyleResult18` 18sp / w500 | 활성: `kDiscountAccent` / 비활성: `kDiscountTextSecondary` |
 | ❷ | 금액 텍스트 | `Text` | `textStyleResult24` 24sp / w300 | 입력 전: `kDiscountTextSecondary` / 입력 후: `kDiscountTextPrimary` |
 
 > 금액은 3자리 콤마 포맷. 최대 9,999,999,999. 소수점 입력 불가.
+> 통화 기호는 `_getCurrencySymbol()`로 결정. 기호 없는 국가는 텍스트 미표시.
 > 필드 탭 시 `_activeField = originalPrice`로 전환.
 
 ---
@@ -103,9 +104,9 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❸ | 레이블 "할인율" | `Text` | `textStyleCaption` 14sp / w500 / letterSpacing:0.5 | `kDiscountTextSecondary` |
-| ❸ | 칩 (비활성) | `AnimatedContainer` | 14sp / w400 / h:v8 h:16 | 텍스트: `kDiscountChipText` / 배경: `kDiscountChipBg` / 테두리: `kDiscountFieldBorder` |
-| ❸ | 칩 (활성) | `AnimatedContainer` | 14sp / w600 / h:v8 h:16 | 텍스트: `kDiscountChipActiveText` / 배경: `kDiscountChipActiveBg` / 테두리: `kDiscountChipActiveBg` |
+| ❸ | 레이블 "할인율" | `Text` | `textStyleLabelLarge` 14sp / w600 / letterSpacing:0.5 | `kDiscountTextSecondary` |
+| ❸ | 칩 (비활성) | `AnimatedContainer` | `textStyleChip` 14sp / w400 / `paddingChip` h14 v8 | 텍스트: `kDiscountChipText` / 배경: `kDiscountChipBg` / 테두리: `kDiscountFieldBorder` |
+| ❸ | 칩 (활성) | `AnimatedContainer` | `textStyleChip` 14sp / w600 / `paddingChip` h14 v8 | 텍스트: `kDiscountChipActiveText` / 배경: `kDiscountChipActiveBg` / 테두리: `kDiscountChipActiveBg` |
 | ❸ | 칩 border radius | — | — | `radiusChip` 20 |
 | ❸ | 칩 간격 | `Padding` | — | right: 8 (마지막 칩 제외) |
 
@@ -113,10 +114,10 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❸ | 필드 배경 | `AnimatedContainer` | — | `kDiscountFieldBg` |
+| ❸ | 필드 배경 | `AnimatedContainer` | `paddingInputField` h20 v14 | `kDiscountFieldBg` |
 | ❸ | 필드 테두리 (비활성 / 활성) | — | — | `kDiscountFieldBorder` w1 / `kDiscountFieldBorderActive` w1.5 |
 | ❸ | 할인율 텍스트 | `Text` | `textStyleResult24` 24sp / w300 | 입력 전: `kDiscountTextSecondary` / 입력 후: `kDiscountTextPrimary` |
-| ❸ | % 기호 | `Text` | 18sp / w500 | 활성: `kDiscountAccent` / 비활성: `kDiscountTextSecondary` |
+| ❸ | % 기호 | `Text` | `textStyleResult18` 18sp / w500 | 활성: `kDiscountAccent` / 비활성: `kDiscountTextSecondary` |
 
 > 할인율은 0–99.9 범위. 칩 선택 시 해당 값으로 직접 입력 필드 동기화.
 > 필드 탭 시 `_activeField = discountRate`로 전환.
@@ -138,8 +139,8 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❹ | 토글 아이콘 | `Icon(add_circle_outline / remove_circle_outline)` | size: 18 | `kDiscountAccent` |
-| ❹ | 토글 텍스트 | `Text` | 13sp / w500 | `kDiscountAccent` |
+| ❹ | 토글 아이콘 | `Icon(add_circle_outline / remove_circle_outline)` | `sizeIconSmall` 20 | `kDiscountAccent` |
+| ❹ | 토글 텍스트 | `Text` | `textStyleSectionTitle` 13sp / w600 / letterSpacing:0.3 | `kDiscountAccent` |
 | ❹ | 칩 / 입력 필드 | ❸과 동일 구조 | — | — |
 
 > 추가 할인 토글 시 `_activeField = extraDiscountRate`로 자동 전환.
@@ -152,7 +153,7 @@
 원가 > 0 AND 할인율 > 0 일 때만 표시.
 
 ```
-┌──────────────────────────────────────────┐  padding: all 20 / radius: radiusCard 16
+┌──────────────────────────────────────────┐  padding: paddingCard all 20 / radius: radiusCard 16
 │  ₩120,000  →  ₩84,000                   │  ← 원가 → 최종가 (취소선)
 │  ──────────────────────────────────────  │
 │  절약액                     -₩36,000    │
@@ -167,18 +168,19 @@
 |---|------|------|------|------|
 | ❺ | 카드 배경 | `Container` | — | `kDiscountCardBg` |
 | ❺ | 카드 테두리 | `Border.all` | — | `kDiscountCardBorder` |
-| ❺ | 원가 (취소선) | `Text` | 15sp / w400 / lineThrough | `kDiscountTextSecondary` |
-| ❺ | 화살표 | `Icon(arrow_forward)` | size: 14 | `kDiscountTextSecondary` |
-| ❺ | 최종가 (행 내) | `Text` | 15sp / w500 | `kDiscountTextPrimary` |
+| ❺ | 원가 (취소선) | `Text` | `textStyleBody` 16sp / w400 / lineThrough | `kDiscountTextSecondary` |
+| ❺ | 화살표 | `Icon(arrow_forward)` | `sizeIconXSmall` 16 | `kDiscountTextSecondary` |
+| ❺ | 최종가 (행 내) | `Text` | `textStyleBody` 16sp / w500 | `kDiscountTextPrimary` |
 | ❺ | 카드 내 구분선 | `Divider` | — | `kDiscountCardBorder` · height:1 |
 | ❺ | "절약액" 레이블 | `Text` | `textStyleBody` 16sp / w400 | `kDiscountTextSecondary` |
 | ❺ | 절약액 수치 | `Text` | `textStyleBody` 16sp / w600 | `kDiscountTextSavings` |
 | ❺ | 할인율 레이블 | `Text` | `textStyleBody` 16sp / w400 | `kDiscountTextSecondary` |
 | ❺ | 할인율 수치 | `Text` | `textStyleBody` 16sp / w500 | `kDiscountTextSecondary` |
-| ❺ | "최종가" 레이블 | `Text` | `textStyleCaption` 14sp / letterSpacing:0.5 | `kDiscountTextSecondary` |
+| ❺ | "최종가" 레이블 | `Text` | `textStyleBody` 16sp / w400 | `kDiscountTextSecondary` |
 | ❺ | 최종가 금액 | `Text` | `textStyleResult36` 36sp / w300 / letterSpacing:-1 | `kDiscountTextFinalPrice` |
 
 > 추가 할인 적용 시 할인율 레이블이 "실질 할인율 (30% + 10%)" 형태로 표시.
+> 금액이 표시되는 모든 위치(원가 취소선·최종가 행·절약액·최종가 대형)에 `_getCurrencySymbol()` 반환값이 앞에 붙는다. 기호 없는 국가는 숫자만 표시.
 
 ---
 
@@ -208,7 +210,7 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❼ | 0~9 · 00 | `_KeypadButton` > `Text` | 22sp / w400 | `kDiscountKeyNumber` |
+| ❼ | 0~9 · 00 | `_KeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kDiscountKeyNumber` |
 | ❼ | ⌫ | `_KeypadButton` > `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kDiscountKeyFunction` |
 | ❼ | 버튼 높이 | `SizedBox` | — | `heightButtonLarge` 68 |
 | ❼ | 버튼 터치 효과 | `Material` + `InkWell` | — | splashColor / highlightColor: `Colors.white10` |
@@ -224,7 +226,7 @@
 | 속성 | 값 |
 |------|----|
 | 위젯 | `ScrollFadeView` |
-| fadeColor | `kDiscountGradientBottom` #4A0A12 |
+| fadeColor | `kDiscountGradientBottom` #3A5CB8 |
 | 패딩 | horizontal: `paddingScreenH` 16 / vertical: 20 |
 
 ---
