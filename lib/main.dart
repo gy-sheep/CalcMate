@@ -1,19 +1,25 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/di/providers.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
-import 'presentation/main/main_screen.dart';
+import 'presentation/splash/splash_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final prefs = await SharedPreferences.getInstance();
+
+  FlutterNativeSplash.remove();
+
   runApp(
     ProviderScope(
       overrides: [
@@ -44,8 +50,7 @@ class CalcmateApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       // 시스템 테마 설정에 따라 자동 전환
       themeMode: ThemeMode.system,
-      // 시작 화면을 우리가 만든 MainScreen으로 설정
-      home: const MainScreen(),
+      home: const SplashScreen(),
       // 디버그 배너 숨기기
       debugShowCheckedModeBanner: false,
     );

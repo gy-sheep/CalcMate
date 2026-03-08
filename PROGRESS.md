@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `fix/main-scroll-performance`
-> **마지막 완료**: 메인 화면 스크롤 성능 개선 + 카드 shadow 조정
+> **현재 브랜치**: `feat/splash-screen`
+> **마지막 완료**: 스플래시 화면 추가 (네이티브 배경 + Flutter shimmer 애니메이션)
 
 ### Phase 10: 다음 계산기
 - [ ] 다음 Phase 계산기 선정 및 기획
@@ -38,6 +38,7 @@
 | 9 | BMI 계산기 (아크 게이지·슬라이더·locale 자동 적용·ViewModel·UseCase) | 27케이스 | `docs/dev/BMI_CALCULATOR_IMPL.md` |
 | — | 공통 모듈화: ScrollFadeView·AppAnimatedTabBar·showAppToast + 스크롤 페이드 전체 적용 | — | `docs/plans/REFACTORING_CHECKLIST.md` |
 | — | 디자인 일관성 리팩토링 (토큰 전체 적용·공통 위젯·디자인 문서) | — | `docs/design/` |
+| — | 스플래시 화면 (네이티브 배경 + Flutter shimmer 애니메이션) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

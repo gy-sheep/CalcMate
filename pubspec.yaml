@@ -77,6 +77,9 @@ dev_dependencies:
   retrofit_generator: ^9.1.5
   flutter_launcher_icons: ^0.14.4
 
+  # Splash Screen
+  flutter_native_splash: ^2.4.3
+
 flutter_launcher_icons:
   android: true
   ios: true
@@ -99,6 +102,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/app_icon.png
     - assets/images/backgrounds/
     - assets/icons/zodiac/
     - assets/icons/constellation/
