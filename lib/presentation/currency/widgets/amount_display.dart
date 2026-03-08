@@ -37,7 +37,7 @@ class AmountDisplay extends StatelessWidget {
           ? Stack(
               clipBehavior: Clip.none,
               children: [
-                amountWidget,
+                Row(children: [Expanded(child: amountWidget)]),
                 Positioned(
                   top: -16,
                   right: 0,
