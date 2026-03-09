@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// 수직 스크롤 영역 하단에 페이드 그라디언트를 표시하는 공통 위젯.
+/// 수직 스크롤 영역 상·하단에 페이드 그라디언트를 표시하는 공통 위젯.
 ///
-/// - 스크롤이 끝에 도달하면 페이드가 사라진다 (8px 임계값).
+/// - 스크롤 최상단이면 상단 페이드 숨김, 최하단이면 하단 페이드 숨김 (8px 임계값).
 /// - [controller]를 생략하면 내부에서 자체 컨트롤러를 생성한다.
 /// - PageView 안에서 페이지 전환 시 페이드를 초기화해야 한다면
 ///   [GlobalKey<ScrollFadeViewState>]를 사용해 [checkFade]를 호출한다.
@@ -46,6 +46,7 @@ class ScrollFadeView extends StatefulWidget {
 
 class ScrollFadeViewState extends State<ScrollFadeView> {
   ScrollController? _ownController;
+  bool _showTopFade = false;
   bool _showBottomFade = false;
 
   ScrollController get _controller => widget.controller ?? _ownController!;
@@ -83,11 +84,43 @@ class ScrollFadeViewState extends State<ScrollFadeView> {
   void checkFade() {
     if (!_controller.hasClients) return;
     final pos = _controller.position;
-    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
     final canScroll = pos.maxScrollExtent > 0;
-    if (_showBottomFade != (canScroll && !atBottom)) {
-      setState(() => _showBottomFade = canScroll && !atBottom);
+    final atTop = pos.pixels <= 8;
+    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
+    final newTop = canScroll && !atTop;
+    final newBottom = canScroll && !atBottom;
+    if (_showTopFade != newTop || _showBottomFade != newBottom) {
+      setState(() {
+        _showTopFade = newTop;
+        _showBottomFade = newBottom;
+      });
     }
+  }
+
+  Widget _buildFade({required bool isTop}) {
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: isTop ? 0 : null,
+      bottom: isTop ? null : 0,
+      height: 48,
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: isTop ? Alignment.bottomCenter : Alignment.topCenter,
+              end: isTop ? Alignment.topCenter : Alignment.bottomCenter,
+              stops: const [0.0, 0.6, 1.0],
+              colors: [
+                widget.fadeColor.withValues(alpha: 0),
+                widget.fadeColor.withValues(alpha: 0.7),
+                widget.fadeColor,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -99,27 +132,8 @@ class ScrollFadeViewState extends State<ScrollFadeView> {
           padding: widget.padding,
           child: widget.child,
         ),
-        if (_showBottomFade)
-          Positioned(
-            left: 0, right: 0, bottom: 0,
-            height: 48,
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: const [0.0, 0.6, 1.0],
-                    colors: [
-                      widget.fadeColor.withValues(alpha: 0),
-                      widget.fadeColor.withValues(alpha: 0.7),
-                      widget.fadeColor,
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+        if (_showTopFade) _buildFade(isTop: true),
+        if (_showBottomFade) _buildFade(isTop: false),
       ],
     );
   }

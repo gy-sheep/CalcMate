@@ -35,6 +35,7 @@ class CurrencyCalculatorScreen extends ConsumerStatefulWidget {
 class _CurrencyCalculatorScreenState
     extends ConsumerState<CurrencyCalculatorScreen> {
   final _scrollController = ScrollController();
+  bool _showTopFade = false;
   bool _showBottomFade = false;
 
   @override
@@ -56,10 +57,16 @@ class _CurrencyCalculatorScreenState
   void _checkFade() {
     if (!_scrollController.hasClients) return;
     final pos = _scrollController.position;
-    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
     final canScroll = pos.maxScrollExtent > 0;
-    if (_showBottomFade != (canScroll && !atBottom)) {
-      setState(() => _showBottomFade = canScroll && !atBottom);
+    final atTop = pos.pixels <= 8;
+    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
+    final newTop = canScroll && !atTop;
+    final newBottom = canScroll && !atBottom;
+    if (_showTopFade != newTop || _showBottomFade != newBottom) {
+      setState(() {
+        _showTopFade = newTop;
+        _showBottomFade = newBottom;
+      });
     }
   }
 
@@ -208,6 +215,29 @@ class _CurrencyCalculatorScreenState
                             ),
                           ),
                         ),
+                        if (_showTopFade)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            height: 48,
+                            child: IgnorePointer(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    stops: const [0.0, 0.6, 1.0],
+                                    colors: [
+                                      kCurrencyGradientBottom.withValues(alpha: 0),
+                                      kCurrencyGradientBottom.withValues(alpha: 0.7),
+                                      kCurrencyGradientBottom,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         if (_showBottomFade)
                           Positioned(
                             left: 0,

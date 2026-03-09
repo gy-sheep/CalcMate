@@ -51,6 +51,8 @@
 | — | 메인·BMI 앱바 블러+그라디언트 오버레이, Pretendard 폰트, textStyleCardTitle 분리, AppBar 타이틀 전역 폰트 설정 | — | — |
 | — | 메인 앱바 투명화·타이틀 스타일·Shadow, textStyleAppBarTitle 토큰 강화, 전체 화면 titleSpacing: 0 통일 | — | — |
 | — | 스플래시 화면 디자인 개선 (아이콘 shimmer·AppTokens 폰트·슬로건 슬라이드 애니메이션) | — | — |
+| — | 스플래시 shimmer 개선 (왕복 애니메이션·속도·곡선 조정) | — | — |
+| — | 스크롤 상단 페이드 그라디언트 추가 (ScrollFadeView·환율·단위변환기) | — | — |
 | — | 탭바(더치페이·날짜) UX 개선 (높이 48·탭 구분선·비활성 opacity·폰트 굵기) | — | — |
 | — | 전체 화면 AppBar.systemOverlayStyle 일괄 적용 (배경색 기준 light/dark 분기) | — | — |
 | 14 | 설정 화면 (다크 모드·계산기 관리·메인 카드 스와이프 숨기기) | — | `docs/specs/SETTINGS.md` |

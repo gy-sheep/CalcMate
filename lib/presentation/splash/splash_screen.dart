@@ -26,12 +26,12 @@ class _SplashScreenState extends State<SplashScreen>
 
     // shimmer: 무한 반복
     _shimmerCtrl = AnimationController(
-      duration: const Duration(milliseconds: 1800),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
-    )..repeat();
+    )..repeat(reverse: true);
 
     _shimmer = Tween<double>(begin: -0.4, end: 1.4).animate(
-      CurvedAnimation(parent: _shimmerCtrl, curve: Curves.easeInOut),
+      CurvedAnimation(parent: _shimmerCtrl, curve: Curves.linear),
     );
 
     // 슬로건 페이드 + 화면 전환
@@ -98,14 +98,16 @@ class _SplashScreenState extends State<SplashScreen>
                     final center = _shimmer.value;
                     return LinearGradient(
                       colors: const [
-                        Color(0xFFD0D0D0),
+                        Color(0xFFB0B0B0),
+                        // Color(0xFFD0D0D0),
                         Colors.white,
-                        Color(0xFFD0D0D0),
+                        Color(0xFFB0B0B0),
+                        // Color(0xFFD0D0D0),
                       ],
                       stops: [
-                        (center - 0.35).clamp(0.0, 1.0),
+                        (center - 0.4).clamp(0.0, 1.0),
                         center.clamp(0.0, 1.0),
-                        (center + 0.35).clamp(0.0, 1.0),
+                        (center + 0.4).clamp(0.0, 1.0),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,

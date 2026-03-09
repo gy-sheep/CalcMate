@@ -30,6 +30,7 @@ class UnitList extends StatefulWidget {
 }
 
 class _UnitListState extends State<UnitList> {
+  bool _showTopFade = false;
   bool _showBottomFade = true;
 
   @override
@@ -62,10 +63,16 @@ class _UnitListState extends State<UnitList> {
   void _checkFade() {
     if (!widget.scrollController.hasClients) return;
     final pos = widget.scrollController.position;
-    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
     final canScroll = pos.maxScrollExtent > 0;
-    if (_showBottomFade != (canScroll && !atBottom)) {
-      setState(() => _showBottomFade = canScroll && !atBottom);
+    final atTop = pos.pixels <= 8;
+    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
+    final newTop = canScroll && !atTop;
+    final newBottom = canScroll && !atBottom;
+    if (_showTopFade != newTop || _showBottomFade != newBottom) {
+      setState(() {
+        _showTopFade = newTop;
+        _showBottomFade = newBottom;
+      });
     }
   }
 
@@ -153,6 +160,30 @@ class _UnitListState extends State<UnitList> {
             );
           },
         ),
+        // 상단 페이드 그라디언트
+        if (_showTopFade)
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            height: 48,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    stops: const [0.0, 0.6, 1.0],
+                    colors: [
+                      kUnitGradientBottom.withValues(alpha: 0),
+                      kUnitGradientBottom.withValues(alpha: 0.7),
+                      kUnitGradientBottom,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         // 하단 페이드 그라디언트
         if (_showBottomFade)
           Positioned(
