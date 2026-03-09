@@ -2,16 +2,36 @@
 
 ---
 
-## 2026-03-09 — 설정 화면 및 메인 카드 스와이프 숨기기 구현
+## 2026-03-09 — 설정 화면 UI 전체 구현 및 블러 오버레이 모듈화
 
 ### 완료 항목
 
-**설정 화면 (Phase 14 — 1, 2번 섹션)**
+**설정 화면 (Phase 14 — 전체 UI)**
 - `SettingsViewModel` + Freezed 상태, `SharedPreferences` 연동 (`theme_mode` 키)
 - 다크 모드: 바텀시트 라디오 선택 → `MaterialApp.themeMode` 즉시 반영
 - `CalcmateApp` → `ConsumerWidget` 변환, `settingsViewModelProvider` 연동
 - 계산기 관리 서브 화면: `CalculatorManagementScreen` (Switch 토글, 최소 1개 보호)
-- 설정 화면 UI: iOS 스타일 섹션 헤더(textStyleCaption, surfaceContainer 배경), 56dp 행
+- Toss 앱 스타일 카드 기반 레이아웃으로 전면 재설계
+  - 배경: 라이트 `#F2F2F7`, 다크 `Colors.black`
+  - 카드: 라이트 `Colors.white`, 다크 `#1C1C1E`, `radiusCard(16)`
+  - `_SectionCard` (선택적 타이틀) + `_SettingsTile` (선택적 값) 위젯
+- 3개 섹션 카드 구성:
+  - 첫 번째 (타이틀 없음): 언어 (한국어/English/中文/日本語 바텀시트, UI only), 화면 테마
+  - 일반: 계산기 관리, 환율 기준 통화 (UI only), BMI 단위 (UI only)
+  - 앱 정보: 버전 정보 (하드코딩 1.0.0), 오픈소스 라이선스, 개인정보 처리방침 (UI only)
+- iOS 스타일 Switch 색상: `#34C759` 녹색, `trackOutlineColor: transparent`
+
+**커스텀 오픈소스 라이선스 화면**
+- `OpenSourceLicensesScreen`: `LicenseRegistry.licenses`로 패키지별 라이선스 수집, 알파벳 정렬
+- `_LicenseDetailScreen`: 패키지별 전체 라이선스 텍스트 표시
+- `paragraph.indent.clamp(0, 10)` — 음수 indent 크래시 방지 (abseil-cpp)
+
+**BlurStatusBarOverlay 공통 위젯**
+- `lib/presentation/widgets/blur_status_bar_overlay.dart` 신규 생성
+- `BackdropFilter(sigma: 20)` + `ShaderMask` + `AnimatedOpacity(250ms)`
+- `isVisible` + `backgroundColor` 파라미터
+- 5개 화면 적용: 설정, 계산기 관리, 라이선스 목록, 라이선스 상세, BMI 계산기
+- BMI 계산기: 인라인 블러 코드 ~40줄 → `BlurStatusBarOverlay` 1줄로 교체
 
 **메인 화면 카드 스와이프 숨기기**
 - `_SwipeToHideCard` 위젯: 좌측 스와이프 → 원형 숨기기 버튼 노출
@@ -22,7 +42,7 @@
 - `MainScreenViewModel`: `toggleVisibility` intent, `_saveHidden`, `_loadSavedData`
 
 **문서**
-- `docs/specs/SETTINGS.md` 신규 작성 (5개 섹션 전체 기획)
+- `docs/specs/SETTINGS.md` — 카드 레이아웃·섹션 구조·커스텀 라이선스·블러 오버레이 반영
 - `docs/specs/MAIN_SCREEN.md` 신규 작성 (스와이프 숨기기 포함)
 
 ---

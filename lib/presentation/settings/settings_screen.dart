@@ -2,14 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../widgets/blur_status_bar_overlay.dart';
 import '../main/main_screen_viewmodel.dart';
 import 'calculator_management_screen.dart';
+import 'open_source_licenses_screen.dart';
 import 'settings_viewmodel.dart';
 
 // ── 설정 화면 ──
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final _scrollController = ScrollController();
+  bool _isScrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final scrolled = _scrollController.offset > 0;
+    if (scrolled != _isScrolled) setState(() => _isScrolled = scrolled);
+  }
+
+  void _showLanguageSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppTokens.radiusBottomSheet),
+        ),
+      ),
+      builder: (_) => const _LanguageSheet(selected: '한국어'),
+    );
+  }
 
   void _showThemeModeSheet(BuildContext context, WidgetRef ref) {
     final current = ref.read(settingsViewModelProvider).themeMode;
@@ -31,40 +70,105 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(settingsViewModelProvider).themeMode;
     final entries = ref.watch(mainScreenViewModelProvider).entries;
     final visibleCount = entries.where((e) => e.isVisible).length;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: isDark ? Colors.black : const Color(0xFFF2F2F7),
       appBar: AppBar(
         systemOverlayStyle:
             isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: const Text('설정'),
         centerTitle: false,
         titleSpacing: 0,
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          _SectionHeader(label: '화면'),
-          _SettingsTile(
-            label: '다크 모드',
-            value: _themeModeLabel(themeMode),
-            onTap: () => _showThemeModeSheet(context, ref),
-          ),
-          const Divider(height: 1, indent: 16, endIndent: 0),
-          _SectionHeader(label: '메인 화면'),
-          _SettingsTile(
-            label: '계산기 관리',
-            value: '$visibleCount개',
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const CalculatorManagementScreen(),
-              ),
+          ListView(
+            controller: _scrollController,
+            padding: EdgeInsets.fromLTRB(
+              16,
+              statusBarHeight + kToolbarHeight + 8,
+              16,
+              16 + MediaQuery.of(context).padding.bottom,
             ),
+            children: [
+              _SectionCard(
+                children: [
+                  _SettingsTile(
+                    label: '언어',
+                    value: '한국어',
+                    onTap: () => _showLanguageSheet(context),
+                  ),
+                  _SettingsTile(
+                    label: '화면 테마',
+                    value: _themeModeLabel(themeMode),
+                    onTap: () => _showThemeModeSheet(context, ref),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _SectionCard(
+                title: '일반',
+                children: [
+                  _SettingsTile(
+                    label: '계산기 관리',
+                    value: '$visibleCount개',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CalculatorManagementScreen(),
+                      ),
+                    ),
+                  ),
+                  _SettingsTile(
+                    label: '환율 기준 통화',
+                    value: 'KRW',
+                    onTap: () {},
+                  ),
+                  _SettingsTile(
+                    label: 'BMI 단위',
+                    value: 'kg/cm',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _SectionCard(
+                title: '앱 정보',
+                children: [
+                  _SettingsTile(
+                    label: '버전 정보',
+                    value: '1.0.0',
+                    onTap: () {},
+                  ),
+                  _SettingsTile(
+                    label: '오픈소스 라이선스',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const OpenSourceLicensesScreen(),
+                      ),
+                    ),
+                  ),
+                  _SettingsTile(
+                    label: '개인정보 처리방침',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ],
           ),
-          const Divider(height: 1, indent: 16, endIndent: 0),
+          BlurStatusBarOverlay(
+            isVisible: _isScrolled,
+            backgroundColor: isDark ? Colors.black : Colors.white,
+          ),
         ],
       ),
     );
@@ -77,32 +181,43 @@ class SettingsScreen extends ConsumerWidget {
       };
 }
 
-// ── 섹션 헤더 ──
+// ── 섹션 카드 ──
 
-class _SectionHeader extends StatelessWidget {
-  final String label;
-  const _SectionHeader({required this.label});
+class _SectionCard extends StatelessWidget {
+  final String? title;
+  final List<Widget> children;
+
+  const _SectionCard({this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return ColoredBox(
-      color: colorScheme.surfaceContainer,
-      child: SizedBox(
-        height: 36,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              label,
-              style: AppTokens.textStyleCaption.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+              child: Text(
+                title!,
+                style: AppTokens.textStyleValue.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-          ),
-        ),
+            )
+          else
+            const SizedBox(height: 4),
+          ...children,
+          const SizedBox(height: 4),
+        ],
       ),
     );
   }
@@ -112,12 +227,12 @@ class _SectionHeader extends StatelessWidget {
 
 class _SettingsTile extends StatelessWidget {
   final String label;
-  final String value;
+  final String? value;
   final VoidCallback onTap;
 
   const _SettingsTile({
     required this.label,
-    required this.value,
+    this.value,
     required this.onTap,
   });
 
@@ -127,8 +242,9 @@ class _SettingsTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(AppTokens.radiusCard),
       child: SizedBox(
-        height: 56,
+        height: 48,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
@@ -140,13 +256,15 @@ class _SettingsTile extends StatelessWidget {
                       .copyWith(color: colorScheme.onSurface),
                 ),
               ),
-              Text(
-                value,
-                style: AppTokens.textStyleBody.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+              if (value != null) ...[
+                Text(
+                  value!,
+                  style: AppTokens.textStyleCaption.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 4),
+                const SizedBox(width: 4),
+              ],
               Icon(
                 Icons.chevron_right,
                 size: 20,
@@ -155,6 +273,58 @@ class _SettingsTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── 언어 선택 바텀시트 ──
+
+class _LanguageSheet extends StatelessWidget {
+  final String selected;
+  const _LanguageSheet({required this.selected});
+
+  static const _languages = ['한국어', 'English', '中文', '日本語'];
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '언어',
+                style: AppTokens.textStyleValue
+                    .copyWith(color: colorScheme.onSurface),
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+          for (final lang in _languages)
+            _SheetRadioTile(
+              label: lang,
+              isSelected: lang == selected,
+              onTap: () => Navigator.pop(context),
+            ),
+          const SizedBox(height: 8),
+        ],
       ),
     );
   }
@@ -190,7 +360,7 @@ class _ThemeModeSheet extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '다크 모드',
+                '화면 테마',
                 style: AppTokens.textStyleValue
                     .copyWith(color: colorScheme.onSurface),
               ),

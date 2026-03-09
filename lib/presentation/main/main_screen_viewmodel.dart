@@ -29,6 +29,7 @@ sealed class MainScreenIntent {
   const factory MainScreenIntent.toggleEditMode() = _ToggleEditMode;
   const factory MainScreenIntent.reorderEntries(int oldIndex, int newIndex) = _ReorderEntries;
   const factory MainScreenIntent.toggleVisibility(String id) = _ToggleVisibility;
+  const factory MainScreenIntent.setAllVisibility(bool visible) = _SetAllVisibility;
 }
 
 class _ScrollChanged extends MainScreenIntent {
@@ -54,6 +55,11 @@ class _ReorderEntries extends MainScreenIntent {
 class _ToggleVisibility extends MainScreenIntent {
   final String id;
   const _ToggleVisibility(this.id);
+}
+
+class _SetAllVisibility extends MainScreenIntent {
+  final bool visible;
+  const _SetAllVisibility(this.visible);
 }
 
 // --- ViewModel ---
@@ -130,6 +136,24 @@ class MainScreenViewModel extends Notifier<MainScreenState> {
             .toList();
         state = state.copyWith(entries: entries);
         _saveHidden(entries);
+      case _SetAllVisibility(:final visible):
+        if (!visible) {
+          // 전체 해제: 첫 번째 항목만 유지
+          final entries = state.entries
+              .asMap()
+              .entries
+              .map((e) => e.value.copyWith(isVisible: e.key == 0))
+              .toList();
+          state = state.copyWith(entries: entries);
+          _saveHidden(entries);
+        } else {
+          // 전체 선택
+          final entries = state.entries
+              .map((e) => e.copyWith(isVisible: true))
+              .toList();
+          state = state.copyWith(entries: entries);
+          _saveHidden(entries);
+        }
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/usecases/bmi_calculate_usecase.dart';
+import '../widgets/blur_status_bar_overlay.dart';
 import '../widgets/scroll_fade_view.dart';
 import 'bmi_calculator_viewmodel.dart';
 import 'widgets/bmi_category_grid.dart';
@@ -330,49 +330,9 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
           ],
         ),
       ),
-          // 상태바 + AppBar 영역을 하나의 블러+그라디언트로 커버
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: MediaQuery.of(context).padding.top + kToolbarHeight + 28.0,
-            child: AnimatedOpacity(
-              opacity: _isScrolled ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 250),
-              child: Builder(
-                builder: (context) {
-                  final statusBarHeight = MediaQuery.of(context).padding.top;
-                  final overlayHeight = statusBarHeight + kToolbarHeight + 28.0;
-                  final solidFraction = (statusBarHeight + kToolbarHeight) / overlayHeight;
-                  return ShaderMask(
-                    shaderCallback: (bounds) => LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: const [Colors.black, Colors.black, Colors.transparent],
-                      stops: [0.0, solidFraction, 1.0],
-                    ).createShader(bounds),
-                    blendMode: BlendMode.dstIn,
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                _kBgTop.withValues(alpha: 0.75),
-                                _kBgTop.withValues(alpha: 0.0),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+          BlurStatusBarOverlay(
+            isVisible: _isScrolled,
+            backgroundColor: _kBgTop,
           ),
         ],
       ),
