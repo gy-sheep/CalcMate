@@ -39,7 +39,7 @@
 | — | 공통 모듈화: ScrollFadeView·AppAnimatedTabBar·showAppToast + 스크롤 페이드 전체 적용 | — | `docs/plans/REFACTORING_CHECKLIST.md` |
 | — | 디자인 일관성 리팩토링 (토큰 전체 적용·공통 위젯·디자인 문서) | — | `docs/design/` |
 | — | 스플래시 화면 (네이티브 배경 + Flutter shimmer 애니메이션) | — | — |
-| — | 메인·BMI 앱바 블러 애니메이션 개선, CalcModeCard 토큰 적용, 메인 앱바 좌측 정렬·more_vert | — | — |
+| — | 메인·BMI 앱바 블러+그라디언트 오버레이, Pretendard 폰트, textStyleCardTitle 분리, AppBar 타이틀 전역 폰트 설정 | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

@@ -32,6 +32,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _settingsKey = GlobalKey();
   OverlayEntry? _menuOverlay;
+  double _scrollOffset = 0.0;
 
   @override
   void initState() {
@@ -49,6 +50,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   void _onScroll() {
+    setState(() {
+      _scrollOffset = _scrollController.offset.clamp(0.0, double.infinity);
+    });
+    // 편집 모드 AppBar blur 용
     final scrolled = _scrollController.offset > 0;
     final isScrolled = ref.read(mainScreenViewModelProvider).isScrolled;
     if (scrolled != isScrolled) {
@@ -103,115 +108,175 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mainScreenViewModelProvider);
-    final topPadding = MediaQuery.of(context).padding.top + kToolbarHeight;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: state.isScrolled ? 20.0 : 0.0),
-          duration: const Duration(milliseconds: 200),
-          builder: (context, sigma, _) {
-            return ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  color: state.isScrolled
-                      ? (Theme.of(context).brightness == Brightness.dark
-                          ? Colors.black.withValues(alpha: 0.75)
-                          : Colors.white.withValues(alpha: 0.75))
-                      : Theme.of(context).colorScheme.surface,
-                  child: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    scrolledUnderElevation: 0,
-                    title: Text(state.isEditMode ? '순서 편집' : 'CalcMate'),
-                    centerTitle: false,
-                    actions: [
-                      if (state.isEditMode)
+    if (state.isEditMode) {
+      final topPadding = statusBarHeight + kToolbarHeight;
+      return Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: state.isScrolled ? 20.0 : 0.0),
+            duration: const Duration(milliseconds: 200),
+            builder: (context, sigma, _) {
+              return ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    color: state.isScrolled
+                        ? (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black.withValues(alpha: 0.75)
+                            : Colors.white.withValues(alpha: 0.75))
+                        : Theme.of(context).colorScheme.surface,
+                    child: AppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      scrolledUnderElevation: 0,
+                      title: const Text('순서 편집'),
+                      centerTitle: false,
+                      actions: [
                         TextButton(
                           onPressed: () => ref
                               .read(mainScreenViewModelProvider.notifier)
                               .handleIntent(const MainScreenIntent.toggleEditMode()),
                           child: const Text('완료'),
-                        )
-                      else
-                        IconButton(
-                          key: _settingsKey,
-                          onPressed: _showSettingsMenu,
-                          icon: const Icon(Icons.more_vert),
                         ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
+              );
+            },
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: _buildEditList(context, state, topPadding),
+        ),
+      );
+    }
+
+    final topPadding = statusBarHeight + kToolbarHeight;
+    final isScrolled = _scrollOffset > 0;
+    final t = _scrollOffset > kToolbarHeight ? 1.0 : _scrollOffset / kToolbarHeight;
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AnimatedOpacity(
+          opacity: isScrolled ? 0.0 : 1.0,
+          duration: const Duration(milliseconds: 250),
+          child: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            title: const Text('CalcMate'),
+            centerTitle: false,
+            actions: [
+              IconButton(
+                key: _settingsKey,
+                onPressed: _showSettingsMenu,
+                icon: const Icon(Icons.more_vert),
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: state.isEditMode
-            ? _buildEditList(context, state, topPadding)
-            : _buildNormalList(context, state, topPadding),
-      ),
-    );
-  }
-
-  Widget _buildNormalList(BuildContext context, MainScreenState state, double topPadding) {
-    return ListView.separated(
-      controller: _scrollController,
-      padding: EdgeInsets.only(
-        top: topPadding + 16,
-        bottom: 16 + MediaQuery.of(context).padding.bottom,
-      ),
-      itemCount: state.entries.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        final entry = state.entries[index];
-        final screen = _buildScreen(entry);
-        if (screen != null) {
-          return RepaintBoundary(
-            child: OpenContainer(
-              transitionDuration: const Duration(milliseconds: 400),
-              closedShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              closedElevation: 0,
-              openElevation: 0,
-              closedColor: Colors.transparent,
-              openColor: Colors.transparent,
-              closedBuilder: (context, openContainer) {
-                return CalcModeCard(
+      body: Stack(
+        children: [
+          ListView.separated(
+            controller: _scrollController,
+            padding: EdgeInsets.only(
+              top: topPadding + 16,
+              left: 16,
+              right: 16,
+              bottom: 16 + MediaQuery.of(context).padding.bottom,
+            ),
+            itemCount: state.entries.length,
+            separatorBuilder: (context, _) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final entry = state.entries[index];
+              final screen = _buildScreen(entry);
+              if (screen != null) {
+                return RepaintBoundary(
+                  child: OpenContainer(
+                    transitionDuration: const Duration(milliseconds: 400),
+                    closedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    closedElevation: 0,
+                    openElevation: 0,
+                    closedColor: Colors.transparent,
+                    openColor: Colors.transparent,
+                    closedBuilder: (context, openContainer) {
+                      return CalcModeCard(
+                        title: entry.title,
+                        description: entry.description,
+                        icon: entry.icon,
+                        imagePath: entry.imagePath,
+                        onTap: openContainer,
+                      );
+                    },
+                    openBuilder: (context, _) {
+                      return EdgeSwipeBack(child: screen);
+                    },
+                  ),
+                );
+              }
+              return RepaintBoundary(
+                child: CalcModeCard(
                   title: entry.title,
                   description: entry.description,
                   icon: entry.icon,
                   imagePath: entry.imagePath,
-                  onTap: openContainer,
-                );
-              },
-              openBuilder: (context, _) {
-                return EdgeSwipeBack(child: screen);
-              },
-            ),
-          );
-        }
-        return RepaintBoundary(
-          child: CalcModeCard(
-            title: entry.title,
-            description: entry.description,
-            icon: entry.icon,
-            imagePath: entry.imagePath,
-            onTap: () {
-              ref
-                  .read(mainScreenViewModelProvider.notifier)
-                  .handleIntent(MainScreenIntent.cardTapped(entry.id));
+                  onTap: () {
+                    ref
+                        .read(mainScreenViewModelProvider.notifier)
+                        .handleIntent(MainScreenIntent.cardTapped(entry.id));
+                  },
+                ),
+              );
             },
           ),
-        );
-      },
+          // 상태바 blur 오버레이 — AppBar 페이드 후 등장, 하단 그라디언트로 경계 제거
+          if (isScrolled)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: statusBarHeight + 24,
+              child: ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black, Colors.black, Colors.transparent],
+                  stops: [0.0, 0.55, 1.0],
+                ).createShader(bounds),
+                blendMode: BlendMode.dstIn,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20 * t, sigmaY: 20 * t),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Theme.of(context).colorScheme.surface.withValues(alpha: 0.75 * t),
+                            Theme.of(context).colorScheme.surface.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

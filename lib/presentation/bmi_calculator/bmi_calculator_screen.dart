@@ -205,72 +205,51 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
       backgroundColor: _kBgBottom,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: _isScrolled ? 20.0 : 0.0),
-          duration: const Duration(milliseconds: 200),
-          builder: (context, sigma, _) {
-            return ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  color: _isScrolled
-                      ? _kBgTop.withValues(alpha: 0.85)
-                      : Colors.transparent,
-                  child: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    scrolledUnderElevation: 0,
-                    leading: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new,
-                          size: AppTokens.sizeAppBarBackIcon, color: _kTextPrimary),
-                      onPressed: () => Navigator.of(context).maybePop(),
-                    ),
-                    title: Text('BMI 계산기',
-                        style: AppTokens.textStyleAppBarTitle
-                            .copyWith(color: _kTextPrimary)),
-                    centerTitle: false,
-                    actions: [
-                      GestureDetector(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          vm.handleIntent(
-                              const BmiCalculatorIntent.unitToggled());
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              right: AppTokens.paddingAppBarH),
-                          padding: AppTokens.paddingChip,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: _kAccent.withValues(alpha: 0.5)),
-                            borderRadius:
-                                BorderRadius.circular(AppTokens.radiusChip),
-                          ),
-                          child: Text(
-                            state.isMetric ? 'kg · cm' : 'lb · ft',
-                            style: AppTokens.textStyleCaption
-                                .copyWith(color: _kAccent),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new,
+                size: AppTokens.sizeAppBarBackIcon, color: _kTextPrimary),
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          title: Text('BMI 계산기',
+              style: AppTokens.textStyleAppBarTitle.copyWith(color: _kTextPrimary)),
+          centerTitle: false,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                vm.handleIntent(const BmiCalculatorIntent.unitToggled());
+              },
+              child: Container(
+                margin: const EdgeInsets.only(right: AppTokens.paddingAppBarH),
+                padding: AppTokens.paddingChip,
+                decoration: BoxDecoration(
+                  border: Border.all(color: _kAccent.withValues(alpha: 0.5)),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+                ),
+                child: Text(
+                  state.isMetric ? 'kg · cm' : 'lb · ft',
+                  style: AppTokens.textStyleCaption.copyWith(color: _kAccent),
                 ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [_kBgTop, _kBgBottom],
-          ),
-        ),
-        child: Column(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [_kBgTop, _kBgBottom],
+              ),
+            ),
+            child: Column(
           children: [
             Expanded(
               child: ScrollFadeView(
@@ -348,6 +327,52 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
             SizedBox(height: bottomPad),
           ],
         ),
+      ),
+          // 상태바 + AppBar 영역을 하나의 블러+그라디언트로 커버
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: MediaQuery.of(context).padding.top + kToolbarHeight + 28.0,
+            child: AnimatedOpacity(
+              opacity: _isScrolled ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 250),
+              child: Builder(
+                builder: (context) {
+                  final statusBarHeight = MediaQuery.of(context).padding.top;
+                  final overlayHeight = statusBarHeight + kToolbarHeight + 28.0;
+                  final solidFraction = (statusBarHeight + kToolbarHeight) / overlayHeight;
+                  return ShaderMask(
+                    shaderCallback: (bounds) => LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: const [Colors.black, Colors.black, Colors.transparent],
+                      stops: [0.0, solidFraction, 1.0],
+                    ).createShader(bounds),
+                    blendMode: BlendMode.dstIn,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                _kBgTop.withValues(alpha: 0.75),
+                                _kBgTop.withValues(alpha: 0.0),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

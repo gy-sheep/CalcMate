@@ -12,6 +12,12 @@ abstract class AppTokens {
     fontWeight: FontWeight.w600,
   );
 
+  /// 카드 타이틀 (메인 화면 CalcModeCard 등)
+  static const TextStyle textStyleCardTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
+
   /// 바텀 시트 제목
   static const TextStyle textStyleSheetTitle = TextStyle(
     fontSize: 18,
