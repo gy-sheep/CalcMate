@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/di/providers.dart';
 import 'core/theme/app_theme.dart';
+import 'presentation/settings/settings_viewmodel.dart';
 import 'firebase_options.dart';
 import 'presentation/splash/splash_screen.dart';
 
@@ -30,11 +31,12 @@ void main() async {
   );
 }
 
-class CalcmateApp extends StatelessWidget {
+class CalcmateApp extends ConsumerWidget {
   const CalcmateApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(settingsViewModelProvider).themeMode;
     return MaterialApp(
       title: 'CalcMate',
       localizationsDelegates: const [
@@ -44,14 +46,10 @@ class CalcmateApp extends StatelessWidget {
       ],
       supportedLocales: const [Locale('ko'), Locale('en')],
       localeResolutionCallback: (locale, supportedLocales) => locale,
-      // 라이트 테마 적용
       theme: AppTheme.lightTheme,
-      // 다크 테마 적용
       darkTheme: AppTheme.darkTheme,
-      // 시스템 테마 설정에 따라 자동 전환
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       home: const SplashScreen(),
-      // 디버그 배너 숨기기
       debugShowCheckedModeBanner: false,
     );
   }

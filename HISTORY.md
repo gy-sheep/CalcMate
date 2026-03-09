@@ -2,6 +2,31 @@
 
 ---
 
+## 2026-03-09 — 설정 화면 및 메인 카드 스와이프 숨기기 구현
+
+### 완료 항목
+
+**설정 화면 (Phase 14 — 1, 2번 섹션)**
+- `SettingsViewModel` + Freezed 상태, `SharedPreferences` 연동 (`theme_mode` 키)
+- 다크 모드: 바텀시트 라디오 선택 → `MaterialApp.themeMode` 즉시 반영
+- `CalcmateApp` → `ConsumerWidget` 변환, `settingsViewModelProvider` 연동
+- 계산기 관리 서브 화면: `CalculatorManagementScreen` (Switch 토글, 최소 1개 보호)
+- 설정 화면 UI: iOS 스타일 섹션 헤더(textStyleCaption, surfaceContainer 배경), 56dp 행
+
+**메인 화면 카드 스와이프 숨기기**
+- `_SwipeToHideCard` 위젯: 좌측 스와이프 → 원형 숨기기 버튼 노출
+- 버튼 UX: fade+scale 등장 → pill 스트레치 → 아이콘 위치 전환(중앙→좌측)
+- 카드 효과: 흑백 필터(ColorFiltered), 드래그 감쇠(0.85, snap 이후 1:1)
+- 햅틱: dismiss 커밋 지점(50%)에서 mediumImpact
+- 자동 닫힘: 스크롤 시작·상세 페이지 진입 시 ValueNotifier로 부드럽게 복귀
+- `MainScreenViewModel`: `toggleVisibility` intent, `_saveHidden`, `_loadSavedData`
+
+**문서**
+- `docs/specs/SETTINGS.md` 신규 작성 (5개 섹션 전체 기획)
+- `docs/specs/MAIN_SCREEN.md` 신규 작성 (스와이프 숨기기 포함)
+
+---
+
 ## 2026-03-08 — 부가세 계산기 모드 토글 및 결과 카드 UX 개선
 
 ### 완료 항목
