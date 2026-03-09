@@ -44,8 +44,11 @@ class BmiInputSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label,
-                  style: AppTokens.textStyleSectionTitle
-                      .copyWith(color: _kTextSecondary)),
+                  style: AppTokens.textStyleLabelLarge.copyWith(
+                    color: _kTextSecondary,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  )),
               GestureDetector(
                 onTap: onValueTap,
                 child: Container(
