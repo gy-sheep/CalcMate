@@ -14,6 +14,7 @@ class LoanPrototypeHub extends StatelessWidget {
     return Scaffold(
       backgroundColor: kLoanBgTop,
       appBar: AppBar(
+        titleSpacing: 0,
         backgroundColor: kLoanBgTop,
         elevation: 0,
         scrolledUnderElevation: 0,

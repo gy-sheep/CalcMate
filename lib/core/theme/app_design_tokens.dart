@@ -8,8 +8,8 @@ abstract class AppTokens {
   // ── Semantic TextStyle ───────────────────────────────────────
   /// AppBar 타이틀
   static const TextStyle textStyleAppBarTitle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
   );
 
   /// 카드 타이틀 (메인 화면 CalcModeCard 등)

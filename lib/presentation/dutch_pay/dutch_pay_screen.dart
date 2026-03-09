@@ -53,6 +53,7 @@ class _DutchPayScreenState extends ConsumerState<DutchPayScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        titleSpacing: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,

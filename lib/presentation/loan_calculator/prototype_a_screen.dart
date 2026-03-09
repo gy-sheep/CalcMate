@@ -35,6 +35,7 @@ class _PrototypeAScreenState extends State<PrototypeAScreen> {
     return Scaffold(
       backgroundColor: kLoanBgTop,
       appBar: AppBar(
+        titleSpacing: 0,
         backgroundColor: kLoanBgTop,
         elevation: 0,
         scrolledUnderElevation: 0,

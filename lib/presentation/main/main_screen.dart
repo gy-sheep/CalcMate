@@ -15,6 +15,7 @@ import 'package:calcmate/presentation/dutch_pay/dutch_pay_screen.dart';
 import 'package:calcmate/presentation/discount_calculator/discount_calculator_screen.dart';
 import 'package:calcmate/presentation/bmi_calculator/bmi_calculator_screen.dart';
 import 'package:calcmate/core/config/calc_mode_config.dart';
+import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -168,12 +169,24 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AnimatedOpacity(
           opacity: isScrolled ? 0.0 : 1.0,
-          duration: const Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 100),
           child: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: Colors.transparent,
             elevation: 0,
             scrolledUnderElevation: 0,
-            title: const Text('CalcMate'),
+            title: Text(
+              'CalcMate',
+              style: AppTokens.textStyleAppBarTitle.copyWith(
+                letterSpacing: 0.5,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.35),
+                    offset: const Offset(0, 2),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
+            ),
             centerTitle: false,
             actions: [
               IconButton(
@@ -190,7 +203,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           ListView.separated(
             controller: _scrollController,
             padding: EdgeInsets.only(
-              top: topPadding + 16,
+              top: topPadding,
               left: 16,
               right: 16,
               bottom: 16 + MediaQuery.of(context).padding.bottom,
@@ -284,7 +297,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     return ReorderableListView.builder(
       scrollController: _scrollController,
       padding: EdgeInsets.only(
-        top: topPadding + 16,
+        top: topPadding,
         bottom: 16 + MediaQuery.of(context).padding.bottom,
       ),
       itemCount: state.entries.length,
