@@ -240,7 +240,8 @@
 | ❹ | 담당자 아이콘 | `Icon(person)` | `textStyleLabelSmall.fontSize` 10 | `kDutchChipText[idx]` |
 | ❹ | 담당자 텍스트 | `Text` | `textStyleLabelSmall` 10sp / w600 | `kDutchChipText[idx]` |
 | ❹ | 금액 | `Text` | `textStyleValue` 16sp / w600 | 편집 중: `kDutchAccent` / 일반: `kDutchTextPrimary` |
-| ❹ | 편집 중 표시 바 | `Container` | w:3 h:36 / radius:2 | `kDutchAccent` |
+| ❹ | 편집 아이콘 (기본 상태) | `Icon(edit_outlined)` | `sizeIconXSmall` 16 / padding-right:8 | `kDutchTextTertiary` 60% |
+| ❹ | 편집 중 표시 바 (편집 상태) | `Container` | w:3 h:36 / radius:2 / margin-right:10 | `kDutchAccent` |
 | ❹ | 항목 패딩 | — | — | h:16 v:12 |
 | ❹ | 구분선 | `Divider` | indent:16 endIndent:16 | `kDutchDivider` 50% |
 
