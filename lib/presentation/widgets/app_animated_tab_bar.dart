@@ -24,7 +24,7 @@ class AppAnimatedTabBar extends StatelessWidget {
   final Color dividerColor;
   final Color inactiveColor;
 
-  static const _tabRowHeight = 48.0;
+  static const _tabRowHeight = CmTab.height;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class AppAnimatedTabBar extends StatelessWidget {
                     width: bgWidth,
                     decoration: BoxDecoration(
                       color: accentColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(CmTab.radius),
                       border: Border.all(color: accentColor.withValues(alpha: 0.25)),
                       boxShadow: [
                         BoxShadow(
@@ -96,7 +96,7 @@ class AppAnimatedTabBar extends StatelessWidget {
                               opacity: 1.0 - distance * 0.45,
                               child: Text(
                                 labels[i],
-                                style: AppTokens.textStyleChip.copyWith(
+                                style: CmTab.text.copyWith(
                                   color: Color.lerp(accentColor, inactiveColor, distance),
                                   fontWeight: distance < 0.5 ? FontWeight.w700 : FontWeight.w500,
                                 ),

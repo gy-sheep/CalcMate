@@ -161,14 +161,14 @@ class DateCalcModeView extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
+        width: CmRoundButton.large.size,
+        height: CmRoundButton.large.size,
         decoration: BoxDecoration(
           color: kDateCardBg,
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(CmRoundButton.large.radius),
           border: Border.all(color: kDateCardBorder),
         ),
-        child: Icon(icon, color: kDateAccent, size: AppTokens.sizeIconStep),
+        child: Icon(icon, color: kDateAccent, size: CmRoundButton.large.iconSize),
       ),
     );
   }

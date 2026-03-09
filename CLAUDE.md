@@ -46,6 +46,7 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 - 기획 명세 작성 후 사용자가 **"화면만 먼저 개발"** 또는 **"UI 먼저 확인"** 을 요청하면 진행한다
 - **구현 전 `memory/patterns.md` 를 읽고** 공통 UI 패턴(스크롤 페이드, 레이아웃 등)을 확인한다
 - **텍스트 스타일은 `AppTokens`의 Semantic TextStyle 토큰을 사용**한다. fontSize를 직접 숫자로 쓰지 않고 `.copyWith(color:)`로 색상만 주입한다
+- **어떤 컴포넌트에 어떤 토큰을 쓸지는 `docs/conventions/UI_TOKEN_CONVENTION.md` 참고**한다
 - **더미 데이터**로 결과가 표시된 상태로 구현하며, **인터랙션**(버튼/탭 동작)도 포함한다
 - ViewModel / UseCase / 실제 로직은 구현하지 않는다
 - UI 확정 후 3단계로 이동
@@ -55,7 +56,7 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 - **템플릿**: `docs/dev/_IMPL_SPEC_TEMPLATE.md`
 - **내용**: 파일 구조, 클래스 설계, 구현 순서 등 **어떻게** 만들지 정의
 - **dev 파일 작성 후 실제 구현 진행 시 `memory/patterns.md` 를 읽고** 공통 패턴을 적용한다
-- **텍스트 스타일·크기·간격 등은 `AppTokens` 토큰을 우선 사용**한다
+- **텍스트 스타일·크기·간격 등은 `AppTokens` 토큰을 우선 사용**하고, **컴포넌트별 사용 기준은 `docs/conventions/UI_TOKEN_CONVENTION.md` 참고**한다
 
 ## 문서 관리
 

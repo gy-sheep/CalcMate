@@ -57,6 +57,8 @@
 | — | 전체 화면 AppBar.systemOverlayStyle 일괄 적용 (배경색 기준 light/dark 분기) | — | — |
 | 14 | 설정 화면 (다크 모드·계산기 관리·메인 카드 스와이프 숨기기) | — | `docs/specs/SETTINGS.md` |
 | — | 설정 UI 전체 구현 (카드 레이아웃·언어·앱 정보·라이선스·블러 오버레이·iOS Switch) | — | `docs/specs/SETTINGS.md` |
+| 10 | 실수령액 계산기 UI 구현 (입력 카드·슬라이더 통합·결과 카드·공제 내역·부양가족 바) | — | `docs/design/NET_PAY_CALCULATOR.md` |
+| — | Cm* 컴포넌트 토큰 시스템 추가 (CmTab·CmInputCard·CmResultCard·CmListCard·CmRoundButton·CmSlider 등) | — | `docs/conventions/UI_TOKEN_CONVENTION.md` |
 
 > 상세 작업 이력: `HISTORY.md`
 

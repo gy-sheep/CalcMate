@@ -282,4 +282,279 @@ abstract class AppTokens {
 
   /// CupertinoActivityIndicator 반지름
   static const double radiusActivityIndicator = 10;
+
+  // ── Bottom Sheet Component ────────────────────────────────────
+  /// 바텀시트 핸들 너비
+  static const double widthSheetHandle = 36;
+
+  /// 바텀시트 핸들 높이
+  static const double heightSheetHandle = 4;
+
+  /// 바텀시트 핸들 borderRadius
+  static const double radiusSheetHandle = 2;
+
+  /// 바텀시트 핸들 하단 margin (핸들 → 첫 콘텐츠 간격)
+  static const double spacingSheetHandle = 20;
+
+  /// 바텀시트 주요 액션 버튼 높이 (확인, 완료, 공유 등)
+  static const double heightButtonPrimary = 52;
+
+  // ── Control ───────────────────────────────────────────────────
+  /// 공통 컨트롤 높이 (드롭다운, 조절 바 버튼 등)
+  static const double heightControl = 44;
+
+  /// 스텝 버튼 크기 — 정사각형 (±, ▲▼ 등)
+  static const double sizeStepButton = 36;
+
+  /// 스텝 버튼 borderRadius
+  static const double radiusStepButton = 8;
+
+  // ── Slider ────────────────────────────────────────────────────
+  /// 슬라이더 터치 오버레이 반지름
+  static const double radiusSliderOverlay = 18;
+
+  // ── Animation ─────────────────────────────────────────────────
+  /// 버튼·칩 상태 전환 (빠름)
+  static const Duration durationFast = Duration(milliseconds: 150);
+
+  /// 카드·오버레이 전환 (보통)
+  static const Duration durationNormal = Duration(milliseconds: 200);
+
+  /// 페이지·탭 전환
+  static const Duration durationPage = Duration(milliseconds: 280);
+
 }
+
+// ════════════════════════════════════════════════════════════════
+// 아래는 Q&A 방식으로 순차 확정된 신규 토큰
+// ════════════════════════════════════════════════════════════════
+/// 탭바 토큰.
+abstract class CmTab {
+  /// 탭바 레이블 (활성: w700 / 비활성: w500 은 위젯에서 copyWith)
+  static const TextStyle text = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// 탭바 활성 배경 borderRadius
+  static const double radius = 20;
+
+  /// 탭바 행 높이
+  static const double height = 48;
+}
+
+/// 금액·값을 표시하고 탭하면 키패드가 열리는 입력 카드 토큰.
+abstract class CmInputCard {
+  /// 내부 패딩
+  static const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 20, vertical: 18);
+
+  /// borderRadius
+  static const double radius = 16;
+
+  /// 타이틀 하단 간격 (타이틀 → 입력값)
+  static const double titleSpacing = 8;
+
+  /// 서브텍스트 상단 간격 (입력값 → 서브텍스트)
+  static const double subSpacing = 4;
+
+  /// 카드 상단 타이틀 ("총 금액", "기준 급여" 등)
+  static const TextStyle titleText = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.3,
+  );
+
+  /// 입력값 숫자 텍스트
+  static const TextStyle inputText = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.w300,
+  );
+
+  /// 단위 텍스트 ("원", "USD" 등)
+  static const TextStyle unitText = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// 보조 텍스트 ("월 3,750,000 원" 등)
+  static const TextStyle subText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+}
+
+/// 목록형 카드 토큰 (공제 내역 등 헤더 + 항목 행 구조).
+abstract class CmListCard {
+  /// borderRadius
+  static const double radius = 16;
+
+  /// 헤더 행 패딩
+  static const EdgeInsets headerPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 14);
+
+  /// 항목 행 패딩
+  static const EdgeInsets itemPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+
+  /// 헤더 레이블 텍스트 ("공제 합계" 등)
+  static const TextStyle headerLabel = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.3,
+  );
+
+  /// 헤더 합계 금액 텍스트
+  static const TextStyle headerValue = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// 항목 레이블 텍스트 ("국민연금" 등)
+  static const TextStyle itemLabel = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// 항목 금액 텍스트
+  static const TextStyle itemValue = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+  );
+}
+
+/// 결과 카드 토큰.
+abstract class CmResultCard {
+  /// 내부 패딩
+  static const EdgeInsets padding = EdgeInsets.all(20);
+
+  /// borderRadius
+  static const double radius = 16;
+
+  /// 타이틀 하단 간격 (타이틀 → 결과 숫자)
+  static const double titleSpacing = 8;
+
+  /// 보조 텍스트 상단 간격 (결과 숫자 → 보조 텍스트)
+  static const double subSpacing = 6;
+
+  /// 카드 상단 타이틀 ("실수령액" 등)
+  static const TextStyle titleText = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.3,
+  );
+
+  /// 결과 숫자 텍스트
+  static const TextStyle resultText = TextStyle(
+    fontSize: 40,
+    fontWeight: FontWeight.w300,
+  );
+
+  /// 단위 텍스트 ("원" 등)
+  static const TextStyle unitText = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// 보조 텍스트 ("연 실수령", "연 환산" 등)
+  static const TextStyle subText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+}
+
+/// 라운드 버튼 사이즈 토큰 (size + radius + iconSize 세트).
+class _RoundButtonSize {
+  const _RoundButtonSize({
+    required this.size,
+    required this.radius,
+    required this.iconSize,
+  });
+  final double size;
+  final double radius;
+  final double iconSize;
+}
+
+/// 라운드 버튼 토큰. 사용처에 따라 small·medium·large를 선택한다.
+abstract class CmRoundButton {
+  /// 소형 — 24×24
+  static const _RoundButtonSize small = _RoundButtonSize(size: 24, radius: 12, iconSize: 16);
+
+  /// 중형 — 32×32 (부양가족 수 조절 버튼 등)
+  // static const _RoundButtonSize medium = _RoundButtonSize(size: 24, radius: 12, iconSize: 16);
+  static const _RoundButtonSize medium = _RoundButtonSize(size: 28, radius: 14, iconSize: 18);
+
+  /// 대형 — 48×48 (날짜 계산기 이동 버튼, 미세 조절 바 등)
+  static const _RoundButtonSize large = _RoundButtonSize(size: 32, radius: 16, iconSize: 20);
+
+  /// 내부 그림자. color는 화면별 색상을 주입한다.
+  static BoxShadow innerShadow(Color color) => BoxShadow(
+        color: color,
+        blurRadius: 4,
+        offset: const Offset(0, 2),
+        blurStyle: BlurStyle.inner,
+      );
+}
+
+/// 드롭다운 버튼 토큰.
+abstract class CmDropdown {
+  /// 높이
+  static const double height = 44;
+
+  /// borderRadius
+  static const double radius = 10;
+
+  /// 레이블 텍스트
+  static const TextStyle text = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// 화살표 아이콘 크기
+  static const double iconSize = 18;
+}
+
+/// 슬라이더 토큰.
+abstract class CmSlider {
+  /// 트랙 높이
+  static const double trackHeight = 4;
+
+  /// thumb 반지름
+  static const double thumbRadius = 10;
+
+  /// 터치 오버레이 반지름
+  static const double overlayRadius = 18;
+
+  /// 범위 레이블 텍스트 (최솟값·최댓값 표시)
+  static const TextStyle rangeLabel = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  );
+}
+
+/// 스텝버튼 사이 값 표시 토큰 ("1명", "2명" 등).
+abstract class CmStepValue {
+  /// 값 텍스트 스타일
+  static const TextStyle text = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// 값 표시 영역 너비
+  static const double width = 44;
+
+  /// 좌우 마진
+  static const double horizontalMargin = 6;
+}
+
+/// 아이콘 크기 토큰. 사용처 기반으로 네이밍한다.
+abstract class CmIcon {
+  /// 입력 카드 내부 아이콘 (편집 아이콘 등)
+  static const double inputCard = 16;
+
+  /// 툴팁 아이콘
+  static const double tooltip = 16;
+}
+
+/// 행 레이블 텍스트 ("부양가족 수" 등 레이블 + 컨트롤 구조의 레이블)
+const TextStyle rowLabel = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+);
