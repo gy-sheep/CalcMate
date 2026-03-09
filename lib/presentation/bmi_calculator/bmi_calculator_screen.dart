@@ -206,6 +206,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.light,
           titleSpacing: 0,
           backgroundColor: Colors.transparent,
           elevation: 0,

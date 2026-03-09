@@ -41,6 +41,9 @@
 | — | 스플래시 화면 (네이티브 배경 + Flutter shimmer 애니메이션) | — | — |
 | — | 메인·BMI 앱바 블러+그라디언트 오버레이, Pretendard 폰트, textStyleCardTitle 분리, AppBar 타이틀 전역 폰트 설정 | — | — |
 | — | 메인 앱바 투명화·타이틀 스타일·Shadow, textStyleAppBarTitle 토큰 강화, 전체 화면 titleSpacing: 0 통일 | — | — |
+| — | 스플래시 화면 디자인 개선 (아이콘 shimmer·AppTokens 폰트·슬로건 슬라이드 애니메이션) | — | — |
+| — | 탭바(더치페이·날짜) UX 개선 (높이 48·탭 구분선·비활성 opacity·폰트 굵기) | — | — |
+| — | 전체 화면 AppBar.systemOverlayStyle 일괄 적용 (배경색 기준 light/dark 분기) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

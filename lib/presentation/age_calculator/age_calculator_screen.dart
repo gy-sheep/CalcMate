@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
@@ -95,6 +96,7 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
       backgroundColor: kAgeBgStart,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         titleSpacing: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,

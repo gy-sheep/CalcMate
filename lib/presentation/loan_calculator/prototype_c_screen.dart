@@ -5,6 +5,7 @@ library;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '_loan_calc_helper.dart';
 import '_loan_shared_widgets.dart';
@@ -39,6 +40,7 @@ class _PrototypeCScreenState extends State<PrototypeCScreen> {
     return Scaffold(
       backgroundColor: kLoanBgTop,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         titleSpacing: 0,
         backgroundColor: kLoanBgTop,
         elevation: 0,

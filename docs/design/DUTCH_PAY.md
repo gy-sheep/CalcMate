@@ -61,10 +61,11 @@
 
 | 속성 | 값 |
 |------|----|
-| 탭 행 높이 | 40 |
+| 탭 행 높이 | 48 |
 | 칩 배경 | `kDutchAccent` 12% |
 | 칩 테두리 | `kDutchAccent` 25% / radius:20 |
 | 칩 글로우 | `kDutchAccent` 25% / blur:8 / spread:1 |
+| 탭 사이 구분선 | 1px `kDutchDivider` / 높이 14 |
 | 하단 언더라인 (전체) | 1px `kDutchDivider` |
 | 하단 언더라인 (활성) | 2px `kDutchAccent` + 글로우 (`kDutchAccent` 60% / blur:6 / spread:1) |
 | 칩 패드 비율 | 양쪽 0.18 |
@@ -73,11 +74,11 @@
 
 **탭 레이블 애니메이션** (pageOffset 기반 실시간)
 
-| 상태 | 폰트 | 스케일 | 색상 |
-|------|------|--------|------|
-| 활성 (distance = 0) | `textStyleChip` 14sp / w600 | 1.08× | `kDutchAccent` |
-| 비활성 (distance ≥ 1) | `textStyleChip` 14sp / w400 | 1.0× | `kDutchTextTertiary` |
-| 중간 | `Color.lerp` | `1.0 + (1 - distance) * 0.08` | lerp 보간 |
+| 상태 | 폰트 | 스케일 | 색상 | opacity |
+|------|------|--------|------|---------|
+| 활성 (distance = 0) | `textStyleChip` 14sp / w700 | 1.08× | `kDutchAccent` | 1.0 |
+| 비활성 (distance ≥ 1) | `textStyleChip` 14sp / w500 | 1.0× | `kDutchTextTertiary` | 0.55 |
+| 중간 | `Color.lerp` | `1.0 + (1 - distance) * 0.08` | lerp 보간 | `1.0 - distance * 0.45` |
 
 ---
 

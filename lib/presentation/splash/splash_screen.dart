@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_design_tokens.dart';
 import '../main/main_screen.dart';
 
 const Color _kBackground = Color(0xFF0D0D14);
@@ -17,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen>
   late final AnimationController _splashCtrl;
   late final Animation<double> _shimmer;
   late final Animation<double> _taglineFade;
+  late final Animation<Offset> _taglineSlide;
 
   @override
   void initState() {
@@ -42,6 +44,16 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(
         parent: _splashCtrl,
         curve: const Interval(0.55, 0.80, curve: Curves.easeOut),
+      ),
+    );
+
+    _taglineSlide = Tween<Offset>(
+      begin: const Offset(0, 0.4),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _splashCtrl,
+        curve: const Interval(0.55, 0.85, curve: Curves.easeOut),
       ),
     );
 
@@ -77,14 +89,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 앱 아이콘 (고정)
-            Image.asset(
-              'assets/images/app_icon.png',
-              width: 130,
-              height: 130,
-            ),
-            const SizedBox(height: 32),
-            // 앱 이름 (shimmer)
+            // 앱 아이콘 (shimmer)
             AnimatedBuilder(
               animation: _shimmer,
               builder: (context, child) {
@@ -93,44 +98,66 @@ class _SplashScreenState extends State<SplashScreen>
                     final center = _shimmer.value;
                     return LinearGradient(
                       colors: const [
-                        Color(0xFFAAAAAA),
+                        Color(0xFFD0D0D0),
                         Colors.white,
-                        Color(0xFFAAAAAA),
+                        Color(0xFFD0D0D0),
                       ],
                       stops: [
                         (center - 0.35).clamp(0.0, 1.0),
                         center.clamp(0.0, 1.0),
                         (center + 0.35).clamp(0.0, 1.0),
                       ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ).createShader(bounds);
                   },
                   child: child,
                 );
               },
-              child: const Text(
-                'CalcMate',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
-                ),
+              child: Image.asset(
+                'assets/images/app_icon.png',
+                width: 180,
+                height: 180,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 14),
+            // 앱 이름
+            Text(
+              'CalcMate',
+              style: AppTokens.textStyleAppBarTitle.copyWith(
+                color: Colors.white,
+                fontSize: 30,
+                letterSpacing: 0.5,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.35),
+                    offset: const Offset(0, 2),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 6),
             // 슬로건 (페이드인)
             FadeTransition(
               opacity: _taglineFade,
-              child: const Text(
+              child: SlideTransition(
+                position: _taglineSlide,
+                child: Text(
                 '생활 속 모든 계산',
-                style: TextStyle(
+                style: AppTokens.textStyleAppBarTitle.copyWith(
                   color: _kTagline,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 1.2,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.35),
+                      offset: const Offset(0, 2),
+                      blurRadius: 6,
+                    ),
+                  ],
                 ),
+              ),
               ),
             ),
           ],

@@ -5,6 +5,7 @@ import 'package:calcmate/presentation/calculator/basic_calculator_viewmodel.dart
 import 'package:calcmate/presentation/calculator/widgets/button_pad.dart';
 import 'package:calcmate/presentation/calculator/widgets/display_panel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BasicCalculatorScreen extends ConsumerWidget {
@@ -22,6 +23,7 @@ class BasicCalculatorScreen extends ConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         titleSpacing: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,

@@ -24,7 +24,7 @@ class AppAnimatedTabBar extends StatelessWidget {
   final Color dividerColor;
   final Color inactiveColor;
 
-  static const _tabRowHeight = 40.0;
+  static const _tabRowHeight = 48.0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,8 @@ class AppAnimatedTabBar extends StatelessWidget {
                 // 스트레치 배경 칩
                 Positioned(
                   left: bgLeft,
-                  top: 4,
-                  bottom: 4,
+                  top: 6,
+                  bottom: 6,
                   child: Container(
                     width: bgWidth,
                     decoration: BoxDecoration(
@@ -73,7 +73,16 @@ class AppAnimatedTabBar extends StatelessWidget {
                 ),
                 // 탭 레이블
                 Row(
-                  children: List.generate(labels.length, (i) {
+                  children: List.generate(labels.length * 2 - 1, (idx) {
+                    // 홀수 인덱스 = 구분선
+                    if (idx.isOdd) {
+                      return Container(
+                        width: 1,
+                        height: 14,
+                        color: dividerColor,
+                      );
+                    }
+                    final i = idx ~/ 2;
                     final distance = (pageOffset - i).abs().clamp(0.0, 1.0);
                     final scale = 1.0 + (1.0 - distance) * 0.08;
                     return Expanded(
@@ -83,11 +92,14 @@ class AppAnimatedTabBar extends StatelessWidget {
                         child: Center(
                           child: Transform.scale(
                             scale: scale,
-                            child: Text(
-                              labels[i],
-                              style: AppTokens.textStyleChip.copyWith(
-                                color: Color.lerp(accentColor, inactiveColor, distance),
-                                fontWeight: distance < 0.5 ? FontWeight.w600 : FontWeight.w400,
+                            child: Opacity(
+                              opacity: 1.0 - distance * 0.45,
+                              child: Text(
+                                labels[i],
+                                style: AppTokens.textStyleChip.copyWith(
+                                  color: Color.lerp(accentColor, inactiveColor, distance),
+                                  fontWeight: distance < 0.5 ? FontWeight.w700 : FontWeight.w500,
+                                ),
                               ),
                             ),
                           ),

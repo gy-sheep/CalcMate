@@ -171,6 +171,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           opacity: isScrolled ? 0.0 : 1.0,
           duration: const Duration(milliseconds: 100),
           child: AppBar(
+            systemOverlayStyle: Theme.of(context).brightness == Brightness.dark
+                ? SystemUiOverlayStyle.light
+                : SystemUiOverlayStyle.dark,
             backgroundColor: Colors.transparent,
             elevation: 0,
             scrolledUnderElevation: 0,

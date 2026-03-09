@@ -78,6 +78,7 @@ class _PrototypeDScreenState extends State<PrototypeDScreen> {
     return Scaffold(
       backgroundColor: kLoanBgTop,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         titleSpacing: 0,
         backgroundColor: kLoanBgTop,
         elevation: 0,

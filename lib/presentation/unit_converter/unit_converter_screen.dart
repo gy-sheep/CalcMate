@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/unit_definitions.dart';
@@ -123,6 +124,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.light,
         titleSpacing: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,
