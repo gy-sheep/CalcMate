@@ -605,9 +605,9 @@ class _ItemList extends StatelessWidget {
                     ? kDutchAccent.withValues(alpha: 0.05)
                     : null,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // 수정 중 표시
-                    if (editing) ...[
+                    if (editing)
                       Container(
                         width: 3,
                         height: 36,
@@ -616,11 +616,20 @@ class _ItemList extends StatelessWidget {
                           color: kDutchAccent,
                           borderRadius: BorderRadius.circular(2),
                         ),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          size: AppTokens.sizeIconXSmall,
+                          color: kDutchTextTertiary.withValues(alpha: 0.6),
+                        ),
                       ),
-                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(item.name,
                               style: AppTokens.textStyleBody.copyWith(
