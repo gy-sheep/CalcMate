@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/usecases/bmi_calculate_usecase.dart';
 import '../widgets/scroll_fade_view.dart';
 import 'bmi_calculator_viewmodel.dart';
@@ -226,7 +227,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
                 title: Text('BMI 계산기',
                     style: AppTokens.textStyleAppBarTitle
                         .copyWith(color: _kTextPrimary)),
-                centerTitle: true,
+                centerTitle: false,
                 actions: [
                   GestureDetector(
                     onTap: () {
@@ -265,75 +266,83 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
             colors: [_kBgTop, _kBgBottom],
           ),
         ),
-        child: ScrollFadeView(
-          controller: _scrollController,
-          fadeColor: _kBgBottom,
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + kToolbarHeight,
-            bottom: bottomPad + 24,
-            left: AppTokens.paddingScreenH,
-            right: AppTokens.paddingScreenH,
-          ),
-          child: Column(
-            children: [
-              // ── 게이지 ────────────────────────────────────────────────────
-              BmiGauge(
-                bmiAnim: _needleAnim,
-                bmi: result.bmi,
-                category: result.category,
-                categories: result.categories,
-                standardLabel: isAsian
-                    ? 'WHO 아시아태평양 기준 (대한비만학회 준용)'
-                    : 'WHO 글로벌 기준',
-              ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ScrollFadeView(
+                controller: _scrollController,
+                fadeColor: _kBgBottom,
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + kToolbarHeight,
+                  bottom: 24,
+                  left: AppTokens.paddingScreenH,
+                  right: AppTokens.paddingScreenH,
+                ),
+                child: Column(
+                  children: [
+                    // ── 게이지 ──────────────────────────────────────────────
+                    BmiGauge(
+                      bmiAnim: _needleAnim,
+                      bmi: result.bmi,
+                      category: result.category,
+                      categories: result.categories,
+                      standardLabel: isAsian
+                          ? 'WHO 아시아태평양 기준 (대한비만학회 준용)'
+                          : 'WHO 글로벌 기준',
+                    ),
 
-              // ── 키 슬라이더 ───────────────────────────────────────────────
-              BmiInputSlider(
-                label: '키',
-                valueLabel: _heightLabel(state.heightCm, state.isMetric),
-                value: state.heightCm,
-                min: 100,
-                max: 220,
-                divisions: 120,
-                accentColor: _kAccent,
-                onChanged: (v) => vm.handleIntent(
-                    BmiCalculatorIntent.heightChanged(v)),
-                onValueTap: _editHeight,
-              ),
-              const SizedBox(height: 16),
+                    // ── 키 슬라이더 ─────────────────────────────────────────
+                    BmiInputSlider(
+                      label: '키',
+                      valueLabel: _heightLabel(state.heightCm, state.isMetric),
+                      value: state.heightCm,
+                      min: 100,
+                      max: 220,
+                      divisions: 120,
+                      accentColor: _kAccent,
+                      onChanged: (v) => vm.handleIntent(
+                          BmiCalculatorIntent.heightChanged(v)),
+                      onValueTap: _editHeight,
+                    ),
+                    const SizedBox(height: 16),
 
-              // ── 몸무게 슬라이더 ───────────────────────────────────────────
-              BmiInputSlider(
-                label: '몸무게',
-                valueLabel: _weightLabel(state.weightKg, state.isMetric),
-                value: state.weightKg,
-                min: 20,
-                max: 150,
-                divisions: 260,
-                accentColor: _kAccent,
-                onChanged: (v) => vm.handleIntent(
-                    BmiCalculatorIntent.weightChanged(v)),
-                onValueTap: _editWeight,
-              ),
-              const SizedBox(height: 20),
+                    // ── 몸무게 슬라이더 ─────────────────────────────────────
+                    BmiInputSlider(
+                      label: '몸무게',
+                      valueLabel: _weightLabel(state.weightKg, state.isMetric),
+                      value: state.weightKg,
+                      min: 20,
+                      max: 150,
+                      divisions: 260,
+                      accentColor: _kAccent,
+                      onChanged: (v) => vm.handleIntent(
+                          BmiCalculatorIntent.weightChanged(v)),
+                      onValueTap: _editWeight,
+                    ),
+                    const SizedBox(height: 20),
 
-              // ── 건강 체중 범위 카드 ────────────────────────────────────────
-              BmiHealthyWeightCard(
-                minKg: result.healthyWeightMinKg,
-                maxKg: result.healthyWeightMaxKg,
-                isInRange: result.isInHealthyRange,
-                isMetric: state.isMetric,
-              ),
-              const SizedBox(height: 16),
+                    // ── 건강 체중 범위 카드 ──────────────────────────────────
+                    BmiHealthyWeightCard(
+                      minKg: result.healthyWeightMinKg,
+                      maxKg: result.healthyWeightMaxKg,
+                      isInRange: result.isInHealthyRange,
+                      isMetric: state.isMetric,
+                    ),
+                    const SizedBox(height: 16),
 
-              // ── 범주 그리드 ───────────────────────────────────────────────
-              BmiCategoryGrid(
-                categories: result.categories,
-                currentCategory: result.category,
+                    // ── 범주 그리드 ─────────────────────────────────────────
+                    BmiCategoryGrid(
+                      categories: result.categories,
+                      currentCategory: result.category,
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-            ],
-          ),
+            ),
+            const AdBannerPlaceholder(),
+            SizedBox(height: bottomPad),
+          ],
         ),
       ),
     );
