@@ -109,42 +109,46 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: ClipRect(
-          child: BackdropFilter(
-            filter: state.isScrolled
-                ? ImageFilter.blur(sigmaX: 20, sigmaY: 20)
-                : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              color: state.isScrolled
-                  ? (Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black.withValues(alpha: 0.75)
-                      : Colors.white.withValues(alpha: 0.75))
-                  : Theme.of(context).colorScheme.surface,
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                scrolledUnderElevation: 0,
-                title: Text(state.isEditMode ? '순서 편집' : 'CalcMate'),
-                centerTitle: true,
-                actions: [
-                  if (state.isEditMode)
-                    TextButton(
-                      onPressed: () => ref
-                          .read(mainScreenViewModelProvider.notifier)
-                          .handleIntent(const MainScreenIntent.toggleEditMode()),
-                      child: const Text('완료'),
-                    )
-                  else
-                    IconButton(
-                      key: _settingsKey,
-                      onPressed: _showSettingsMenu,
-                      icon: const Icon(Icons.settings),
-                    ),
-                ],
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: state.isScrolled ? 20.0 : 0.0),
+          duration: const Duration(milliseconds: 200),
+          builder: (context, sigma, _) {
+            return ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  color: state.isScrolled
+                      ? (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black.withValues(alpha: 0.75)
+                          : Colors.white.withValues(alpha: 0.75))
+                      : Theme.of(context).colorScheme.surface,
+                  child: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    scrolledUnderElevation: 0,
+                    title: Text(state.isEditMode ? '순서 편집' : 'CalcMate'),
+                    centerTitle: false,
+                    actions: [
+                      if (state.isEditMode)
+                        TextButton(
+                          onPressed: () => ref
+                              .read(mainScreenViewModelProvider.notifier)
+                              .handleIntent(const MainScreenIntent.toggleEditMode()),
+                          child: const Text('완료'),
+                        )
+                      else
+                        IconButton(
+                          key: _settingsKey,
+                          onPressed: _showSettingsMenu,
+                          icon: const Icon(Icons.more_vert),
+                        ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
       body: Padding(

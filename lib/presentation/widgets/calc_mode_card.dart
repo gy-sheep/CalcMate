@@ -83,11 +83,9 @@ class CalcModeCard extends StatelessWidget {
                         children: [
                           Text(
                             title,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            style: AppTokens.textStyleAppBarTitle.copyWith(
                               color: Colors.white,
-                              shadows: [
+                              shadows: const [
                                 Shadow(offset: Offset(-1.5, -1.5), color: Colors.black26),
                                 Shadow(offset: Offset( 1.5, -1.5), color: Colors.black26),
                                 Shadow(offset: Offset(-1.5,  1.5), color: Colors.black26),
@@ -97,8 +95,7 @@ class CalcModeCard extends StatelessWidget {
                           ),
                           Text(
                             description,
-                            style: TextStyle(
-                              fontSize: 13,
+                            style: AppTokens.textStyleCaption.copyWith(
                               color: Colors.white.withValues(alpha: 0.8),
                             ),
                             maxLines: 2,

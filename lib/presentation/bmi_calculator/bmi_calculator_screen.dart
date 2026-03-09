@@ -205,57 +205,61 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
       backgroundColor: _kBgBottom,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: ClipRect(
-          child: BackdropFilter(
-            filter: _isScrolled
-                ? ImageFilter.blur(sigmaX: 20, sigmaY: 20)
-                : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              color: _isScrolled
-                  ? _kBgTop.withValues(alpha: 0.85)
-                  : Colors.transparent,
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                scrolledUnderElevation: 0,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new,
-                      size: AppTokens.sizeAppBarBackIcon, color: _kTextPrimary),
-                  onPressed: () => Navigator.of(context).maybePop(),
-                ),
-                title: Text('BMI 계산기',
-                    style: AppTokens.textStyleAppBarTitle
-                        .copyWith(color: _kTextPrimary)),
-                centerTitle: false,
-                actions: [
-                  GestureDetector(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      vm.handleIntent(
-                          const BmiCalculatorIntent.unitToggled());
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          right: AppTokens.paddingAppBarH),
-                      padding: AppTokens.paddingChip,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: _kAccent.withValues(alpha: 0.5)),
-                        borderRadius:
-                            BorderRadius.circular(AppTokens.radiusChip),
-                      ),
-                      child: Text(
-                        state.isMetric ? 'kg · cm' : 'lb · ft',
-                        style: AppTokens.textStyleCaption
-                            .copyWith(color: _kAccent),
-                      ),
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: _isScrolled ? 20.0 : 0.0),
+          duration: const Duration(milliseconds: 200),
+          builder: (context, sigma, _) {
+            return ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  color: _isScrolled
+                      ? _kBgTop.withValues(alpha: 0.85)
+                      : Colors.transparent,
+                  child: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    scrolledUnderElevation: 0,
+                    leading: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios_new,
+                          size: AppTokens.sizeAppBarBackIcon, color: _kTextPrimary),
+                      onPressed: () => Navigator.of(context).maybePop(),
                     ),
+                    title: Text('BMI 계산기',
+                        style: AppTokens.textStyleAppBarTitle
+                            .copyWith(color: _kTextPrimary)),
+                    centerTitle: false,
+                    actions: [
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          vm.handleIntent(
+                              const BmiCalculatorIntent.unitToggled());
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              right: AppTokens.paddingAppBarH),
+                          padding: AppTokens.paddingChip,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: _kAccent.withValues(alpha: 0.5)),
+                            borderRadius:
+                                BorderRadius.circular(AppTokens.radiusChip),
+                          ),
+                          child: Text(
+                            state.isMetric ? 'kg · cm' : 'lb · ft',
+                            style: AppTokens.textStyleCaption
+                                .copyWith(color: _kAccent),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
       body: Container(

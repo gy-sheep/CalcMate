@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `fix/vat-checkbox-tap-target`
-> **마지막 완료**: 부가세 계산기 모드 토글 및 결과 카드 UX 개선
+> **현재 브랜치**: `fix/ui-design-updates`
+> **마지막 완료**: 메인·BMI 앱바 블러 애니메이션 개선 및 메인 UI 업데이트
 
 ### Phase 10: 다음 계산기
 - [ ] 다음 Phase 계산기 선정 및 기획
@@ -39,6 +39,7 @@
 | — | 공통 모듈화: ScrollFadeView·AppAnimatedTabBar·showAppToast + 스크롤 페이드 전체 적용 | — | `docs/plans/REFACTORING_CHECKLIST.md` |
 | — | 디자인 일관성 리팩토링 (토큰 전체 적용·공통 위젯·디자인 문서) | — | `docs/design/` |
 | — | 스플래시 화면 (네이티브 배경 + Flutter shimmer 애니메이션) | — | — |
+| — | 메인·BMI 앱바 블러 애니메이션 개선, CalcModeCard 토큰 적용, 메인 앱바 좌측 정렬·more_vert | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 
