@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
-import '../net_pay_calculator_colors.dart';
+import '../salary_calculator_colors.dart';
 
 class ResultCard extends StatelessWidget {
   const ResultCard({
@@ -23,13 +23,10 @@ class ResultCard extends StatelessWidget {
     return Container(
       padding: CmResultCard.padding,
       decoration: BoxDecoration(
-        color: kNetPayResultBg,
+        color: kSalaryResultBg,
         borderRadius: BorderRadius.circular(CmResultCard.radius),
-        border: Border.all(color: kNetPayResultBorder),
-        boxShadow: const [
-          BoxShadow(
-              color: kNetPayCardShadow, blurRadius: 8, offset: Offset(0, 2)),
-        ],
+        border: Border.all(color: kSalaryResultBorder),
+        boxShadow: kSalaryCardBoxShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -38,7 +35,7 @@ class ResultCard extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text('실수령액',
                 style: CmResultCard.titleText
-                    .copyWith(color: kNetPayTextSecondary)),
+                    .copyWith(color: kSalaryTextSecondary)),
           ),
           const SizedBox(height: CmResultCard.titleSpacing),
           Row(
@@ -51,7 +48,7 @@ class ResultCard extends StatelessWidget {
                       ? NumberFormatter.addCommas(netPay.toString())
                       : '—',
                   style: CmResultCard.resultText.copyWith(
-                    color: kNetPayGold,
+                    color: kSalaryGold,
                     fontWeight: FontWeight.w400,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -59,12 +56,12 @@ class ResultCard extends StatelessWidget {
                 ),
               ),
               if (netPay > 0) ...[
-                const SizedBox(width: 6),
+                const SizedBox(width: spacingUnit),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
+                  padding: const EdgeInsets.only(bottom: CmResultCard.subSpacing),
                   child: Text('원',
                       style: CmResultCard.unitText
-                          .copyWith(color: kNetPayTextSecondary)),
+                          .copyWith(color: kSalaryTextSecondary)),
                 ),
               ],
             ],
@@ -74,7 +71,7 @@ class ResultCard extends StatelessWidget {
             Text(
               '$subLabel  ${NumberFormatter.addCommas(netPayAnnual.toString())} 원',
               style:
-                  CmResultCard.subText.copyWith(color: kNetPayTextSecondary),
+                  CmResultCard.subText.copyWith(color: kSalaryTextSecondary),
             ),
           ],
         ],

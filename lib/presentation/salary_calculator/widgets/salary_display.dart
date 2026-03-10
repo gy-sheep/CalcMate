@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
-import '../net_pay_calculator_colors.dart';
+import '../salary_calculator_colors.dart';
 
 class SalaryDisplay extends StatelessWidget {
   const SalaryDisplay({
@@ -14,6 +14,7 @@ class SalaryDisplay extends StatelessWidget {
     required this.sliderValue,
     required this.sliderMin,
     required this.sliderMax,
+    required this.sliderDivisions,
     required this.sliderMinLabel,
     required this.sliderMaxLabel,
     required this.onSliderChanged,
@@ -26,6 +27,7 @@ class SalaryDisplay extends StatelessWidget {
   final double sliderValue;
   final double sliderMin;
   final double sliderMax;
+  final int sliderDivisions;
   final String sliderMinLabel;
   final String sliderMaxLabel;
   final ValueChanged<double> onSliderChanged;
@@ -39,15 +41,10 @@ class SalaryDisplay extends StatelessWidget {
       child: Container(
         padding: CmInputCard.padding,
         decoration: BoxDecoration(
-          color: kNetPayCardBg,
+          color: kSalaryCardBg,
           borderRadius: BorderRadius.circular(CmInputCard.radius),
-          border: Border.all(color: kNetPayCardBorder),
-          boxShadow: const [
-            BoxShadow(
-                color: kNetPayCardShadow,
-                blurRadius: 8,
-                offset: Offset(0, 2)),
-          ],
+          border: Border.all(color: kSalaryCardBorder),
+          boxShadow: kSalaryCardBoxShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -57,9 +54,9 @@ class SalaryDisplay extends StatelessWidget {
               children: [
                 Text(title,
                     style: CmInputCard.titleText
-                        .copyWith(color: kNetPayTextSecondary)),
+                        .copyWith(color: kSalaryTextSecondary)),
                 const Icon(Icons.edit_outlined,
-                    color: kNetPayTextSecondary, size: CmIcon.inputCard),
+                    color: kSalaryTextSecondary, size: CmIcon.inputCard),
               ],
             ),
             const SizedBox(height: CmInputCard.titleSpacing),
@@ -72,24 +69,24 @@ class SalaryDisplay extends StatelessWidget {
                         ? NumberFormatter.addCommas(salary.toString())
                         : '0',
                     style:
-                        CmInputCard.inputText.copyWith(color: kNetPayTextPrimary),
+                        CmInputCard.inputText.copyWith(color: kSalaryTextPrimary),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: spacingUnit),
                 Text('원',
                     style:
-                        CmInputCard.unitText.copyWith(color: kNetPayTextSecondary)),
+                        CmInputCard.unitText.copyWith(color: kSalaryTextSecondary)),
               ],
             ),
             if (isAnnual && salary > 0) ...[
               const SizedBox(height: CmInputCard.subSpacing),
               Text(
                 '월 ${NumberFormatter.addCommas(monthSalary.toString())} 원',
-                style: CmInputCard.subText.copyWith(color: kNetPayTextSecondary),
+                style: CmInputCard.subText.copyWith(color: kSalaryTextSecondary),
               ),
             ],
-            const SizedBox(height: 12),
+            const SizedBox(height: CmSlider.topSpacing),
             SliderTheme(
               data: SliderThemeData(
                 trackHeight: CmSlider.trackHeight,
@@ -97,29 +94,30 @@ class SalaryDisplay extends StatelessWidget {
                     enabledThumbRadius: CmSlider.thumbRadius),
                 overlayShape: const RoundSliderOverlayShape(
                     overlayRadius: CmSlider.overlayRadius),
-                activeTrackColor: kNetPayGold,
-                inactiveTrackColor: kNetPaySliderTrack,
-                thumbColor: kNetPayGold,
-                overlayColor: kNetPayGoldSoft,
+                activeTrackColor: kSalaryGold,
+                inactiveTrackColor: kSalarySliderTrack,
+                thumbColor: kSalaryGold,
+                overlayColor: kSalaryGoldSoft,
               ),
               child: Slider(
                 value: sliderValue,
                 min: sliderMin,
                 max: sliderMax,
+                divisions: sliderDivisions,
                 onChanged: onSliderChanged,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: CmSlider.labelPaddingH),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(sliderMinLabel,
                       style: CmSlider.rangeLabel
-                          .copyWith(color: kNetPayTextSecondary)),
+                          .copyWith(color: kSalaryTextSecondary)),
                   Text(sliderMaxLabel,
                       style: CmSlider.rangeLabel
-                          .copyWith(color: kNetPayTextSecondary)),
+                          .copyWith(color: kSalaryTextSecondary)),
                 ],
               ),
             ),

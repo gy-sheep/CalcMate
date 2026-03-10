@@ -59,7 +59,7 @@
 | 14 | 설정 화면 (다크 모드·계산기 관리·메인 카드 스와이프 숨기기) | — | `docs/specs/SETTINGS.md` |
 | — | 설정 UI 전체 구현 (카드 레이아웃·언어·앱 정보·라이선스·블러 오버레이·iOS Switch) | — | `docs/specs/SETTINGS.md` |
 | 10 | 실수령액 계산기 UI 구현 (입력 카드·슬라이더 통합·결과 카드·공제 내역·부양가족 바) | — | `docs/design/SALARY_CALCULATOR.md` |
-| 10 | 실수령액 계산기 로직 구현 (TaxRates·NetPayState·UseCase·ViewModel·위젯 분리) | 19케이스 | `docs/dev/SALARY_CALCULATOR_IMPL.md` |
+| 10 | 실수령액 계산기 로직 구현 (TaxRates·SalaryCalculatorState·CalculateSalaryUseCase·ViewModel·위젯 분리) | 19케이스 | `docs/dev/SALARY_CALCULATOR_IMPL.md` |
 | — | Cm* 컴포넌트 토큰 시스템 추가 (CmTab·CmInputCard·CmResultCard·CmListCard·CmRoundButton·CmSlider 등) | — | `docs/conventions/UI_TOKEN_CONVENTION.md` |
 | — | 단위 변환기 단위 전환 정밀도 개선 (rawConvertedValues) | — | — |
 

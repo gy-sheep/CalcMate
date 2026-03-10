@@ -328,6 +328,23 @@ abstract class AppTokens {
 // ════════════════════════════════════════════════════════════════
 // 아래는 Q&A 방식으로 순차 확정된 신규 토큰
 // ════════════════════════════════════════════════════════════════
+
+// ── Global Constants ─────────────────────────────────────────
+
+/// 카드/섹션 간 수직 간격
+const double spacingSection = 16;
+
+/// 숫자와 단위 텍스트('원', 'USD' 등) 사이 간격
+const double spacingUnit = 6;
+
+/// 행 레이블 텍스트 ("부양가족 수" 등 레이블 + 컨트롤 구조의 레이블)
+const TextStyle rowLabel = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+);
+
+// ── Component Tokens (Cm*) ───────────────────────────────────
+
 /// 탭바 토큰.
 abstract class CmTab {
   /// 탭바 레이블 (활성: w700 / 비활성: w500 은 위젯에서 copyWith)
@@ -359,8 +376,8 @@ abstract class CmInputCard {
 
   /// 카드 상단 타이틀 ("총 금액", "기준 급여" 등)
   static const TextStyle titleText = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
+    fontSize: 14,
+    fontWeight: FontWeight.w800,
     letterSpacing: 0.3,
   );
 
@@ -383,6 +400,46 @@ abstract class CmInputCard {
   );
 }
 
+/// 결과 카드 토큰.
+abstract class CmResultCard {
+  /// 내부 패딩
+  static const EdgeInsets padding = EdgeInsets.all(20);
+
+  /// borderRadius
+  static const double radius = 16;
+
+  /// 타이틀 하단 간격 (타이틀 → 결과 숫자)
+  static const double titleSpacing = 8;
+
+  /// 보조 텍스트 상단 간격 (결과 숫자 → 보조 텍스트)
+  static const double subSpacing = 6;
+
+  /// 카드 상단 타이틀 ("실수령액" 등)
+  static const TextStyle titleText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 0.3,
+  );
+
+  /// 결과 숫자 텍스트
+  static const TextStyle resultText = TextStyle(
+    fontSize: 40,
+    fontWeight: FontWeight.w300,
+  );
+
+  /// 단위 텍스트 ("원" 등)
+  static const TextStyle unitText = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// 보조 텍스트 ("연 실수령", "연 환산" 등)
+  static const TextStyle subText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+}
+
 /// 목록형 카드 토큰 (공제 내역 등 헤더 + 항목 행 구조).
 abstract class CmListCard {
   /// borderRadius
@@ -394,9 +451,12 @@ abstract class CmListCard {
   /// 항목 행 패딩
   static const EdgeInsets itemPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
 
+  /// 구분선 두께
+  static const double dividerHeight = 1;
+
   /// 헤더 레이블 텍스트 ("공제 합계" 등)
   static const TextStyle headerLabel = TextStyle(
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.3,
   );
@@ -420,49 +480,9 @@ abstract class CmListCard {
   );
 }
 
-/// 결과 카드 토큰.
-abstract class CmResultCard {
-  /// 내부 패딩
-  static const EdgeInsets padding = EdgeInsets.all(20);
-
-  /// borderRadius
-  static const double radius = 16;
-
-  /// 타이틀 하단 간격 (타이틀 → 결과 숫자)
-  static const double titleSpacing = 8;
-
-  /// 보조 텍스트 상단 간격 (결과 숫자 → 보조 텍스트)
-  static const double subSpacing = 6;
-
-  /// 카드 상단 타이틀 ("실수령액" 등)
-  static const TextStyle titleText = TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.3,
-  );
-
-  /// 결과 숫자 텍스트
-  static const TextStyle resultText = TextStyle(
-    fontSize: 40,
-    fontWeight: FontWeight.w300,
-  );
-
-  /// 단위 텍스트 ("원" 등)
-  static const TextStyle unitText = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-  );
-
-  /// 보조 텍스트 ("연 실수령", "연 환산" 등)
-  static const TextStyle subText = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-  );
-}
-
 /// 라운드 버튼 사이즈 토큰 (size + radius + iconSize 세트).
-class _RoundButtonSize {
-  const _RoundButtonSize({
+class RoundButtonSize {
+  const RoundButtonSize({
     required this.size,
     required this.radius,
     required this.iconSize,
@@ -475,14 +495,14 @@ class _RoundButtonSize {
 /// 라운드 버튼 토큰. 사용처에 따라 small·medium·large를 선택한다.
 abstract class CmRoundButton {
   /// 소형 — 24×24
-  static const _RoundButtonSize small = _RoundButtonSize(size: 24, radius: 12, iconSize: 16);
+  static const RoundButtonSize small = RoundButtonSize(size: 24, radius: 12, iconSize: 16);
 
   /// 중형 — 32×32 (부양가족 수 조절 버튼 등)
-  // static const _RoundButtonSize medium = _RoundButtonSize(size: 24, radius: 12, iconSize: 16);
-  static const _RoundButtonSize medium = _RoundButtonSize(size: 28, radius: 14, iconSize: 18);
+  // static const RoundButtonSize medium = RoundButtonSize(size: 24, radius: 12, iconSize: 16);
+  static const RoundButtonSize medium = RoundButtonSize(size: 28, radius: 14, iconSize: 18);
 
   /// 대형 — 48×48 (날짜 계산기 이동 버튼, 미세 조절 바 등)
-  static const _RoundButtonSize large = _RoundButtonSize(size: 32, radius: 16, iconSize: 20);
+  static const RoundButtonSize large = RoundButtonSize(size: 32, radius: 16, iconSize: 20);
 
   /// 내부 그림자. color는 화면별 색상을 주입한다.
   static BoxShadow innerShadow(Color color) => BoxShadow(
@@ -522,6 +542,12 @@ abstract class CmSlider {
   /// 터치 오버레이 반지름
   static const double overlayRadius = 18;
 
+  /// 슬라이더 상단 간격 (콘텐츠 → 슬라이더)
+  static const double topSpacing = 12;
+
+  /// 범위 라벨 좌우 패딩
+  static const double labelPaddingH = 4;
+
   /// 범위 레이블 텍스트 (최솟값·최댓값 표시)
   static const TextStyle rangeLabel = TextStyle(
     fontSize: 14,
@@ -553,8 +579,36 @@ abstract class CmIcon {
   static const double tooltip = 16;
 }
 
-/// 행 레이블 텍스트 ("부양가족 수" 등 레이블 + 컨트롤 구조의 레이블)
-const TextStyle rowLabel = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w500,
-);
+/// 숫자 키패드 모달 토큰.
+abstract class CmKeypad {
+  /// 모달 내부 패딩
+  static const EdgeInsets padding = EdgeInsets.fromLTRB(16, 12, 16, 0);
+
+  /// 입력 표시 영역 패딩
+  static const EdgeInsets displayPadding = EdgeInsets.symmetric(horizontal: 20, vertical: 16);
+
+  /// 입력 표시 → 키패드 간격
+  static const double displaySpacing = 16;
+
+  /// 키패드 행 간격
+  static const double rowSpacing = 8;
+
+  /// 버튼 좌우 간격
+  static const double buttonSpacingH = 4;
+
+  /// 버튼 borderRadius
+  static const double buttonRadius = 12;
+
+  /// 확인 버튼 하단 safe area 추가 여백
+  static const double bottomPadding = 16;
+}
+
+/// 하단 고정 바 토큰 (부양가족 수 등 레이블 + 컨트롤 구조).
+abstract class CmBottomBar {
+  /// 내부 패딩
+  static const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 20, vertical: 12);
+
+  /// 레이블과 아이콘 사이 간격
+  static const double labelIconSpacing = 4;
+}
+

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../net_pay_calculator_colors.dart';
+import '../salary_calculator_colors.dart';
 
 class DependentsBar extends StatelessWidget {
   const DependentsBar({
@@ -18,10 +18,10 @@ class DependentsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: CmBottomBar.padding,
       decoration: BoxDecoration(
-        color: kNetPayCardBg,
-        border: const Border(top: BorderSide(color: kNetPayCardBorder)),
+        color: kSalaryCardBg,
+        border: const Border(top: BorderSide(color: kSalaryCardBorder)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,12 +29,12 @@ class DependentsBar extends StatelessWidget {
           Row(
             children: [
               Text('부양가족 수',
-                  style: rowLabel.copyWith(color: kNetPayTextPrimary)),
-              const SizedBox(width: 4),
+                  style: rowLabel.copyWith(color: kSalaryTextPrimary)),
+              const SizedBox(width: CmBottomBar.labelIconSpacing),
               Tooltip(
                 message: '본인 포함 기준, 소득세 계산에 반영됩니다',
                 child: Icon(Icons.info_outline,
-                    size: CmIcon.tooltip, color: kNetPayTextSecondary),
+                    size: CmIcon.tooltip, color: kSalaryTextSecondary),
               ),
             ],
           ),
@@ -51,7 +51,7 @@ class DependentsBar extends StatelessWidget {
                 child: Text(
                   '$dependents명',
                   textAlign: TextAlign.center,
-                  style: CmStepValue.text.copyWith(color: kNetPayGold),
+                  style: CmStepValue.text.copyWith(color: kSalaryGold),
                 ),
               ),
               _StepButton(
@@ -85,18 +85,18 @@ class _StepButton extends StatelessWidget {
         width: CmRoundButton.medium.size,
         height: CmRoundButton.medium.size,
         decoration: BoxDecoration(
-          color: enabled ? kNetPayGoldSoft : Colors.transparent,
+          color: enabled ? kSalaryGoldSoft : Colors.transparent,
           borderRadius: BorderRadius.circular(CmRoundButton.medium.radius),
           border: Border.all(
             color: enabled
-                ? kNetPayGold.withValues(alpha: 0.4)
-                : kNetPayTextDisabled,
+                ? kSalaryGold.withValues(alpha: 0.4)
+                : kSalaryTextDisabled,
           ),
         ),
         child: Icon(
           icon,
           size: CmRoundButton.medium.iconSize,
-          color: enabled ? kNetPayGold : kNetPayTextDisabled,
+          color: enabled ? kSalaryGold : kSalaryTextDisabled,
         ),
       ),
     );

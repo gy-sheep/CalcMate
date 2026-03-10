@@ -33,8 +33,8 @@ class DeductionResult {
 ///
 /// 4대보험 + 소득세(간이세액표 산출 공식) + 지방소득세를 계산한다.
 /// 소득세는 국세청 간이세액표 산출 알고리즘(소득세법 시행령 별표2)을 구현.
-class CalculateNetPayUseCase {
-  const CalculateNetPayUseCase(this._rates);
+class CalculateSalaryUseCase {
+  const CalculateSalaryUseCase(this._rates);
 
   final TaxRates _rates;
 

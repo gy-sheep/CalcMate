@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
-import '../net_pay_calculator_colors.dart';
+import '../salary_calculator_colors.dart';
 
 /// 급여 직접 입력 키패드 모달.
 ///
@@ -51,11 +51,11 @@ void showSalaryKeypad(
 
         return Container(
           decoration: const BoxDecoration(
-            color: kNetPayBgTop,
+            color: kSalaryBgTop,
             borderRadius: BorderRadius.vertical(
                 top: Radius.circular(AppTokens.radiusBottomSheet)),
           ),
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          padding: CmKeypad.padding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -66,7 +66,7 @@ void showSalaryKeypad(
                 margin: const EdgeInsets.only(
                     bottom: AppTokens.spacingSheetHandle),
                 decoration: BoxDecoration(
-                  color: kNetPayCardBorder,
+                  color: kSalaryCardBorder,
                   borderRadius:
                       BorderRadius.circular(AppTokens.radiusSheetHandle),
                 ),
@@ -74,23 +74,22 @@ void showSalaryKeypad(
               // 입력 표시
               Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: CmKeypad.displayPadding,
                 decoration: BoxDecoration(
-                  color: kNetPayDeductionBg,
+                  color: kSalaryDeductionBg,
                   borderRadius:
                       BorderRadius.circular(AppTokens.radiusInput),
                   border: Border.all(
-                      color: kNetPayGold.withValues(alpha: 0.4)),
+                      color: kSalaryGold.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   displayText(),
                   textAlign: TextAlign.right,
                   style: AppTokens.textStyleResult36
-                      .copyWith(color: kNetPayTextPrimary),
+                      .copyWith(color: kSalaryTextPrimary),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: CmKeypad.displaySpacing),
               // 키패드
               ...[
                 ['7', '8', '9'],
@@ -98,17 +97,19 @@ void showSalaryKeypad(
                 ['1', '2', '3'],
                 ['00', '0', '⌫'],
               ].map((row) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: CmKeypad.rowSpacing),
                     child: Row(
                       children: row.map((key) {
                         final isBack = key == '⌫';
                         return Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: CmKeypad.buttonSpacingH),
                             child: Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(
+                                    CmKeypad.buttonRadius),
                                 onTap: isBack
                                     ? backspace
                                     : () => append(key),
@@ -119,21 +120,21 @@ void showSalaryKeypad(
                                   height: AppTokens.heightButtonMedium,
                                   decoration: BoxDecoration(
                                     color: isBack
-                                        ? kNetPayGoldSoft
-                                        : kNetPayCardBg,
-                                    borderRadius:
-                                        BorderRadius.circular(12),
+                                        ? kSalaryGoldSoft
+                                        : kSalaryCardBg,
+                                    borderRadius: BorderRadius.circular(
+                                        CmKeypad.buttonRadius),
                                     border: Border.all(
                                       color: isBack
-                                          ? kNetPayGold.withValues(
+                                          ? kSalaryGold.withValues(
                                               alpha: 0.4)
-                                          : kNetPayCardBorder,
+                                          : kSalaryCardBorder,
                                     ),
                                   ),
                                   child: Center(
                                     child: isBack
                                         ? Icon(Icons.backspace_outlined,
-                                            color: kNetPayGold,
+                                            color: kSalaryGold,
                                             size: AppTokens
                                                 .sizeKeypadBackspace)
                                         : Text(
@@ -142,7 +143,7 @@ void showSalaryKeypad(
                                                 .textStyleKeypadNumber
                                                 .copyWith(
                                                     color:
-                                                        kNetPayTextPrimary),
+                                                        kSalaryTextPrimary),
                                           ),
                                   ),
                                 ),
@@ -156,14 +157,15 @@ void showSalaryKeypad(
               // 확인 버튼
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                    0, 8, 0, MediaQuery.of(ctx).padding.bottom + 16),
+                    0, CmKeypad.rowSpacing, 0,
+                    MediaQuery.of(ctx).padding.bottom + CmKeypad.bottomPadding),
                 child: SizedBox(
                   width: double.infinity,
                   height: AppTokens.heightButtonPrimary,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kNetPayAccent,
-                      foregroundColor: Colors.white,
+                      backgroundColor: kSalaryAccent,
+                      foregroundColor: kSalaryBgTop,
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(AppTokens.radiusInput),
@@ -173,7 +175,7 @@ void showSalaryKeypad(
                     child: Text(
                       '확인',
                       style: AppTokens.textStyleBody.copyWith(
-                        color: Colors.white,
+                        color: kSalaryBgTop,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

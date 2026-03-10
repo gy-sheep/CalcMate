@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
-import '../net_pay_calculator_colors.dart';
+import '../salary_calculator_colors.dart';
 
 class DeductionCard extends StatelessWidget {
   const DeductionCard({
@@ -39,13 +39,10 @@ class DeductionCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: kNetPayDeductionBg,
+        color: kSalaryDeductionBg,
         borderRadius: BorderRadius.circular(CmListCard.radius),
-        border: Border.all(color: kNetPayDeductionLine),
-        boxShadow: const [
-          BoxShadow(
-              color: kNetPayCardShadow, blurRadius: 8, offset: Offset(0, 2)),
-        ],
+        border: Border.all(color: kSalaryDeductionLine),
+        boxShadow: kSalaryCardBoxShadow,
       ),
       child: Column(
         children: [
@@ -56,16 +53,16 @@ class DeductionCard extends StatelessWidget {
               children: [
                 Text('공제 합계',
                     style: CmListCard.headerLabel
-                        .copyWith(color: kNetPayTextSecondary)),
+                        .copyWith(color: kSalaryTextSecondary)),
                 Text(
                   totalDeduction > 0 ? '${_fmt(totalDeduction)} 원' : '—',
                   style:
-                      CmListCard.headerValue.copyWith(color: kNetPayTextPrimary),
+                      CmListCard.headerValue.copyWith(color: kSalaryTextPrimary),
                 ),
               ],
             ),
           ),
-          Container(height: 1, color: kNetPayDeductionLine),
+          Container(height: CmListCard.dividerHeight, color: kSalaryDeductionLine),
           ...items.asMap().entries.map((e) {
             final isLast = e.key == items.length - 1;
             final (label, amount) = e.value;
@@ -78,20 +75,20 @@ class DeductionCard extends StatelessWidget {
                     children: [
                       Text(label,
                           style: CmListCard.itemLabel
-                              .copyWith(color: kNetPayTextSecondary)),
+                              .copyWith(color: kSalaryTextSecondary)),
                       Text(
                         amount > 0 ? '${_fmt(amount)} 원' : '—',
                         style: CmListCard.itemValue
-                            .copyWith(color: kNetPayTextPrimary),
+                            .copyWith(color: kSalaryTextPrimary),
                       ),
                     ],
                   ),
                 ),
                 if (!isLast)
                   Container(
-                    height: 1,
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    color: kNetPayDeductionLine,
+                    height: CmListCard.dividerHeight,
+                    margin: EdgeInsets.symmetric(horizontal: CmListCard.itemPadding.horizontal / 2),
+                    color: kSalaryDeductionLine,
                   ),
               ],
             );

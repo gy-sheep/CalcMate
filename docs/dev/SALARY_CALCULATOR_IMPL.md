@@ -15,18 +15,17 @@
 | 파일 | 작업 |
 |------|------|
 | `lib/domain/models/tax_rates.dart` | 신규 — 도메인 TaxRates Freezed 모델 + kFallbackTaxRates 상수 |
-| `lib/domain/models/net_pay_state.dart` | 신규 — UI 전체 상태 Freezed 모델 |
-| `lib/domain/usecases/calculate_net_pay_usecase.dart` | 신규 — 실수령액 계산 UseCase (간이세액표 산출 공식) |
-| `lib/presentation/net_pay_calculator/net_pay_calculator_viewmodel.dart` | 신규 — ViewModel (AutoDisposeNotifier) |
-| `lib/presentation/net_pay_calculator/net_pay_calculator_screen.dart` | 수정 — StatefulWidget → ConsumerStatefulWidget, ViewModel 연결 |
-| `lib/presentation/net_pay_calculator/net_pay_calculator_colors.dart` | 유지 — 색상 상수 (변경 없음) |
-| `lib/presentation/net_pay_calculator/widgets/salary_display.dart` | 신규 — 급여 입력 표시 + 슬라이더 통합 위젯 |
-| `lib/presentation/net_pay_calculator/widgets/adjust_bar.dart` | 신규 — 미세 조절 바 위젯 |
-| `lib/presentation/net_pay_calculator/widgets/result_card.dart` | 신규 — 실수령액 결과 카드 위젯 |
-| `lib/presentation/net_pay_calculator/widgets/deduction_card.dart` | 신규 — 공제 내역 카드 위젯 |
-| `lib/presentation/net_pay_calculator/widgets/dependents_bar.dart` | 신규 — 부양가족 수 조절기 위젯 |
-| `lib/presentation/net_pay_calculator/widgets/keypad_modal.dart` | 신규 — 키패드 바텀시트 |
-| `test/domain/usecases/calculate_net_pay_usecase_test.dart` | 신규 — 계산 로직 단위 테스트 (19케이스) |
+| `lib/domain/models/salary_calculator_state.dart` | 신규 — UI 전체 상태 Freezed 모델 |
+| `lib/domain/usecases/calculate_salary_usecase.dart` | 신규 — 실수령액 계산 UseCase (간이세액표 산출 공식) |
+| `lib/presentation/salary_calculator/salary_calculator_viewmodel.dart` | 신규 — ViewModel (AutoDisposeNotifier) |
+| `lib/presentation/salary_calculator/salary_calculator_screen.dart` | 수정 — StatefulWidget → ConsumerStatefulWidget, ViewModel 연결 |
+| `lib/presentation/salary_calculator/salary_calculator_colors.dart` | 유지 — 색상 상수 |
+| `lib/presentation/salary_calculator/widgets/salary_display.dart` | 신규 — 급여 입력 표시 + 슬라이더 통합 위젯 |
+| `lib/presentation/salary_calculator/widgets/result_card.dart` | 신규 — 실수령액 결과 카드 위젯 |
+| `lib/presentation/salary_calculator/widgets/deduction_card.dart` | 신규 — 공제 내역 카드 위젯 |
+| `lib/presentation/salary_calculator/widgets/dependents_bar.dart` | 신규 — 부양가족 수 조절기 위젯 |
+| `lib/presentation/salary_calculator/widgets/keypad_modal.dart` | 신규 — 키패드 바텀시트 |
+| `test/domain/usecases/calculate_salary_usecase_test.dart` | 신규 — 계산 로직 단위 테스트 (19케이스) |
 
 **데이터 흐름**
 
@@ -34,18 +33,16 @@
 [kFallbackTaxRates 상수 (2024년 기준)]
         │
         ▼
-[NetPayViewModel (AutoDisposeNotifier<NetPayState>)]
+[SalaryCalculatorViewModel (AutoDisposeNotifier<SalaryCalculatorState>)]
         │  handleIntent(intent)
         │
-        ├── SalaryChanged    → _salary 업데이트 → CalculateNetPayUseCase
-        ├── TabSwitched      → _salary 환산 (×12/÷12) → CalculateNetPayUseCase
-        ├── UnitChanged      → _unit 업데이트
-        ├── Adjust           → _salary ± unit.value → CalculateNetPayUseCase
-        ├── DependentsChanged→ _dependents 업데이트 → CalculateNetPayUseCase
-        └── DirectInput      → _salary 업데이트 → CalculateNetPayUseCase
+        ├── SalaryChanged    → _salary 업데이트 → CalculateSalaryUseCase
+        ├── TabSwitched      → _salary 환산 (×12/÷12) → CalculateSalaryUseCase
+        ├── DependentsChanged→ _dependents 업데이트 → CalculateSalaryUseCase
+        └── DirectInput      → _salary 업데이트 → CalculateSalaryUseCase
                 │
                 ▼
-        [NetPayState 갱신] ──▶ [화면 리렌더]
+        [SalaryCalculatorState 갱신] ──▶ [화면 리렌더]
 ```
 
 ---
@@ -56,20 +53,17 @@
 
 | 역할 | 색상 상수 | 값 |
 |------|-----------|-----|
-| 화면 배경 (위) | `kNetPayBgTop` | `#F5F0E6` (따뜻한 크림) |
-| 화면 배경 (아래) | `kNetPayBgBottom` | `#EDE8D8` |
-| 강조색 (확인 버튼) | `kNetPayAccent` | `#8B1A2E` (딥 버건디) |
-| 골드 (탭·결과·버튼) | `kNetPayGold` | `#8B6914` (딥 앤틱 골드) |
-| 카드 배경 | `kNetPayCardBg` | `#F5EFDF` (양피지) |
-| 카드 테두리 | `kNetPayCardBorder` | `#D8C9A8` |
-| 결과 카드 배경 | `kNetPayResultBg` | `#EEE4CC` (진한 양피지) |
-| 공제 카드 배경 | `kNetPayDeductionBg` | `#F0E8D4` |
-| 텍스트 주색 | `kNetPayTextPrimary` | `#1A2540` (네이비 잉크) |
-| 텍스트 보조색 | `kNetPayTextSecondary` | `#6B7A99` |
-
-**골드가 적용되는 요소**: 탭 활성 인디케이터, 슬라이더 트랙·썸, 미세 조절 단위 버튼, 실수령액 금액, 부양가족 수 숫자, 부양가족 [−][+] 버튼, 단위 선택 팝업 체크마크
-
-**버건디가 적용되는 요소**: 키패드 모달 확인 버튼
+| 화면 배경 (위) | `kSalaryBgTop` | `#0A0A0F` (깊은 블랙) |
+| 화면 배경 (아래) | `kSalaryBgBottom` | `#141420` |
+| 강조색 | `kSalaryAccent` | `#E8ECF2` (브릴리언트 실버) |
+| 하이라이트 (금액) | `kSalaryGold` | `#F0F4FF` (밝은 실버 화이트) |
+| 카드 배경 | `kSalaryCardBg` | `#1A1A28` (다크 카드) |
+| 카드 테두리 | `kSalaryCardBorder` | `#2A2A3A` |
+| 결과 카드 배경 | `kSalaryResultBg` | `#1E1E2C` |
+| 공제 카드 배경 | `kSalaryDeductionBg` | `#1A1A28` |
+| 텍스트 주색 | `kSalaryTextPrimary` | `#F0EDE6` (아이보리 화이트) |
+| 텍스트 보조색 | `kSalaryTextSecondary` | `#C8C6D2` (미디엄 그레이) |
+| 공통 카드 그림자 | `kSalaryCardBoxShadow` | `BoxShadow(blurRadius: 8, offset: (0,2))` |
 
 ---
 
@@ -109,28 +103,17 @@ const kFallbackTaxRates = TaxRates(
 
 ---
 
-### 2. `lib/domain/models/net_pay_state.dart`
+### 2. `lib/domain/models/salary_calculator_state.dart`
 
 ```dart
 enum SalaryMode { monthly, annual }
 
-enum AdjustUnit {
-  man(10000, '만원'),
-  tenMan(100000, '10만'),
-  hundredMan(1000000, '100만'),
-  cheonMan(10000000, '천만');
-  const AdjustUnit(this.value, this.label);
-  final int value;
-  final String label;
-}
-
 @freezed
-class NetPayState with _$NetPayState {
-  const factory NetPayState({
+class SalaryCalculatorState with _$SalaryCalculatorState {
+  const factory SalaryCalculatorState({
     @Default(SalaryMode.annual) SalaryMode mode,
     @Default(45000000) int salary,
     @Default(1) int dependents,
-    @Default(AdjustUnit.hundredMan) AdjustUnit unit,
     // 계산 결과
     @Default(0) int nationalPension,
     @Default(0) int healthInsurance,
@@ -138,10 +121,10 @@ class NetPayState with _$NetPayState {
     @Default(0) int employmentInsurance,
     @Default(0) int incomeTax,
     @Default(0) int localTax,
-  }) = _NetPayState;
+  }) = _SalaryCalculatorState;
 }
 
-extension NetPayStateX on NetPayState {
+extension SalaryCalculatorStateX on SalaryCalculatorState {
   int get monthSalary => mode == SalaryMode.monthly ? salary : (salary / 12).round();
   int get totalDeduction => nationalPension + healthInsurance + longTermCare
       + employmentInsurance + incomeTax + localTax;
@@ -152,12 +135,12 @@ extension NetPayStateX on NetPayState {
 
 ---
 
-### 3. `lib/domain/usecases/calculate_net_pay_usecase.dart`
+### 3. `lib/domain/usecases/calculate_salary_usecase.dart`
 
 **주요 구성 요소**
 
 ```dart
-class CalculateNetPayUseCase {
+class CalculateSalaryUseCase {
   final TaxRates rates;
 
   DeductionResult execute({required int monthSalary, required int dependents});
@@ -207,47 +190,45 @@ class DeductionResult {
 
 ---
 
-### 4. `lib/presentation/net_pay_calculator/net_pay_calculator_viewmodel.dart`
+### 4. `lib/presentation/salary_calculator/salary_calculator_viewmodel.dart`
 
 **Intent 목록**
 
 ```dart
-sealed class NetPayIntent {
-  const factory NetPayIntent.salaryChanged(int salary) = SalaryChanged;
-  const factory NetPayIntent.tabSwitched(SalaryMode mode) = TabSwitched;
-  const factory NetPayIntent.unitChanged(AdjustUnit unit) = UnitChanged;
-  const factory NetPayIntent.adjust(int delta) = Adjust;
-  const factory NetPayIntent.directInput(int salary) = DirectInput;
-  const factory NetPayIntent.dependentsChanged(int dependents) = DependentsChanged;
+sealed class SalaryCalculatorIntent {
+  const factory SalaryCalculatorIntent.salaryChanged(int salary) = _SalaryChanged;
+  const factory SalaryCalculatorIntent.tabSwitched(SalaryMode mode) = _TabSwitched;
+  const factory SalaryCalculatorIntent.directInput(int salary) = _DirectInput;
+  const factory SalaryCalculatorIntent.dependentsChanged(int dependents) = _DependentsChanged;
 }
 ```
 
 **ViewModel 구조**
 
 ```dart
-class NetPayViewModel extends AutoDisposeNotifier<NetPayState> {
-  late final CalculateNetPayUseCase _useCase;
+class SalaryCalculatorViewModel extends AutoDisposeNotifier<SalaryCalculatorState> {
+  late final CalculateSalaryUseCase _useCase;
 
   @override
-  NetPayState build() {
-    _useCase = CalculateNetPayUseCase(kFallbackTaxRates);
-    return _recalculate(const NetPayState());
+  SalaryCalculatorState build() {
+    _useCase = const CalculateSalaryUseCase(kFallbackTaxRates);
+    return _recalculate(const SalaryCalculatorState());
   }
 
-  void handleIntent(NetPayIntent intent) {
+  void handleIntent(SalaryCalculatorIntent intent) {
     // switch on intent → state 업데이트 + _recalculate
   }
 
-  NetPayState _recalculate(NetPayState s) {
+  SalaryCalculatorState _recalculate(SalaryCalculatorState s) {
     final result = _useCase.execute(
         monthSalary: s.monthSalary, dependents: s.dependents);
     return s.copyWith(...result);
   }
 }
 
-final netPayViewModelProvider =
-    NotifierProvider.autoDispose<NetPayViewModel, NetPayState>(
-        NetPayViewModel.new);
+final salaryCalculatorViewModelProvider =
+    NotifierProvider.autoDispose<SalaryCalculatorViewModel, SalaryCalculatorState>(
+        SalaryCalculatorViewModel.new);
 ```
 
 > **설계 결정**: Firestore 연동이 없으므로 `AsyncNotifier` 대신 동기 `AutoDisposeNotifier` 사용.
@@ -255,20 +236,19 @@ final netPayViewModelProvider =
 
 ---
 
-### 5. `lib/presentation/net_pay_calculator/` 위젯 분리
+### 5. `lib/presentation/salary_calculator/` 위젯 분리
 
 프리뷰 단계에서 한 파일에 작성된 위젯을 `widgets/` 폴더로 분리한다.
 
 | 위젯 클래스 | 분리 파일 | 비고 |
 |------------|-----------|------|
 | `SalaryDisplay` | `widgets/salary_display.dart` | 급여 표시 + 슬라이더 통합 + 키패드 트리거 |
-| `AdjustBar` | `widgets/adjust_bar.dart` | [−] [단위▾] [+] 미세 조절 바 |
 | `ResultCard` | `widgets/result_card.dart` | 실수령액 결과 (금액 우측 정렬) |
 | `DeductionCard` | `widgets/deduction_card.dart` | 공제 내역 리스트 |
 | `DependentsBar` | `widgets/dependents_bar.dart` | 고정 하단 부양가족 조절기 |
 | `showSalaryKeypad` | `widgets/keypad_modal.dart` | 직접 입력 바텀시트 (함수) |
 
-**분리 후 `net_pay_calculator_screen.dart` 역할**
+**분리 후 `salary_calculator_screen.dart` 역할**
 
 - ViewModel watch + `handleIntent` 호출 전달
 - 슬라이더 범위 관리, 탭 전환 로직
@@ -279,11 +259,11 @@ final netPayViewModelProvider =
 ## 구현 순서
 
 ```
-1. 도메인 모델 구현 (tax_rates.dart, net_pay_state.dart) + build_runner
-2. TDD: calculate_net_pay_usecase_test.dart 작성 (19케이스)
-3. CalculateNetPayUseCase 구현 (간이세액표 산출 공식) — 테스트 통과
+1. 도메인 모델 구현 (tax_rates.dart, salary_calculator_state.dart) + build_runner
+2. TDD: calculate_salary_usecase_test.dart 작성 (19케이스)
+3. CalculateSalaryUseCase 구현 (간이세액표 산출 공식) — 테스트 통과
 4. ViewModel 구현 (AutoDisposeNotifier + sealed Intent)
-5. 위젯 분리 (widgets/ 폴더 6개 파일)
+5. 위젯 분리 (widgets/ 폴더 5개 파일)
 6. Screen ConsumerStatefulWidget 전환 + ViewModel 연결
 7. 검증 (단위 테스트 + 정적 분석 + 수동 UI 확인)
 ```

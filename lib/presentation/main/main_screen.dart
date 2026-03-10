@@ -14,7 +14,7 @@ import 'package:calcmate/presentation/loan_calculator/loan_prototype_hub.dart';
 import 'package:calcmate/presentation/dutch_pay/dutch_pay_screen.dart';
 import 'package:calcmate/presentation/discount_calculator/discount_calculator_screen.dart';
 import 'package:calcmate/presentation/bmi_calculator/bmi_calculator_screen.dart';
-import 'package:calcmate/presentation/net_pay_calculator/net_pay_calculator_screen.dart';
+import 'package:calcmate/presentation/salary_calculator/salary_calculator_screen.dart';
 import 'package:calcmate/presentation/settings/settings_screen.dart';
 import 'package:calcmate/core/config/calc_mode_config.dart';
 import 'package:calcmate/core/theme/app_design_tokens.dart';
@@ -398,7 +398,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       case 'dutch_pay':
         return const DutchPayScreen();
       case 'salary_calculator':
-        return NetPayCalculatorScreen(title: entry.title);
+        return SalaryCalculatorScreen(title: entry.title);
       case 'discount_calculator':
         return DiscountCalculatorScreen(title: entry.title);
       case 'bmi_calculator':

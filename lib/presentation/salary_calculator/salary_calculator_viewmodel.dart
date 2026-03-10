@@ -1,71 +1,59 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/models/net_pay_state.dart';
+import '../../domain/models/salary_calculator_state.dart';
 import '../../domain/models/tax_rates.dart';
-import '../../domain/usecases/calculate_net_pay_usecase.dart';
+import '../../domain/usecases/calculate_salary_usecase.dart';
 
 // ── Intent ──────────────────────────────────────────────────────────────────
 
-sealed class NetPayIntent {
-  const NetPayIntent();
-  const factory NetPayIntent.tabSwitched(SalaryMode mode) = _TabSwitched;
-  const factory NetPayIntent.salaryChanged(int salary) = _SalaryChanged;
-  const factory NetPayIntent.directInput(int salary) = _DirectInput;
-  const factory NetPayIntent.unitChanged(AdjustUnit unit) = _UnitChanged;
-  const factory NetPayIntent.adjust(int delta) = _Adjust;
-  const factory NetPayIntent.dependentsChanged(int dependents) =
+sealed class SalaryCalculatorIntent {
+  const SalaryCalculatorIntent();
+  const factory SalaryCalculatorIntent.tabSwitched(SalaryMode mode) = _TabSwitched;
+  const factory SalaryCalculatorIntent.salaryChanged(int salary) = _SalaryChanged;
+  const factory SalaryCalculatorIntent.directInput(int salary) = _DirectInput;
+  const factory SalaryCalculatorIntent.dependentsChanged(int dependents) =
       _DependentsChanged;
 }
 
-class _TabSwitched extends NetPayIntent {
+class _TabSwitched extends SalaryCalculatorIntent {
   final SalaryMode mode;
   const _TabSwitched(this.mode);
 }
 
-class _SalaryChanged extends NetPayIntent {
+class _SalaryChanged extends SalaryCalculatorIntent {
   final int salary;
   const _SalaryChanged(this.salary);
 }
 
-class _DirectInput extends NetPayIntent {
+class _DirectInput extends SalaryCalculatorIntent {
   final int salary;
   const _DirectInput(this.salary);
 }
 
-class _UnitChanged extends NetPayIntent {
-  final AdjustUnit unit;
-  const _UnitChanged(this.unit);
-}
-
-class _Adjust extends NetPayIntent {
-  final int delta;
-  const _Adjust(this.delta);
-}
-
-class _DependentsChanged extends NetPayIntent {
+class _DependentsChanged extends SalaryCalculatorIntent {
   final int dependents;
   const _DependentsChanged(this.dependents);
 }
 
 // ── Provider ────────────────────────────────────────────────────────────────
 
-final netPayViewModelProvider =
-    NotifierProvider.autoDispose<NetPayViewModel, NetPayState>(
-        NetPayViewModel.new);
+final salaryCalculatorViewModelProvider =
+    NotifierProvider.autoDispose<SalaryCalculatorViewModel, SalaryCalculatorState>(
+        SalaryCalculatorViewModel.new);
 
 // ── ViewModel ───────────────────────────────────────────────────────────────
 
-class NetPayViewModel extends AutoDisposeNotifier<NetPayState> {
-  late final CalculateNetPayUseCase _useCase;
+class SalaryCalculatorViewModel extends AutoDisposeNotifier<SalaryCalculatorState> {
+  late final CalculateSalaryUseCase _useCase;
 
   @override
-  NetPayState build() {
-    _useCase = const CalculateNetPayUseCase(kFallbackTaxRates);
-    const initial = NetPayState();
+  SalaryCalculatorState build() {
+    _useCase = const CalculateSalaryUseCase(kFallbackTaxRates);
+    const initial = SalaryCalculatorState();
     return _recalculate(initial);
   }
 
-  void handleIntent(NetPayIntent intent) {
+  void handleIntent(SalaryCalculatorIntent intent) {
     switch (intent) {
       case _TabSwitched(:final mode):
         _onTabSwitched(mode);
@@ -73,10 +61,6 @@ class NetPayViewModel extends AutoDisposeNotifier<NetPayState> {
         state = _recalculate(state.copyWith(salary: salary.clamp(0, 9999999999)));
       case _DirectInput(:final salary):
         state = _recalculate(state.copyWith(salary: salary.clamp(0, 9999999999)));
-      case _UnitChanged(:final unit):
-        state = state.copyWith(unit: unit);
-      case _Adjust(:final delta):
-        _onAdjust(delta);
       case _DependentsChanged(:final dependents):
         state = _recalculate(
             state.copyWith(dependents: dependents.clamp(1, 11)));
@@ -88,18 +72,19 @@ class NetPayViewModel extends AutoDisposeNotifier<NetPayState> {
     int converted;
     if (state.mode == SalaryMode.monthly && mode == SalaryMode.annual) {
       converted = state.salary * 12;
+      // 100만 단위로 스냅
+      converted = (converted / 1000000).round() * 1000000;
+      converted = converted.clamp(20000000, 300000000);
     } else {
       converted = (state.salary / 12).round();
+      // 10만 단위로 스냅
+      converted = (converted / 100000).round() * 100000;
+      converted = converted.clamp(1000000, 10000000);
     }
     state = _recalculate(state.copyWith(mode: mode, salary: converted));
   }
 
-  void _onAdjust(int delta) {
-    final newSalary = (state.salary + delta * state.unit.value).clamp(0, 9999999999);
-    state = _recalculate(state.copyWith(salary: newSalary));
-  }
-
-  NetPayState _recalculate(NetPayState s) {
+  SalaryCalculatorState _recalculate(SalaryCalculatorState s) {
     final result = _useCase.execute(
       monthSalary: s.mode == SalaryMode.monthly
           ? s.salary
