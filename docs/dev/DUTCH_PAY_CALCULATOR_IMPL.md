@@ -23,6 +23,7 @@
 | `lib/presentation/dutch_pay/widgets/dutch_pay_keypad.dart` | 신규 — 숫자 키패드 위젯 |
 | `lib/presentation/dutch_pay/widgets/equal_split_view.dart` | 신규 — 균등 분배 탭 콘텐츠 |
 | `lib/presentation/dutch_pay/widgets/individual_split_view.dart` | 신규 — 개별 계산 탭 콘텐츠 |
+| `lib/presentation/dutch_pay/widgets/dutch_card.dart` | 신규 — 그라데이션 테두리 카드 공통 위젯 |
 | `lib/presentation/dutch_pay/widgets/participant_chip.dart` | 신규 — 참여자 칩 위젯 |
 | `lib/presentation/dutch_pay/widgets/share_sheet.dart` | 신규 — 공유 바텀시트 (영수증 미리보기 + 공유) |
 | `test/domain/usecases/dutch_pay_equal_split_usecase_test.dart` | 신규 — 균등 분배 UseCase 단위 테스트 |

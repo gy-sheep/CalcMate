@@ -69,6 +69,7 @@
 | — | DateKeypad 제거 → showNumberKeypad 공통 모달 전환 | — | — |
 | — | 숫자 키패드 공통 모듈화: KeypadColors + showNumberKeypad (core/widgets) | — | — |
 | — | 단위 변환기 왕복 변환 정밀도 개선 및 테스트 추가 | — | — |
+| — | 더치페이 UI 개선 (테마 심화·그라데이션 테두리·탭 레이블·인원 프리셋 칩·정산 단위 인라인 칩·각출 단일 스크롤·바 차트 결과) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

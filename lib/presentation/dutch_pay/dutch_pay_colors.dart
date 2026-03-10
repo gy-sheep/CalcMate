@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
 // ── Background ────────────────────────────────────────────────
-const kDutchBg1 = Color(0xFFFFF0F8);
-const kDutchBg2 = Color(0xFFF5E8FF);
-const kDutchBg3 = Color(0xFFEEE4FF);
+const kDutchBg1 = Color(0xFFFBE8F4);  // warm rose
+const kDutchBg2 = Color(0xFFEEDCFF);  // rich lavender
+const kDutchBg3 = Color(0xFFE2D0FF);  // deep lavender
 
 // ── Accent ────────────────────────────────────────────────────
-const kDutchAccent = Color(0xFFE8547A);
+const kDutchAccent = Color(0xFFC33868);  // deep rose
 
 // ── Text ──────────────────────────────────────────────────────
-const kDutchTextPrimary   = Color(0xFF3D0B1E);
-const kDutchTextSecondary = Color(0xFF8B4060);
-const kDutchTextTertiary  = Color(0xFFBB7A99);
+const kDutchTextPrimary   = Color(0xFF260618);  // deep wine
+const kDutchTextSecondary = Color(0xFF782654);  // rich rose
+const kDutchTextTertiary  = Color(0xFF9C5E7C);  // muted rose
 
 // ── UI Elements ───────────────────────────────────────────────
-const kDutchDivider     = Color(0xFFEEC4D4);
-const kDutchCardBg      = Color(0xFFFFEEF4);
-const kDutchInputBg     = Color(0xFFFFE0EE);
-const kDutchReceiptBg   = Color(0xFFFFFBFC);
-const kDutchReceiptDash = Color(0xFFE0B0C4);
+const kDutchDivider     = Color(0xFFD8AAC4);
+const kDutchCardBg      = Color(0xFFF6E2EE);
+const kDutchInputBg     = Color(0xFFF0CCDE);
+const kDutchReceiptBg   = Color(0xFFFFF6FA);
+const kDutchReceiptDash = Color(0xFFCCA0BA);
 
 // ── Participant Chip Colors ────────────────────────────────────
 const List<Color> kDutchChipBg = [

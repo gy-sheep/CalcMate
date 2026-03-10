@@ -8,6 +8,7 @@ import '../../../domain/usecases/dutch_pay_equal_split_usecase.dart';
 import '../../../presentation/widgets/scroll_fade_view.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
+import 'dutch_card.dart';
 import 'dutch_pay_keypad.dart';
 import 'share_sheet.dart';
 
@@ -41,9 +42,11 @@ class EqualSplitView extends ConsumerWidget {
                   _TipRow(eq: eq, vm: vm),
                   const SizedBox(height: 14),
                 ],
-                _ResultCard(result: result, isKorea: state.isKorea, vm: vm),
-                const SizedBox(height: 14),
-                _ShareBtn(result: result, isKorea: state.isKorea, eq: eq, vm: vm),
+                if (result != null) ...[
+                  _ResultCard(result: result, isKorea: state.isKorea, vm: vm),
+                  const SizedBox(height: 14),
+                  _ShareBtn(result: result, isKorea: state.isKorea, eq: eq, vm: vm),
+                ],
               ],
             ),
           ),
@@ -88,13 +91,11 @@ class _AmountCard extends StatelessWidget {
       onTap: eq.rawInput.isNotEmpty
           ? () => vm.handleIntent(const DutchPayIntent.keyPressed('C'))
           : null,
-      child: Container(
+      child: DutchCard(
+        radius: CmInputCard.radius,
+        color: kDutchCardBg,
+        child: Padding(
         padding: CmInputCard.padding,
-        decoration: BoxDecoration(
-          color: kDutchCardBg,
-          borderRadius: BorderRadius.circular(CmInputCard.radius),
-          border: Border.all(color: kDutchDivider),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,6 +121,7 @@ class _AmountCard extends StatelessWidget {
             ),
           ],
         ),
+        ),
       ),
     );
   }
@@ -132,32 +134,99 @@ class _PeopleRow extends StatelessWidget {
   final int people;
   final DutchPayViewModel vm;
 
+  static const _presets = [2, 3, 4, 5, 6, 7, 8];
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text('인원',
-            style: CmStepValue.text.copyWith(
-                color: kDutchTextPrimary, fontWeight: FontWeight.w500)),
-        const Spacer(),
-        _StepBtn(
-          icon: Icons.remove,
-          enabled: people > 2,
-          onTap: () => vm.handleIntent(const DutchPayIntent.peopleChanged(-1)),
+    return DutchCard(
+      color: kDutchCardBg,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('인원',
+                    style: CmStepValue.text.copyWith(
+                        color: kDutchTextPrimary,
+                        fontWeight: FontWeight.w500)),
+                const Spacer(),
+                _StepBtn(
+                  icon: Icons.remove,
+                  enabled: people > 2,
+                  onTap: () => vm.handleIntent(
+                      const DutchPayIntent.peopleChanged(-1)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Text('$people명',
+                      style: textStyle18.copyWith(
+                          color: kDutchTextPrimary,
+                          fontWeight: FontWeight.w600)),
+                ),
+                _StepBtn(
+                  icon: Icons.add,
+                  enabled: people < 30,
+                  onTap: () =>
+                      vm.handleIntent(const DutchPayIntent.peopleChanged(1)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _presets.map((n) {
+                  final selected = people == n;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: GestureDetector(
+                      onTap: () => vm.handleIntent(
+                          DutchPayIntent.peopleChanged(n - people)),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? kDutchAccent
+                              : kDutchAccent.withValues(alpha: 0.06),
+                          borderRadius:
+                              BorderRadius.circular(CmTab.radius),
+                          border: Border.all(
+                            color: selected
+                                ? kDutchAccent
+                                : kDutchAccent.withValues(alpha: 0.20),
+                          ),
+                        ),
+                        child: Text(
+                          '$n명',
+                          style: CmTab.text.copyWith(
+                            color: selected
+                                ? Colors.white
+                                : kDutchAccent,
+                            fontWeight: selected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            if (people > 8) ...[
+              const SizedBox(height: 8),
+              Text(
+                '위 + 버튼으로 조절하세요',
+                style: textStyleCaption.copyWith(color: kDutchTextTertiary),
+              ),
+            ],
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text('$people명',
-              style: textStyle18.copyWith(
-                  color: kDutchTextPrimary,
-                  fontWeight: FontWeight.w600)),
-        ),
-        _StepBtn(
-          icon: Icons.add,
-          enabled: people < 30,
-          onTap: () => vm.handleIntent(const DutchPayIntent.peopleChanged(1)),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -175,8 +244,8 @@ class _StepBtn extends StatelessWidget {
       onTap: enabled ? onTap : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        width: 36,
-        height: 36,
+        width: 32,
+        height: 32,
         decoration: BoxDecoration(
           color: enabled
               ? kDutchAccent.withValues(alpha: 0.12)
@@ -205,6 +274,15 @@ class _RemainderRow extends StatelessWidget {
   final DutchPayViewModel vm;
   final BuildContext context;
 
+  static String _chipLabel(RemUnit u) {
+    switch (u) {
+      case RemUnit.hundred:
+        return '100원';
+      case RemUnit.thousand:
+        return '1,000원';
+    }
+  }
+
   @override
   Widget build(BuildContext ctx) {
     return Row(
@@ -213,91 +291,39 @@ class _RemainderRow extends StatelessWidget {
         Text('정산 단위',
             style: CmStepValue.text.copyWith(
                 color: kDutchTextSecondary, fontWeight: FontWeight.w500)),
-        GestureDetector(
-          onTap: () => _showPicker(ctx),
-          child: Container(
-            padding: CmTab.padding,
-            decoration: BoxDecoration(
-              color: kDutchCardBg,
-              borderRadius:
-                  BorderRadius.circular(CmTab.radius),
-              border: Border.all(color: kDutchDivider),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(eq.remUnit.label,
-                    style: rowLabel.copyWith(
-                        color: kDutchTextPrimary,
-                        fontWeight: FontWeight.w500)),
-                const SizedBox(width: 4),
-                Icon(Icons.expand_more,
-                    size: CmRoundButton.medium.iconSize, color: kDutchTextSecondary),
-              ],
-            ),
-          ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: RemUnit.values.map((u) {
+            final selected = eq.remUnit == u;
+            return Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: GestureDetector(
+                onTap: () =>
+                    vm.handleIntent(DutchPayIntent.remUnitChanged(u)),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  padding: CmTab.padding,
+                  decoration: BoxDecoration(
+                    color: selected ? kDutchAccent : kDutchCardBg,
+                    borderRadius: BorderRadius.circular(CmTab.radius),
+                    border: Border.all(
+                      color: selected ? kDutchAccent : kDutchDivider,
+                    ),
+                  ),
+                  child: Text(
+                    _chipLabel(u),
+                    style: CmTab.text.copyWith(
+                      color: selected ? Colors.white : kDutchTextPrimary,
+                      fontWeight:
+                          selected ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ],
-    );
-  }
-
-  void _showPicker(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-            top: Radius.circular(CmSheet.radius)),
-      ),
-      builder: (bsCtx) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: CmSheet.handleTopSpacing),
-          Container(
-            width: CmSheet.handleWidth,
-            height: CmSheet.handleHeight,
-            decoration: BoxDecoration(
-                color: kDutchDivider,
-                borderRadius: BorderRadius.circular(CmSheet.handleRadius)),
-          ),
-          const SizedBox(height: CmSheet.handleBottomSpacing),
-          Padding(
-            padding: CmSheet.padding,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('정산 단위',
-                  style: CmSheet.titleText.copyWith(
-                      color: kDutchTextPrimary)),
-            ),
-          ),
-          ...RemUnit.values.map((u) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Divider(
-                    color: Colors.black12,
-                    thickness: CmSheet.dividerThickness,
-                    height: CmSheet.dividerHeight,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  ListTile(
-                    title: Text(u.label,
-                        style: CmSheet.itemTitle.copyWith(color: kDutchTextPrimary)),
-                    trailing: eq.remUnit == u
-                        ? Icon(Icons.check, color: kDutchAccent)
-                        : null,
-                    onTap: () {
-                      vm.handleIntent(DutchPayIntent.remUnitChanged(u));
-                      Navigator.pop(bsCtx);
-                    },
-                  ),
-                ],
-              )),
-          SizedBox(
-              height:
-                  MediaQuery.of(bsCtx).padding.bottom + 8),
-        ],
-      ),
     );
   }
 }
@@ -405,11 +431,11 @@ class _ResultCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             kDutchAccent.withValues(alpha: 0.08),
-            kDutchAccent.withValues(alpha: 0.03)
+            kDutchAccent.withValues(alpha: 0.03),
           ],
         ),
         borderRadius: BorderRadius.circular(radiusCard),
-        border: Border.all(color: kDutchAccent.withValues(alpha: 0.2)),
+        border: Border.all(color: kDutchAccent.withValues(alpha: 0.25)),
       ),
       child: result == null
           ? Center(
@@ -526,9 +552,7 @@ class _ResultRow extends StatelessWidget {
             const TextSpan(text: ' '),
             TextSpan(
               text: '원',
-              style: textStyleCaption.copyWith(
-                color: kDutchTextTertiary,
-              ),
+              style: textStyleCaption.copyWith(color: kDutchTextTertiary),
             ),
           ]),
         ),
