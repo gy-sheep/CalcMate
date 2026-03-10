@@ -138,7 +138,7 @@
 - 범위: 1 ~ 11명 / 기본값: 1명 (본인)
 - 경계값에서 해당 버튼 비활성화
 
-> **UI 스타일**: 토큰·색상·위젯 상세는 `docs/dev/NET_PAY_CALCULATOR_IMPL.md` 구현 명세 참조.
+> **UI 스타일**: 토큰·색상·위젯 상세는 `docs/dev/SALARY_CALCULATOR_IMPL.md` 구현 명세 참조.
 
 ---
 

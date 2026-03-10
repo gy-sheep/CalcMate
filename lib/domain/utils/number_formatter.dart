@@ -92,10 +92,10 @@ abstract final class NumberFormatter {
 
     final absVal = value.abs();
 
-    if (absVal < 0.0001) return formatScientific(value);
+    if (absVal < 1e-12) return formatScientific(value);
 
     if (absVal < 1) {
-      return addCommas(trimTrailingZeros(value.toStringAsFixed(8)));
+      return addCommas(trimTrailingZeros(value.toStringAsFixed(12)));
     }
 
     if (absVal >= 1e15) return formatScientific(value);

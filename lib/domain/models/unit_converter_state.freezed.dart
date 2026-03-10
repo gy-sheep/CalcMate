@@ -22,6 +22,8 @@ mixin _$UnitConverterState {
   String get input => throw _privateConstructorUsedError;
   bool get isResult => throw _privateConstructorUsedError;
   Map<String, String> get convertedValues => throw _privateConstructorUsedError;
+  Map<String, double> get rawConvertedValues =>
+      throw _privateConstructorUsedError;
   String? get toastMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of UnitConverterState
@@ -44,6 +46,7 @@ abstract class $UnitConverterStateCopyWith<$Res> {
     String input,
     bool isResult,
     Map<String, String> convertedValues,
+    Map<String, double> rawConvertedValues,
     String? toastMessage,
   });
 }
@@ -68,6 +71,7 @@ class _$UnitConverterStateCopyWithImpl<$Res, $Val extends UnitConverterState>
     Object? input = null,
     Object? isResult = null,
     Object? convertedValues = null,
+    Object? rawConvertedValues = null,
     Object? toastMessage = freezed,
   }) {
     return _then(
@@ -92,6 +96,10 @@ class _$UnitConverterStateCopyWithImpl<$Res, $Val extends UnitConverterState>
                 ? _value.convertedValues
                 : convertedValues // ignore: cast_nullable_to_non_nullable
                       as Map<String, String>,
+            rawConvertedValues: null == rawConvertedValues
+                ? _value.rawConvertedValues
+                : rawConvertedValues // ignore: cast_nullable_to_non_nullable
+                      as Map<String, double>,
             toastMessage: freezed == toastMessage
                 ? _value.toastMessage
                 : toastMessage // ignore: cast_nullable_to_non_nullable
@@ -117,6 +125,7 @@ abstract class _$$UnitConverterStateImplCopyWith<$Res>
     String input,
     bool isResult,
     Map<String, String> convertedValues,
+    Map<String, double> rawConvertedValues,
     String? toastMessage,
   });
 }
@@ -140,6 +149,7 @@ class __$$UnitConverterStateImplCopyWithImpl<$Res>
     Object? input = null,
     Object? isResult = null,
     Object? convertedValues = null,
+    Object? rawConvertedValues = null,
     Object? toastMessage = freezed,
   }) {
     return _then(
@@ -164,6 +174,10 @@ class __$$UnitConverterStateImplCopyWithImpl<$Res>
             ? _value._convertedValues
             : convertedValues // ignore: cast_nullable_to_non_nullable
                   as Map<String, String>,
+        rawConvertedValues: null == rawConvertedValues
+            ? _value._rawConvertedValues
+            : rawConvertedValues // ignore: cast_nullable_to_non_nullable
+                  as Map<String, double>,
         toastMessage: freezed == toastMessage
             ? _value.toastMessage
             : toastMessage // ignore: cast_nullable_to_non_nullable
@@ -182,8 +196,10 @@ class _$UnitConverterStateImpl implements _UnitConverterState {
     this.input = '0',
     this.isResult = false,
     final Map<String, String> convertedValues = const {},
+    final Map<String, double> rawConvertedValues = const {},
     this.toastMessage,
-  }) : _convertedValues = convertedValues;
+  }) : _convertedValues = convertedValues,
+       _rawConvertedValues = rawConvertedValues;
 
   @override
   @JsonKey()
@@ -206,12 +222,22 @@ class _$UnitConverterStateImpl implements _UnitConverterState {
     return EqualUnmodifiableMapView(_convertedValues);
   }
 
+  final Map<String, double> _rawConvertedValues;
+  @override
+  @JsonKey()
+  Map<String, double> get rawConvertedValues {
+    if (_rawConvertedValues is EqualUnmodifiableMapView)
+      return _rawConvertedValues;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_rawConvertedValues);
+  }
+
   @override
   final String? toastMessage;
 
   @override
   String toString() {
-    return 'UnitConverterState(selectedCategoryIndex: $selectedCategoryIndex, activeUnitCode: $activeUnitCode, input: $input, isResult: $isResult, convertedValues: $convertedValues, toastMessage: $toastMessage)';
+    return 'UnitConverterState(selectedCategoryIndex: $selectedCategoryIndex, activeUnitCode: $activeUnitCode, input: $input, isResult: $isResult, convertedValues: $convertedValues, rawConvertedValues: $rawConvertedValues, toastMessage: $toastMessage)';
   }
 
   @override
@@ -230,6 +256,10 @@ class _$UnitConverterStateImpl implements _UnitConverterState {
               other._convertedValues,
               _convertedValues,
             ) &&
+            const DeepCollectionEquality().equals(
+              other._rawConvertedValues,
+              _rawConvertedValues,
+            ) &&
             (identical(other.toastMessage, toastMessage) ||
                 other.toastMessage == toastMessage));
   }
@@ -242,6 +272,7 @@ class _$UnitConverterStateImpl implements _UnitConverterState {
     input,
     isResult,
     const DeepCollectionEquality().hash(_convertedValues),
+    const DeepCollectionEquality().hash(_rawConvertedValues),
     toastMessage,
   );
 
@@ -264,6 +295,7 @@ abstract class _UnitConverterState implements UnitConverterState {
     final String input,
     final bool isResult,
     final Map<String, String> convertedValues,
+    final Map<String, double> rawConvertedValues,
     final String? toastMessage,
   }) = _$UnitConverterStateImpl;
 
@@ -277,6 +309,8 @@ abstract class _UnitConverterState implements UnitConverterState {
   bool get isResult;
   @override
   Map<String, String> get convertedValues;
+  @override
+  Map<String, double> get rawConvertedValues;
   @override
   String? get toastMessage;
 

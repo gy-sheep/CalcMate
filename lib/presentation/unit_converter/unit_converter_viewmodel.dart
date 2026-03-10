@@ -198,22 +198,9 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
   void _onUnitTapped(String code) {
     if (code == state.activeUnitCode) return;
 
-    // 현재 변환 결과를 새 활성 단위의 입력값으로 설정
-    final currentConverted = state.convertedValues[code];
-    String newInput;
-    if (currentConverted != null && currentConverted != '0') {
-      // 포맷팅된 값에서 콤마 제거
-      newInput = currentConverted.replaceAll(',', '');
-      // 지수 표기법이면 double로 파싱 후 다시 문자열로
-      if (newInput.contains('e')) {
-        final parsed = double.tryParse(newInput);
-        if (parsed != null) {
-          newInput = NumberFormatter.rawFromDouble(parsed);
-        }
-      }
-    } else {
-      newInput = '0';
-    }
+    // raw double 값을 사용하여 정밀도 손실 방지
+    final rawValue = state.rawConvertedValues[code] ?? 0.0;
+    final newInput = NumberFormatter.rawFromDouble(rawValue);
 
     state = _recalculate(state.copyWith(
       activeUnitCode: code,
@@ -255,7 +242,10 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
           isTemperature ? NumberFormatter.formatTemperature(entry.value) : NumberFormatter.formatUnitResult(entry.value);
     }
 
-    return s.copyWith(convertedValues: formatted);
+    return s.copyWith(
+      convertedValues: formatted,
+      rawConvertedValues: rawResults,
+    );
   }
 
   double _parseInput(String input) {

@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/settings-screen`
-> **마지막 완료**: 설정 화면 UI 전체 구현 (카드 기반 레이아웃, 3개 섹션, 블러 오버레이, 커스텀 라이선스 화면)
+> **현재 브랜치**: `feat/salary-calculator`
+> **마지막 완료**: 실수령액 계산기 로직 구현 및 Clean Architecture 전환
 
 ### Phase 14: 설정 화면 — 나머지 기능 연동
 - [ ] 언어 설정 실제 l10n 전환 (현재 UI만 구현)
@@ -16,6 +16,7 @@
 
 ### Phase 10: 다음 계산기
 - [ ] 다음 Phase 계산기 선정 및 기획
+- [ ] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)
 
 > **대출 계산기** (Phase 13으로 이동): `docs/specs/LOAN_CALCULATOR.md` 기획 명세 작성 완료, UI 안 선택 및 구현은 추후 진행
 
@@ -57,8 +58,10 @@
 | — | 전체 화면 AppBar.systemOverlayStyle 일괄 적용 (배경색 기준 light/dark 분기) | — | — |
 | 14 | 설정 화면 (다크 모드·계산기 관리·메인 카드 스와이프 숨기기) | — | `docs/specs/SETTINGS.md` |
 | — | 설정 UI 전체 구현 (카드 레이아웃·언어·앱 정보·라이선스·블러 오버레이·iOS Switch) | — | `docs/specs/SETTINGS.md` |
-| 10 | 실수령액 계산기 UI 구현 (입력 카드·슬라이더 통합·결과 카드·공제 내역·부양가족 바) | — | `docs/design/NET_PAY_CALCULATOR.md` |
+| 10 | 실수령액 계산기 UI 구현 (입력 카드·슬라이더 통합·결과 카드·공제 내역·부양가족 바) | — | `docs/design/SALARY_CALCULATOR.md` |
+| 10 | 실수령액 계산기 로직 구현 (TaxRates·NetPayState·UseCase·ViewModel·위젯 분리) | 19케이스 | `docs/dev/SALARY_CALCULATOR_IMPL.md` |
 | — | Cm* 컴포넌트 토큰 시스템 추가 (CmTab·CmInputCard·CmResultCard·CmListCard·CmRoundButton·CmSlider 등) | — | `docs/conventions/UI_TOKEN_CONVENTION.md` |
+| — | 단위 변환기 단위 전환 정밀도 개선 (rawConvertedValues) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

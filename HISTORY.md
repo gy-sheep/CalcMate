@@ -2,6 +2,43 @@
 
 ---
 
+## 2026-03-10 — 실수령액 계산기 로직 구현 및 Clean Architecture 전환
+
+### 완료 항목
+
+**Domain 계층**
+- `tax_rates.dart` — TaxRates Freezed 모델 + `kFallbackTaxRates` 상수 (2024년 기준)
+- `net_pay_state.dart` — SalaryMode/AdjustUnit enum, NetPayState Freezed, NetPayStateX computed getters
+- `calculate_net_pay_usecase.dart` — 4대보험 + 소득세(간이세액표 산출 공식 10단계) + 지방소득세 계산
+  - 소득세: 소득세법 시행령 별표2 기반 공식 (근로소득공제 → 과세표준 → 누진세율 → 세액공제)
+  - 간이세액표 2D 배열 대신 산출 공식 사용 (Firestore 연동 전 임시 방안)
+
+**Presentation 계층**
+- `net_pay_calculator_viewmodel.dart` — `AutoDisposeNotifier<NetPayState>` + sealed Intent 6종
+  - salaryChanged, tabSwitched, directInput, unitChanged, adjust, dependentsChanged
+- `net_pay_calculator_screen.dart` — StatefulWidget → ConsumerStatefulWidget 전환
+- 위젯 6개 분리:
+  - `widgets/salary_display.dart` — 급여 입력 표시 + 슬라이더 통합
+  - `widgets/adjust_bar.dart` — [−] [단위▾] [+] 미세 조절 바
+  - `widgets/result_card.dart` — 실수령액 결과 카드
+  - `widgets/deduction_card.dart` — 공제 내역 6항목 리스트
+  - `widgets/dependents_bar.dart` — 고정 하단 부양가족 조절기
+  - `widgets/keypad_modal.dart` — 키패드 바텀시트
+
+**테스트**
+- `calculate_net_pay_usecase_test.dart` — 19케이스
+  - 국민연금 3, 건강보험 2, 장기요양 1, 고용보험 1, 소득세 6, 지방소득세 1, 통합검증 4, 엣지케이스 1
+
+**단위 변환기 정밀도 개선**
+- `unit_converter_state.dart` — `rawConvertedValues` 필드 추가
+- `number_formatter.dart` — `formatUnitResult` 임계값 1e-4→1e-12, 소수점 8→12자리
+- `unit_converter_viewmodel.dart` — 단위 전환 시 raw double 값 사용 (정밀도 손실 방지)
+
+**문서**
+- `docs/dev/SALARY_CALCULATOR_IMPL.md` — 실제 구현 반영 (산출 공식, AutoDisposeNotifier, 위젯 목록)
+
+---
+
 ## 2026-03-09 — 설정 화면 UI 전체 구현 및 블러 오버레이 모듈화
 
 ### 완료 항목

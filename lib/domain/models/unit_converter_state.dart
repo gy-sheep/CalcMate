@@ -10,6 +10,7 @@ class UnitConverterState with _$UnitConverterState {
     @Default('0') String input,
     @Default(false) bool isResult,
     @Default({}) Map<String, String> convertedValues,
+    @Default({}) Map<String, double> rawConvertedValues,
     String? toastMessage,
   }) = _UnitConverterState;
 }
