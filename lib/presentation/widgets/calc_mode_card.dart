@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_design_tokens.dart';
 
+const _kIconContainerSize = 44.0;
+const _kIconContainerRadius = 10.0;
+const _kTitleText = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
+
 class CalcModeCard extends StatelessWidget {
   final String title;
   final String description;
@@ -67,11 +71,11 @@ class CalcModeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: AppTokens.sizeIconContainer,
-                      height: AppTokens.sizeIconContainer,
+                      width: _kIconContainerSize,
+                      height: _kIconContainerSize,
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.25),
-                        borderRadius: BorderRadius.circular(AppTokens.radiusIconContainer),
+                        borderRadius: BorderRadius.circular(_kIconContainerRadius),
                       ),
                       child: Icon(icon, color: Colors.white),
                     ),
@@ -83,7 +87,7 @@ class CalcModeCard extends StatelessWidget {
                         children: [
                           Text(
                             title,
-                            style: AppTokens.textStyleCardTitle.copyWith(
+                            style: _kTitleText.copyWith(
                               color: Colors.white,
                               shadows: const [
                                 Shadow(offset: Offset(-1.5, -1.5), color: Colors.black26),
@@ -95,7 +99,7 @@ class CalcModeCard extends StatelessWidget {
                           ),
                           Text(
                             description,
-                            style: AppTokens.textStyleCaption.copyWith(
+                            style: textStyleCaption.copyWith(
                               color: Colors.white.withValues(alpha: 0.8),
                             ),
                             maxLines: 2,

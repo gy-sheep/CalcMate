@@ -40,35 +40,28 @@ class TaxRateInfoSheet extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [kVatGradientTop, kVatGradientBottom],
         ),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppTokens.radiusBottomSheet)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(CmSheet.radius)),
       ),
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * CmSheet.listHeightRatio,
       child: Column(
         children: [
           Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(top: 12, bottom: 4),
+            width: CmSheet.handleWidth,
+            height: CmSheet.handleHeight,
+            margin: const EdgeInsets.only(
+              top: CmSheet.handleTopSpacing,
+              bottom: CmSheet.handleBottomSpacing,
+            ),
             decoration: BoxDecoration(
               color: Colors.white38,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(CmSheet.handleRadius),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '세율 참고',
-                  style: AppTokens.textStyleSheetTitle.copyWith(color: Colors.white),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close,
-                      color: Colors.white54, size: AppTokens.sizeIconSmall),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
+            child: Text(
+              '세율 참고',
+              style: CmSheet.titleText.copyWith(color: Colors.white),
             ),
           ),
           const Divider(color: kVatDivider, thickness: 0.5, height: 1),
@@ -79,8 +72,8 @@ class TaxRateInfoSheet extends StatelessWidget {
               itemCount: _rates.length,
               separatorBuilder: (_, __) => const Divider(
                 color: kVatDivider,
-                thickness: 0.3,
-                height: 1,
+                thickness: CmSheet.dividerThickness,
+                height: CmSheet.dividerHeight,
               ),
               itemBuilder: (_, index) {
                 final (flag, country, taxName, rate) = _rates[index];
@@ -91,8 +84,8 @@ class TaxRateInfoSheet extends StatelessWidget {
                       CountryFlag.fromCountryCode(
                         flag,
                         theme: const ImageTheme(
-                          width: AppTokens.sizeFlagSmall,
-                          height: AppTokens.sizeFlagSmall,
+                          width: CmFlag.medium,
+                          height: CmFlag.medium,
                           shape: Circle(),
                         ),
                       ),
@@ -104,18 +97,18 @@ class TaxRateInfoSheet extends StatelessWidget {
                           children: [
                             Text(
                               country,
-                              style: AppTokens.textStyleLabelLarge.copyWith(color: Colors.white),
+                              style: CmSheet.itemTitle.copyWith(color: Colors.white),
                             ),
                             Text(
                               taxName,
-                              style: AppTokens.textStyleLabelMedium.copyWith(color: Colors.white54),
+                              style: CmSheet.itemSubtext.copyWith(color: Colors.white54),
                             ),
                           ],
                         ),
                       ),
                       Text(
                         rate,
-                        style: AppTokens.textStyleValue.copyWith(color: Colors.white),
+                        style: textStyle16.copyWith(color: Colors.white),
                       ),
                     ],
                   ),

@@ -62,6 +62,7 @@
 | 10 | 실수령액 계산기 로직 구현 (TaxRates·SalaryCalculatorState·CalculateSalaryUseCase·ViewModel·위젯 분리) | 19케이스 | `docs/dev/SALARY_CALCULATOR_IMPL.md` |
 | — | Cm* 컴포넌트 토큰 시스템 추가 (CmTab·CmInputCard·CmResultCard·CmListCard·CmRoundButton·CmSlider 등) | — | `docs/conventions/UI_TOKEN_CONVENTION.md` |
 | — | 단위 변환기 단위 전환 정밀도 개선 (rawConvertedValues) | — | — |
+| — | 구 AppTokens 클래스 제거 및 전체 코드베이스를 Cm* 신규 토큰·전역 상수로 전면 교체 | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

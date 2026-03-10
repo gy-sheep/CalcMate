@@ -60,12 +60,12 @@ class _DutchPayScreenState extends ConsumerState<DutchPayScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: kDutchTextPrimary, size: AppTokens.sizeAppBarBackIcon),
+          icon: Icon(Icons.arrow_back_ios, color: kDutchTextPrimary, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           '더치페이',
-          style: AppTokens.textStyleAppBarTitle.copyWith(
+          style: CmAppBar.titleText.copyWith(
             color: kDutchTextPrimary,
           ),
         ),

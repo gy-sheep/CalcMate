@@ -47,7 +47,7 @@ class BmiCategoryGrid extends StatelessWidget {
                   ? cat.color.withValues(alpha: 0.18)
                   : _kCardBg,
               borderRadius:
-                  BorderRadius.circular(AppTokens.radiusInput),
+                  BorderRadius.circular(radiusInput),
               border: Border.all(
                 color: isActive
                     ? cat.color.withValues(alpha: 0.6)
@@ -60,7 +60,7 @@ class BmiCategoryGrid extends StatelessWidget {
                 Text(
                   cat.label,
                   textAlign: TextAlign.center,
-                  style: AppTokens.textStyleCaption.copyWith(
+                  style: textStyleCaption.copyWith(
                     color: isActive ? cat.color : _kTextSecondary,
                     fontWeight:
                         isActive ? FontWeight.w600 : FontWeight.w400,
@@ -70,7 +70,7 @@ class BmiCategoryGrid extends StatelessWidget {
                 Text(
                   cat.rangeLabel,
                   textAlign: TextAlign.center,
-                  style: AppTokens.textStyleLabelMedium.copyWith(
+                  style: CmInfoCard.captionText.copyWith(
                     color: isActive
                         ? cat.color.withValues(alpha: 0.8)
                         : _kTextSecondary.withValues(alpha: 0.6),

@@ -22,18 +22,17 @@ class DateCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTokens.textStyleCaption.copyWith(color: kDateTextSecondary),
+          style: sectionLabel.copyWith(color: kDateTextSecondary),
         ),
         const SizedBox(height: 6),
         GestureDetector(
           onTap: onTap,
           child: Container(
             width: double.infinity,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: CmCalendarCard.padding,
             decoration: BoxDecoration(
               color: kDateCardBg,
-              borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+              borderRadius: BorderRadius.circular(CmCalendarCard.radius),
               border: Border.all(color: kDateCardBorder),
             ),
             child: Row(
@@ -43,13 +42,12 @@ class DateCard extends StatelessWidget {
                   children: [
                     Text(
                       formatYear(date),
-                      style: AppTokens.textStyleCaption
-                          .copyWith(color: kDateTextSecondary),
+                      style: CmCalendarCard.yearText.copyWith(color: kDateTextSecondary),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       formatMonthDay(date),
-                      style: AppTokens.textStyleResult22.copyWith(
+                      style: CmCalendarCard.dateText.copyWith(
                         color: kDateAccent,
                         fontWeight: FontWeight.w600,
                       ),
@@ -59,12 +57,11 @@ class DateCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   formatWeekday(date),
-                  style: AppTokens.textStyleLabelLarge.copyWith(
-                      color: kDateAccent),
+                  style: CmCalendarCard.weekdayText.copyWith(color: kDateAccent),
                 ),
                 const SizedBox(width: 6),
                 const Icon(Icons.chevron_right,
-                    color: kDateTextTertiary, size: 18),
+                    color: kDateTextTertiary, size: CmCalendarCard.chevronSize),
               ],
             ),
           ),

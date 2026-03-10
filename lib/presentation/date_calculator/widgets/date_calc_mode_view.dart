@@ -60,23 +60,23 @@ class DateCalcModeView extends ConsumerWidget {
       children: [
         Text(
           '${result.year}년 ${result.month}월 ${result.day}일',
-          style: AppTokens.textStyleResult28.copyWith(
+          style: CmInfoCard.titleText.copyWith(
             fontWeight: FontWeight.w700,
-            color: kDateTextPrimary,
+            color: kDateAccent,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           formatWeekday(result),
-          style: AppTokens.textStyleResult18.copyWith(
-              color: kDateAccent, fontWeight: FontWeight.w500),
+          style: CmInfoCard.bodyText.copyWith(
+              color: kDateTextPrimary, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 12),
         const Divider(color: kDateDivider),
         const SizedBox(height: 10),
         Text(
           descStr,
-          style: AppTokens.textStyleBody.copyWith(color: kDateTextSecondary),
+          style: CmInfoCard.captionText.copyWith(color: kDateTextSecondary),
         ),
       ],
     );
@@ -102,7 +102,7 @@ class DateCalcModeView extends ConsumerWidget {
                 child: Text(
                   '${state.calcDirection == 0 ? '+' : '−'} ${state.calcNumberInput}',
                   textAlign: TextAlign.center,
-                  style: AppTokens.textStyleResult40.copyWith(
+                  style: textLargeInput.copyWith(
                     fontWeight: FontWeight.w700,
                     color: kDateAccent,
                     height: 1.0,
@@ -142,7 +142,7 @@ class DateCalcModeView extends ConsumerWidget {
                   child: Center(
                     child: Text(
                       units[i],
-                      style: AppTokens.textStyleBody.copyWith(
+                      style: inputFieldInnerLabel.copyWith(
                         color: isSelected ? kDateAccent : kDateTextSecondary,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                       ),

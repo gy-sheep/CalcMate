@@ -14,7 +14,7 @@ import 'discount_calculator_viewmodel.dart';
 
 String _getCurrencySymbol() {
   const map = <String, String>{
-    'KR': '₩',
+    'KR': '원',
     'US': '\$', 'CA': '\$',
     'JP': '¥', 'CN': '¥',
     'GB': '£',
@@ -53,12 +53,12 @@ class DiscountCalculatorScreen extends ConsumerWidget {
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: AppTokens.sizeAppBarBackIcon),
+              color: Colors.white, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           title,
-          style: AppTokens.textStyleAppBarTitle.copyWith(color: Colors.white),
+          style: CmAppBar.titleText.copyWith(color: Colors.white),
         ),
         centerTitle: false,
       ),
@@ -77,7 +77,7 @@ class DiscountCalculatorScreen extends ConsumerWidget {
                 child: ScrollFadeView(
                   fadeColor: kDiscountGradientBottom,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppTokens.paddingScreenH,
+                    horizontal: screenPaddingH,
                     vertical: 20,
                   ),
                   child: Column(
@@ -174,60 +174,48 @@ class _OriginalPriceField extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '원가',
-            style: AppTokens.textStyleLabelLarge.copyWith(
-              color: kDiscountTextSecondary,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-            ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: CmInputCard.padding,
+        decoration: BoxDecoration(
+          color: kDiscountFieldBg,
+          borderRadius: BorderRadius.circular(CmInputCard.radius),
+          border: Border.all(
+            color: isActive ? kDiscountFieldBorderActive : kDiscountFieldBorder,
+            width: isActive ? 1.5 : 1,
           ),
-          const SizedBox(height: 8),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: AppTokens.paddingInputField,
-            decoration: BoxDecoration(
-              color: kDiscountFieldBg,
-              borderRadius: BorderRadius.circular(AppTokens.radiusInput),
-              border: Border.all(
-                color: isActive
-                    ? kDiscountFieldBorderActive
-                    : kDiscountFieldBorder,
-                width: isActive ? 1.5 : 1,
-              ),
-            ),
-            child: Row(
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('원가',
+                style: CmInputCard.titleText.copyWith(
+                    color: kDiscountTextSecondary)),
+            const SizedBox(height: CmInputCard.titleSpacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
-                if (currencySymbol.isNotEmpty) ...[
-                  Text(
-                    currencySymbol,
-                    style: AppTokens.textStyleResult18.copyWith(
-                      color: isActive
-                          ? kDiscountAccent
-                          : kDiscountTextSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
-                Expanded(
-                  child: Text(
-                    value.isEmpty ? '0' : value,
-                    style: AppTokens.textStyleResult24.copyWith(
-                      color: value.isEmpty
-                          ? kDiscountTextSecondary
-                          : kDiscountTextPrimary,
-                    ),
-                    textAlign: TextAlign.right,
+                Text(
+                  value.isEmpty ? '0' : value,
+                  style: CmInputCard.inputText.copyWith(
+                    color: value.isEmpty ? kDiscountTextSecondary : kDiscountTextPrimary,
                   ),
                 ),
+                if (currencySymbol.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    currencySymbol,
+                    style: CmInputCard.unitText.copyWith(
+                      color: isActive ? kDiscountAccent : kDiscountTextSecondary,
+                    ),
+                  ),
+                ],
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -236,7 +224,7 @@ class _OriginalPriceField extends StatelessWidget {
 // ──────────────────────────────────────────
 // 할인율 섹션
 // ──────────────────────────────────────────
-class _DiscountRateSection extends StatelessWidget {
+class _DiscountRateSection extends StatefulWidget {
   final String rateText;
   final int? selectedChip;
   final bool isActive;
@@ -254,102 +242,173 @@ class _DiscountRateSection extends StatelessWidget {
   });
 
   @override
+  State<_DiscountRateSection> createState() => _DiscountRateSectionState();
+}
+
+class _DiscountRateSectionState extends State<_DiscountRateSection> {
+  final _scrollCtrl = ScrollController();
+  bool _canScrollLeft = false;
+  bool _canScrollRight = false;
+
+  void _onScroll() {
+    if (!_scrollCtrl.hasClients) return;
+    final pos = _scrollCtrl.position;
+    final left = pos.pixels > 0;
+    final right = pos.pixels < pos.maxScrollExtent;
+    if (left != _canScrollLeft || right != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = left;
+        _canScrollRight = right;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollCtrl.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
+  }
+
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '할인율',
-          style: AppTokens.textStyleLabelLarge.copyWith(
-            color: kDiscountTextSecondary,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
+    return GestureDetector(
+      onTap: widget.onFieldTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: CmInputCard.padding,
+        decoration: BoxDecoration(
+          color: kDiscountFieldBg,
+          borderRadius: BorderRadius.circular(CmInputCard.radius),
+          border: Border.all(
+            color: widget.isActive
+                ? kDiscountFieldBorderActive
+                : kDiscountFieldBorder,
+            width: widget.isActive ? 1.5 : 1,
           ),
         ),
-        const SizedBox(height: 8),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(chips.length, (i) {
-              final active = selectedChip == i;
-              return Padding(
-                padding: EdgeInsets.only(right: i < chips.length - 1 ? 8 : 0),
-                child: GestureDetector(
-                  onTap: () => onChipTap(i),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color:
-                          active ? kDiscountChipActiveBg : kDiscountChipBg,
-                      borderRadius:
-                          BorderRadius.circular(AppTokens.radiusChip),
-                      border: Border.all(
-                        color: active
-                            ? kDiscountChipActiveBg
-                            : kDiscountFieldBorder,
-                      ),
-                    ),
-                    child: Text(
-                      chips[i],
-                      style: AppTokens.textStyleChip.copyWith(
-                        color: active
-                            ? kDiscountChipActiveText
-                            : kDiscountChipText,
-                        fontWeight: active ? FontWeight.w600 : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('할인율',
+                style: CmInputCard.titleText.copyWith(
+                    color: kDiscountTextSecondary)),
+            const SizedBox(height: CmInputCard.titleSpacing),
+            Stack(
+              children: [
+                SingleChildScrollView(
+                  controller: _scrollCtrl,
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(widget.chips.length, (i) {
+                      final active = widget.selectedChip == i;
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            right: i < widget.chips.length - 1 ? 8 : 0),
+                        child: GestureDetector(
+                          onTap: () => widget.onChipTap(i),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 180),
+                            padding: CmTab.padding,
+                            decoration: BoxDecoration(
+                              color: active
+                                  ? kDiscountChipActiveBg
+                                  : kDiscountChipBg,
+                              borderRadius:
+                                  BorderRadius.circular(CmTab.radius),
+                              border: Border.all(
+                                color: active
+                                    ? kDiscountChipActiveBg
+                                    : kDiscountFieldBorder,
+                              ),
+                            ),
+                            child: Text(
+                              widget.chips[i],
+                              style: CmTab.text.copyWith(
+                                color: active
+                                    ? kDiscountChipActiveText
+                                    : kDiscountChipText,
+                                fontWeight: active ? FontWeight.w600 : null,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                if (_canScrollLeft)
+                  Positioned(
+                    left: 0, top: 0, bottom: 0, width: 32,
+                    child: IgnorePointer(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              kDiscountFieldBg,
+                              kDiscountFieldBg.withValues(alpha: 0),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }),
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: onFieldTap,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: AppTokens.paddingInputField,
-            decoration: BoxDecoration(
-              color: kDiscountFieldBg,
-              borderRadius: BorderRadius.circular(AppTokens.radiusInput),
-              border: Border.all(
-                color: isActive
-                    ? kDiscountFieldBorderActive
-                    : kDiscountFieldBorder,
-                width: isActive ? 1.5 : 1,
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    rateText.isEmpty ? '0' : rateText,
-                    style: AppTokens.textStyleResult24.copyWith(
-                      color: rateText.isEmpty
-                          ? kDiscountTextSecondary
-                          : kDiscountTextPrimary,
+                if (_canScrollRight)
+                  Positioned(
+                    right: 0, top: 0, bottom: 0, width: 32,
+                    child: IgnorePointer(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerRight,
+                            end: Alignment.centerLeft,
+                            colors: [
+                              kDiscountFieldBg,
+                              kDiscountFieldBg.withValues(alpha: 0),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.right,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  widget.rateText.isEmpty ? '0' : widget.rateText,
+                  style: CmInputCard.inputText.copyWith(
+                    color: widget.rateText.isEmpty
+                        ? kDiscountTextSecondary
+                        : kDiscountTextPrimary,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   '%',
-                  style: AppTokens.textStyleResult18.copyWith(
-                    color: isActive
+                  style: CmInputCard.unitText.copyWith(
+                    color: widget.isActive
                         ? kDiscountAccent
                         : kDiscountTextSecondary,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -357,7 +416,7 @@ class _DiscountRateSection extends StatelessWidget {
 // ──────────────────────────────────────────
 // 추가 할인 섹션
 // ──────────────────────────────────────────
-class _ExtraDiscountSection extends StatelessWidget {
+class _ExtraDiscountSection extends StatefulWidget {
   final bool show;
   final String rateText;
   final int? selectedChip;
@@ -379,110 +438,195 @@ class _ExtraDiscountSection extends StatelessWidget {
   });
 
   @override
+  State<_ExtraDiscountSection> createState() => _ExtraDiscountSectionState();
+}
+
+class _ExtraDiscountSectionState extends State<_ExtraDiscountSection> {
+  final _scrollCtrl = ScrollController();
+  bool _canScrollLeft = false;
+  bool _canScrollRight = false;
+
+  void _onScroll() {
+    if (!_scrollCtrl.hasClients) return;
+    final pos = _scrollCtrl.position;
+    final left = pos.pixels > 0;
+    final right = pos.pixels < pos.maxScrollExtent;
+    if (left != _canScrollLeft || right != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = left;
+        _canScrollRight = right;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollCtrl.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
+  }
+
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GestureDetector(
-          onTap: onToggle,
+          onTap: widget.onToggle,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                show ? Icons.remove_circle_outline : Icons.add_circle_outline,
+                widget.show
+                    ? Icons.remove_circle_outline
+                    : Icons.add_circle_outline,
                 color: kDiscountAccent,
-                size: AppTokens.sizeIconSmall,
+                size: CmIcon.small,
               ),
               const SizedBox(width: 6),
               Text(
-                show ? '추가 할인 제거' : '추가 할인 쌓기',
-                style: AppTokens.textStyleSectionTitle.copyWith(
-                  color: kDiscountAccent,
-                ),
+                widget.show ? '추가 할인 제거' : '추가 할인',
+                style: rowLabel.copyWith(color: kDiscountAccent),
               ),
             ],
           ),
         ),
-        if (show) ...[
+        if (widget.show) ...[
           const SizedBox(height: 12),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(chips.length, (i) {
-                final active = selectedChip == i;
-                return Padding(
-                  padding:
-                      EdgeInsets.only(right: i < chips.length - 1 ? 8 : 0),
-                  child: GestureDetector(
-                    onTap: () => onChipTap(i),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      padding: AppTokens.paddingChip,
-                      decoration: BoxDecoration(
-                        color: active
-                            ? kDiscountChipActiveBg
-                            : kDiscountChipBg,
-                        borderRadius:
-                            BorderRadius.circular(AppTokens.radiusChip),
-                        border: Border.all(
-                          color: active
-                              ? kDiscountChipActiveBg
-                              : kDiscountFieldBorder,
-                        ),
-                      ),
-                      child: Text(
-                        chips[i],
-                        style: AppTokens.textStyleChip.copyWith(
-                          color: active
-                              ? kDiscountChipActiveText
-                              : kDiscountChipText,
-                          fontWeight: active ? FontWeight.w600 : null,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-          const SizedBox(height: 8),
           GestureDetector(
-            onTap: onFieldTap,
+            onTap: widget.onFieldTap,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: AppTokens.paddingInputField,
+              padding: CmInputCard.padding,
               decoration: BoxDecoration(
                 color: kDiscountFieldBg,
-                borderRadius: BorderRadius.circular(AppTokens.radiusInput),
+                borderRadius: BorderRadius.circular(CmInputCard.radius),
                 border: Border.all(
-                  color: isActive
+                  color: widget.isActive
                       ? kDiscountFieldBorderActive
                       : kDiscountFieldBorder,
-                  width: isActive ? 1.5 : 1,
+                  width: widget.isActive ? 1.5 : 1,
                 ),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      rateText.isEmpty ? '0' : rateText,
-                      style: AppTokens.textStyleResult24.copyWith(
-                        color: rateText.isEmpty
-                            ? kDiscountTextSecondary
-                            : kDiscountTextPrimary,
+                  Text('추가 할인율',
+                      style: CmInputCard.titleText.copyWith(
+                          color: kDiscountTextSecondary)),
+                  const SizedBox(height: CmInputCard.titleSpacing),
+                  Stack(
+                    children: [
+                      SingleChildScrollView(
+                        controller: _scrollCtrl,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(widget.chips.length, (i) {
+                            final active = widget.selectedChip == i;
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  right: i < widget.chips.length - 1 ? 8 : 0),
+                              child: GestureDetector(
+                                onTap: () => widget.onChipTap(i),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 180),
+                                  padding: CmTab.padding,
+                                  decoration: BoxDecoration(
+                                    color: active
+                                        ? kDiscountChipActiveBg
+                                        : kDiscountChipBg,
+                                    borderRadius:
+                                        BorderRadius.circular(CmTab.radius),
+                                    border: Border.all(
+                                      color: active
+                                          ? kDiscountChipActiveBg
+                                          : kDiscountFieldBorder,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    widget.chips[i],
+                                    style: CmTab.text.copyWith(
+                                      color: active
+                                          ? kDiscountChipActiveText
+                                          : kDiscountChipText,
+                                      fontWeight:
+                                          active ? FontWeight.w600 : null,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
                       ),
-                      textAlign: TextAlign.right,
-                    ),
+                      if (_canScrollLeft)
+                        Positioned(
+                          left: 0, top: 0, bottom: 0, width: 32,
+                          child: IgnorePointer(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    kDiscountFieldBg,
+                                    kDiscountFieldBg.withValues(alpha: 0),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (_canScrollRight)
+                        Positioned(
+                          right: 0, top: 0, bottom: 0, width: 32,
+                          child: IgnorePointer(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerRight,
+                                  end: Alignment.centerLeft,
+                                  colors: [
+                                    kDiscountFieldBg,
+                                    kDiscountFieldBg.withValues(alpha: 0),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '%',
-                    style: AppTokens.textStyleResult18.copyWith(
-                      color: isActive
-                          ? kDiscountAccent
-                          : kDiscountTextSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        widget.rateText.isEmpty ? '0' : widget.rateText,
+                        style: CmInputCard.inputText.copyWith(
+                          color: widget.rateText.isEmpty
+                              ? kDiscountTextSecondary
+                              : kDiscountTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '%',
+                        style: CmInputCard.unitText.copyWith(
+                          color: widget.isActive
+                              ? kDiscountAccent
+                              : kDiscountTextSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -526,10 +670,10 @@ class _ResultCard extends StatelessWidget {
         : '${discountRate.toStringAsFixed(discountRate % 1 == 0 ? 0 : 1)}%';
 
     return Container(
-      padding: AppTokens.paddingCard,
+      padding: CmResultCard.padding,
       decoration: BoxDecoration(
         color: kDiscountCardBg,
-        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        borderRadius: BorderRadius.circular(CmResultCard.radius),
         border: Border.all(color: kDiscountCardBorder),
       ),
       child: Column(
@@ -538,8 +682,8 @@ class _ResultCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                '$currencySymbol${_fmt(originalPrice)}',
-                style: AppTokens.textStyleBody.copyWith(
+                '${_fmt(originalPrice)}$currencySymbol',
+                style: CmResultCard.unitText.copyWith(
                   color: kDiscountTextSecondary,
                   decoration: TextDecoration.lineThrough,
                   decorationColor: kDiscountTextSecondary,
@@ -548,11 +692,11 @@ class _ResultCard extends StatelessWidget {
               const SizedBox(width: 8),
               const Icon(Icons.arrow_forward,
                   color: kDiscountTextSecondary,
-                  size: AppTokens.sizeIconXSmall),
+                  size: CmTab.iconSize),
               const SizedBox(width: 8),
               Text(
-                '$currencySymbol${_fmt(finalPrice)}',
-                style: AppTokens.textStyleBody.copyWith(
+                '${_fmt(finalPrice)}$currencySymbol',
+                style: CmResultCard.unitText.copyWith(
                   color: kDiscountTextPrimary,
                   fontWeight: FontWeight.w500,
                 ),
@@ -567,12 +711,12 @@ class _ResultCard extends StatelessWidget {
             children: [
               Text(
                 '할인 금액',
-                style: AppTokens.textStyleBody
-                    .copyWith(color: kDiscountTextSecondary),
+                style: CmResultCard.unitText.copyWith(
+                    color: kDiscountTextSecondary),
               ),
               Text(
-                '- $currencySymbol${_fmt(savedAmount)}',
-                style: AppTokens.textStyleBody.copyWith(
+                '- ${_fmt(savedAmount)}$currencySymbol',
+                style: CmResultCard.unitText.copyWith(
                   color: kDiscountTextSavings,
                   fontWeight: FontWeight.w600,
                 ),
@@ -585,12 +729,12 @@ class _ResultCard extends StatelessWidget {
             children: [
               Text(
                 hasExtra ? '실질 할인율 ($rateLabel)' : '할인율',
-                style: AppTokens.textStyleBody
-                    .copyWith(color: kDiscountTextSecondary),
+                style: CmResultCard.unitText.copyWith(
+                    color: kDiscountTextSecondary),
               ),
               Text(
                 '${effectiveRate.toStringAsFixed(effectiveRate % 1 == 0 ? 0 : 1)}%',
-                style: AppTokens.textStyleBody.copyWith(
+                style: CmResultCard.unitText.copyWith(
                   color: kDiscountTextSecondary,
                   fontWeight: FontWeight.w500,
                 ),
@@ -603,13 +747,13 @@ class _ResultCard extends StatelessWidget {
             children: [
               Text(
                 '최종가',
-                style: AppTokens.textStyleBody
-                    .copyWith(color: kDiscountTextSecondary),
+                style: CmResultCard.unitText.copyWith(
+                    color: kDiscountTextSecondary),
               ),
               const SizedBox(height: 4),
               Text(
-                '$currencySymbol${_fmt(finalPrice)}',
-                style: AppTokens.textStyleResult36.copyWith(
+                '${_fmt(finalPrice)}$currencySymbol',
+                style: CmResultCard.resultText.copyWith(
                   color: kDiscountTextFinalPrice,
                   letterSpacing: -1,
                 ),
@@ -685,14 +829,14 @@ class _KeypadButton extends StatelessWidget {
         splashColor: Colors.white10,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: AppTokens.heightButtonLarge,
+          height: keypadButtonHeightLarge,
           child: Center(
             child: label == '⌫'
                 ? Icon(Icons.backspace_outlined,
-                    color: color, size: AppTokens.sizeKeypadBackspace)
+                    color: color, size: keypadBackspaceSize)
                 : Text(
                     label,
-                    style: AppTokens.textStyleKeypadNumber
+                    style: keypadNumberText
                         .copyWith(color: color),
                   ),
           ),

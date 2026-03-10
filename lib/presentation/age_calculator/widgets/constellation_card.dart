@@ -20,7 +20,7 @@ class ConstellationCard extends StatelessWidget {
           children: [
             Text(
               '별자리',
-              style: AppTokens.textStyleLabelMedium.copyWith(
+              style: CmBirthdayMiniCard.labelText.copyWith(
                 color: kAgeSubText,
                 fontWeight: FontWeight.w600,
               ),
@@ -36,7 +36,7 @@ class ConstellationCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   name,
-                  style: AppTokens.textStyleValue.copyWith(
+                  style: textStyle16.copyWith(
                     color: kAgeText,
                     fontWeight: FontWeight.w700,
                   ),

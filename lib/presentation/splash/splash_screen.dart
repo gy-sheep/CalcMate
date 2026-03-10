@@ -126,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen>
             // 앱 이름
             Text(
               'CalcMate',
-              style: AppTokens.textStyleAppBarTitle.copyWith(
+              style: CmAppBar.titleText.copyWith(
                 color: Colors.white,
                 fontSize: 30,
                 letterSpacing: 0.5,
@@ -147,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen>
                 position: _taglineSlide,
                 child: Text(
                 '생활 속 모든 계산',
-                style: AppTokens.textStyleAppBarTitle.copyWith(
+                style: CmAppBar.titleText.copyWith(
                   color: _kTagline,
                   fontSize: 16,
                   letterSpacing: 0.5,

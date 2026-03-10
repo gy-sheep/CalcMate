@@ -53,7 +53,7 @@ void showSalaryKeypad(
           decoration: const BoxDecoration(
             color: kSalaryBgTop,
             borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppTokens.radiusBottomSheet)),
+                top: Radius.circular(CmSheet.radius)),
           ),
           padding: CmKeypad.padding,
           child: Column(
@@ -61,14 +61,14 @@ void showSalaryKeypad(
             children: [
               // 핸들
               Container(
-                width: AppTokens.widthSheetHandle,
-                height: AppTokens.heightSheetHandle,
+                width: CmSheet.handleWidth,
+                height: CmSheet.handleHeight,
                 margin: const EdgeInsets.only(
-                    bottom: AppTokens.spacingSheetHandle),
+                    bottom: CmSheet.handleBottomSpacing),
                 decoration: BoxDecoration(
                   color: kSalaryCardBorder,
                   borderRadius:
-                      BorderRadius.circular(AppTokens.radiusSheetHandle),
+                      BorderRadius.circular(CmSheet.handleRadius),
                 ),
               ),
               // 입력 표시
@@ -78,14 +78,14 @@ void showSalaryKeypad(
                 decoration: BoxDecoration(
                   color: kSalaryDeductionBg,
                   borderRadius:
-                      BorderRadius.circular(AppTokens.radiusInput),
+                      BorderRadius.circular(radiusInput),
                   border: Border.all(
                       color: kSalaryGold.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   displayText(),
                   textAlign: TextAlign.right,
-                  style: AppTokens.textStyleResult36
+                  style: CmResultCard.resultText
                       .copyWith(color: kSalaryTextPrimary),
                 ),
               ),
@@ -117,7 +117,7 @@ void showSalaryKeypad(
                                     ? () => setModal(() => input = '')
                                     : null,
                                 child: Container(
-                                  height: AppTokens.heightButtonMedium,
+                                  height: keypadButtonHeightMedium,
                                   decoration: BoxDecoration(
                                     color: isBack
                                         ? kSalaryGoldSoft
@@ -135,12 +135,10 @@ void showSalaryKeypad(
                                     child: isBack
                                         ? Icon(Icons.backspace_outlined,
                                             color: kSalaryGold,
-                                            size: AppTokens
-                                                .sizeKeypadBackspace)
+                                            size: keypadBackspaceSize)
                                         : Text(
                                             key,
-                                            style: AppTokens
-                                                .textStyleKeypadNumber
+                                            style: keypadNumberText
                                                 .copyWith(
                                                     color:
                                                         kSalaryTextPrimary),
@@ -161,20 +159,20 @@ void showSalaryKeypad(
                     MediaQuery.of(ctx).padding.bottom + CmKeypad.bottomPadding),
                 child: SizedBox(
                   width: double.infinity,
-                  height: AppTokens.heightButtonPrimary,
+                  height: keypadButtonHeightPrimary,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kSalaryAccent,
                       foregroundColor: kSalaryBgTop,
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.circular(AppTokens.radiusInput),
+                            BorderRadius.circular(radiusInput),
                       ),
                     ),
                     onPressed: confirm,
                     child: Text(
                       '확인',
-                      style: AppTokens.textStyleBody.copyWith(
+                      style: inputFieldInnerLabel.copyWith(
                         color: kSalaryBgTop,
                         fontWeight: FontWeight.w600,
                       ),

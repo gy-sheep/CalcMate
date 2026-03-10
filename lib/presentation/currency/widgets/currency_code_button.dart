@@ -17,22 +17,22 @@ class CurrencyCodeButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 48,
+        width: CmFlag.buttonWidth,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CountryFlag.fromCurrencyCode(
               code,
               theme: const ImageTheme(
-                width: AppTokens.sizeFlagMedium,
-                height: AppTokens.sizeFlagMedium,
+                width: CmFlag.medium,
+                height: CmFlag.medium,
                 shape: Circle(),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: CmFlag.codeSpacing),
             Text(
               code,
-              style: AppTokens.textStyleLabelMedium.copyWith(
+              style: CmFlag.codeText.copyWith(
                 color: Colors.white,
               ),
             ),

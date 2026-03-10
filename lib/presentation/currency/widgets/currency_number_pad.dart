@@ -95,16 +95,16 @@ class CurrencyKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: AppTokens.heightButtonLarge,
+          height: keypadButtonHeightLarge,
           child: Center(
             child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: AppTokens.sizeKeypadBackspace)
+                ? Icon(Icons.backspace_outlined, color: _textColor, size: keypadBackspaceSize)
                 : Text(
                     label,
                     style: (const ['\u{00F7}', '\u{00D7}', '-', '+', '=']
                                 .contains(label)
-                            ? AppTokens.textStyleKeypadOperator
-                            : AppTokens.textStyleKeypadNumber)
+                            ? keypadOperatorText
+                            : keypadNumberText)
                         .copyWith(color: _textColor),
                   ),
           ),

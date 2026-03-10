@@ -82,7 +82,7 @@ class DDayModeView extends ConsumerWidget {
       children: [
         Text(
           mainText,
-          style: AppTokens.textStyleResult48.copyWith(
+          style: CmInfoCard.displayText.copyWith(
             fontWeight: FontWeight.w700,
             color: mainColor,
             height: 1.0,

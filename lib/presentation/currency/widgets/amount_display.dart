@@ -23,7 +23,7 @@ class AmountDisplay extends StatelessWidget {
         amount,
         maxLines: 1,
         softWrap: false,
-        style: AppTokens.textStyleResult28.copyWith(
+        style: CmCurrencyRow.amountText.copyWith(
           color: Colors.white,
           letterSpacing: -1,
         ),
@@ -43,7 +43,7 @@ class AmountDisplay extends StatelessWidget {
                   right: 0,
                   child: Text(
                     hint!,
-                    style: AppTokens.textStyleCaption.copyWith(
+                    style: textStyleCaption.copyWith(
                       color: Colors.white38,
                     ),
                   ),

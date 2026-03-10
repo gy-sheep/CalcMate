@@ -52,11 +52,11 @@ class AppTextField extends StatelessWidget {
           hintColor: hintColor,
           prefixIcon: Icon(Icons.search, color: hintColor),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppTokens.radiusInput),
+            borderRadius: BorderRadius.circular(radiusInput),
             borderSide: BorderSide(color: borderColor),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppTokens.radiusInput),
+            borderRadius: BorderRadius.circular(radiusInput),
             borderSide: BorderSide(color: focusedBorderColor),
           ),
         );
@@ -70,10 +70,10 @@ class AppTextField extends StatelessWidget {
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
-      style: AppTokens.textStyleBody.copyWith(color: textColor),
+      style: inputFieldInnerLabel.copyWith(color: textColor),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: AppTokens.textStyleHint.copyWith(color: hintColor),
+        hintStyle: inputFieldInnerLabel.copyWith(color: hintColor),
         prefixIcon: prefixIcon,
         border: hasBorder ? null : InputBorder.none,
         enabledBorder: enabledBorder,

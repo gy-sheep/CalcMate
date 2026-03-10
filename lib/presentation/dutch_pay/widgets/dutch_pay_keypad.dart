@@ -59,10 +59,10 @@ class _KeypadBtn extends StatelessWidget {
         child: Center(
           child: switch (label) {
             '⌫' => const Icon(Icons.backspace_outlined,
-                color: kDutchTextSecondary, size: AppTokens.sizeKeypadBackspace),
+                color: kDutchTextSecondary, size: keypadBackspaceSize),
             _ => Text(
                 label,
-                style: AppTokens.textStyleKeypadNumber
+                style: keypadNumberText
                     .copyWith(color: kDutchTextPrimary),
               ),
           },

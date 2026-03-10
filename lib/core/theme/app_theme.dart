@@ -13,7 +13,7 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       textTheme: const TextTheme(
-        titleLarge: AppTokens.textStyleAppBarTitle,
+        titleLarge: CmAppBar.titleText,
       ),
       appBarTheme: const AppBarTheme(
         centerTitle: true,
@@ -30,7 +30,7 @@ class AppTheme {
         brightness: Brightness.dark,
       ),
       textTheme: const TextTheme(
-        titleLarge: AppTokens.textStyleAppBarTitle,
+        titleLarge: CmAppBar.titleText,
       ),
       appBarTheme: const AppBarTheme(
         centerTitle: true,

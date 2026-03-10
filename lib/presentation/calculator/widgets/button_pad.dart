@@ -90,15 +90,15 @@ class CalcButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: AppTokens.heightButtonLarge,
+          height: keypadButtonHeightLarge,
           child: Center(
             child: label == '⌫'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: AppTokens.sizeKeypadBackspace)
+                ? Icon(Icons.backspace_outlined, color: _textColor, size: keypadBackspaceSize)
                 : Text(
                     label,
                     style: (const ['÷', '×', '-', '+', '='].contains(label)
-                            ? AppTokens.textStyleKeypadOperator
-                            : AppTokens.textStyleKeypadNumber)
+                            ? keypadOperatorText
+                            : keypadNumberText)
                         .copyWith(color: _textColor),
                   ),
           ),

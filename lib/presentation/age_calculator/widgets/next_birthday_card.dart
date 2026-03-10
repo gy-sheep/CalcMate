@@ -20,11 +20,11 @@ class NextBirthdayCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('🎂', style: AppTokens.textStyleResult28.copyWith()),
+              Text('🎂', style: CmBirthdayMiniCard.resultText.copyWith()),
               const SizedBox(height: 6),
               Text(
                 '오늘이 생일이에요!',
-                style: AppTokens.textStyleSectionTitle.copyWith(
+                style: CmBirthdayMiniCard.titleText.copyWith(
                   color: kAgeAccent,
                   fontWeight: FontWeight.w700,
                 ),
@@ -53,7 +53,7 @@ class NextBirthdayCard extends StatelessWidget {
             children: [
               Text(
                 '다음 생일',
-                style: AppTokens.textStyleLabelMedium.copyWith(
+                style: CmBirthdayMiniCard.labelText.copyWith(
                   color: kAgeSubText,
                   fontWeight: FontWeight.w600,
                 ),
@@ -61,7 +61,7 @@ class NextBirthdayCard extends StatelessWidget {
               const Spacer(),
               Text(
                 'D-$dDays',
-                style: AppTokens.textStyleResult28.copyWith(
+                style: CmBirthdayMiniCard.resultText.copyWith(
                   color: kAgeAccent,
                   fontWeight: FontWeight.w800,
                   height: 1.0,
@@ -70,7 +70,7 @@ class NextBirthdayCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 nextDateStr,
-                style: AppTokens.textStyleLabelSmall.copyWith(color: kAgeSubText),
+                style: CmBirthdayMiniCard.subText.copyWith(color: kAgeSubText),
               ),
             ],
           ),

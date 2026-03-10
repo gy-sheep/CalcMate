@@ -27,10 +27,10 @@ class BmiHealthyWeightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: AppTokens.paddingCard,
+      padding: CmInfoCard.padding,
       decoration: BoxDecoration(
         color: _kCardBg,
-        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        borderRadius: BorderRadius.circular(radiusCard),
         border: Border.all(
           color: isInRange
               ? _kGreen.withValues(alpha: 0.4)
@@ -40,19 +40,18 @@ class BmiHealthyWeightCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: AppTokens.sizeIconContainer,
-            height: AppTokens.sizeIconContainer,
+            width: 44,
+            height: 44,
             decoration: BoxDecoration(
               color: _kGreen.withValues(alpha: 0.12),
-              borderRadius:
-                  BorderRadius.circular(AppTokens.radiusIconContainer),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               isInRange
                   ? Icons.check_circle_outline
                   : Icons.monitor_weight_outlined,
               color: isInRange ? _kGreen : _kTextSecondary,
-              size: AppTokens.sizeIconMedium,
+              size: 22,
             ),
           ),
           const SizedBox(width: 14),
@@ -61,16 +60,14 @@ class BmiHealthyWeightCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('건강 체중 범위',
-                    style: AppTokens.textStyleSectionTitle
-                        .copyWith(color: _kTextSecondary)),
+                    style: CmInfoCard.captionText.copyWith(color: _kTextSecondary)),
                 const SizedBox(height: 2),
                 Text('${_fmt(minKg)} – ${_fmt(maxKg)}',
-                    style: AppTokens.textStyleValue
-                        .copyWith(color: _kTextPrimary)),
+                    style: CmInfoCard.bodyText.copyWith(color: _kTextPrimary)),
                 if (isInRange) ...[
                   const SizedBox(height: 2),
                   Text('현재 체중이 건강 범위 안에 있습니다',
-                      style: AppTokens.textStyleCaption
+                      style: textStyleCaption
                           .copyWith(color: _kGreen)),
                 ],
               ],

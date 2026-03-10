@@ -115,13 +115,12 @@ class _SalaryCalculatorScreenState
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios,
-              color: kSalaryTextPrimary, size: AppTokens.sizeAppBarBackIcon),
+              color: kSalaryTextPrimary, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           widget.title,
-          style: AppTokens.textStyleAppBarTitle
-              .copyWith(color: kSalaryTextPrimary),
+          style: CmAppBar.titleText.copyWith(color: kSalaryTextPrimary),
         ),
         centerTitle: false,
       ),
@@ -193,7 +192,7 @@ class _SalaryCalculatorScreenState
     return ScrollFadeView(
       fadeColor: kSalaryBgBottom,
       padding: const EdgeInsets.symmetric(
-          horizontal: AppTokens.paddingScreenH),
+          horizontal: screenPaddingH),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

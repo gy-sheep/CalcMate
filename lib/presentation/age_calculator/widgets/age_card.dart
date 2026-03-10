@@ -13,7 +13,7 @@ class AgeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AgeInfoCard(
       child: Padding(
-        padding: AppTokens.paddingCard,
+        padding: CmInfoCard.padding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -24,7 +24,7 @@ class AgeCard extends StatelessWidget {
               children: [
                 Text(
                   '${result.countingAge}',
-                  style: AppTokens.textStyleResult56.copyWith(
+                  style: CmInfoCard.displayText.copyWith(
                     fontWeight: FontWeight.w800,
                     color: kAgeAccent,
                     height: 1.0,
@@ -33,7 +33,7 @@ class AgeCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   '세',
-                  style: AppTokens.textStyleResult22.copyWith(
+                  style: textMediumResult.copyWith(
                     color: kAgeAccent,
                     fontWeight: FontWeight.w600,
                   ),
@@ -44,11 +44,11 @@ class AgeCard extends StatelessWidget {
                       horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: kAgeAccent.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppTokens.radiusTag),
+                    borderRadius: BorderRadius.circular(CmInfoCard.tagRadius),
                   ),
                   child: Text(
                     '세는 나이',
-                    style: AppTokens.textStyleLabelMedium.copyWith(
+                    style: CmInfoCard.tagLabel.copyWith(
                       color: kAgeAccent,
                       fontWeight: FontWeight.w600,
                     ),
@@ -82,9 +82,9 @@ class AgeRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label,
-            style: AppTokens.textStyleBody.copyWith(color: kAgeSubText)),
+            style: inputFieldInnerLabel.copyWith(color: kAgeSubText)),
         Text(value,
-            style: AppTokens.textStyleValue.copyWith(color: kAgeText)),
+            style: textStyle16.copyWith(color: kAgeText)),
       ],
     );
   }
@@ -104,11 +104,11 @@ class BirthWeekdayRow extends StatelessWidget {
           children: [
             Text(
               '태어난 요일',
-              style: AppTokens.textStyleBody.copyWith(color: kAgeSubText),
+              style: inputFieldInnerLabel.copyWith(color: kAgeSubText),
             ),
             Text(
               kWeekdays[result.birthWeekday],
-              style: AppTokens.textStyleValue.copyWith(color: kAgeText),
+              style: textStyle16.copyWith(color: kAgeText),
             ),
           ],
         ),

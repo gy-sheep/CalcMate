@@ -130,12 +130,12 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: AppTokens.sizeAppBarBackIcon),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           widget.title,
-          style: AppTokens.textStyleAppBarTitle.copyWith(color: Colors.white),
+          style: CmAppBar.titleText.copyWith(color: Colors.white),
         ),
         centerTitle: false,
       ),

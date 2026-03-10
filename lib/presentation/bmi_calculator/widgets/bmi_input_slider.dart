@@ -32,10 +32,10 @@ class BmiInputSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: AppTokens.paddingCard,
+      padding: CmInputCard.padding,
       decoration: BoxDecoration(
         color: _kCardBg,
-        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        borderRadius: BorderRadius.circular(CmInputCard.radius),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,19 +44,16 @@ class BmiInputSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label,
-                  style: AppTokens.textStyleLabelLarge.copyWith(
+                  style: CmInputCard.titleText.copyWith(
                     color: _kTextSecondary,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
                   )),
               GestureDetector(
                 onTap: onValueTap,
                 child: Container(
-                  padding: AppTokens.paddingChip,
+                  padding: CmTab.padding,
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.12),
-                    borderRadius:
-                        BorderRadius.circular(AppTokens.radiusChip),
+                    borderRadius: BorderRadius.circular(CmTab.radius),
                     border: Border.all(
                         color: accentColor.withValues(alpha: 0.3)),
                   ),
@@ -64,11 +61,10 @@ class BmiInputSlider extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(valueLabel,
-                          style: AppTokens.textStyleValue
-                              .copyWith(color: accentColor)),
+                          style: textStyle16.copyWith(color: accentColor)),
                       const SizedBox(width: 4),
                       Icon(Icons.edit_outlined,
-                          size: AppTokens.sizeIconXSmall,
+                          size: CmIcon.inputCard,
                           color: accentColor.withValues(alpha: 0.7)),
                     ],
                   ),
@@ -76,6 +72,7 @@ class BmiInputSlider extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: CmSlider.topSpacing),
           SliderTheme(
             data: SliderThemeData(
               activeTrackColor: accentColor,
@@ -83,8 +80,8 @@ class BmiInputSlider extends StatelessWidget {
               thumbColor: Colors.white,
               overlayColor: accentColor.withValues(alpha: 0.15),
               thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: AppTokens.radiusSliderThumb),
-              trackHeight: AppTokens.heightSliderTrack,
+                  enabledThumbRadius: CmSlider.thumbRadius),
+              trackHeight: CmSlider.trackHeight,
             ),
             child: Slider(
               value: value,
@@ -98,10 +95,10 @@ class BmiInputSlider extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('${min.round()}',
-                  style: AppTokens.textStyleCaption
+                  style: textStyleCaption
                       .copyWith(color: _kTextSecondary)),
               Text('${max.round()}',
-                  style: AppTokens.textStyleCaption
+                  style: textStyleCaption
                       .copyWith(color: _kTextSecondary)),
             ],
           ),

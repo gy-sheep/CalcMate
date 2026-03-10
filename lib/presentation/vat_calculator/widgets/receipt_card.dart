@@ -62,7 +62,7 @@ class ReceiptCard extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: Text(
                         vm.formattedInput,
-                        style: AppTokens.textStyleResult40.copyWith(
+                        style: textLargeInput.copyWith(
                           color: kVatReceiptText,
                           letterSpacing: -1,
                         ),
@@ -116,7 +116,7 @@ class ReceiptCard extends StatelessWidget {
                   children: [
                     Text(
                       isExclusive ? '합계' : '공급가액',
-                      style: AppTokens.textStyleResult18.copyWith(
+                      style: textStyle18.copyWith(
                         color: kVatReceiptText,
                         fontWeight: FontWeight.w700,
                       ),
@@ -125,7 +125,7 @@ class ReceiptCard extends StatelessWidget {
                       isExclusive
                           ? '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원'
                           : '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
-                      style: AppTokens.textStyleResult22.copyWith(
+                      style: textMediumResult.copyWith(
                         fontWeight: FontWeight.w700,
                         color: kVatReceiptText,
                       ),
@@ -155,7 +155,7 @@ class ReceiptCard extends StatelessWidget {
           children: [
             Text(
               '부가세 (',
-              style: AppTokens.textStyleCaption.copyWith(color: kVatReceiptSecondary),
+              style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
             ),
             GestureDetector(
               onTap: () => vm.handleIntent(
@@ -174,7 +174,7 @@ class ReceiptCard extends StatelessWidget {
                 ),
                 child: Text(
                   '$rateText%',
-                  style: AppTokens.textStyleCaption.copyWith(
+                  style: textStyleCaption.copyWith(
                     color: isEditing ? kVatColorEquals : kVatReceiptSecondary,
                     fontWeight: isEditing ? FontWeight.w700 : FontWeight.w400,
                   ),
@@ -183,7 +183,7 @@ class ReceiptCard extends StatelessWidget {
             ),
             Text(
               ')',
-              style: AppTokens.textStyleCaption.copyWith(color: kVatReceiptSecondary),
+              style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
             ),
             const SizedBox(width: 4),
             GestureDetector(
@@ -191,14 +191,14 @@ class ReceiptCard extends StatelessWidget {
               child: const Icon(
                 Icons.info_outline,
                 color: kVatReceiptSecondary,
-                size: AppTokens.sizeIconSmall,
+                size: CmIcon.small,
               ),
             ),
           ],
         ),
         Text(
           '${NumberFormatter.formatVatResult(vatResult.vatAmount)}원',
-          style: AppTokens.textStyleCaption.copyWith(color: kVatReceiptSecondary),
+          style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
         ),
       ],
     );
@@ -246,7 +246,7 @@ class VatModeToggle extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Text(
           label,
-          style: AppTokens.textStyleCheckboxLabelLarge.copyWith(
+          style: CmTextToggle.text.copyWith(
             color: isSelected ? kVatReceiptText : kVatReceiptSecondary,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
           ),
@@ -272,11 +272,11 @@ class ReceiptRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTokens.textStyleCaption.copyWith(color: kVatReceiptSecondary),
+          style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
         ),
         Text(
           amount,
-          style: AppTokens.textStyleCaption.copyWith(color: kVatReceiptSecondary),
+          style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
         ),
       ],
     );

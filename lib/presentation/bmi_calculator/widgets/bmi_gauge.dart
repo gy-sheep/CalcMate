@@ -58,7 +58,7 @@ class BmiGauge extends StatelessWidget {
                       builder: (context1, v, _) => Text(
                         v.toStringAsFixed(1),
                         textAlign: TextAlign.center,
-                        style: AppTokens.textStyleResult52
+                        style: textStyle52
                             .copyWith(color: _kTextPrimary),
                       ),
                     ),
@@ -69,7 +69,7 @@ class BmiGauge extends StatelessWidget {
                         category.label,
                         key: ValueKey(category.label),
                         textAlign: TextAlign.center,
-                        style: AppTokens.textStyleValue
+                        style: textStyle16
                             .copyWith(color: category.color),
                       ),
                     ),
@@ -77,7 +77,7 @@ class BmiGauge extends StatelessWidget {
                     Text(
                       standardLabel,
                       textAlign: TextAlign.center,
-                      style: AppTokens.textStyleLabelSmall
+                      style: textStyleCaption
                           .copyWith(color: _kTextSecondary),
                     ),
                   ],

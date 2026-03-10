@@ -101,7 +101,7 @@ class _ShareSheetState extends State<ShareSheet> {
                               colors: [Color(0xFFF48FB1), kDutchAccent]),
                       color: _sharing ? kDutchDivider : null,
                       borderRadius:
-                          BorderRadius.circular(AppTokens.radiusCard),
+                          BorderRadius.circular(radiusCard),
                     ),
                     child: Center(
                       child: _sharing
@@ -131,7 +131,7 @@ class _ShareSheetState extends State<ShareSheet> {
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Text('닫기',
-                      style: AppTokens.textStyleBody.copyWith(
+                      style: modalButtonLabel.copyWith(
                           color: kDutchTextTertiary)),
                 ),
               ],

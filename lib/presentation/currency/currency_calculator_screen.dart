@@ -110,12 +110,12 @@ class _CurrencyCalculatorScreenState
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: AppTokens.sizeAppBarBackIcon),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           widget.title,
-          style: AppTokens.textStyleAppBarTitle.copyWith(color: Colors.white),
+          style: CmAppBar.titleText.copyWith(color: Colors.white),
         ),
         centerTitle: false,
       ),
@@ -137,9 +137,8 @@ class _CurrencyCalculatorScreenState
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(
                         state.error!,
-                        style: const TextStyle(
+                        style: textStyleCaption.copyWith(
                           color: Colors.redAccent,
-                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -153,13 +152,13 @@ class _CurrencyCalculatorScreenState
                             child: ConstrainedBox(
                               constraints: BoxConstraints(minHeight: constraints.maxHeight + AdBannerPlaceholder.height),
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 16, right: 24),
+                                padding: CmCurrencyRow.padding,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     // From 행
                                     ConstrainedBox(
-                                      constraints: const BoxConstraints(minHeight: 80),
+                                      constraints: const BoxConstraints(minHeight: CmCurrencyRow.minHeight),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
@@ -185,7 +184,7 @@ class _CurrencyCalculatorScreenState
                                     // To 행 3개
                                     for (int i = 0; i < state.toCodes.length; i++)
                                       ConstrainedBox(
-                                        constraints: const BoxConstraints(minHeight: 80),
+                                        constraints: const BoxConstraints(minHeight: CmCurrencyRow.minHeight),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
@@ -198,7 +197,7 @@ class _CurrencyCalculatorScreenState
                                                 rates: state.rates,
                                               ),
                                             ),
-                                            const SizedBox(width: 16),
+                                            const SizedBox(width: CmCurrencyRow.codeSpacing),
                                             Expanded(
                                               child: AmountDisplay(
                                                 amount: vm.convertedDisplayAt(i),
@@ -275,7 +274,7 @@ class _CurrencyCalculatorScreenState
                             state.lastUpdated,
                             hasRates: state.rates.isNotEmpty,
                           ),
-                          style: AppTokens.textStyleCaption.copyWith(
+                          style: textStyleCaption.copyWith(
                             color: Colors.white38,
                           ),
                         ),
@@ -289,13 +288,13 @@ class _CurrencyCalculatorScreenState
                             padding: const EdgeInsets.all(8),
                             child: state.isRefreshing
                                 ? const CupertinoActivityIndicator(
-                                    radius: AppTokens.radiusActivityIndicator,
+                                    radius: CmIcon.activityIndicator,
                                     color: Colors.white54,
                                   )
                                 : const Icon(
                                     Icons.refresh,
                                     color: Colors.white54,
-                                    size: AppTokens.sizeIconSmall,
+                                    size: CmIcon.small,
                                   ),
                           ),
                         ),
@@ -321,17 +320,17 @@ class _CurrencyCalculatorScreenState
             if (state.isLoading)
               Center(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(CmLoadingOverlay.radius),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    filter: ImageFilter.blur(
+                      sigmaX: CmLoadingOverlay.blurSigma,
+                      sigmaY: CmLoadingOverlay.blurSigma,
+                    ),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 20,
-                      ),
+                      padding: CmLoadingOverlay.padding,
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(CmLoadingOverlay.radius),
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.24),
                         ),
@@ -340,17 +339,17 @@ class _CurrencyCalculatorScreenState
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(
-                            width: 20,
-                            height: 20,
+                            width: CmLoadingOverlay.spinnerSize,
+                            height: CmLoadingOverlay.spinnerSize,
                             child: CircularProgressIndicator(
-                              strokeWidth: 2,
+                              strokeWidth: CmLoadingOverlay.spinnerStroke,
                               color: Colors.white70,
                             ),
                           ),
-                          SizedBox(width: 14),
+                          SizedBox(width: CmLoadingOverlay.spinnerTextSpacing),
                           Text(
                             '환율 정보를 가져오는 중...',
-                            style: AppTokens.textStyleBody.copyWith(
+                            style: CmLoadingOverlay.text.copyWith(
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),

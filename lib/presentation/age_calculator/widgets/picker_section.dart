@@ -44,19 +44,15 @@ class PickerSection extends StatelessWidget {
               children: [
                 Text(
                   '생년월일',
-                  style: AppTokens.textStyleLabelLarge.copyWith(
-                    color: kAgeSubText,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
+                  style: sectionLabel.copyWith(color: kAgeSubText),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: AppTokens.sizeCheckboxMedium,
-                      height: AppTokens.sizeCheckboxMedium,
+                      width: CmCheckbox.sizeMedium,
+                      height: CmCheckbox.sizeMedium,
                       child: Checkbox(
                         value: state.calendarType == AgeCalendarType.lunar,
                         onChanged: (v) => vm.handleIntent(
@@ -74,7 +70,7 @@ class PickerSection extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       '음력',
-                      style: AppTokens.textStyleCheckboxLabelMedium.copyWith(color: kAgeSubText),
+                      style: CmCheckbox.labelMedium.copyWith(color: kAgeSubText),
                     ),
                   ],
                 ),
@@ -205,7 +201,7 @@ class PickerSection extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10, bottom: 8, left: 4),
             child: Text(
               '${_formatDate(DateTime.now())} 기준',
-              style: AppTokens.textStyleLabelLarge.copyWith(color: kAgeSubText),
+              style: textStyleCaption.copyWith(color: kAgeSubText),
             ),
           ),
         ],

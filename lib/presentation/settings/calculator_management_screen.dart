@@ -77,7 +77,7 @@ class _CalculatorManagementScreenState
                     Expanded(
                       child: Text(
                         '메인 화면에 표시할 계산기를 선택하세요.',
-                        style: AppTokens.textStyleCaption
+                        style: textStyleCaption
                             .copyWith(color: colorScheme.onSurfaceVariant),
                       ),
                     ),
@@ -97,7 +97,7 @@ class _CalculatorManagementScreenState
                         entries.every((e) => e.isVisible)
                             ? '전체 해제'
                             : '전체 선택',
-                        style: AppTokens.textStyleCaption.copyWith(
+                        style: textStyleCaption.copyWith(
                           color: isDark
                               ? _kActiveColorDark
                               : _kActiveColorLight,
@@ -112,7 +112,7 @@ class _CalculatorManagementScreenState
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
                   borderRadius:
-                      BorderRadius.circular(AppTokens.radiusCard),
+                      BorderRadius.circular(radiusCard),
                 ),
                 child: Column(
                   children: [
@@ -199,7 +199,7 @@ class _CalculatorTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+      borderRadius: BorderRadius.circular(radiusCard),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         child: Row(
@@ -211,7 +211,7 @@ class _CalculatorTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: iconBgColor,
                 borderRadius:
-                    BorderRadius.circular(AppTokens.radiusIconContainer),
+                    BorderRadius.circular(10),
               ),
               child: Icon(icon, color: iconColor, size: 20),
             ),
@@ -220,7 +220,7 @@ class _CalculatorTile extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: AppTokens.textStyleBody.copyWith(
+                style: inputFieldInnerLabel.copyWith(
                   color: titleColor,
                 ),
               ),

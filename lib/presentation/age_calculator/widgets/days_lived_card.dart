@@ -28,7 +28,7 @@ class DaysLivedCard extends StatelessWidget {
             children: [
               Text(
                 '살아온 날',
-                style: AppTokens.textStyleLabelMedium.copyWith(
+                style: CmBirthdayMiniCard.labelText.copyWith(
                   color: kAgeSubText,
                   fontWeight: FontWeight.w600,
                 ),
@@ -36,7 +36,7 @@ class DaysLivedCard extends StatelessWidget {
               const Spacer(),
               Text(
                 '${NumberFormatter.addCommas(days.toString())}일',
-                style: AppTokens.textStyleResult22.copyWith(
+                style: textMediumResult.copyWith(
                   color: kAgeText,
                   fontWeight: FontWeight.w700,
                   height: 1.0,
@@ -44,7 +44,7 @@ class DaysLivedCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(sub,
-                  style: AppTokens.textStyleLabelSmall.copyWith(color: kAgeSubText)),
+                  style: CmBirthdayMiniCard.subText.copyWith(color: kAgeSubText)),
             ],
           ),
         ),

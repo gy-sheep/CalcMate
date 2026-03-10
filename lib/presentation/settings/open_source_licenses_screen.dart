@@ -94,12 +94,12 @@ class _OpenSourceLicensesScreenState extends State<OpenSourceLicensesScreen> {
                           const EdgeInsets.symmetric(horizontal: 16),
                       title: Text(
                         package,
-                        style: AppTokens.textStyleBody
+                        style: inputFieldInnerLabel
                             .copyWith(color: colorScheme.onSurface),
                       ),
                       subtitle: Text(
                         '$count개의 라이선스',
-                        style: AppTokens.textStyleCaption
+                        style: textStyleCaption
                             .copyWith(color: colorScheme.onSurfaceVariant),
                       ),
                       trailing: Icon(
@@ -209,7 +209,7 @@ class _LicenseDetailScreenState extends State<_LicenseDetailScreen> {
                       ),
                       child: Text(
                         paragraph.text,
-                        style: AppTokens.textStyleCaption.copyWith(
+                        style: textStyleCaption.copyWith(
                           color: colorScheme.onSurface,
                           height: 1.5,
                         ),

@@ -61,10 +61,10 @@ class DateKeypad extends StatelessWidget {
         child: Center(
           child: label == '⌫'
               ? const Icon(Icons.backspace_outlined,
-                  color: kDateTextSecondary, size: AppTokens.sizeKeypadBackspace)
+                  color: kDateTextSecondary, size: keypadBackspaceSize)
               : Text(
                   label,
-                  style: AppTokens.textStyleKeypadNumber
+                  style: keypadNumberText
                       .copyWith(color: kDateTextPrimary),
                 ),
         ),

@@ -46,7 +46,7 @@ class DisplayPanel extends StatelessWidget {
     );
   }
 
-  static final _baseStyle = AppTokens.textStyleResult56.copyWith(
+  static final _baseStyle = CmInfoCard.displayText.copyWith(
     color: Colors.white,
   );
 

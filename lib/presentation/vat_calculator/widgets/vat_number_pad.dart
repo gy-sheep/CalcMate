@@ -66,7 +66,7 @@ class VatNumberPad extends StatelessWidget {
                 label: '=',
                 type: VatBtnType.equals,
                 onTap: () => onKeyTap('='),
-                height: AppTokens.heightButtonLarge * 2,
+                height: keypadButtonHeightLarge * 2,
               ),
             ),
           ],
@@ -108,16 +108,16 @@ class VatKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: height ?? AppTokens.heightButtonLarge,
+          height: height ?? keypadButtonHeightLarge,
           child: Center(
             child: switch (label) {
               '\u{232B}' => Icon(Icons.backspace_outlined,
-                  color: _textColor, size: AppTokens.sizeKeypadBackspace),
+                  color: _textColor, size: keypadBackspaceSize),
               '=' => Icon(Icons.keyboard_return,
-                  color: _textColor, size: AppTokens.sizeKeypadBackspace),
+                  color: _textColor, size: keypadBackspaceSize),
               _ => Text(
                   label,
-                  style: AppTokens.textStyleKeypadNumber
+                  style: keypadNumberText
                       .copyWith(color: _textColor),
                 ),
             },

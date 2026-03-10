@@ -12,11 +12,10 @@ class ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding:
-          const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+      padding: CmInfoCard.padding,
       decoration: BoxDecoration(
         color: kDateCardBg,
-        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        borderRadius: BorderRadius.circular(radiusCard),
         border: Border.all(color: kDateCardBorder),
       ),
       child: child,

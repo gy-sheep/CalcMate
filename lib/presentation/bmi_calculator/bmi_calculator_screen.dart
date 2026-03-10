@@ -150,16 +150,16 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
       builder: (ctx) => AlertDialog(
         backgroundColor: _kCardBg,
         title: Text(title,
-            style: AppTokens.textStyleValue.copyWith(color: _kTextPrimary)),
+            style: textStyle16.copyWith(color: _kTextPrimary)),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          style: AppTokens.textStyleValue.copyWith(color: _kTextPrimary),
+          style: textStyle16.copyWith(color: _kTextPrimary),
           decoration: InputDecoration(
             suffixText: suffix,
             suffixStyle:
-                AppTokens.textStyleCaption.copyWith(color: _kTextSecondary),
+                textStyleCaption.copyWith(color: _kTextSecondary),
             enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: _kAccent)),
             focusedBorder: const UnderlineInputBorder(
@@ -171,12 +171,12 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
             onPressed: () => Navigator.of(ctx).pop(),
             child: Text('취소',
                 style:
-                    AppTokens.textStyleCaption.copyWith(color: _kTextSecondary)),
+                    textStyleCaption.copyWith(color: _kTextSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(ctrl.text),
             child: Text('확인',
-                style: AppTokens.textStyleCaption.copyWith(color: _kAccent)),
+                style: textStyleCaption.copyWith(color: _kAccent)),
           ),
         ],
       ),
@@ -213,11 +213,11 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
           scrolledUnderElevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new,
-                size: AppTokens.sizeAppBarBackIcon, color: _kTextPrimary),
+                size: CmAppBar.backIconSize, color: _kTextPrimary),
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           title: Text('BMI 계산기',
-              style: AppTokens.textStyleAppBarTitle.copyWith(color: _kTextPrimary)),
+              style: CmAppBar.titleText.copyWith(color: _kTextPrimary)),
           centerTitle: false,
           actions: [
             GestureDetector(
@@ -226,15 +226,15 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
                 vm.handleIntent(const BmiCalculatorIntent.unitToggled());
               },
               child: Container(
-                margin: const EdgeInsets.only(right: AppTokens.paddingAppBarH),
-                padding: AppTokens.paddingChip,
+                margin: const EdgeInsets.only(right: 16),
+                padding: CmTab.padding,
                 decoration: BoxDecoration(
                   border: Border.all(color: _kAccent.withValues(alpha: 0.5)),
-                  borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+                  borderRadius: BorderRadius.circular(CmTab.radius),
                 ),
                 child: Text(
                   state.isMetric ? 'kg · cm' : 'lb · ft',
-                  style: AppTokens.textStyleCaption.copyWith(color: _kAccent),
+                  style: textStyleCaption.copyWith(color: _kAccent),
                 ),
               ),
             ),
@@ -260,8 +260,8 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + kToolbarHeight,
                   bottom: 24,
-                  left: AppTokens.paddingScreenH,
-                  right: AppTokens.paddingScreenH,
+                  left: screenPaddingH,
+                  right: screenPaddingH,
                 ),
                 child: Column(
                   children: [

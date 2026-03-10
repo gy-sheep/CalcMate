@@ -74,72 +74,89 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
           end: Alignment.bottomCenter,
           colors: [kCurrencyGradientTop, kCurrencyGradientBottom],
         ),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(CmSheet.radius)),
       ),
-      padding: const EdgeInsets.all(16),
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * CmSheet.listHeightRatio,
       child: Column(
         children: [
           Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.only(bottom: 16),
+            width: CmSheet.handleWidth,
+            height: CmSheet.handleHeight,
+            margin: const EdgeInsets.only(
+              top: CmSheet.handleTopSpacing,
+              bottom: CmSheet.handleBottomSpacing,
+            ),
             decoration: BoxDecoration(
               color: Colors.white38,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(CmSheet.handleRadius),
             ),
           ),
-          AppTextField.search(
-            controller: _controller,
-            hintText: '통화 검색 (USD, 달러...)',
-            onChanged: (v) => setState(() => _query = v),
-          ),
-          const SizedBox(height: 12),
           Expanded(
-            child: ListView.builder(
-              itemCount: filtered.length,
-              itemBuilder: (context, index) {
-                final item = filtered[index];
-                final isSelected = item.code == widget.selectedCode;
-                final isUsed = widget.usedCodes.contains(item.code);
-                return ListTile(
-                  leading: CountryFlag.fromCurrencyCode(
-                    item.code,
-                    theme: const ImageTheme(
-                      width: AppTokens.sizeFlagMedium,
-                      height: AppTokens.sizeFlagMedium,
-                      shape: Circle(),
+            child: Padding(
+              padding: CmSheet.padding,
+              child: Column(
+                children: [
+                  AppTextField.search(
+                    controller: _controller,
+                    hintText: '통화 검색 (USD, 달러...)',
+                    onChanged: (v) => setState(() => _query = v),
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: filtered.length,
+                      separatorBuilder: (_, __) => const Divider(
+                        color: Colors.white24,
+                        thickness: CmSheet.dividerThickness,
+                        height: CmSheet.dividerHeight,
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = filtered[index];
+                        final isSelected = item.code == widget.selectedCode;
+                        final isUsed = widget.usedCodes.contains(item.code);
+                        return ListTile(
+                          leading: CountryFlag.fromCurrencyCode(
+                            item.code,
+                            theme: const ImageTheme(
+                              width: CmFlag.medium,
+                              height: CmFlag.medium,
+                              shape: Circle(),
+                            ),
+                          ),
+                          title: Text(
+                            item.code,
+                            style: CmSheet.itemTitle.copyWith(
+                              color: isUsed ? Colors.white38 : Colors.white,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                          subtitle: Text(
+                            item.name,
+                            style: textStyleCaption.copyWith(
+                              color: isUsed ? Colors.white24 : Colors.white60,
+                            ),
+                          ),
+                          trailing: isSelected
+                              ? const Icon(Icons.check, color: Colors.white)
+                              : null,
+                          onTap: () {
+                            if (isUsed) {
+                              final message = item.code == widget.fromCode
+                                  ? '기준 통화로 사용 중입니다'
+                                  : '이미 선택된 통화입니다';
+                              _showCenterToast(context, message);
+                              return;
+                            }
+                            Navigator.pop(context, item.code);
+                          },
+                        );
+                      },
                     ),
                   ),
-                  title: Text(
-                    item.code,
-                    style: AppTokens.textStyleBody.copyWith(
-                      color: isUsed ? Colors.white38 : Colors.white,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                  subtitle: Text(
-                    item.name,
-                    style: AppTokens.textStyleCaption.copyWith(
-                      color: isUsed ? Colors.white24 : Colors.white60,
-                    ),
-                  ),
-                  trailing: isSelected
-                      ? const Icon(Icons.check, color: Colors.white)
-                      : null,
-                  onTap: () {
-                    if (isUsed) {
-                      final message = item.code == widget.fromCode
-                          ? '기준 통화로 사용 중입니다'
-                          : '이미 선택된 통화입니다';
-                      _showCenterToast(context, message);
-                      return;
-                    }
-                    Navigator.pop(context, item.code);
-                  },
-                );
-              },
+                ],
+              ),
             ),
           ),
         ],

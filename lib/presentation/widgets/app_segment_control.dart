@@ -55,7 +55,7 @@ class AppSegmentControl<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppTokens.heightSegment,
+      height: 36,
       decoration: BoxDecoration(
         color: trackColor ?? Colors.white.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(10),
@@ -85,7 +85,7 @@ class AppSegmentControl<T> extends StatelessWidget {
                 child: Center(
                   child: Text(
                     seg.$2,
-                    style: AppTokens.textStyleBody.copyWith(
+                    style: inputFieldInnerLabel.copyWith(
                       color: isSelected
                           ? (activeTextColor ?? Colors.black87)
                           : (inactiveTextColor ?? Colors.white60),

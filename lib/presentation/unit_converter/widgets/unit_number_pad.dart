@@ -89,7 +89,7 @@ class UnitKeypadButton extends StatelessWidget {
           height: 56,
           child: Center(
             child: label == '\u{232B}'
-                ? Icon(Icons.backspace_outlined, color: _textColor, size: AppTokens.sizeKeypadBackspace)
+                ? Icon(Icons.backspace_outlined, color: _textColor, size: keypadBackspaceSize)
                 : label == '▲'
                     ? Icon(Icons.keyboard_arrow_up, color: _textColor, size: 28)
                     : label == '▼'
@@ -98,7 +98,7 @@ class UnitKeypadButton extends StatelessWidget {
                             ? _buildPlusMinusLabel(_textColor)
                             : Text(
                                 label,
-                                style: AppTokens.textStyleKeypadNumber
+                                style: keypadNumberText
                                     .copyWith(color: _textColor),
                               ),
           ),

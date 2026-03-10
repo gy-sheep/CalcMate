@@ -28,6 +28,6 @@ String formatDateShort(DateTime d) =>
 Widget buildSubText(String text) {
   return Text(
     text,
-    style: AppTokens.textStyleCaption.copyWith(color: kDateTextSecondary),
+    style: textStyleCaption.copyWith(color: kDateTextSecondary),
   );
 }

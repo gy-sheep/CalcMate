@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_design_tokens.dart';
-
 enum InputUnderlineStyle {
   /// 부모 너비 전체에 걸쳐 밑줄을 그린다.
   full,
@@ -29,7 +27,7 @@ class AppInputUnderline extends StatelessWidget {
     required this.child,
     this.style = InputUnderlineStyle.full,
     required this.color,
-    this.thickness = AppTokens.thicknessInputUnderline,
+    this.thickness = 1.5,
   });
 
   @override

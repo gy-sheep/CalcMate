@@ -185,7 +185,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             scrolledUnderElevation: 0,
             title: Text(
               'CalcMate',
-              style: AppTokens.textStyleAppBarTitle.copyWith(
+              style: CmAppBar.titleText.copyWith(
                 letterSpacing: 0.5,
                 shadows: [
                   Shadow(

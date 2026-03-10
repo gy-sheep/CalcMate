@@ -24,15 +24,24 @@ class IndividualSplitView extends ConsumerWidget {
       children: [
         // 1. 인원 컴팩트 바
         _ParticipantsBar(s: s, vm: vm),
-        Divider(height: 1, color: kDutchDivider),
         // 2. 항목 목록 (Expanded — 대부분 공간)
         Expanded(
-          child: ColoredBox(
-            color: kDutchReceiptBg,
-            child: _ItemList(
-              s: s,
-              vm: vm,
-              onItemTapped: () => _showInputSheet(context, ref),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: kDutchCardBg,
+                borderRadius: BorderRadius.circular(radiusCard),
+                border: Border.all(color: kDutchDivider),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(radiusCard),
+                child: _ItemList(
+                  s: s,
+                  vm: vm,
+                  onItemTapped: () => _showInputSheet(context, ref),
+                ),
+              ),
             ),
           ),
         ),
@@ -44,9 +53,18 @@ class IndividualSplitView extends ConsumerWidget {
             onTap: () => _showInputSheet(context, ref),
           ),
         ),
-        Divider(height: 1, color: kDutchDivider),
         // 4. 결과 영역 — 하단 고정
-        _ResultSection(s: s, result: result, vm: vm),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Container(
+            decoration: BoxDecoration(
+              color: kDutchCardBg,
+              borderRadius: BorderRadius.circular(radiusCard),
+              border: Border.all(color: kDutchDivider),
+            ),
+            child: _ResultSection(s: s, result: result, vm: vm),
+          ),
+        ),
         SizedBox(height: MediaQuery.of(context).padding.bottom),
       ],
     );
@@ -59,7 +77,7 @@ class IndividualSplitView extends ConsumerWidget {
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppTokens.radiusBottomSheet)),
+            top: Radius.circular(CmSheet.radius)),
       ),
       builder: (_) => _MenuInputSheet(parentRef: ref),
     ).then((_) {
@@ -84,14 +102,31 @@ class _ParticipantsBar extends StatefulWidget {
 class _ParticipantsBarState extends State<_ParticipantsBar> {
   final _scrollCtrl = ScrollController();
   int _prevCount = 0;
+  bool _canScrollLeft = false;
+  bool _canScrollRight = false;
 
   IndividualSplitState get s => widget.s;
   DutchPayViewModel get vm => widget.vm;
+
+  void _onScroll() {
+    if (!_scrollCtrl.hasClients) return;
+    final pos = _scrollCtrl.position;
+    final left = pos.pixels > 0;
+    final right = pos.pixels < pos.maxScrollExtent;
+    if (left != _canScrollLeft || right != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = left;
+        _canScrollRight = right;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _prevCount = s.participants.length;
+    _scrollCtrl.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
   }
 
   @override
@@ -131,74 +166,122 @@ class _ParticipantsBarState extends State<_ParticipantsBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+      child: Container(
+        decoration: BoxDecoration(
+          color: kDutchCardBg,
+          borderRadius: BorderRadius.circular(radiusCard),
+          border: Border.all(color: kDutchDivider),
+        ),
+        padding: CmInputCard.padding,
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollCtrl,
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: s.participants.asMap().entries.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ParticipantChip(
-                      label: e.value.name,
-                      bg: kDutchChipBg[e.key % kDutchChipBg.length],
-                      fg: kDutchChipText[e.key % kDutchChipText.length],
-                      showDelete: s.isParticipantEditMode,
-                      onTap: s.isParticipantEditMode
-                          ? () => _confirmRemove(context, e.key, s)
-                          : () => _showRenameDialogAt(context, e.key),
+          // 타이틀 + 추가/편집 버튼
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('참여인원',
+                  style: CmInputCard.titleText.copyWith(color: kDutchTextSecondary)),
+              const Spacer(),
+              if (s.participants.length < 10)
+                GestureDetector(
+                  onTap: () =>
+                      vm.handleIntent(const DutchPayIntent.participantAdded()),
+                  child: Container(
+                    padding: CmTab.padding,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: kDutchAccent.withValues(alpha: 0.4)),
+                      borderRadius: BorderRadius.circular(CmTab.radius),
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-          if (s.participants.length < 10) ...[
-            const SizedBox(width: 8),
-            GestureDetector(
-              onTap: () =>
-                  vm.handleIntent(const DutchPayIntent.participantAdded()),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  border:
-                      Border.all(color: kDutchAccent.withValues(alpha: 0.4)),
-                  borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.add,
+                          size: CmTab.iconSize, color: kDutchAccent),
+                      const SizedBox(width: 2),
+                      Text('추가',
+                          style: CmTab.text.copyWith(color: kDutchAccent)),
+                    ]),
+                  ),
                 ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.add, size: AppTokens.sizeIconXSmall, color: kDutchAccent),
-                  const SizedBox(width: 2),
-                  Text('추가',
-                      style: AppTokens.textStyleChip.copyWith(color: kDutchAccent)),
-                ]),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () => vm.handleIntent(
+                    const DutchPayIntent.participantEditModeToggled()),
+                child: Container(
+                  padding: CmTab.padding,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: kDutchAccent.withValues(alpha: 0.4)),
+                    borderRadius: BorderRadius.circular(CmTab.radius),
+                  ),
+                  child: Text(
+                    s.isParticipantEditMode ? '완료' : '편집',
+                    style: CmTab.text.copyWith(
+                        color: kDutchAccent, fontWeight: FontWeight.w500),
+                  ),
+                ),
               ),
-            ),
-          ],
-          const SizedBox(width: 12),
-          GestureDetector(
-            onTap: () => vm.handleIntent(
-                const DutchPayIntent.participantEditModeToggled()),
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                border:
-                    Border.all(color: kDutchAccent.withValues(alpha: 0.4)),
-                borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+            ],
+          ),
+          const SizedBox(height: CmInputCard.titleSpacing),
+          // 참여자 칩
+          Stack(
+            children: [
+              SingleChildScrollView(
+                controller: _scrollCtrl,
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: s.participants.asMap().entries.map((e) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ParticipantChip(
+                        label: e.value.name,
+                        bg: kDutchChipBg[e.key % kDutchChipBg.length],
+                        fg: kDutchChipText[e.key % kDutchChipText.length],
+                        showDelete: s.isParticipantEditMode,
+                        onTap: s.isParticipantEditMode
+                            ? () => _confirmRemove(context, e.key, s)
+                            : () => _showRenameDialogAt(context, e.key),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-              child: Text(
-                s.isParticipantEditMode ? '완료' : '편집',
-                style: AppTokens.textStyleChip.copyWith(
-                    color: kDutchAccent,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
+              if (_canScrollLeft)
+                Positioned(
+                  left: 0, top: 0, bottom: 0, width: 32,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [kDutchCardBg, kDutchCardBg.withValues(alpha: 0)],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              if (_canScrollRight)
+                Positioned(
+                  right: 0, top: 0, bottom: 0, width: 32,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerRight,
+                          end: Alignment.centerLeft,
+                          colors: [kDutchCardBg, kDutchCardBg.withValues(alpha: 0)],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
+        ),
       ),
     );
   }
@@ -256,6 +339,10 @@ class _ParticipantsBarState extends State<_ParticipantsBar> {
   }
 
   void _confirmRemove(BuildContext context, int idx, IndividualSplitState s) {
+    if (s.participants.length <= 1) {
+      showAppToast(context, '최소 1명은 있어야 해요');
+      return;
+    }
     final hasItems = s.items.any((item) => item.assignees.contains(idx));
     if (hasItems) {
       showDialog(
@@ -297,16 +384,16 @@ class _AddMenuButton extends StatelessWidget {
         height: 48,
         decoration: BoxDecoration(
           color: kDutchAccent.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+          borderRadius: BorderRadius.circular(radiusCard),
           border: Border.all(color: kDutchAccent.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add_circle_outline, color: kDutchAccent, size: AppTokens.sizeIconSmall),
+            Icon(Icons.add_circle_outline, color: kDutchAccent, size: CmIcon.small),
             const SizedBox(width: 8),
             Text('메뉴 추가',
-                style: AppTokens.textStyleValue.copyWith(
+                style: textStyle16.copyWith(
                     color: kDutchAccent)),
           ],
         ),
@@ -392,7 +479,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
             ),
             const SizedBox(height: 16),
             Text(isEditing ? '메뉴 수정' : '메뉴 추가',
-                style: AppTokens.textStyleSheetTitle.copyWith(
+                style: CmSheet.titleText.copyWith(
                     color: kDutchTextPrimary)),
             const SizedBox(height: 16),
             // 입력 필드
@@ -406,12 +493,12 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                     decoration: BoxDecoration(
                       color: kDutchInputBg,
                       borderRadius:
-                          BorderRadius.circular(AppTokens.radiusInput),
+                          BorderRadius.circular(radiusInput),
                     ),
                     child: TextField(
                       controller: _nameCtrl,
                       focusNode: _nameFocus,
-                      style: AppTokens.textStyleBody.copyWith(color: kDutchTextPrimary),
+                      style: inputFieldInnerLabel.copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
                         hintText: '메뉴명',
                         hintStyle: TextStyle(color: kDutchTextTertiary),
@@ -433,12 +520,12 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                     decoration: BoxDecoration(
                       color: kDutchInputBg,
                       borderRadius:
-                          BorderRadius.circular(AppTokens.radiusInput),
+                          BorderRadius.circular(radiusInput),
                     ),
                     child: TextField(
                       controller: _amtCtrl,
                       keyboardType: TextInputType.number,
-                      style: AppTokens.textStyleBody.copyWith(color: kDutchTextPrimary),
+                      style: inputFieldInnerLabel.copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
                         hintText: '금액',
                         hintStyle: TextStyle(color: kDutchTextTertiary),
@@ -491,12 +578,12 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                         decoration: BoxDecoration(
                           color: Colors.red.shade50,
                           borderRadius:
-                              BorderRadius.circular(AppTokens.radiusCard),
+                              BorderRadius.circular(radiusCard),
                           border: Border.all(color: Colors.red.shade200),
                         ),
                         child: Center(
                           child: Text('삭제',
-                              style: AppTokens.textStyleValue.copyWith(
+                              style: textStyle16.copyWith(
                                   color: Colors.red.shade400)),
                         ),
                       ),
@@ -552,11 +639,11 @@ class _SubmitButton extends StatelessWidget {
                   colors: [Color(0xFFF48FB1), kDutchAccent])
               : null,
           color: enabled ? null : kDutchDivider,
-          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+          borderRadius: BorderRadius.circular(radiusCard),
         ),
         child: Center(
           child: Text(label,
-              style: AppTokens.textStyleValue.copyWith(
+              style: textStyle16.copyWith(
                   color: enabled ? Colors.white : kDutchTextTertiary)),
         ),
       ),
@@ -577,7 +664,7 @@ class _ItemList extends StatelessWidget {
     if (s.items.isEmpty) {
       return Center(
         child: Text('추가한 메뉴가 표시돼요',
-            style: AppTokens.textStyleBody.copyWith(color: kDutchTextTertiary)),
+            style: textEmptyGuide.copyWith(color: kDutchTextTertiary)),
       );
     }
     return Stack(
@@ -622,7 +709,7 @@ class _ItemList extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 8),
                         child: Icon(
                           Icons.edit_outlined,
-                          size: AppTokens.sizeIconXSmall,
+                          size: CmTab.iconSize,
                           color: kDutchTextTertiary.withValues(alpha: 0.6),
                         ),
                       ),
@@ -632,7 +719,7 @@ class _ItemList extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(item.name,
-                              style: AppTokens.textStyleBody.copyWith(
+                              style: rowLabel.copyWith(
                                   color: kDutchTextPrimary,
                                   fontWeight: FontWeight.w500)),
                           const SizedBox(height: 4),
@@ -652,15 +739,14 @@ class _ItemList extends StatelessWidget {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(Icons.person,
-                                              size: AppTokens.textStyleLabelSmall.fontSize,
+                                              size: 10,
                                               color: kDutchChipText[
                                                   idx % kDutchChipText.length]),
                                           Text(
                                             s.participants[idx].name,
-                                            style: AppTokens.textStyleLabelSmall.copyWith(
+                                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600).copyWith(
                                               color: kDutchChipText[
                                                   idx % kDutchChipText.length],
-                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                         ],
@@ -672,7 +758,7 @@ class _ItemList extends StatelessWidget {
                       ),
                     ),
                     Text('${_fmt(item.amount)}원',
-                        style: AppTokens.textStyleValue.copyWith(
+                        style: textStyle16.copyWith(
                             color: editing ? kDutchAccent : kDutchTextPrimary)),
                   ],
                 ),
@@ -733,7 +819,7 @@ class _ResultSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         child: Center(
           child: Text('메뉴를 추가하면 결과가 표시돼요',
-              style: AppTokens.textStyleBody.copyWith(color: kDutchTextTertiary)),
+              style: textEmptyGuide.copyWith(color: kDutchTextTertiary)),
         ),
       );
     }
@@ -748,10 +834,10 @@ class _ResultSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('총 합계',
-                  style: AppTokens.textStyleCaption.copyWith(
+                  style: textStyleCaption.copyWith(
                       color: kDutchTextSecondary)),
               Text('${_fmt(result.totalAmount)}원',
-                  style: AppTokens.textStyleValue.copyWith(
+                  style: textStyle16.copyWith(
                       color: kDutchTextPrimary)),
             ],
           ),
@@ -807,18 +893,18 @@ class _ResultSection extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.person,
-                        size: AppTokens.sizeIconXSmall,
+                        size: CmTab.iconSize,
                         color: kDutchChipText[e.key % kDutchChipText.length]),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(e.value.name,
                           overflow: TextOverflow.ellipsis,
-                          style: AppTokens.textStyleBody.copyWith(
+                          style: rowLabel.copyWith(
                               color: kDutchTextPrimary,
                               fontWeight: FontWeight.w500)),
                     ),
                     Text('${_fmt(result.personAmounts[e.key])}원',
-                        style: AppTokens.textStyleValue.copyWith(
+                        style: textStyle16.copyWith(
                             color: kDutchTextPrimary)),
                   ],
                 ),
@@ -856,7 +942,7 @@ class _ShareResultBtn extends StatelessWidget {
         decoration: BoxDecoration(
           gradient:
               const LinearGradient(colors: [Color(0xFFF48FB1), kDutchAccent]),
-          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+          borderRadius: BorderRadius.circular(radiusCard),
           boxShadow: [
             BoxShadow(
               color: kDutchAccent.withValues(alpha: 0.3),
@@ -868,10 +954,10 @@ class _ShareResultBtn extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.share_outlined, color: Colors.white, size: AppTokens.sizeIconSmall),
+            Icon(Icons.share_outlined, color: Colors.white, size: CmIcon.small),
             const SizedBox(width: 8),
             Text('결과 공유',
-                style: AppTokens.textStyleValue.copyWith(
+                style: textStyle16.copyWith(
                     color: Colors.white)),
           ],
         ),

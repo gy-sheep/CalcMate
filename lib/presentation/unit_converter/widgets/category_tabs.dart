@@ -108,7 +108,7 @@ class _CategoryTabsState extends State<CategoryTabs> {
 
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: AppTokens.paddingScreenH),
+            padding: const EdgeInsets.symmetric(horizontal: screenPaddingH),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -122,7 +122,7 @@ class _CategoryTabsState extends State<CategoryTabs> {
                     child: DecoratedBox(
                       decoration: BoxDecoration(
                         color: kUnitChipSelectedColor,
-                        borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+                        borderRadius: BorderRadius.circular(CmTab.radius),
                         border: Border.all(
                           color: kUnitChipSelectedColor.withValues(alpha: 0.25),
                         ),
@@ -206,19 +206,19 @@ class _CategoryTabsState extends State<CategoryTabs> {
         child: Transform.scale(
           scale: scale,
           child: Container(
-            padding: AppTokens.paddingChip,
+            padding: CmTab.padding,
             decoration: BoxDecoration(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(AppTokens.radiusChip),
+              borderRadius: BorderRadius.circular(CmTab.radius),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(category.icon, size: AppTokens.sizeIconXSmall, color: color),
+                Icon(category.icon, size: CmTab.iconSize, color: color),
                 const SizedBox(width: 6),
                 Text(
                   category.name,
-                  style: AppTokens.textStyleChip.copyWith(
+                  style: CmTab.text.copyWith(
                     color: color,
                     fontWeight: fontWeight,
                   ),

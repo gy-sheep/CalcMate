@@ -110,7 +110,7 @@ class _UnitListState extends State<UnitList> {
                   color: (widget.isActive && isActiveUnit)
                       ? kUnitActiveRowColor
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+                  borderRadius: BorderRadius.circular(radiusCard),
                   border: (widget.isActive && isActiveUnit)
                       ? Border.all(
                           color: kUnitChipSelectedColor.withValues(alpha: 0.4),
@@ -125,7 +125,7 @@ class _UnitListState extends State<UnitList> {
                         unit.code,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTokens.textStyleValue.copyWith(
+                        style: textStyle16.copyWith(
                           color: (widget.isActive && isActiveUnit)
                               ? kUnitChipSelectedColor
                               : Colors.white70,
@@ -135,7 +135,7 @@ class _UnitListState extends State<UnitList> {
                     Expanded(
                       child: Text(
                         unit.label,
-                        style: AppTokens.textStyleCaption.copyWith(
+                        style: textStyleCaption.copyWith(
                           color: (widget.isActive && isActiveUnit)
                               ? Colors.white
                               : Colors.white54,
@@ -144,7 +144,7 @@ class _UnitListState extends State<UnitList> {
                     ),
                     Text(
                       displayValue,
-                      style: AppTokens.textStyleResult18.copyWith(
+                      style: textStyle18.copyWith(
                         color: (widget.isActive && isActiveUnit)
                             ? Colors.white
                             : Colors.white70,

@@ -43,7 +43,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppTokens.radiusBottomSheet),
+          top: Radius.circular(CmSheet.radius),
         ),
       ),
       builder: (_) => const _LanguageSheet(selected: '한국어'),
@@ -56,7 +56,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppTokens.radiusBottomSheet),
+          top: Radius.circular(CmSheet.radius),
         ),
       ),
       builder: (_) => _ThemeModeSheet(selected: current),
@@ -197,7 +197,7 @@ class _SectionCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-        borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+        borderRadius: BorderRadius.circular(radiusCard),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +207,7 @@ class _SectionCard extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
               child: Text(
                 title!,
-                style: AppTokens.textStyleValue.copyWith(
+                style: textStyle16.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                 ),
@@ -242,7 +242,7 @@ class _SettingsTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+      borderRadius: BorderRadius.circular(radiusCard),
       child: SizedBox(
         height: 48,
         child: Padding(
@@ -252,14 +252,14 @@ class _SettingsTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: AppTokens.textStyleBody
+                  style: inputFieldInnerLabel
                       .copyWith(color: colorScheme.onSurface),
                 ),
               ),
               if (value != null) ...[
                 Text(
                   value!,
-                  style: AppTokens.textStyleCaption.copyWith(
+                  style: textStyleCaption.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -294,15 +294,16 @@ class _LanguageSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(2),
-              ),
+          Container(
+            width: CmSheet.handleWidth,
+            height: CmSheet.handleHeight,
+            margin: const EdgeInsets.only(
+              top: CmSheet.handleTopSpacing,
+              bottom: CmSheet.handleBottomSpacing,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(CmSheet.handleRadius),
             ),
           ),
           Padding(
@@ -311,18 +312,25 @@ class _LanguageSheet extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 '언어',
-                style: AppTokens.textStyleValue
+                style: textStyle16
                     .copyWith(color: colorScheme.onSurface),
               ),
             ),
           ),
           const Divider(height: 1),
-          for (final lang in _languages)
+          for (int i = 0; i < _languages.length; i++) ...[
+            if (i > 0) const Divider(
+              thickness: CmSheet.dividerThickness,
+              height: CmSheet.dividerHeight,
+              indent: 16,
+              endIndent: 16,
+            ),
             _SheetRadioTile(
-              label: lang,
-              isSelected: lang == selected,
+              label: _languages[i],
+              isSelected: _languages[i] == selected,
               onTap: () => Navigator.pop(context),
             ),
+          ],
           const SizedBox(height: 8),
         ],
       ),
@@ -344,15 +352,16 @@ class _ThemeModeSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(2),
-              ),
+          Container(
+            width: CmSheet.handleWidth,
+            height: CmSheet.handleHeight,
+            margin: const EdgeInsets.only(
+              top: CmSheet.handleTopSpacing,
+              bottom: CmSheet.handleBottomSpacing,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(CmSheet.handleRadius),
             ),
           ),
           Padding(
@@ -361,18 +370,25 @@ class _ThemeModeSheet extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 '화면 테마',
-                style: AppTokens.textStyleValue
+                style: textStyle16
                     .copyWith(color: colorScheme.onSurface),
               ),
             ),
           ),
           const Divider(height: 1),
-          for (final option in ThemeMode.values)
-            _SheetRadioTile(
-              label: _themeModeLabel(option),
-              isSelected: option == selected,
-              onTap: () => Navigator.pop(context, option),
+          for (int i = 0; i < ThemeMode.values.length; i++) ...[
+            if (i > 0) const Divider(
+              thickness: CmSheet.dividerThickness,
+              height: CmSheet.dividerHeight,
+              indent: 16,
+              endIndent: 16,
             ),
+            _SheetRadioTile(
+              label: _themeModeLabel(ThemeMode.values[i]),
+              isSelected: ThemeMode.values[i] == selected,
+              onTap: () => Navigator.pop(context, ThemeMode.values[i]),
+            ),
+          ],
           const SizedBox(height: 8),
         ],
       ),
@@ -414,7 +430,7 @@ class _SheetRadioTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: AppTokens.textStyleBody
+                  style: inputFieldInnerLabel
                       .copyWith(color: colorScheme.onSurface),
                 ),
               ),

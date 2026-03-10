@@ -124,7 +124,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(
-                    AppTokens.paddingScreenH, 0, AppTokens.paddingScreenH, 12),
+                    screenPaddingH, 0, screenPaddingH, 12),
                 child: DateTabBar(
                   pageOffset: _pageOffset,
                   onTabSelected: _switchMode,
@@ -139,7 +139,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                       key: _fadeKeyPeriod,
                       fadeColor: kDateBg3,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: AppTokens.paddingScreenH),
+                          horizontal: screenPaddingH),
                       child: PeriodModeView(pickDate: _pickDate),
                     ),
                     SizedBox.expand(
@@ -150,7 +150,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                               key: _fadeKeyDateCalc,
                               fadeColor: kDateBg3,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: AppTokens.paddingScreenH),
+                                  horizontal: screenPaddingH),
                               child: DateCalcModeView(pickDate: _pickDate),
                             ),
                           ),
@@ -165,7 +165,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                       key: _fadeKeyDDay,
                       fadeColor: kDateBg3,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: AppTokens.paddingScreenH),
+                          horizontal: screenPaddingH),
                       child: DDayModeView(pickDate: _pickDate),
                     ),
                   ],
@@ -189,12 +189,12 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
       elevation: 0,
       scrolledUnderElevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: kDateTextPrimary, size: AppTokens.sizeAppBarBackIcon),
+        icon: Icon(Icons.arrow_back_ios, color: kDateTextPrimary, size: CmAppBar.backIconSize),
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
         '날짜 계산기',
-        style: AppTokens.textStyleAppBarTitle.copyWith(color: kDateTextPrimary),
+        style: CmAppBar.titleText.copyWith(color: kDateTextPrimary),
       ),
       centerTitle: false,
     );
