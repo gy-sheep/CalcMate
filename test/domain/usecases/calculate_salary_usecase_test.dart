@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:calcmate/domain/models/tax_rates.dart';
-import 'package:calcmate/domain/usecases/calculate_net_pay_usecase.dart';
+import 'package:calcmate/domain/usecases/calculate_salary_usecase.dart';
 
 void main() {
-  late CalculateNetPayUseCase useCase;
+  late CalculateSalaryUseCase useCase;
 
   setUp(() {
-    useCase = const CalculateNetPayUseCase(kFallbackTaxRates);
+    useCase = const CalculateSalaryUseCase(kFallbackTaxRates);
   });
 
   group('국민연금', () {
