@@ -22,31 +22,94 @@ class IndividualSplitView extends ConsumerStatefulWidget {
       _IndividualSplitViewState();
 }
 
-class _IndividualSplitViewState extends ConsumerState<IndividualSplitView>
-    with SingleTickerProviderStateMixin {
+class _IndividualSplitViewState extends ConsumerState<IndividualSplitView> {
   int? _filterPerson;
-  late AnimationController _shakeCtrl;
+  final _scrollCtrl = ScrollController();
+  final _participantsBarKey = GlobalKey();
+  bool _showTopFade = false;
+  bool _showBottomFade = false;
+  bool _compactIsSticky = false;
+  double _participantsBarHeight = 0;
 
   @override
   void initState() {
     super.initState();
-    _shakeCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
+    _scrollCtrl.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkFade());
   }
 
   @override
   void dispose() {
-    _shakeCtrl.dispose();
+    _scrollCtrl.removeListener(_onScroll);
+    _scrollCtrl.dispose();
     super.dispose();
+  }
+
+  void _onScroll() => _checkFade();
+
+  void _checkFade() {
+    if (!_scrollCtrl.hasClients) return;
+
+    // 참여인원 바 높이 측정 (최초 1회)
+    if (_participantsBarHeight == 0) {
+      final box = _participantsBarKey.currentContext?.findRenderObject() as RenderBox?;
+      if (box != null && box.hasSize) {
+        _participantsBarHeight = box.size.height;
+      }
+    }
+
+    final pos = _scrollCtrl.position;
+    final canScroll = pos.maxScrollExtent > 0;
+    final atTop = pos.pixels <= 8;
+    final atBottom = pos.pixels >= pos.maxScrollExtent - 8;
+    final newTop = canScroll && !atTop;
+    final newBottom = canScroll && !atBottom;
+    final newSticky = _participantsBarHeight > 0 &&
+        pos.pixels >= _participantsBarHeight;
+
+    if (_showTopFade != newTop ||
+        _showBottomFade != newBottom ||
+        _compactIsSticky != newSticky) {
+      setState(() {
+        _showTopFade = newTop;
+        _showBottomFade = newBottom;
+        _compactIsSticky = newSticky;
+      });
+    }
+  }
+
+  Widget _buildFade({required bool isTop}) {
+    final topOffset = (isTop && _compactIsSticky) ? _CompactBarDelegate._height : 0.0;
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: isTop ? topOffset : null,
+      bottom: isTop ? null : 0,
+      height: 48,
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: isTop ? Alignment.bottomCenter : Alignment.topCenter,
+              end: isTop ? Alignment.topCenter : Alignment.bottomCenter,
+              stops: const [0.0, 0.6, 1.0],
+              colors: [
+                kDutchBg3.withValues(alpha: 0),
+                kDutchBg3.withValues(alpha: 0.7),
+                kDutchBg3,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _showInputSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: kDutchBg1,
       shape: const RoundedRectangleBorder(
         borderRadius:
             BorderRadius.vertical(top: Radius.circular(CmSheet.radius)),
@@ -67,64 +130,101 @@ class _IndividualSplitViewState extends ConsumerState<IndividualSplitView>
 
     return Column(
       children: [
-        // 1. 인원 컴팩트 바
-        _ParticipantsBar(s: s, vm: vm),
-        // 2. 컴팩트 요약 바 (항목 있을 때만)
-        if (s.items.isNotEmpty)
-          _CompactSummaryBar(s: s, result: result, show: s.items.isNotEmpty),
-        // 3. 스크롤 영역
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _ItemsCard(
-                  s: s,
-                  vm: vm,
-                  filterPerson: _filterPerson,
-                  onAddTap: () => _showInputSheet(context),
+          child: Stack(
+            children: [
+              CustomScrollView(
+            controller: _scrollCtrl,
+            slivers: [
+              // 1. 참여인원 바 (스크롤됨)
+              SliverToBoxAdapter(
+                child: KeyedSubtree(
+                  key: _participantsBarKey,
+                  child: _ParticipantsBar(
+                    s: s,
+                    vm: vm,
+                    filterPerson: _filterPerson,
+                    onFilterChanged: (i) => setState(() => _filterPerson = i),
+                  ),
                 ),
-                if (s.items.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  _ResultBarSection(s: s, result: result),
-                ],
-              ],
-            ),
+              ),
+              // 2. compact 요약 바 (항목 있을 때 sticky)
+              if (s.items.isNotEmpty)
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _CompactBarDelegate(
+                    child: _CompactSummaryBar(s: s, result: result),
+                  ),
+                ),
+              // 3. 메뉴 목록 + 결과
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                sliver: SliverList.list(
+                  children: [
+                    _ItemsCard(
+                      s: s,
+                      vm: vm,
+                      filterPerson: _filterPerson,
+                      onAddTap: () => _showInputSheet(context),
+                    ),
+                    if (s.items.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      _ResultBarSection(s: s, result: result),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+              if (_showTopFade) _buildFade(isTop: true),
+              if (_showBottomFade) _buildFade(isTop: false),
+            ],
           ),
         ),
-        // 4. 광고 배너 플레이스홀더
-        _AdBannerPlaceholder(),
-        SizedBox(height: MediaQuery.of(context).padding.bottom),
       ],
     );
   }
 }
 
-// ── 광고 배너 플레이스홀더 ────────────────────────────────────
+// ── Compact 바 슬리버 델리게이트 ─────────────────────────────
 
-class _AdBannerPlaceholder extends StatelessWidget {
+class _CompactBarDelegate extends SliverPersistentHeaderDelegate {
+  const _CompactBarDelegate({required this.child});
+  final Widget child;
+
+  static const _height = 48.0;
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      color: kDutchCardBg,
-      child: Center(
-        child: Text(
-          'Ad',
-          style: textStyleCaption.copyWith(color: kDutchTextTertiary),
-        ),
-      ),
-    );
+  double get minExtent => _height;
+
+  @override
+  double get maxExtent => _height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
   }
+
+  @override
+  bool shouldRebuild(_CompactBarDelegate old) => true;
 }
+
+// ── 광고 배너 플레이스홀더 ────────────────────────────────────
 
 // ── 인원 컴팩트 바 ───────────────────────────────────────────
 
 class _ParticipantsBar extends StatefulWidget {
-  const _ParticipantsBar({required this.s, required this.vm});
+  const _ParticipantsBar({
+    required this.s,
+    required this.vm,
+    required this.filterPerson,
+    required this.onFilterChanged,
+  });
   final IndividualSplitState s;
   final DutchPayViewModel vm;
+  final int? filterPerson;
+  final ValueChanged<int?> onFilterChanged;
 
   @override
   State<_ParticipantsBar> createState() => _ParticipantsBarState();
@@ -137,7 +237,6 @@ class _ParticipantsBarState extends State<_ParticipantsBar>
   bool _canScrollLeft = false;
   bool _canScrollRight = false;
 
-  int? _filterPerson;
   late AnimationController _shakeCtrl;
 
   IndividualSplitState get s => widget.s;
@@ -286,7 +385,7 @@ class _ParticipantsBarState extends State<_ParticipantsBar>
                     child: Row(
                       children: s.participants.asMap().entries.map((e) {
                         final i = e.key;
-                        final isFiltered = _filterPerson == i;
+                        final isFiltered = widget.filterPerson == i;
                         return Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: s.isParticipantEditMode
@@ -310,7 +409,7 @@ class _ParticipantsBarState extends State<_ParticipantsBar>
                                             i % kDutchChipBg.length],
                                         fg: kDutchChipText[
                                             i % kDutchChipText.length],
-                                        showDelete: true,
+                                        showDelete: false,
                                         onTap: () =>
                                             _confirmRemove(context, i, s),
                                       ),
@@ -337,14 +436,17 @@ class _ParticipantsBarState extends State<_ParticipantsBar>
                                   ),
                                 )
                               : GestureDetector(
-                                  onTap: () =>
-                                      _showRenameDialogAt(context, i),
+                                  onTap: () {
+                                    if (isFiltered) {
+                                      widget.onFilterChanged(null);
+                                    } else {
+                                      _showRenameDialogAt(context, i);
+                                    }
+                                  },
                                   onLongPress: () {
                                     HapticFeedback.selectionClick();
-                                    setState(() {
-                                      _filterPerson =
-                                          _filterPerson == i ? null : i;
-                                    });
+                                    widget.onFilterChanged(
+                                        widget.filterPerson == i ? null : i);
                                   },
                                   child: AnimatedContainer(
                                     duration:
@@ -368,15 +470,27 @@ class _ParticipantsBarState extends State<_ParticipantsBar>
                                         width: 1.5,
                                       ),
                                     ),
-                                    child: Text(
-                                      e.value.name,
-                                      style: const TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600)
-                                          .copyWith(
-                                        color: kDutchChipText[
-                                            i % kDutchChipText.length],
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.person,
+                                          size: CmTab.iconSize,
+                                          color: kDutchChipText[i % kDutchChipText.length]
+                                              .withValues(alpha: 0.7),
+                                        ),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          e.value.name,
+                                          style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600)
+                                              .copyWith(
+                                            color: kDutchChipText[
+                                                i % kDutchChipText.length],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -432,22 +546,26 @@ class _ParticipantsBarState extends State<_ParticipantsBar>
               if (!s.isParticipantEditMode)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _HintChip(
-                        icon: Icons.touch_app_outlined,
-                        label: _filterPerson != null
-                            ? '${s.participants[_filterPerson!].name} 강조 중  ·  탭하면 해제'
-                            : '탭 → 이름 변경',
-                      ),
-                      const SizedBox(width: 6),
-                      const _HintChip(
-                        icon: Icons.touch_app,
-                        label: '길게 누르기 → 항목 강조',
-                      ),
-                    ],
-                  ),
+                  child: widget.filterPerson != null
+                      ? _HintChip(
+                          icon: Icons.touch_app_outlined,
+                          label:
+                              '${s.participants[widget.filterPerson!].name} 강조 중  ·  탭하면 해제',
+                        )
+                      : const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _HintChip(
+                              icon: Icons.touch_app_outlined,
+                              label: '탭 → 이름 변경',
+                            ),
+                            SizedBox(width: 20),
+                            _HintChip(
+                              icon: Icons.touch_app,
+                              label: '길게 누르기 → 항목 강조',
+                            ),
+                          ],
+                        ),
                 ),
             ],
           ),
@@ -549,35 +667,68 @@ class _HintChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: kDutchAccent.withValues(alpha: 0.07),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: kDutchAccent.withValues(alpha: 0.2)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 11, color: kDutchTextTertiary),
-          const SizedBox(width: 4),
-          Text(label,
-              style: const TextStyle(fontSize: 11)
-                  .copyWith(color: kDutchTextTertiary)),
-        ],
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 11, color: kDutchTextTertiary.withValues(alpha: 0.7)),
+        const SizedBox(width: 3),
+        Text(label,
+            style: TextStyle(
+                fontSize: 11,
+                color: kDutchTextTertiary.withValues(alpha: 0.7))),
+      ],
     );
   }
 }
 
 // ── 컴팩트 요약 바 ───────────────────────────────────────────
 
-class _CompactSummaryBar extends StatelessWidget {
-  const _CompactSummaryBar(
-      {required this.s, required this.result, required this.show});
+class _CompactSummaryBar extends StatefulWidget {
+  const _CompactSummaryBar({required this.s, required this.result});
   final IndividualSplitState s;
   final IndividualSplitResult result;
-  final bool show;
+
+  @override
+  State<_CompactSummaryBar> createState() => _CompactSummaryBarState();
+}
+
+class _CompactSummaryBarState extends State<_CompactSummaryBar> {
+  final _hScroll = ScrollController();
+  bool _showLeftFade = false;
+  bool _showRightFade = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _hScroll.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
+  }
+
+  @override
+  void dispose() {
+    _hScroll.removeListener(_onScroll);
+    _hScroll.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_hScroll.hasClients) return;
+    final pos = _hScroll.position;
+    final left = pos.pixels > 4;
+    final right = pos.pixels < pos.maxScrollExtent - 4;
+    if (_showLeftFade != left || _showRightFade != right) {
+      setState(() {
+        _showLeftFade = left;
+        _showRightFade = right;
+      });
+    }
+  }
+
+  String _compact(int n) {
+    if (n >= 10000) return '${(n / 10000).toStringAsFixed(n % 10000 == 0 ? 0 : 1)}만';
+    if (n >= 1000) return '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}천';
+    return n.toString();
+  }
 
   String _fmt(int n) {
     if (n == 0) return '0';
@@ -592,50 +743,88 @@ class _CompactSummaryBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!show) return const SizedBox.shrink();
+    final s = widget.s;
+    final result = widget.result;
+
     return Container(
-      height: 44,
-      color: kDutchCardBg.withValues(alpha: 0.8),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: s.participants.asMap().entries.map((e) {
-            final i = e.key;
-            final amt = result.personAmounts.length > i
-                ? result.personAmounts[i]
-                : 0;
-            return Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: kDutchChipBg[i % kDutchChipBg.length],
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    e.value.name,
-                    style: textStyleCaption.copyWith(
-                        color: kDutchTextSecondary),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${_fmt(amt)}원',
-                    style: textStyleCaption.copyWith(
-                        color: kDutchTextPrimary,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: kDutchBg1,
+        border: Border(
+          bottom: BorderSide(color: kDutchAccent.withValues(alpha: 0.15)),
         ),
+      ),
+      child: Row(
+        children: [
+          Text(
+            '합계 ${_fmt(result.totalAmount)}원',
+            style: textStyleCaption.copyWith(
+              color: kDutchAccent,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            width: 1,
+            height: 12,
+            color: kDutchAccent.withValues(alpha: 0.25),
+          ),
+          // 인원별 칩 (가로 스크롤 + 동적 좌우 페이드)
+          Expanded(
+            child: ShaderMask(
+              shaderCallback: (rect) => LinearGradient(
+                colors: [
+                  _showLeftFade ? kDutchBg1 : Colors.transparent,
+                  Colors.transparent,
+                  Colors.transparent,
+                  _showRightFade ? kDutchBg1 : Colors.transparent,
+                ],
+                stops: const [0.0, 0.08, 0.92, 1.0],
+              ).createShader(rect),
+              blendMode: BlendMode.dstOut,
+              child: SingleChildScrollView(
+                controller: _hScroll,
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: s.participants.asMap().entries.map((e) {
+                    final i = e.key;
+                    final amt = result.personAmounts.length > i
+                        ? result.personAmounts[i]
+                        : 0;
+                    final bg = kDutchChipBg[i % kDutchChipBg.length];
+                    final fg = kDutchChipText[i % kDutchChipText.length];
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: bg.withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.person,
+                                size: 10, color: fg.withValues(alpha: 0.7)),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${e.value.name} ${_compact(amt)}',
+                              style: textStyleCaption.copyWith(
+                                color: fg,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -683,17 +872,6 @@ class _ItemsCard extends StatelessWidget {
                 children: [
                   Icon(Icons.receipt_long_outlined,
                       size: 40, color: kDutchTextTertiary.withValues(alpha: 0.4)),
-                  const SizedBox(height: 12),
-                  Text(
-                    '아직 메뉴가 없어요',
-                    style: textEmptyGuide.copyWith(color: kDutchTextTertiary),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '아래 버튼으로 메뉴를 추가해 보세요',
-                    style: textStyleCaption
-                        .copyWith(color: kDutchTextTertiary),
-                  ),
                 ],
               ),
             )
@@ -892,7 +1070,7 @@ class _ResultBarSection extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 36,
+                      width: 52,
                       child: Text(
                         e.value.name,
                         overflow: TextOverflow.ellipsis,
@@ -930,10 +1108,12 @@ class _ResultBarSection extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     SizedBox(
-                      width: 72,
+                      width: 96,
                       child: Text(
                         '${_fmt(amt)}원',
                         textAlign: TextAlign.right,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
                         style: textStyleCaption.copyWith(
                             color: kDutchTextPrimary,
                             fontWeight: FontWeight.w600),
@@ -1031,9 +1211,24 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
   final _nameCtrl = TextEditingController();
   final _amtCtrl = TextEditingController();
   final _nameFocus = FocusNode();
+  final _chipScroll = ScrollController();
+  bool _chipLeftFade = false;
+  bool _chipRightFade = false;
 
   DutchPayViewModel get _vm =>
       ref.read(dutchPayViewModelProvider.notifier);
+
+  String _fmtAmt(String raw) {
+    final n = int.tryParse(raw);
+    if (n == null || raw.isEmpty) return raw;
+    final str = n.toString();
+    final buf = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) buf.write(',');
+      buf.write(str[i]);
+    }
+    return buf.toString();
+  }
 
   @override
   void initState() {
@@ -1042,9 +1237,24 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
         widget.parentRef.read(dutchPayViewModelProvider).individualSplit;
     _nameCtrl.text = s.nameInput;
     _amtCtrl.text = s.amtInput;
+    _chipScroll.addListener(_onChipScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _nameFocus.requestFocus();
+      _onChipScroll();
     });
+  }
+
+  void _onChipScroll() {
+    if (!_chipScroll.hasClients) return;
+    final pos = _chipScroll.position;
+    final left = pos.pixels > 4;
+    final right = pos.pixels < pos.maxScrollExtent - 4;
+    if (_chipLeftFade != left || _chipRightFade != right) {
+      setState(() {
+        _chipLeftFade = left;
+        _chipRightFade = right;
+      });
+    }
   }
 
   @override
@@ -1052,6 +1262,8 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
     _nameCtrl.dispose();
     _amtCtrl.dispose();
     _nameFocus.dispose();
+    _chipScroll.removeListener(_onChipScroll);
+    _chipScroll.dispose();
     super.dispose();
   }
 
@@ -1067,10 +1279,11 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
       _nameCtrl.selection =
           TextSelection.collapsed(offset: s.nameInput.length);
     }
-    if (_amtCtrl.text != s.amtInput) {
-      _amtCtrl.text = s.amtInput;
+    final formattedAmt = _fmtAmt(s.amtInput);
+    if (_amtCtrl.text != formattedAmt) {
+      _amtCtrl.text = formattedAmt;
       _amtCtrl.selection =
-          TextSelection.collapsed(offset: s.amtInput.length);
+          TextSelection.collapsed(offset: formattedAmt.length);
     }
 
     return Padding(
@@ -1089,7 +1302,7 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                 width: 36,
                 height: 4,
                 decoration: BoxDecoration(
-                    color: kDutchDivider,
+                    color: kDutchAccent.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2)),
               ),
             ),
@@ -1107,8 +1320,10 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: kDutchInputBg,
+                      color: kDutchBg2.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(radiusInput),
+                      border: Border.all(
+                          color: kDutchAccent.withValues(alpha: 0.15)),
                     ),
                     child: TextField(
                       controller: _nameCtrl,
@@ -1135,12 +1350,17 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: kDutchInputBg,
+                      color: kDutchBg2.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(radiusInput),
+                      border: Border.all(
+                          color: kDutchAccent.withValues(alpha: 0.15)),
                     ),
                     child: TextField(
                       controller: _amtCtrl,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       style: inputFieldInnerLabel
                           .copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
@@ -1152,33 +1372,46 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                         contentPadding: EdgeInsets.zero,
                       ),
                       onChanged: (v) => _vm.handleIntent(
-                          DutchPayIntent.amtInputChanged(v)),
+                          DutchPayIntent.amtInputChanged(v.replaceAll(',', ''))),
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            // 담당자 선택 칩
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: s.participants.asMap().entries.map((e) {
-                  final selected =
-                      s.selectedParticipants.contains(e.key);
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ParticipantChip(
-                      label: e.value.name,
-                      bg: kDutchChipBg[e.key % kDutchChipBg.length],
-                      fg: kDutchChipText[e.key % kDutchChipText.length],
-                      isSelected: selected,
-                      showSelectIndicator: true,
-                      onTap: () => _vm.handleIntent(
-                          DutchPayIntent.participantToggled(e.key)),
-                    ),
-                  );
-                }).toList(),
+            // 담당자 선택 칩 (가로 스크롤 + 동적 좌우 페이드)
+            ShaderMask(
+              shaderCallback: (rect) => LinearGradient(
+                colors: [
+                  _chipLeftFade ? Colors.white : Colors.transparent,
+                  Colors.transparent,
+                  Colors.transparent,
+                  _chipRightFade ? Colors.white : Colors.transparent,
+                ],
+                stops: const [0.0, 0.08, 0.92, 1.0],
+              ).createShader(rect),
+              blendMode: BlendMode.dstOut,
+              child: SingleChildScrollView(
+                controller: _chipScroll,
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: s.participants.asMap().entries.map((e) {
+                    final selected =
+                        s.selectedParticipants.contains(e.key);
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ParticipantChip(
+                        label: e.value.name,
+                        bg: kDutchChipBg[e.key % kDutchChipBg.length],
+                        fg: kDutchChipText[e.key % kDutchChipText.length],
+                        isSelected: selected,
+                        showSelectIndicator: true,
+                        onTap: () => _vm.handleIntent(
+                            DutchPayIntent.participantToggled(e.key)),
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -1196,16 +1429,16 @@ class _MenuInputSheetState extends ConsumerState<_MenuInputSheet> {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: Colors.red.shade50,
+                          color: kDutchInputBg,
                           borderRadius:
                               BorderRadius.circular(radiusCard),
-                          border:
-                              Border.all(color: Colors.red.shade200),
+                          border: Border.all(
+                              color: kDutchAccent.withValues(alpha: 0.3)),
                         ),
                         child: Center(
                           child: Text('삭제',
                               style: textStyle16.copyWith(
-                                  color: Colors.red.shade400)),
+                                  color: kDutchAccent)),
                         ),
                       ),
                     ),

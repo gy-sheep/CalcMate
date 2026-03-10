@@ -212,15 +212,9 @@ class _ReceiptWidget extends StatelessWidget {
             Text('CalcMate',
                 style: TextStyle(
                     color: kDutchAccent,
-                    fontSize: 13,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.5)),
-            const SizedBox(height: 2),
-            const Text('더치페이',
-                style: TextStyle(
-                    color: kDutchTextPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700)),
             const SizedBox(height: 16),
             _DashedDivider(),
             const SizedBox(height: 12),

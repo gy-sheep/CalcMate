@@ -57,11 +57,14 @@ class TaxRateInfoSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(CmSheet.handleRadius),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              '세율 참고',
-              style: CmSheet.titleText.copyWith(color: Colors.white),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                '세율 참고',
+                style: CmSheet.titleText.copyWith(color: Colors.white),
+              ),
             ),
           ),
           const Divider(color: kVatDivider, thickness: 0.5, height: 1),

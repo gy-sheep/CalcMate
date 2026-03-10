@@ -175,11 +175,7 @@ class DutchPayViewModel extends AutoDisposeNotifier<DutchPayState> {
     switch (intent) {
       // ── 공통 ──────────────────────────────────────────────
       case _TabChanged(:final index):
-        state = state.copyWith(
-          tabIndex: index,
-          equalSplit: const EqualSplitState(),
-          individualSplit: const IndividualSplitState(),
-        );
+        state = state.copyWith(tabIndex: index);
 
       // ── 균등 분배 ──────────────────────────────────────────
       case _KeyPressed(:final key):
