@@ -43,12 +43,6 @@ void showSalaryKeypad(
           Navigator.pop(ctx);
         }
 
-        String displayText() {
-          if (input.isEmpty) return '0 원';
-          final n = int.tryParse(input) ?? 0;
-          return '${NumberFormatter.addCommas(n.toString())} 원';
-        }
-
         return Container(
           decoration: const BoxDecoration(
             color: kSalaryBgTop,
@@ -74,19 +68,29 @@ void showSalaryKeypad(
               // 입력 표시
               Container(
                 width: double.infinity,
-                padding: CmKeypad.displayPadding,
+                padding: CmInputCard.padding,
                 decoration: BoxDecoration(
                   color: kSalaryDeductionBg,
                   borderRadius:
-                      BorderRadius.circular(radiusInput),
+                      BorderRadius.circular(CmInputCard.radius),
                   border: Border.all(
                       color: kSalaryGold.withValues(alpha: 0.4)),
                 ),
-                child: Text(
-                  displayText(),
-                  textAlign: TextAlign.right,
-                  style: CmResultCard.resultText
-                      .copyWith(color: kSalaryTextPrimary),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        input.isEmpty
+                            ? '0'
+                            : NumberFormatter.addCommas(
+                                (int.tryParse(input) ?? 0).toString()),
+                        style: CmInputCard.inputText
+                            .copyWith(color: kSalaryTextPrimary),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: CmKeypad.displaySpacing),
