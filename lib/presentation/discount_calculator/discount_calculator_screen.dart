@@ -46,19 +46,19 @@ class DiscountCalculatorScreen extends ConsumerWidget {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         titleSpacing: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios,
-              color: Colors.white, size: CmAppBar.backIconSize),
+              color: kDiscountTextPrimary, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
           title,
-          style: CmAppBar.titleText.copyWith(color: Colors.white),
+          style: CmAppBar.titleText.copyWith(color: kDiscountTextPrimary),
         ),
         centerTitle: false,
       ),
@@ -537,6 +537,7 @@ class _ExtraDiscountSectionState extends State<_ExtraDiscountSection> {
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 180),
                                   padding: CmTab.padding,
+                                  constraints: const BoxConstraints(minWidth: 56),
                                   decoration: BoxDecoration(
                                     color: active
                                         ? kDiscountChipActiveBg
@@ -826,8 +827,8 @@ class _KeypadButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        splashColor: Colors.white10,
-        highlightColor: Colors.white10,
+        splashColor: Colors.black12,
+        highlightColor: Colors.black12,
         child: SizedBox(
           height: keypadButtonHeightLarge,
           child: Center(

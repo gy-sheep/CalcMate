@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 
-// 퍼플블루 + 핫핑크 — 세일 포스터 느낌의 밝고 경쾌한 테마
-const kDiscountGradientTop = Color(0xFF5580D0);
-const kDiscountGradientBottom = Color(0xFF3A5CB8);
+// Blush & Ivory — 아이보리 배경 + 핫핑크 포인트, 모던 쇼핑 앱 느낌
+const kDiscountGradientTop = Color(0xFFFFFAF9);
+const kDiscountGradientBottom = Color(0xFFFFF0EC);
 
-const kDiscountAccent = Color(0xFFFFB8D6);
-const kDiscountAccentSoft = Color(0x33FFB8D6);
+const kDiscountAccent = Color(0xFFFF3C6E);
+const kDiscountAccentSoft = Color(0x22FF3C6E);
 
-const kDiscountChipBg = Color(0x22FFFFFF);
-const kDiscountChipActiveBg = Color(0xFFFFB8D6);
-const kDiscountChipText = Color(0xCCFFFFFF);
+const kDiscountChipBg = Color(0xFFFFEBF0);
+const kDiscountChipActiveBg = Color(0xFFFF3C6E);
+const kDiscountChipText = Color(0xFF999999);
 const kDiscountChipActiveText = Colors.white;
 
-const kDiscountFieldBg = Color(0x18FFFFFF);
-const kDiscountFieldBorder = Color(0x40FFFFFF);
-const kDiscountFieldBorderActive = Color(0xFFFFB8D6);
+const kDiscountFieldBg = Color(0xFFFFFFFF);
+const kDiscountFieldBorder = Color(0xFFEEDDDA);
+const kDiscountFieldBorderActive = Color(0xFFFF3C6E);
 
-const kDiscountCardBg = Color(0x22FFFFFF);
-const kDiscountCardBorder = Color(0x33FFFFFF);
+const kDiscountCardBg = Color(0xFFFFFFFF);
+const kDiscountCardBorder = Color(0xFFEEDDDA);
 
-const kDiscountDivider = Color(0x33FFFFFF);
+const kDiscountDivider = Color(0xFFEEDDDA);
 
-const kDiscountTextPrimary = Colors.white;
-const kDiscountTextSecondary = Color(0xCCFFFFFF);
-const kDiscountTextSavings = Color(0xFFFFB8D6);
-const kDiscountTextFinalPrice = Colors.white;
+const kDiscountTextPrimary = Color(0xFF1A1A1A);
+const kDiscountTextSecondary = Color(0xFF999999);
+const kDiscountTextSavings = Color(0xFFFF3C6E);
+const kDiscountTextFinalPrice = Color(0xFF1A1A1A);
 
-const kDiscountKeyNumber = Colors.white;
-const kDiscountKeyFunction = Color(0xCCFFFFFF);
-const kDiscountKeySpecial = Color(0xFFFFB8D6);
+const kDiscountKeyNumber = Color(0xFF333333);
+const kDiscountKeyFunction = Color(0xFF999999);
+const kDiscountKeySpecial = Color(0xFFFF3C6E);

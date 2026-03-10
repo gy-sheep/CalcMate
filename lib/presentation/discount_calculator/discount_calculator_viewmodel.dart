@@ -34,7 +34,7 @@ class _ToggleExtraDiscount extends DiscountCalculatorIntent {
 
 // ── Chip 목록 ───────────────────────────────────────────────────────────────
 
-const kDiscountChips = ['5%', '10%', '20%', '30%', '50%'];
+const kDiscountChips = ['5%', '10%', '20%', '30%', '50%', '90%'];
 
 // ── Provider ────────────────────────────────────────────────────────────────
 
