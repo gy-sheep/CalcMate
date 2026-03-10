@@ -96,20 +96,20 @@ class ReceiptCard extends StatelessWidget {
                     label: '공급가액',
                     amount: '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   _buildTaxRateRow(),
                 ] else ...[
                   ReceiptRow(
                     label: '합계',
                     amount: '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원',
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   _buildTaxRateRow(),
                 ],
                 const SizedBox(height: 16),
                 // ── 실선 구분선 ──
                 Container(height: 1.5, color: kVatReceiptDivider),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 // ── 강조 행 ──
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class ReceiptCard extends StatelessWidget {
           children: [
             Text(
               '부가세 (',
-              style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
+              style: sectionLabel.copyWith(color: kVatReceiptSecondary),
             ),
             GestureDetector(
               onTap: () => vm.handleIntent(
@@ -174,7 +174,7 @@ class ReceiptCard extends StatelessWidget {
                 ),
                 child: Text(
                   '$rateText%',
-                  style: textStyleCaption.copyWith(
+                  style: sectionLabel.copyWith(
                     color: isEditing ? kVatColorEquals : kVatReceiptSecondary,
                     fontWeight: isEditing ? FontWeight.w700 : FontWeight.w400,
                   ),
@@ -183,7 +183,7 @@ class ReceiptCard extends StatelessWidget {
             ),
             Text(
               ')',
-              style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
+              style: sectionLabel.copyWith(color: kVatReceiptSecondary),
             ),
             const SizedBox(width: 4),
             GestureDetector(
@@ -198,7 +198,7 @@ class ReceiptCard extends StatelessWidget {
         ),
         Text(
           '${NumberFormatter.formatVatResult(vatResult.vatAmount)}원',
-          style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
+          style: sectionLabel.copyWith(color: kVatReceiptSecondary),
         ),
       ],
     );
@@ -223,7 +223,7 @@ class VatModeToggle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildOption('공급가액', VatMode.exclusive),
+        _buildOption('합계금액', VatMode.inclusive),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Container(
@@ -232,7 +232,7 @@ class VatModeToggle extends StatelessWidget {
             color: kVatReceiptDash,
           ),
         ),
-        _buildOption('합계금액', VatMode.inclusive),
+        _buildOption('공급가액', VatMode.exclusive),
       ],
     );
   }
@@ -272,11 +272,11 @@ class ReceiptRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
+          style: sectionLabel.copyWith(color: kVatReceiptSecondary),
         ),
         Text(
           amount,
-          style: textStyleCaption.copyWith(color: kVatReceiptSecondary),
+          style: sectionLabel.copyWith(color: kVatReceiptSecondary),
         ),
       ],
     );

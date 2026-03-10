@@ -86,7 +86,7 @@ class UnitKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: 56,
+          height: keypadButtonHeightLarge,
           child: Center(
             child: label == '\u{232B}'
                 ? Icon(Icons.backspace_outlined, color: _textColor, size: keypadBackspaceSize)

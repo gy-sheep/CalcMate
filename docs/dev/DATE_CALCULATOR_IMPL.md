@@ -26,7 +26,6 @@ lib/
         period_mode_view.dart             # "기간 계산" 모드 UI
         date_calc_mode_view.dart          # "날짜 계산" 모드 UI
         dday_mode_view.dart               # "D-Day" 모드 UI
-        date_keypad.dart                  # 키패드 + 방향 토글
         date_card.dart                    # 날짜 표시 카드
         result_card.dart                  # 결과 카드
 
@@ -106,26 +105,27 @@ class DateCalculatorState with _$DateCalculatorState {
 
 ## 3. Presentation: ViewModel
 
-### sealed Intent 11종
+### sealed Intent 12종
 
 ```
 modeChanged            periodStartChanged     periodEndChanged
 includeStartDayToggled calcBaseChanged        keyPressed
 calcDirectionChanged   calcUnitChanged        numberStepped
-ddayTargetChanged      ddayReferenceChanged
+calcNumberChanged      ddayTargetChanged      ddayReferenceChanged
 ```
+
+- `calcNumberChanged(int value)` — 키패드 모달에서 직접 숫자 입력 시 사용
 
 ### 초기값 (build())
 - `periodStart` = 오늘, `periodEnd` = 오늘+30일
 - `calcBase` = 오늘, `calcNumberInput` = '100'
 - `ddayTarget` = 오늘+100일, `ddayReference` = 오늘
 
-### 키 입력 규칙 (`_handleKey`)
-- `'0'` 상태에서 숫자 입력 → 교체 (선행 0 방지)
-- 결과값 > 9999이면 입력 무시
-- `'⌫'` → 한 자리 제거, 1자리면 `'0'`
-- `'+/-'` → `calcDirection` 토글 (0↔1), `calcNumberInput` 변경 없음
+### 숫자 입력 방식
+- 날짜 계산 모드 숫자 표시 영역 탭 → `showNumberKeypad` 모달 호출
+- 모달 확인 시 `calcNumberChanged(value)` → 0~9999 클램프
 - `numberStepped(delta)` → `calcNumber + delta`, 0~9999 클램프
+- `keyPressed` / `_handleKey` — 하위 호환용 (직접 사용 안 함)
 
 ### Computed getters
 - `periodResult` — PeriodResult

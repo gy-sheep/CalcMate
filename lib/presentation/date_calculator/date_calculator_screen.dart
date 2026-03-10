@@ -8,7 +8,6 @@ import '../../presentation/widgets/scroll_fade_view.dart';
 import 'date_calculator_colors.dart';
 import 'date_calculator_viewmodel.dart';
 import 'widgets/date_calc_mode_view.dart';
-import 'widgets/date_keypad.dart';
 import 'widgets/date_tab_bar.dart';
 import 'widgets/dday_mode_view.dart';
 import 'widgets/period_mode_view.dart';
@@ -142,24 +141,12 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
                           horizontal: screenPaddingH),
                       child: PeriodModeView(pickDate: _pickDate),
                     ),
-                    SizedBox.expand(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: ScrollFadeView(
-                              key: _fadeKeyDateCalc,
-                              fadeColor: kDateBg3,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: screenPaddingH),
-                              child: DateCalcModeView(pickDate: _pickDate),
-                            ),
-                          ),
-                          DateKeypad(
-                            onKeyPressed: (key) => _vm.handleIntent(
-                                DateCalculatorIntent.keyPressed(key)),
-                          ),
-                        ],
-                      ),
+                    ScrollFadeView(
+                      key: _fadeKeyDateCalc,
+                      fadeColor: kDateBg3,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: screenPaddingH),
+                      child: DateCalcModeView(pickDate: _pickDate),
                     ),
                     ScrollFadeView(
                       key: _fadeKeyDDay,

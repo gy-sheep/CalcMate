@@ -190,7 +190,7 @@ class __$$VatCalculatorStateImplCopyWithImpl<$Res>
 
 class _$VatCalculatorStateImpl implements _VatCalculatorState {
   const _$VatCalculatorStateImpl({
-    this.mode = VatMode.exclusive,
+    this.mode = VatMode.inclusive,
     this.inputTarget = InputTarget.amount,
     this.input = '0',
     this.isResult = false,

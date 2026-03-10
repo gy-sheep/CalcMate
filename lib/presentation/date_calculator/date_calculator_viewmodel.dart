@@ -24,6 +24,7 @@ sealed class DateCalculatorIntent {
       _CalcDirectionChanged;
   const factory DateCalculatorIntent.calcUnitChanged(int unit) = _CalcUnitChanged;
   const factory DateCalculatorIntent.numberStepped(int delta) = _NumberStepped;
+  const factory DateCalculatorIntent.calcNumberChanged(int value) = _CalcNumberChanged;
   const factory DateCalculatorIntent.ddayTargetChanged(DateTime date) =
       _DDayTargetChanged;
   const factory DateCalculatorIntent.ddayReferenceChanged(DateTime date) =
@@ -72,6 +73,11 @@ class _CalcUnitChanged extends DateCalculatorIntent {
 class _NumberStepped extends DateCalculatorIntent {
   final int delta;
   const _NumberStepped(this.delta);
+}
+
+class _CalcNumberChanged extends DateCalculatorIntent {
+  final int value;
+  const _CalcNumberChanged(this.value);
 }
 
 class _DDayTargetChanged extends DateCalculatorIntent {
@@ -151,6 +157,9 @@ class DateCalculatorViewModel
       case _NumberStepped(:final delta):
         final next = (calcNumber + delta).clamp(0, 9999);
         state = state.copyWith(calcNumberInput: next.toString());
+
+      case _CalcNumberChanged(:final value):
+        state = state.copyWith(calcNumberInput: value.clamp(0, 9999).toString());
 
       case _DDayTargetChanged(:final date):
         state = state.copyWith(

@@ -38,8 +38,8 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❶ | AppBar 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `sizeAppBarBackIcon` 20 | `Colors.white` |
-| ❶ | AppBar 타이틀 | `Text` | `textStyleAppBarTitle` 18sp / w600 | `Colors.white` |
+| ❶ | AppBar 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `CmAppBar.backIconSize` 20 | `Colors.white` |
+| ❶ | AppBar 타이틀 | `Text` | `CmAppBar.titleText` 20sp / w700 | `Colors.white` |
 | ❷ | 수식 표시 | `DisplayPanel` > `Text` | 20sp / w400 / h:1.4 | `Colors.white54` |
 | ❷ | (동작) 한 줄 초과 시 | 연산자 앞 줄바꿈 → 최대 2줄, 그래도 넘치면 우측 기준 가로 스크롤 | | |
 | ❸ | 입력값 / 결과 | `DisplayPanel` > `Text` | **동적** 10~80sp / w300 / h:1.1 | `Colors.white` |
@@ -47,12 +47,12 @@
 | ❸ | (동작) 넘칠 때 | 우측 기준 가로 스크롤 (`BouncingScrollPhysics`) | | |
 | ❹ | 하단 구분선 | `AppInputUnderline(full)` > `Container` | `thicknessInputUnderline` 1.5 | `Colors.white60` |
 | ❺ | 키패드 상단 구분선 | `Divider` | — | `Colors.white` 20% · thickness:0.5 |
-| ❻ | ⌫ | `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kCalcColorFunction` |
-| ❻ | AC · % · () | `CalcButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kCalcColorFunction` |
-| ❻ | ÷ · × · - · + | `CalcButton` > `Text` | `textStyleKeypadOperator` 28sp / w400 | `kCalcColorOperator` |
-| ❻ | 버튼 높이 | — | — | `AppTokens.heightButtonLarge` 68 |
-| ❼ | 0~9 · . | `CalcButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kCalcColorNumber` |
-| ❽ | = | `CalcButton` > `Text` | `textStyleKeypadOperator` 28sp / w400 | `Colors.white` · 배경 `kCalcColorEquals` |
+| ❻ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kCalcColorFunction` |
+| ❻ | AC · % · () | `CalcButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCalcColorFunction` |
+| ❻ | ÷ · × · - · + | `CalcButton` > `Text` | `keypadOperatorText` 28sp / w400 | `kCalcColorOperator` |
+| ❻ | 버튼 높이 | — | — | `keypadButtonHeightLarge` 68 |
+| ❼ | 0~9 · . | `CalcButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCalcColorNumber` |
+| ❽ | = | `CalcButton` > `Text` | `keypadOperatorText` 28sp / w400 | `Colors.white` · 배경 `kCalcColorEquals` |
 
 ---
 

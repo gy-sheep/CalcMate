@@ -10,7 +10,7 @@ enum InputTarget { amount, taxRate }
 @freezed
 class VatCalculatorState with _$VatCalculatorState {
   const factory VatCalculatorState({
-    @Default(VatMode.exclusive) VatMode mode,
+    @Default(VatMode.inclusive) VatMode mode,
     @Default(InputTarget.amount) InputTarget inputTarget,
     @Default('0') String input,
     @Default(false) bool isResult,

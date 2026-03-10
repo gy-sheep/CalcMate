@@ -62,6 +62,10 @@ class ConvertUnitUseCase {
 
   // ── 연비 ──
 
+  // 상수를 하나만 정의하고 역수를 사용하여 왕복 변환 정확성 보장
+  static const _mpgUSToKmPerL = 1.609344 / 3.785411784;
+  static const _mpgUKToKmPerL = 1.609344 / 4.54609;
+
   Map<String, double> _convertFuelEfficiency(
     String fromCode,
     double value,
@@ -75,8 +79,8 @@ class ConvertUnitUseCase {
     final kmPerL = switch (fromCode) {
       'km/L' => value,
       'L/100km' => 100 / value,
-      'mpg(US)' => value * 0.425144,
-      'mpg(UK)' => value * 0.354006,
+      'mpg(US)' => value * _mpgUSToKmPerL,
+      'mpg(UK)' => value * _mpgUKToKmPerL,
       _ => value,
     };
 
@@ -85,8 +89,8 @@ class ConvertUnitUseCase {
       result[u.code] = switch (u.code) {
         'km/L' => kmPerL,
         'L/100km' => kmPerL == 0 ? 0.0 : 100 / kmPerL,
-        'mpg(US)' => kmPerL * 2.352145,
-        'mpg(UK)' => kmPerL * 2.824809,
+        'mpg(US)' => kmPerL / _mpgUSToKmPerL,
+        'mpg(UK)' => kmPerL / _mpgUKToKmPerL,
         _ => 0.0,
       };
     }

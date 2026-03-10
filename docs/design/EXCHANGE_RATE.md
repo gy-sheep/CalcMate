@@ -57,28 +57,28 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❶ | AppBar 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `sizeAppBarBackIcon` 20 | `Colors.white` |
-| ❶ | AppBar 타이틀 | `Text` | `textStyleAppBarTitle` 18sp / w600 | `Colors.white` |
-| ❷ | 국기 (From) | `CurrencyCodeButton` > `CountryFlag` | `sizeFlagMedium` 32×32 · 원형(Circle) | — |
-| ❷ | 통화 코드 (From) | `CurrencyCodeButton` > `Text` | `textStyleLabelMedium` 12sp / w500 | `Colors.white` |
-| ❷ | 금액 (From, 활성) | `AmountDisplay` > `FittedBox` > `Text` | `textStyleResult28` 28sp / w300 / letterSpacing:-1 | `Colors.white` |
+| ❶ | AppBar 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `CmAppBar.backIconSize` 20 | `Colors.white` |
+| ❶ | AppBar 타이틀 | `Text` | `CmAppBar.titleText` 20sp / w700 | `Colors.white` |
+| ❷ | 국기 (From) | `CurrencyCodeButton` > `CountryFlag` | `CmFlag.medium` 32×32 · 원형(Circle) | — |
+| ❷ | 통화 코드 (From) | `CurrencyCodeButton` > `Text` | `CmFlag.codeText` 12sp / w500 | `Colors.white` |
+| ❷ | 금액 (From, 활성) | `AmountDisplay` > `FittedBox` > `Text` | `CmCurrencyRow.amountText` 28sp / w300 / letterSpacing:-1 | `Colors.white` |
 | ❷ | 밑줄 (From, 활성) | `AppInputUnderline(full)` > `Container` | `thicknessInputUnderline` 1.5 | `Colors.white` |
-| ❸ | 국기 (To) | `CurrencyCodeButton` > `CountryFlag` | `sizeFlagMedium` 32×32 · 원형(Circle) | — |
-| ❸ | 통화 코드 (To) | `CurrencyCodeButton` > `Text` | `textStyleLabelMedium` 12sp / w500 | `Colors.white` |
-| ❸ | 1단위 환율 힌트 | `AmountDisplay` > `Text` (금액 위에 오버레이) | `textStyleCaption` 14sp / w400 | `Colors.white38` |
-| ❸ | 금액 (To, 비활성) | `AmountDisplay` > `FittedBox` > `Text` | `textStyleResult28` 28sp / w300 / letterSpacing:-1 | `Colors.white` |
+| ❸ | 국기 (To) | `CurrencyCodeButton` > `CountryFlag` | `CmFlag.medium` 32×32 · 원형(Circle) | — |
+| ❸ | 통화 코드 (To) | `CurrencyCodeButton` > `Text` | `CmFlag.codeText` 12sp / w500 | `Colors.white` |
+| ❸ | 1단위 환율 힌트 | `AmountDisplay` > `Text` (금액 위에 오버레이) | `textStyleCaption` 12sp / w400 | `Colors.white38` |
+| ❸ | 금액 (To, 비활성) | `AmountDisplay` > `FittedBox` > `Text` | `CmCurrencyRow.amountText` 28sp / w300 / letterSpacing:-1 | `Colors.white` |
 | ❸ | 밑줄 (To, 비활성) | `AppInputUnderline(full)` > `Container` | `thicknessInputUnderline` 1.5 | `Colors.white38` |
 | ❹ | To 행 × 3개 | ❸과 동일 구조 반복 | | |
-| ❺ | 업데이트 시간 | `Text` | `textStyleCaption` 14sp / w400 | `Colors.white38` |
-| ❺ | 새로고침 아이콘 | `Icon(refresh)` | `sizeIconSmall` 20 | `Colors.white54` |
-| ❺ | 새로고침 로딩 중 | `CupertinoActivityIndicator` | `radiusActivityIndicator` 10 | `Colors.white54` |
+| ❺ | 업데이트 시간 | `Text` | `textStyleCaption` 12sp / w400 | `Colors.white38` |
+| ❺ | 새로고침 아이콘 | `Icon(refresh)` | `CmIcon.small` 20 | `Colors.white54` |
+| ❺ | 새로고침 로딩 중 | `CupertinoActivityIndicator` | `CmIcon.activityIndicator` 10 | `Colors.white54` |
 | ❻ | 구분선 | `Divider` | — | `kCurrencyDivider` · thickness:0.5 |
-| ❼ | ⌫ | `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kCurrencyColorFunction` |
-| ❼ | AC · % | `CurrencyKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kCurrencyColorFunction` |
-| ❼ | ÷ · × · - · + | `CurrencyKeypadButton` > `Text` | `textStyleKeypadOperator` 28sp / w400 | `kCurrencyColorOperator` |
-| ❼ | 버튼 높이 | — | — | `AppTokens.heightButtonLarge` 68 |
-| ❽ | 0~9 · . · 00 | `CurrencyKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kCurrencyColorNumber` |
-| ❾ | = | `CurrencyKeypadButton` > `Text` | `textStyleKeypadOperator` 28sp / w400 | `Colors.white` · 배경 `kCurrencyColorEquals` |
+| ❼ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kCurrencyColorFunction` |
+| ❼ | AC · % | `CurrencyKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCurrencyColorFunction` |
+| ❼ | ÷ · × · - · + | `CurrencyKeypadButton` > `Text` | `keypadOperatorText` 28sp / w400 | `kCurrencyColorOperator` |
+| ❼ | 버튼 높이 | — | — | `keypadButtonHeightLarge` 68 |
+| ❽ | 0~9 · . · 00 | `CurrencyKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCurrencyColorNumber` |
+| ❾ | = | `CurrencyKeypadButton` > `Text` | `keypadOperatorText` 28sp / w400 | `Colors.white` · 배경 `kCurrencyColorEquals` |
 
 ---
 
@@ -104,14 +104,14 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ⓫ | 드래그 핸들 | `Container` | — | `Colors.white38` · w:40 h:4 · radius:2 |
-| ⓬ | 검색 입력창 | `AppTextField.search()` | `textStyleBody` (본문) / `textStyleHint` (힌트) | border `Colors.white30` / 포커스 `Colors.white70` · `radiusInput` 12 |
+| ⓬ | 검색 입력창 | `AppTextField.search()` | `inputFieldInnerLabel` 16sp / w400 | border `Colors.white30` / 포커스 `Colors.white70` · `radiusInput` 12 |
 | ⓬ | 검색 아이콘 | `AppTextField.search()` 내장 | size: 기본 | `Colors.white54` (hintColor 기본값) |
-| ⓭ | 통화 코드 (선택됨) | `ListTile` > `Text` (title) | `textStyleBody` 16sp / w400 · `FontWeight.bold` | `Colors.white` |
-| ⓮ | 통화 코드 (일반) | `ListTile` > `Text` (title) | `textStyleBody` 16sp / w400 | `Colors.white` |
-| ⓯ | 통화 코드 (사용 중) | `ListTile` > `Text` (title) | `textStyleBody` 16sp / w400 | `Colors.white38` |
-| ⓭⓮ | 통화 이름 (일반) | `ListTile` > `Text` (subtitle) | `textStyleCaption` 14sp / w400 | `Colors.white60` |
-| ⓯ | 통화 이름 (사용 중) | `ListTile` > `Text` (subtitle) | `textStyleCaption` 14sp / w400 | `Colors.white24` |
-| ⓭⓮⓯ | 국기 | `CountryFlag` | `sizeFlagMedium` 32×32 · 원형(Circle) | — |
+| ⓭ | 통화 코드 (선택됨) | `ListTile` > `Text` (title) | `CmSheet.itemTitle` 16sp / w400 · `FontWeight.bold` | `Colors.white` |
+| ⓮ | 통화 코드 (일반) | `ListTile` > `Text` (title) | `CmSheet.itemTitle` 16sp / w400 | `Colors.white` |
+| ⓯ | 통화 코드 (사용 중) | `ListTile` > `Text` (title) | `CmSheet.itemTitle` 16sp / w400 | `Colors.white38` |
+| ⓭⓮ | 통화 이름 (일반) | `ListTile` > `Text` (subtitle) | `CmSheet.itemSubtext` 14sp / w400 | `Colors.white60` |
+| ⓯ | 통화 이름 (사용 중) | `ListTile` > `Text` (subtitle) | `CmSheet.itemSubtext` 14sp / w400 | `Colors.white24` |
+| ⓭⓮⓯ | 국기 | `CountryFlag` | `CmFlag.medium` 32×32 · 원형(Circle) | — |
 | ⓭ | 체크 아이콘 | `Icon(check)` | — | `Colors.white` |
 
 **레이아웃 속성**
@@ -159,7 +159,7 @@
 | ❿ | 카드 블러 | `BackdropFilter(blur: 10)` | — | — |
 | ❿ | 카드 배경 | `Container` | — | `Colors.white` 12% · 테두리 `Colors.white` 24% · radius:16 |
 | ❿ | 스피너 | `CircularProgressIndicator` | strokeWidth: 2 | `Colors.white70` |
-| ❿ | 로딩 텍스트 | `Text` | `textStyleBody` 16sp / w500 | `Colors.white70` |
+| ❿ | 로딩 텍스트 | `Text` | `CmLoadingOverlay.text` 16sp / w400 | `Colors.white70` |
 
 ---
 

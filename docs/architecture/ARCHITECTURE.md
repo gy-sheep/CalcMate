@@ -132,51 +132,51 @@ Scaffold(
 
 ---
 
-## 디자인 토큰 (AppTokens)
+## 디자인 토큰
 
-`lib/core/theme/app_design_tokens.dart`의 `AppTokens`를 통해 앱 전체 스타일을 통일한다.
+`lib/core/theme/app_design_tokens.dart`에 컴포넌트별 `Cm*` 토큰 클래스와 전역 상수로 앱 전체 스타일을 통일한다.
 
 ### 원칙
 
-- **fontSize를 직접 숫자로 쓰지 않는다.** 반드시 Semantic TextStyle 토큰을 사용한다.
-- **색상은 토큰에 포함하지 않는다.** `.copyWith(color: kXxxColor)` 로 각 화면 컬러파일에서 주입한다.
+- **fontSize를 직접 숫자로 쓰지 않는다.** 반드시 컴포넌트 토큰(`Cm*.text*`) 또는 전역 TextStyle 상수를 사용한다.
+- **색상은 토큰에 포함하지 않는다.** `.copyWith(color: kXxxColor)`로 각 화면 컬러파일에서 주입한다.
 - display_panel 등 동적 폰트 계산이 필요한 경우는 예외 허용.
+- 컴포넌트 토큰 사용 기준은 `docs/conventions/UI_TOKEN_CONVENTION.md` 참고.
 
-### Semantic TextStyle 토큰
+### 컴포넌트 토큰 클래스
 
-| 토큰 | fontSize | weight | 용도 |
-|------|----------|--------|------|
-| `textStyleSectionTitle` | 13 | w600 | 섹션 헤더 ("기준 금액", "참여자 목록") |
-| `textStyleBody` | 14 | w400 | 일반 본문, 레이블 |
-| `textStyleHint` | 14 | w400 | 입력창 힌트 |
-| `textStyleCaption` | 12 | w400 | 보조 설명, 단위, 소형 레이블 |
-| `textStyleValue` | 16 | w600 | 보조 수치 (AgeRow value 등) |
-| `textStyleResultLarge` | 56 | w300 | 핵심 결과값 (기본 계산기 디스플레이) |
-| `textStyleResultMedium` | 32 | w300 | 중간 결과값 (더치페이 총액 등) |
-| `textStyleResultSmall` | 20 | w400 | 보조 결과값 |
-| `textStyleKeypadNumber` | 22 | w400 | 키패드 숫자 버튼 |
-| `textStyleKeypadOperator` | 28 | w400 | 키패드 연산자/등호 버튼 |
+| 클래스 | 용도 |
+|--------|------|
+| `CmInputCard` | 입력값 표시 카드 (급여 입력, 총 금액 등) |
+| `CmResultCard` | 결과값 표시 카드 (실수령액, 계산 결과 등) |
+| `CmListCard` | 헤더 + 항목 목록 카드 (공제 내역 등) |
+| `CmTab` | 탭바 / 카테고리 칩 |
+| `CmRoundButton` + `CmStepValue` | ± 스텝 버튼 |
+| `CmDropdown` | 드롭다운 / 선택 컨트롤 |
+| `CmSlider` | 슬라이더 |
+| `CmKeypad` | 키패드 모달 레이아웃 |
+| `CmSheet` | 바텀시트 구조 |
+| `CmAppBar` | AppBar 스타일 |
+| `CmFlag` | 국기 + 통화 코드 버튼 |
+| `CmCurrencyRow` | 환율 계산기 통화 행 |
+| `CmIcon` | 아이콘 크기 |
+| `CmLoadingOverlay` | 로딩 오버레이 다이얼로그 |
 
 ### 사용 패턴
 
 ```dart
-// 본문/레이블
-Text(label, style: AppTokens.textStyleBody.copyWith(color: kColor))
+// 입력 카드 타이틀
+Text('연봉', style: CmInputCard.titleText.copyWith(color: kColor))
 
-// 캡션 (단위, 보조 설명)
-Text('원', style: AppTokens.textStyleCaption.copyWith(color: kColor))
+// 결과 카드 결과값
+Text(amount, style: CmResultCard.resultText.copyWith(color: kColor))
+
+// 전역 캡션 텍스트 (보조 설명, 단위)
+Text('원', style: textStyleCaption.copyWith(color: kColor))
 
 // 키패드 버튼 — 연산자 여부에 따라 분기
 style: (isOperator
-    ? AppTokens.textStyleKeypadOperator
-    : AppTokens.textStyleKeypadNumber
+    ? keypadOperatorText
+    : keypadNumberText
   ).copyWith(color: _textColor)
-
-// 공통 TextField 래퍼 (body/hint 스타일 자동 적용)
-AppTextField(
-  controller: controller,
-  textColor: kColor,
-  hintColor: kHintColor,
-  hintText: '금액 입력',
-)
 ```

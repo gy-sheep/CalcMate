@@ -79,8 +79,14 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
     state = state.copyWith(toastMessage: null);
   }
 
-  /// 활성 단위의 입력값을 천 단위 콤마로 포맷팅
+  /// 활성 단위의 입력값을 포맷팅하여 반환.
+  ///
+  /// - 단위 전환(isResult=true): convertedValues를 그대로 사용 → 비활성 표시와 100% 일치
+  /// - 사용자 직접 입력(isResult=false): 천 단위 콤마만 추가
   String get formattedInput {
+    if (state.isResult) {
+      return state.convertedValues[state.activeUnitCode] ?? '0';
+    }
     return NumberFormatter.formatInput(state.input);
   }
 
@@ -198,7 +204,7 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
   void _onUnitTapped(String code) {
     if (code == state.activeUnitCode) return;
 
-    // raw double 값을 사용하여 정밀도 손실 방지
+    // raw double 값을 표시용 정밀도로 변환
     final rawValue = state.rawConvertedValues[code] ?? 0.0;
     final newInput = NumberFormatter.rawFromDouble(rawValue);
 
@@ -238,8 +244,9 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
     final isTemperature = category.name == '온도';
     final formatted = <String, String>{};
     for (final entry in rawResults.entries) {
-      formatted[entry.key] =
-          isTemperature ? NumberFormatter.formatTemperature(entry.value) : NumberFormatter.formatUnitResult(entry.value);
+      formatted[entry.key] = isTemperature
+          ? NumberFormatter.formatTemperature(entry.value)
+          : NumberFormatter.formatUnitResult(entry.value);
     }
 
     return s.copyWith(

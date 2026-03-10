@@ -63,6 +63,12 @@
 | — | Cm* 컴포넌트 토큰 시스템 추가 (CmTab·CmInputCard·CmResultCard·CmListCard·CmRoundButton·CmSlider 등) | — | `docs/conventions/UI_TOKEN_CONVENTION.md` |
 | — | 단위 변환기 단위 전환 정밀도 개선 (rawConvertedValues) | — | — |
 | — | 구 AppTokens 클래스 제거 및 전체 코드베이스를 Cm* 신규 토큰·전역 상수로 전면 교체 | — | — |
+| — | Cm* 토큰 기준 설계 문서 전체 현행화 (ARCHITECTURE·UI_TOKEN_CONVENTION·4개 design docs) | — | — |
+| — | 부가세 계산기 합계금액 디폴트·토글 순서 수정 | — | — |
+| — | 날짜 계산기 UX 개선 (CmTab 칩·이후/이전 토글·CmInputCard 숫자·카드 레이아웃·오늘 표시) | — | `docs/dev/DATE_CALCULATOR_IMPL.md` |
+| — | DateKeypad 제거 → showNumberKeypad 공통 모달 전환 | — | — |
+| — | 숫자 키패드 공통 모듈화: KeypadColors + showNumberKeypad (core/widgets) | — | — |
+| — | 단위 변환기 왕복 변환 정밀도 개선 및 테스트 추가 | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

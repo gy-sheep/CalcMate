@@ -64,8 +64,8 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❶ | 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `sizeAppBarBackIcon` 20 | `kNetPayTextPrimary` |
-| ❶ | 타이틀 | `Text` | `textStyleAppBarTitle` 20sp / w700 | `kNetPayTextPrimary` |
+| ❶ | 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `CmAppBar.backIconSize` 20 | `kNetPayTextPrimary` |
+| ❶ | 타이틀 | `Text` | `CmAppBar.titleText` 20sp / w700 | `kNetPayTextPrimary` |
 
 > `backgroundColor: Colors.transparent` / `elevation: 0` / `scrolledUnderElevation: 0`
 > `centerTitle: false` / `systemOverlayStyle: SystemUiOverlayStyle.dark`
@@ -110,7 +110,7 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❸ | 컨테이너 | `Container` | `CmInputCard.padding` / `CmInputCard.radius` 16 | bg: `kNetPayCardBg` / border: `kNetPayCardBorder` / shadow: `kNetPayCardShadow` blur:8 |
-| ❸ | 타이틀 | `Text` (좌) | `CmInputCard.titleText` 13sp / w600 | `kNetPayTextSecondary` |
+| ❸ | 타이틀 | `Text` (좌) | `CmInputCard.titleText` 14sp / w800 | `kNetPayTextSecondary` |
 | ❸ | 편집 아이콘 | `Icon(edit_outlined)` | `CmIcon.inputCard` 16 | `kNetPayTextSecondary` |
 | ❸ | 금액 | `Text` (우측) | `CmInputCard.inputText` 32sp / w300 | `kNetPayTextPrimary` |
 | ❸ | "원" 단위 | `Text` | `CmInputCard.unitText` 16sp / w400 | `kNetPayTextSecondary` |
@@ -145,11 +145,11 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❻ | 컨테이너 | `Container` | padding:`paddingCard` 20 / radius:`radiusCard` 16 | bg: `kNetPayResultBg` #EEE4CC / border: `kNetPayResultBorder` #CDB99A / shadow: `kNetPayCardShadow` blur:8 |
-| ❻ | "실수령액" 레이블 | `Text` (좌측 `Align`) | `textStyleSectionTitle` 13sp / w600 | `kNetPayTextSecondary` |
-| ❻ | 금액 | `Text` (우측) | `textStyleResult48` 48sp / w400 | `kNetPayGold` #8B6914 |
-| ❻ | "원" 단위 | `Text` | `textStyleBody` 16sp / w400 | `kNetPayTextSecondary` |
-| ❻ | 보조 텍스트 | `Text` (우측) | `textStyleCaption` 14sp / w400 | `kNetPayTextSecondary` |
+| ❻ | 컨테이너 | `Container` | padding:`CmResultCard.padding` all:20 / radius:`radiusCard` 16 | bg: `kNetPayResultBg` #EEE4CC / border: `kNetPayResultBorder` #CDB99A / shadow: `kNetPayCardShadow` blur:8 |
+| ❻ | "실수령액" 레이블 | `Text` (좌측 `Align`) | `CmResultCard.titleText` 14sp / w800 | `kNetPayTextSecondary` |
+| ❻ | 금액 | `Text` (우측) | `CmResultCard.resultText` 40sp / w300 | `kNetPayGold` #8B6914 |
+| ❻ | "원" 단위 | `Text` | `CmResultCard.unitText` 16sp / w400 | `kNetPayTextSecondary` |
+| ❻ | 보조 텍스트 | `Text` (우측) | `CmResultCard.subText` 14sp / w400 | `kNetPayTextSecondary` |
 
 > 레이블→금액 Row: 8dp / 금액↔"원": 6dp, baseline 정렬 ("원"은 bottom padding 6dp)
 > 금액 Row: `mainAxisAlignment: end` / `crossAxisAlignment: end`
@@ -188,11 +188,11 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❼ | 컨테이너 | `Container` | radius:`radiusCard` 16 | bg: `kNetPayDeductionBg` #F0E8D4 / border: `kNetPayDeductionLine` #DDD0B0 / shadow: `kNetPayCardShadow` blur:8 |
-| ❼ | "공제 합계" 레이블 | `Text` | `textStyleSectionTitle` 13sp / w600 | `kNetPayTextSecondary` |
-| ❼ | 공제 합계 금액 | `Text` | `textStyleValue` 16sp / w600 | `kNetPayTextPrimary` |
+| ❼ | "공제 합계" 레이블 | `Text` | `CmListCard.headerLabel` 15sp / w600 | `kNetPayTextSecondary` |
+| ❼ | 공제 합계 금액 | `Text` | `CmListCard.headerValue` 16sp / w600 | `kNetPayTextPrimary` |
 | ❼ | 헤더 구분선 | `Container` h:1 | — | `kNetPayDeductionLine` |
-| ❼ | 항목 레이블 | `Text` | `textStyleCaption` 14sp / w400 | `kNetPayTextSecondary` |
-| ❼ | 항목 금액 | `Text` | `textStyleValue` 16sp (fontSize:15) / w600 | `kNetPayTextPrimary` |
+| ❼ | 항목 레이블 | `Text` | `CmListCard.itemLabel` 14sp / w400 | `kNetPayTextSecondary` |
+| ❼ | 항목 금액 | `Text` | `CmListCard.itemValue` 15sp / w600 | `kNetPayTextPrimary` |
 | ❼ | 항목 구분선 | `Container` h:1 | margin: h:16 | `kNetPayDeductionLine` |
 
 > 헤더 패딩: h:16 v:14 / 항목 패딩: h:16 v:12
@@ -260,16 +260,16 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| — | 시트 배경 | `Container` | radius: top `radiusBottomSheet` 20 / padding: fromLTRB(16,12,16,0) | `kNetPayBgTop` |
-| — | 핸들 | `Container` | w:36 h:4 / radius:2 / bottom margin:20 | `kNetPayCardBorder` |
-| — | 입력 표시 컨테이너 | `Container` | padding: h:20 v:16 / radius:`radiusInput` 12 | bg: `kNetPayDeductionBg` / border: `kNetPayGold` 40% |
-| — | 입력 금액 | `Text` (우측) | `textStyleResult36` 36sp / w300 | `kNetPayTextPrimary` |
-| — | 0~9 · 00 버튼 컨테이너 | `Container` | h:56 / radius:12 | bg: `kNetPayCardBg` / border: `kNetPayCardBorder` |
-| — | 0~9 · 00 텍스트 | `Text` | `textStyleKeypadNumber` 22sp / w400 | `kNetPayTextPrimary` |
-| — | ⌫ 버튼 컨테이너 | `Container` | h:56 / radius:12 | bg: `kNetPayGoldSoft` / border: `kNetPayGold` 40% |
-| — | ⌫ 아이콘 | `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kNetPayGold` |
-| — | 확인 버튼 | `ElevatedButton` | h:52 / radius:12 | bg: `kNetPayAccent` #8B1A2E / fg: `Colors.white` |
-| — | 확인 텍스트 | `Text` | `textStyleBody` 16sp / w600 | `Colors.white` |
+| — | 시트 배경 | `Container` | radius: top `CmSheet.radius` 20 / padding: `CmKeypad.padding` fromLTRB(16,12,16,0) | `kNetPayBgTop` |
+| — | 핸들 | `Container` | w:`CmSheet.handleWidth` 40 h:`CmSheet.handleHeight` 4 / radius:`CmSheet.handleRadius` 2 / bottom spacing:`CmSheet.handleBottomSpacing` 16 | `kNetPayCardBorder` |
+| — | 입력 표시 컨테이너 | `Container` | padding: `CmKeypad.displayPadding` h:20 v:16 / radius:`radiusInput` 12 | bg: `kNetPayDeductionBg` / border: `kNetPayGold` 40% |
+| — | 입력 금액 | `Text` (우측) | `CmInputCard.inputText` 32sp / w300 | `kNetPayTextPrimary` |
+| — | 0~9 · 00 버튼 컨테이너 | `Container` | h:`keypadButtonHeightMedium` 56 / radius:12 | bg: `kNetPayCardBg` / border: `kNetPayCardBorder` |
+| — | 0~9 · 00 텍스트 | `Text` | `keypadNumberText` 22sp / w400 | `kNetPayTextPrimary` |
+| — | ⌫ 버튼 컨테이너 | `Container` | h:`keypadButtonHeightMedium` 56 / radius:12 | bg: `kNetPayGoldSoft` / border: `kNetPayGold` 40% |
+| — | ⌫ 아이콘 | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kNetPayGold` |
+| — | 확인 버튼 | `ElevatedButton` | h:`keypadButtonHeightPrimary` 52 / radius:12 | bg: `kNetPayAccent` #8B1A2E / fg: `Colors.white` |
+| — | 확인 텍스트 | `Text` | `modalButtonLabel` 16sp / w400 | `Colors.white` |
 
 > 키패드 행 간격: bottom 8dp / 확인 버튼 상단 margin: 8dp
 > 확인 버튼 하단 여백: `MediaQuery.padding.bottom + 16`
@@ -283,7 +283,7 @@
 |------|----|
 | 위젯 | `ScrollFadeView` (공통 위젯) |
 | fadeColor | `kNetPayBgBottom` |
-| 수평 패딩 | `paddingScreenH` 16 |
+| 수평 패딩 | `screenPaddingH` 16 |
 
 ---
 
@@ -301,7 +301,7 @@
 
 | 위치 | 값 |
 |------|----|
-| 화면 수평 패딩 | `paddingScreenH` 16 |
+| 화면 수평 패딩 | `screenPaddingH` 16 |
 | 스크롤 최상단 여백 | 28 |
 | 급여 카드 내부 패딩 | `CmInputCard.padding` h:20 v:18 |
 | 급여 카드↔결과 카드 | 28 |

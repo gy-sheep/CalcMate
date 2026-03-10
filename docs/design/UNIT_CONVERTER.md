@@ -49,8 +49,8 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❶ | 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `sizeAppBarBackIcon` 20 | `Colors.white` |
-| ❶ | 타이틀 | `Text` | `textStyleAppBarTitle` 18sp / w600 | `Colors.white` |
+| ❶ | 뒤로가기 아이콘 | `Icon(arrow_back_ios)` | `CmAppBar.backIconSize` 20 | `Colors.white` |
+| ❶ | 타이틀 | `Text` | `CmAppBar.titleText` 20sp / w700 | `Colors.white` |
 
 > `backgroundColor: Colors.transparent` / `elevation: 0` / `scrolledUnderElevation: 0` / `centerTitle: false`
 
@@ -69,12 +69,12 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❷ | 탭 전체 높이 | `SizedBox` | — | h: 48 |
-| ❷ | 스크롤 패딩 | `SingleChildScrollView` | — | horizontal: `paddingScreenH` |
-| ❷ | 칩 (선택) 배경 | `Positioned` > `DecoratedBox` | — | `kUnitChipSelectedColor` · `radiusChip` 20 · border `kUnitChipSelectedColor` 25% · glow shadow (blurRadius:8 spreadRadius:1 `kUnitChipSelectedColor` 25%) |
-| ❷ | 칩 내부 패딩 | `Container` | — | `AppTokens.paddingChip` (horizontal: 14 / vertical: 8) |
+| ❷ | 스크롤 패딩 | `SingleChildScrollView` | — | horizontal: `screenPaddingH` |
+| ❷ | 칩 (선택) 배경 | `Positioned` > `DecoratedBox` | — | `kUnitChipSelectedColor` · `CmTab.radius` 20 · border `kUnitChipSelectedColor` 25% · glow shadow (blurRadius:8 spreadRadius:1 `kUnitChipSelectedColor` 25%) |
+| ❷ | 칩 내부 패딩 | `Container` | — | `CmTab.padding` (horizontal: 14 / vertical: 8) |
 | ❷ | 칩 스케일 | `Transform.scale` | — | 선택 시 최대 ×1.08 (`1.0 + proximity × 0.08`) |
 | ❷ | 칩 아이콘 | `Icon` | `sizeIconXSmall` 16 | `Color.lerp(Colors.white60, Colors.white, proximity)` |
-| ❷ | 칩 텍스트 | `Text` | `textStyleChip` 14sp · proximity>0.5: w600 / 그 외: w400 | `Color.lerp(Colors.white60, Colors.white, proximity)` |
+| ❷ | 칩 텍스트 | `Text` | `CmTab.text` 14sp · proximity>0.5: w600 / 그 외: w400 | `Color.lerp(Colors.white60, Colors.white, proximity)` |
 | ❷ | 칩 간격 | `Padding` | — | 첫 칩: 0 / 이후 칩: left 8 |
 | ❷ | 슬라이딩 언더라인 | `Positioned(left:rect.left+4, bottom:1, width:rect.width-8)` > `DecoratedBox` | h: 2.5 · radius: 2 | `kUnitChipSelectedColor` · glow shadow (blurRadius:6 spreadRadius:1 `kUnitChipSelectedColor` 60%) |
 | ❷ | 하단 divider | `Positioned(left:0, right:0, bottom:4)` > `Container` | h: 0.5 | `kUnitDivider` |
@@ -89,13 +89,13 @@
 |---|------|------|------|------|
 | ❸ | 활성 행 배경 | `AnimatedContainer` | — | `kUnitActiveRowColor` · radius: `radiusCard` 16 |
 | ❸ | 활성 행 테두리 | `Border.all` | — | `kUnitChipSelectedColor` 40% |
-| ❸ | 단위 코드 (활성) | `Text` (SizedBox w:80) | `textStyleValue` 16sp / w600 | `kUnitChipSelectedColor` |
-| ❸ | 단위 이름 (활성) | `Text` | `textStyleCaption` 14sp / w400 | `Colors.white` |
-| ❸ | 변환값 (활성) | `Text` | `textStyleResult18` 18sp / w500 / letterSpacing:-0.5 | `Colors.white` |
+| ❸ | 단위 코드 (활성) | `Text` (SizedBox w:80) | `textStyle16` 16sp / w600 | `kUnitChipSelectedColor` |
+| ❸ | 단위 이름 (활성) | `Text` | `textStyleCaption` 12sp / w400 | `Colors.white` |
+| ❸ | 변환값 (활성) | `Text` | `textStyle18` 18sp / w500(copyWith) / letterSpacing:-0.5 | `Colors.white` |
 | ❹ | 비활성 행 배경 | — | — | `Colors.transparent` |
-| ❹ | 단위 코드 (비활성) | `Text` (SizedBox w:80) | `textStyleValue` 16sp / w600 | `Colors.white70` |
-| ❹ | 단위 이름 (비활성) | `Text` | `textStyleCaption` 14sp / w400 | `Colors.white54` |
-| ❹ | 변환값 (비활성) | `Text` | `textStyleResult18` 18sp / w300 / letterSpacing:-0.5 | `Colors.white70` |
+| ❹ | 단위 코드 (비활성) | `Text` (SizedBox w:80) | `textStyle16` 16sp / w600 | `Colors.white70` |
+| ❹ | 단위 이름 (비활성) | `Text` | `textStyleCaption` 12sp / w400 | `Colors.white54` |
+| ❹ | 변환값 (비활성) | `Text` | `textStyle18` 18sp / w300(copyWith) / letterSpacing:-0.5 | `Colors.white70` |
 | ❸❹ | 행 내부 패딩 | — | — | horizontal: 16 / vertical: 14 |
 | ❸❹ | 행 수직 마진 | — | — | vertical: 2 |
 
@@ -122,9 +122,9 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❻ | 구분선 | `Divider` | — | `kUnitDivider` · thickness:0.5 |
-| ❼ | ⌫ | `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kUnitColorFunction` |
-| ❼ | AC · 00 | `UnitKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kUnitColorFunction` |
-| ❼ | 0~9 · . | `UnitKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kUnitColorNumber` |
+| ❼ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kUnitColorFunction` |
+| ❼ | AC · 00 | `UnitKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kUnitColorFunction` |
+| ❼ | 0~9 · . | `UnitKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kUnitColorNumber` |
 | ❽ | ▲ | `Icon(keyboard_arrow_up)` | size: 28 | `kUnitColorFunction` |
 | ❽ | ▼ | `Icon(keyboard_arrow_down)` | size: 28 | `kUnitColorFunction` |
 | ❽ | +/- (온도) | `Row` > `Text` × 3 | `+` 18sp w500 / `/` 20sp w300 / `-` **24sp** w500 | `kUnitColorFunction` |

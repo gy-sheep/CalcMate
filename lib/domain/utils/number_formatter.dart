@@ -36,20 +36,32 @@ abstract final class NumberFormatter {
     return result;
   }
 
-  /// 지수 표기법 변환. 가수부 소수점 최대 2자리.
+  /// 지수 표기법 변환. 가수부 소수점 최대 6자리.
   static String formatScientific(double value) {
     final exp = (log(value.abs()) / ln10).floor();
     final mantissa = value / pow(10, exp);
-    final mantissaStr = trimTrailingZeros(mantissa.toStringAsFixed(2));
+    final mantissaStr = trimTrailingZeros(mantissa.toStringAsFixed(6));
     final sign = exp >= 0 ? '+' : '';
     return '${mantissaStr}e$sign$exp';
   }
 
   /// double을 raw 입력 문자열로 변환 (콤마 없이, 후행 0 제거).
+  ///
+  /// 최대 정밀도를 유지하여 왕복 변환 시 정밀도 손실을 최소화.
+  /// 매우 작거나 큰 값은 Dart의 toString()으로 지수 표기 자동 적용.
   static String rawFromDouble(double value) {
     if (value == 0) return '0';
     if (value == value.truncateToDouble()) return value.toInt().toString();
-    final str = value.toStringAsFixed(10);
+
+    final absVal = value.abs();
+    // 극단적 범위는 toString() 사용 (지수 표기 자동)
+    // 1e-12 미만: toStringAsFixed(15)로 유효 자릿수 부족
+    // 1e15 이상: 정수 범위 초과
+    if (absVal < 1e-12 || absVal >= 1e15) {
+      return value.toString();
+    }
+
+    final str = value.toStringAsFixed(15);
     return trimTrailingZeros(str);
   }
 
@@ -57,10 +69,7 @@ abstract final class NumberFormatter {
 
   /// 기본 계산기 결과 표시 (정수화, 후행 0 제거, Infinity/NaN 처리).
   static String formatResult(double value) {
-    if (value == double.infinity || value == double.negativeInfinity) {
-      return '정의되지 않음';
-    }
-    if (value.isNaN) return '정의되지 않음';
+    if (value.isNaN || value.isInfinite) return '정의되지 않음';
     if (value == value.truncateToDouble()) return value.toInt().toString();
     final str = value.toStringAsFixed(9);
     return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
@@ -82,35 +91,49 @@ abstract final class NumberFormatter {
 
   /// 단위 변환 결과 표시 (지수 표기 포함).
   ///
-  /// - <0.0001: 지수 표기
-  /// - <1: 소수점 최대 8자리
-  /// - ≥1e15: 지수 표기
+  /// - <1e-12: 지수 표기 (가수부 6자리)
+  /// - <1: 소수점 최대 12자리
+  /// - ≥1e15: 지수 표기 (가수부 6자리)
   /// - ≥1,000,000: 정수 + 콤마
   /// - 그 외: 소수점 최대 6자리 + 콤마
   static String formatUnitResult(double value) {
     if (value == 0) return '0';
+    if (value.isNaN || value.isInfinite) return '0';
 
-    final absVal = value.abs();
+    // 스마트 라운딩: 부동소수점 오차 보정 (0.9999999... → 1.0)
+    final smartValue = _smartRound(value);
+    final absVal = smartValue.abs();
 
-    if (absVal < 1e-12) return formatScientific(value);
+    if (absVal < 1e-12) return formatScientific(smartValue);
 
     if (absVal < 1) {
-      return addCommas(trimTrailingZeros(value.toStringAsFixed(12)));
+      return addCommas(trimTrailingZeros(smartValue.toStringAsFixed(12)));
     }
 
-    if (absVal >= 1e15) return formatScientific(value);
+    if (absVal >= 1e15) return formatScientific(smartValue);
 
     if (absVal >= 1000000) {
-      return addCommas(value.toStringAsFixed(0));
+      return addCommas(smartValue.toStringAsFixed(0));
     }
 
-    return addCommas(trimTrailingZeros(value.toStringAsFixed(6)));
+    return addCommas(trimTrailingZeros(smartValue.toStringAsFixed(6)));
   }
 
-  /// 온도 결과 표시 (소수점 최대 3자리 + 콤마).
+  /// 부동소수점 오차를 보정하는 스마트 라운딩.
+  ///
+  /// 0.9999999... → 1.0, 1.9999999... → 2.0 등으로 자동 보정.
+  /// 매우 작은 값(< 1e-6)은 라운딩하면 0이 되므로 원본 유지.
+  static double _smartRound(double value) {
+    if (value.abs() < 1e-6) return value;
+    final rounded = double.parse(value.toStringAsFixed(8));
+    return rounded;
+  }
+
+  /// 온도 결과 표시 (소수점 최대 6자리 + 콤마).
   static String formatTemperature(double value) {
     if (value == 0) return '0';
-    return addCommas(trimTrailingZeros(value.toStringAsFixed(3)));
+    if (value.isNaN || value.isInfinite) return '0';
+    return addCommas(trimTrailingZeros(value.toStringAsFixed(6)));
   }
 
   /// 부가세 결과 표시 (1000 이상 콤마+정수, 정수화, 소수 2자리).

@@ -25,6 +25,8 @@ class PeriodModeView extends ConsumerWidget {
     final state = ref.watch(dateCalculatorViewModelProvider);
     final vm = ref.read(dateCalculatorViewModelProvider.notifier);
     final result = vm.periodResult;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -32,7 +34,7 @@ class PeriodModeView extends ConsumerWidget {
         ResultCard(child: _buildPeriodResult(result)),
         const SizedBox(height: 16),
         DateCard(
-          label: '시작 날짜',
+          label: state.periodStart == today ? '시작 날짜 (오늘)' : '시작 날짜',
           date: state.periodStart,
           onTap: () => pickDate(context, state.periodStart, (d) {
             vm.handleIntent(DateCalculatorIntent.periodStartChanged(d));
@@ -40,7 +42,7 @@ class PeriodModeView extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         DateCard(
-          label: '종료 날짜',
+          label: state.periodEnd == today ? '종료 날짜 (오늘)' : '종료 날짜',
           date: state.periodEnd,
           onTap: () => pickDate(context, state.periodEnd, (d) {
             vm.handleIntent(DateCalculatorIntent.periodEndChanged(d));
@@ -73,11 +75,11 @@ class PeriodModeView extends ConsumerWidget {
             buildSubText('${r.weeks}주 ${r.remainingDaysAfterWeeks}일'),
             Container(width: 1, height: 16, color: kDateDivider),
             buildSubText('${r.months}개월 ${r.remainingDaysAfterMonths}일'),
+            Container(width: 1, height: 16, color: kDateDivider),
+            buildSubText(
+                '${r.years}년 ${r.monthsAfterYears}개월 ${r.daysAfterYearsMonths}일'),
           ],
         ),
-        const SizedBox(height: 6),
-        buildSubText(
-            '${r.years}년 ${r.monthsAfterYears}개월 ${r.daysAfterYearsMonths}일'),
       ],
     );
   }
@@ -96,7 +98,12 @@ class PeriodModeView extends ConsumerWidget {
             '시작일 포함',
             style: rowLabel.copyWith(color: kDateTextSecondary),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
+          Text(
+            '(기념일 계산 시 ON 권장)',
+            style: textStyleCaption.copyWith(color: kDateTextTertiary),
+          ),
+          const Spacer(),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             width: 42,
@@ -121,11 +128,6 @@ class PeriodModeView extends ConsumerWidget {
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '기념일 계산 시 ON 권장',
-            style: textStyleCaption.copyWith(color: kDateTextTertiary),
           ),
         ],
       ),

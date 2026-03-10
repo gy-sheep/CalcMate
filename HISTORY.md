@@ -2,6 +2,27 @@
 
 ---
 
+## 2026-03-10 — 날짜 계산기 UX 개선·키패드 공통 모듈화 및 문서 현행화
+
+### 완료 항목
+
+- **날짜 계산기 UX 개선**
+  - 단위 버튼(일/주/개월/년): CmTab 칩 스타일 + AnimatedContainer 전환
+  - 이후/이전 텍스트 토글 + 숫자·단위 CmInputCard 토큰 우측 정렬 표시
+  - 날짜 계산 카드 영역을 CmInputCard 토큰으로 카드 형태로 감싸기
+  - 기간 계산: 시작일 포함 레이아웃 개선, 서브 결과 단일 Row
+  - D-Day·기간·날짜 계산 공통으로 오늘 날짜 (오늘) 표시 통일
+  - DateKeypad 제거 → 숫자 표시 영역 탭 시 showNumberKeypad 모달 호출
+- **숫자 키패드 공통 모듈화**
+  - `lib/core/widgets/number_keypad.dart`: KeypadColors + showNumberKeypad
+  - `showSalaryKeypad` thin wrapper로 리팩토링
+  - 모달 열릴 때 빈 입력으로 시작 (실수령액·날짜 계산기 공통 적용)
+- **부가세 계산기**: 합계금액 디폴트 변경, 합계금액 | 공급가액 토글 순서 수정
+- **단위 변환기**: 왕복 변환 정밀도 개선 (역수 활용), formatScientific·rawFromDouble 정밀도 향상, 테스트 추가
+- **Cm* 토큰 설계 문서 전체 현행화**: ARCHITECTURE.md, UI_TOKEN_CONVENTION.md, BASIC_CALCULATOR.md, EXCHANGE_RATE.md, SALARY_CALCULATOR.md, UNIT_CONVERTER.md
+
+---
+
 ## 2026-03-10 — 실수령액 계산기 로직 구현 및 Clean Architecture 전환
 
 ### 완료 항목
