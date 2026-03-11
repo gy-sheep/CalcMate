@@ -38,7 +38,7 @@ class TaxRateInfoSheet extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [kVatGradientTop, kVatGradientBottom],
+          colors: [kVatBg1, kVatBg2],
         ),
         borderRadius: BorderRadius.vertical(top: Radius.circular(CmSheet.radius)),
       ),

@@ -43,7 +43,7 @@ class BasicCalculatorScreen extends ConsumerWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [kCalcGradientTop, kCalcGradientBottom],
+            colors: [kCalcBg1, kCalcBg2],
           ),
         ),
         child: SafeArea(

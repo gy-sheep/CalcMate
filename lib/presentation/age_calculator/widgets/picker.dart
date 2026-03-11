@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../age_calculator_colors.dart';
 
 class AgePicker extends StatelessWidget {
@@ -33,9 +34,9 @@ class AgePicker extends StatelessWidget {
               controller.selectedItem == index;
           return Center(
             child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 150),
+              duration: durationAnimFast,
               style: TextStyle(
-                color: isSelected ? kAgeAccent : kAgeText.withValues(alpha: 0.5),
+                color: isSelected ? kAgeAccent : kAgeTextPrimary.withValues(alpha: 0.5),
                 fontSize: isSelected ? 18 : 15,
                 fontWeight:
                     isSelected ? FontWeight.w700 : FontWeight.w400,

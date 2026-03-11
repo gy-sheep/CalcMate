@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/unit_definitions.dart';
 import '../../domain/models/unit_converter_state.dart';
 import '../../domain/usecases/convert_unit_usecase.dart';
+import '../../domain/utils/digit_limit_policy.dart';
 import '../../domain/utils/number_formatter.dart';
 
 // ──────────────────────────────────────────
@@ -131,22 +132,12 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
         }
         if (input == '0' || input == '-0') break;
         // 자릿수 제한 체크
-        final clean00 = input.startsWith('-') ? input.substring(1) : input;
-        if (clean00.contains('.')) {
-          final fracLen = clean00.split('.')[1].length;
-          if (fracLen >= 8) {
-            state = state.copyWith(toastMessage: '소수점 이하 8자리까지 입력 가능해요');
-            return;
-          }
-          input += (fracLen >= 7) ? '0' : '00';
-        } else {
-          final intLen = clean00.replaceFirst(RegExp(r'^0+'), '').length;
-          if (intLen >= 12) {
-            state = state.copyWith(toastMessage: '정수부는 최대 12자리까지 입력 가능해요');
-            return;
-          }
-          input += (intLen >= 11) ? '0' : '00';
-        }
+        final add00 = DigitLimitPolicy.standard.adjustDoubleZero(input,
+            onExceed: (msg) {
+          if (msg != null) state = state.copyWith(toastMessage: msg);
+        });
+        if (add00 == null) return;
+        input += add00;
 
       case '.':
         if (isResult) {
@@ -164,19 +155,10 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
           break;
         }
         // 자릿수 제한 체크
-        final clean = input.startsWith('-') ? input.substring(1) : input;
-        if (clean.contains('.')) {
-          final fracLen = clean.split('.')[1].length;
-          if (fracLen >= 8) {
-            state = state.copyWith(toastMessage: '소수점 이하 8자리까지 입력 가능해요');
-            return;
-          }
-        } else {
-          final intPart = clean.replaceFirst(RegExp(r'^0+'), '');
-          if (intPart.length >= 12) {
-            state = state.copyWith(toastMessage: '정수부는 최대 12자리까지 입력 가능해요');
-            return;
-          }
+        final toast = DigitLimitPolicy.standard.check(input, key);
+        if (toast != null) {
+          if (toast.isNotEmpty) state = state.copyWith(toastMessage: toast);
+          return;
         }
 
         if (input == '0') {

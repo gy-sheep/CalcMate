@@ -45,7 +45,7 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
             decoration: BoxDecoration(
               color: Colors.black87,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(radiusInput),
             ),
             child: Text(
               message,
@@ -72,7 +72,7 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [kCurrencyGradientTop, kCurrencyGradientBottom],
+          colors: [kCurrencyBg1, kCurrencyBg2],
         ),
         borderRadius: BorderRadius.vertical(top: Radius.circular(CmSheet.radius)),
       ),

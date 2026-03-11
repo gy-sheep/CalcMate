@@ -28,7 +28,7 @@ class LunarInfo extends StatelessWidget {
           Text(
             '양력  ',
             style: CmBirthdayMiniCard.labelText.copyWith(
-              color: kAgeSubText,
+              color: kAgeTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -36,12 +36,12 @@ class LunarInfo extends StatelessWidget {
             solarDate != null
                 ? '${solarDate.year}년 ${solarDate.month}월 ${solarDate.day}일'
                 : '—',
-            style: CmBirthdayMiniCard.labelText.copyWith(color: kAgeText),
+            style: CmBirthdayMiniCard.labelText.copyWith(color: kAgeTextPrimary),
           ),
           const Spacer(),
           // 윤달 체크박스 (해당 연·월에 윤달이 있을 때만)
           if (hasLeap) ...[
-            Text('윤달', style: CmCheckbox.labelSmall.copyWith(color: kAgeSubText, fontWeight: FontWeight.w600)),
+            Text('윤달', style: CmCheckbox.labelSmall.copyWith(color: kAgeTextSecondary, fontWeight: FontWeight.w600)),
             const SizedBox(width: 6),
             SizedBox(
               width: CmCheckbox.sizeSmall,
@@ -53,7 +53,7 @@ class LunarInfo extends StatelessWidget {
                 ),
                 activeColor: kAgeAccent,
                 checkColor: Colors.white,
-                side: const BorderSide(color: kAgeSubText, width: 1.5),
+                side: const BorderSide(color: kAgeTextSecondary, width: 1.5),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               ),

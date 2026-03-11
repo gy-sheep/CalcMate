@@ -83,9 +83,9 @@ class CurrencyKeypadButton extends StatelessWidget {
   });
 
   Color get _textColor => switch (type) {
-        CurrencyBtnType.number => kCurrencyColorNumber,
-        CurrencyBtnType.operator => kCurrencyColorOperator,
-        CurrencyBtnType.function => kCurrencyColorFunction,
+        CurrencyBtnType.number => kCurrencyKeyNumber,
+        CurrencyBtnType.operator => kCurrencyKeyOperator,
+        CurrencyBtnType.function => kCurrencyKeyFunction,
         CurrencyBtnType.equals => Colors.white,
       };
 
@@ -93,7 +93,7 @@ class CurrencyKeypadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: type == CurrencyBtnType.equals
-          ? kCurrencyColorEquals
+          ? kCurrencyKeyEquals
           : Colors.transparent,
       child: InkWell(
         onTap: onTap,
@@ -101,7 +101,7 @@ class CurrencyKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: keypadButtonHeightLarge,
+          height: keypadButtonHeightMedium,
           child: Center(
             child: label == '\u{232B}'
                 ? Icon(Icons.backspace_outlined, color: _textColor, size: keypadBackspaceSize)

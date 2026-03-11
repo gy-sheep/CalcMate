@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_design_tokens.dart';
 import '../age_calculator_colors.dart';
 
 class AgeInfoCard extends StatelessWidget {
@@ -11,7 +12,7 @@ class AgeInfoCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(radiusCard),
         boxShadow: [
           BoxShadow(
             color: kAgeCardShadow.withValues(alpha: 0.12),

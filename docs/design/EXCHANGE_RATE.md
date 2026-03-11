@@ -10,8 +10,8 @@
 | 속성 | 값 |
 |------|----|
 | 종류 | `LinearGradient` · topCenter → bottomCenter |
-| 상단 | `kCurrencyGradientTop` #0D1B3E |
-| 하단 | `kCurrencyGradientBottom` #0A4D52 |
+| 상단 | `kCurrencyBg1` #0D1B3E |
+| 하단 | `kCurrencyBg2` #0A4D52 |
 | 비고 | `extendBodyBehindAppBar: true` → 그라디언트가 상태바 뒤까지 연장 |
 
 ---
@@ -73,12 +73,12 @@
 | ❺ | 새로고침 아이콘 | `Icon(refresh)` | `CmIcon.small` 20 | `Colors.white54` |
 | ❺ | 새로고침 로딩 중 | `CupertinoActivityIndicator` | `CmIcon.activityIndicator` 10 | `Colors.white54` |
 | ❻ | 구분선 | `Divider` | — | `kCurrencyDivider` · thickness:0.5 |
-| ❼ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kCurrencyColorFunction` |
-| ❼ | AC · % | `CurrencyKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCurrencyColorFunction` |
-| ❼ | ÷ · × · - · + | `CurrencyKeypadButton` > `Text` | `keypadOperatorText` 28sp / w400 | `kCurrencyColorOperator` |
+| ❼ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kCurrencyKeyFunction` |
+| ❼ | AC · % | `CurrencyKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCurrencyKeyFunction` |
+| ❼ | ÷ · × · - · + | `CurrencyKeypadButton` > `Text` | `keypadOperatorText` 28sp / w400 | `kCurrencyKeyOperator` |
 | ❼ | 버튼 높이 | — | — | `keypadButtonHeightLarge` 68 |
-| ❽ | 0~9 · . · 00 | `CurrencyKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCurrencyColorNumber` |
-| ❾ | = | `CurrencyKeypadButton` > `Text` | `keypadOperatorText` 28sp / w400 | `Colors.white` · 배경 `kCurrencyColorEquals` |
+| ❽ | 0~9 · . · 00 | `CurrencyKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCurrencyKeyNumber` |
+| ❾ | = | `CurrencyKeypadButton` > `Text` | `keypadOperatorText` 28sp / w400 | `Colors.white` · 배경 `kCurrencyKeyEquals` |
 
 ---
 
@@ -118,7 +118,7 @@
 
 | 속성 | 값 |
 |------|----|
-| 배경 그라디언트 | 메인 화면과 동일 (`kCurrencyGradientTop` → `kCurrencyGradientBottom`) |
+| 배경 그라디언트 | 메인 화면과 동일 (`kCurrencyBg1` → `kCurrencyBg2`) |
 | 상단 border radius | 20 |
 | 높이 | 화면 높이 × 0.6 |
 | 패딩 | 16 (전체) |
@@ -133,7 +133,7 @@
 |------|----|
 | 위젯 | `Positioned` (Stack 내부) |
 | 높이 | 48 |
-| 그라디언트 | `kCurrencyGradientBottom` 0% → 70% → 100% |
+| 그라디언트 | `kCurrencyBg2` 0% → 70% → 100% |
 | stops | `[0.0, 0.6, 1.0]` |
 
 ---
@@ -167,10 +167,10 @@
 
 | 상수 | hex / 값 | 용도 |
 |------|---------|------|
-| `kCurrencyGradientTop` | `#0D1B3E` | 배경 그라디언트 상단 |
-| `kCurrencyGradientBottom` | `#0A4D52` | 배경 그라디언트 하단 |
+| `kCurrencyBg1` | `#0D1B3E` | 배경 그라디언트 상단 |
+| `kCurrencyBg2` | `#0A4D52` | 배경 그라디언트 하단 |
 | `kCurrencyDivider` | `Colors.white` 33% | 키패드 상단 구분선 |
-| `kCurrencyColorNumber` | `Colors.white` | 숫자 버튼 텍스트 |
-| `kCurrencyColorOperator` | `#FF9F7A` | 연산자 버튼 텍스트 |
-| `kCurrencyColorFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ AC %) |
-| `kCurrencyColorEquals` | `#FF6B4A` | = 버튼 배경 |
+| `kCurrencyKeyNumber` | `Colors.white` | 숫자 버튼 텍스트 |
+| `kCurrencyKeyOperator` | `#FF9F7A` | 연산자 버튼 텍스트 |
+| `kCurrencyKeyFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ AC %) |
+| `kCurrencyKeyEquals` | `#FF6B4A` | = 버튼 배경 |

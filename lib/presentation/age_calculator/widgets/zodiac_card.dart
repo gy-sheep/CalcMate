@@ -21,7 +21,7 @@ class ZodiacCard extends StatelessWidget {
             Text(
               '띠',
               style: CmBirthdayMiniCard.labelText.copyWith(
-                color: kAgeSubText,
+                color: kAgeTextSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -37,7 +37,7 @@ class ZodiacCard extends StatelessWidget {
                 Text(
                   '$name띠',
                   style: textStyle16.copyWith(
-                    color: kAgeText,
+                    color: kAgeTextPrimary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

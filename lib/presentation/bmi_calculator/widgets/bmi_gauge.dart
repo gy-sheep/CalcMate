@@ -53,7 +53,7 @@ class BmiGauge extends StatelessWidget {
                   children: [
                     TweenAnimationBuilder<double>(
                       tween: Tween(end: bmi),
-                      duration: const Duration(milliseconds: 400),
+                      duration: durationPageTransition,
                       curve: Curves.easeOutCubic,
                       builder: (context1, v, _) => Text(
                         v.toStringAsFixed(1),
@@ -64,7 +64,7 @@ class BmiGauge extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
+                      duration: durationAnimMedium,
                       child: Text(
                         category.label,
                         key: ValueKey(category.label),

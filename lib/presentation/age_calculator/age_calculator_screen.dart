@@ -71,7 +71,7 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
       if (_dayCtrl.hasClients && _dayCtrl.selectedItem != targetDay - 1) {
         _dayCtrl.animateToItem(
           targetDay - 1,
-          duration: const Duration(milliseconds: 200),
+          duration: durationAnimDefault,
           curve: Curves.easeOut,
         );
       }
@@ -93,7 +93,7 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
     final result = vm.ageResult;
 
     return Scaffold(
-      backgroundColor: kAgeBgStart,
+      backgroundColor: kAgeBg1,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -102,12 +102,12 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: kAgeText, size: CmAppBar.backIconSize),
+          icon: Icon(Icons.arrow_back_ios, color: kAgeTextPrimary, size: CmAppBar.backIconSize),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           widget.title,
-          style: CmAppBar.titleText.copyWith(color: kAgeText),
+          style: CmAppBar.titleText.copyWith(color: kAgeTextPrimary),
         ),
         centerTitle: false,
       ),
@@ -116,7 +116,7 @@ class _AgeCalculatorScreenState extends ConsumerState<AgeCalculatorScreen>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [kAgeBgStart, kAgeBgEnd],
+            colors: [kAgeBg1, kAgeBg2],
           ),
         ),
         child: SafeArea(

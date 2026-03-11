@@ -10,8 +10,8 @@
 | 속성 | 값 |
 |------|----|
 | 종류 | `LinearGradient` · topCenter → bottomCenter |
-| 상단 | `kDiscountGradientTop` #5580D0 |
-| 하단 | `kDiscountGradientBottom` #3A5CB8 |
+| 상단 | `kDiscountBg1` #5580D0 |
+| 하단 | `kDiscountBg2` #3A5CB8 |
 | 비고 | `extendBodyBehindAppBar: true` → 그라디언트가 상태바 뒤까지 연장 |
 
 ---
@@ -226,7 +226,7 @@
 | 속성 | 값 |
 |------|----|
 | 위젯 | `ScrollFadeView` |
-| fadeColor | `kDiscountGradientBottom` #3A5CB8 |
+| fadeColor | `kDiscountBg2` #3A5CB8 |
 | 패딩 | horizontal: `paddingScreenH` 16 / vertical: 20 |
 
 ---
@@ -235,8 +235,8 @@
 
 | 상수 | hex / 값 | 용도 |
 |------|---------|------|
-| `kDiscountGradientTop` | `#5580D0` | 배경 그라디언트 상단 (퍼플블루) |
-| `kDiscountGradientBottom` | `#3A5CB8` | 배경 그라디언트 하단 (딥 퍼플블루) |
+| `kDiscountBg1` | `#5580D0` | 배경 그라디언트 상단 (퍼플블루) |
+| `kDiscountBg2` | `#3A5CB8` | 배경 그라디언트 하단 (딥 퍼플블루) |
 | `kDiscountAccent` | `#FFB8D6` | 활성 테두리 · 칩 배경 · 토글 버튼 |
 | `kDiscountAccentSoft` | `#FFB8D6` 20% | 소프트 액센트 (예비) |
 | `kDiscountChipBg` | `Colors.white` 13% | 비활성 칩 배경 |

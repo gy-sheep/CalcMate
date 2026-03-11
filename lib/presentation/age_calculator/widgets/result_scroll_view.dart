@@ -18,7 +18,7 @@ class ResultScrollView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScrollFadeView(
-      fadeColor: kAgeBgEnd,
+      fadeColor: kAgeBg2,
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       child: Column(
         children: [

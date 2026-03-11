@@ -80,16 +80,16 @@ class CalcButton extends StatelessWidget {
   });
 
   Color get _textColor => switch (type) {
-        CalcBtnType.number => kCalcColorNumber,
-        CalcBtnType.operator => kCalcColorOperator,
-        CalcBtnType.function => kCalcColorFunction,
+        CalcBtnType.number => kCalcKeyNumber,
+        CalcBtnType.operator => kCalcKeyOperator,
+        CalcBtnType.function => kCalcKeyFunction,
         CalcBtnType.equals => Colors.white,
       };
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: type == CalcBtnType.equals ? kCalcColorEquals : Colors.transparent,
+      color: type == CalcBtnType.equals ? kCalcKeyEquals : Colors.transparent,
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,

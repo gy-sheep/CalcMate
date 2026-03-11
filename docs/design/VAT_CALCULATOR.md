@@ -10,8 +10,8 @@
 | 속성 | 값 |
 |------|----|
 | 종류 | `LinearGradient` · topCenter → bottomCenter |
-| 상단 | `kVatGradientTop` #141218 |
-| 하단 | `kVatGradientBottom` #231F2E |
+| 상단 | `kVatBg1` #141218 |
+| 하단 | `kVatBg2` #231F2E |
 | 비고 | `extendBodyBehindAppBar: true` → 그라디언트가 상태바 뒤까지 연장 |
 
 ---
@@ -103,7 +103,7 @@
 | ❺ | 첫 번째 행 라벨·금액 | `ReceiptRow` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 · **모드에 따라 공급가액 or 합계** |
 | ❻ | 세율 레이블 "부가세 (" ")") | `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 |
 | ❻ | 세율 칩 (비활성) | `Container` > `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` / 배경 transparent |
-| ❻ | 세율 칩 (활성·편집 중) | `Container` > `Text` | `textStyleCaption` 14sp / w700 | `kVatColorEquals` / 배경 `kVatColorEquals` 15% / 실선 테두리 `kVatColorEquals` w1.5 / radius:4 |
+| ❻ | 세율 칩 (활성·편집 중) | `Container` > `Text` | `textStyleCaption` 14sp / w700 | `kVatKeyEquals` / 배경 `kVatKeyEquals` 15% / 실선 테두리 `kVatKeyEquals` w1.5 / radius:4 |
 | ❻ | 세율 칩 내부 패딩 | — | — | horizontal: 6 / vertical: 2 |
 | ❻ | 세율 정보 아이콘 | `Icon(info_outline)` | `sizeIconSmall` 20 | `kVatReceiptSecondary` #888888 |
 | ❻ | 부가세 금액 | `Text` | `textStyleCaption` 14sp / w400 | `kVatReceiptSecondary` #888888 |
@@ -156,11 +156,11 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❾ | 구분선 | `Divider` | — | `kVatDivider` · thickness:0.5 |
-| ❿ | ⌫ | `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kVatColorFunction` |
-| ❿ | AC | `VatKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kVatColorFunction` |
-| ❿ | 0~9 · . · 00 | `VatKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kVatColorNumber` |
+| ❿ | ⌫ | `Icon(backspace_outlined)` | `sizeKeypadBackspace` 26 | `kVatKeyFunction` |
+| ❿ | AC | `VatKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kVatKeyFunction` |
+| ❿ | 0~9 · . · 00 | `VatKeypadButton` > `Text` | `textStyleKeypadNumber` 22sp / w400 | `kVatKeyNumber` |
 | ❿ | 버튼 높이 | `SizedBox` | — | `heightButtonLarge` 68 |
-| ⓫ | ↵ Enter | `Icon(keyboard_return)` | `sizeKeypadBackspace` 26 | `Colors.white` · 배경 `kVatColorEquals` · 높이 `heightButtonLarge` × 2 |
+| ⓫ | ↵ Enter | `Icon(keyboard_return)` | `sizeKeypadBackspace` 26 | `Colors.white` · 배경 `kVatKeyEquals` · 높이 `heightButtonLarge` × 2 |
 
 ---
 
@@ -198,7 +198,7 @@
 
 | 속성 | 값 |
 |------|----|
-| 배경 그라디언트 | 메인 화면과 동일 (`kVatGradientTop` → `kVatGradientBottom`) |
+| 배경 그라디언트 | 메인 화면과 동일 (`kVatBg1` → `kVatBg2`) |
 | 상단 border radius | `radiusBottomSheet` 20 |
 | 높이 | 화면 높이 × 0.6 |
 | 헤더 패딩 | 16 (전체) |
@@ -210,15 +210,15 @@
 
 | 상수 | hex / 값 | 용도 |
 |------|---------|------|
-| `kVatGradientTop` | `#141218` | 배경 그라디언트 상단 (딥 다크) |
-| `kVatGradientBottom` | `#231F2E` | 배경 그라디언트 하단 (다크 퍼플) |
+| `kVatBg1` | `#141218` | 배경 그라디언트 상단 (딥 다크) |
+| `kVatBg2` | `#231F2E` | 배경 그라디언트 하단 (다크 퍼플) |
 | `kVatReceiptBg` | `#F5F5F0` | 영수증 카드 배경 (크림색) |
 | `kVatReceiptText` | `#2C2C2C` | 영수증 카드 주 텍스트 |
 | `kVatReceiptSecondary` | `#888888` | 영수증 카드 보조 텍스트 |
 | `kVatReceiptDash` | `#CCCCCC` | 점선 구분선 · 토글 세로 구분선 |
 | `kVatReceiptDivider` | `#444444` | 실선 구분선 (강조 행 위) |
 | `kVatDivider` | `Colors.white` 33% | 키패드 구분선 · Bottom Sheet 구분선 |
-| `kVatColorNumber` | `Colors.white` | 숫자 버튼 텍스트 |
-| `kVatColorOperator` | `#A78BFA` | 연산자 버튼 텍스트 (라벤더) — 정의됨, 현재 키패드 미사용 |
-| `kVatColorFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ · AC) |
-| `kVatColorEquals` | `#7C3AED` | = 버튼 배경 · 세율 칩 활성 색상 (딥 퍼플) |
+| `kVatKeyNumber` | `Colors.white` | 숫자 버튼 텍스트 |
+| `kVatKeyOperator` | `#A78BFA` | 연산자 버튼 텍스트 (라벤더) — 정의됨, 현재 키패드 미사용 |
+| `kVatKeyFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ · AC) |
+| `kVatKeyEquals` | `#7C3AED` | = 버튼 배경 · 세율 칩 활성 색상 (딥 퍼플) |

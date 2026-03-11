@@ -2,17 +2,24 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/rent-calculator`
-> **마지막 완료**: 전월세·대출·취득세 계산기 삭제 및 실수령액 테마 변경
+> **현재 브랜치**: `dev`
+> **마지막 완료**: 리팩토링 R-01/R-06/R-10 완료 및 전반 코드 정리
 
 ### Phase 11: 설정 화면 — 나머지 기능 연동
-- [ ] 언어 설정 실제 l10n 전환 (현재 UI만 구현)
 - [ ] 환율 기준 통화 바텀시트 + SharedPreferences 연동
 - [ ] BMI 단위 바텀시트 + SharedPreferences 연동
-- [ ] 버전 정보 `package_info_plus` 동적 표시
-- [ ] 개인정보 처리방침 URL 확정 + `url_launcher` 연동
 
 > 기획 명세: `docs/specs/SETTINGS.md`
+
+### Phase 12: 출시 준비
+- [x] 버전 정보 `package_info_plus` 동적 표시
+- [ ] 언어 설정 실제 l10n 전환 (현재 UI만 구현)
+- [ ] 개인정보 처리방침 URL 확정 + `url_launcher` 연동
+- [ ] 공통 팝업, 공통 토스트
+- [ ] 에러 메시지 config
+- [ ] Google Analytics (Firebase Analytics) 연동
+- [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
+- [ ] 개인정보 처리방침 작성 + URL 확정 + `url_launcher` 연동
 
 ### Phase 10: 기타
 - [ ] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)
@@ -72,6 +79,13 @@
 | — | 실수령액 계산기 뉴스프린트 테마 적용 (accent black 통일) | — | — |
 | — | 할인 계산기 UI 개선 (Peach Bunny 테마·CmGradientBorderCard 그라데이션 테두리·입체 그림자) | — | — |
 | — | 전 계산기 키패드 백스페이스 롱프레스 → AC 통일 (7개 키패드 + viewmodel 2건 보강) | — | — |
+| — | 스플래시 배경색 앱 아이콘 일치 보정 (#0F0F19), 메인 앱바 다크모드 glow, 설정 UI 개선 | — | — |
+| — | 버전 정보 package_info_plus 동적 표시 | — | — |
+| — | DigitLimitPolicy 공용 클래스 도입 (기본·환율·부가세·단위변환 4개 ViewModel) | — | — |
+| — | 대형 파일 분리: discount_calculator_screen (6파일), individual_split_view (6파일) | — | — |
+| — | 미사용 DateKeypad 삭제, 키패드 높이 Medium 통일 (기본 계산기만 Large) | — | — |
+| — | 리팩토링 R-01 색상 네이밍 통일 (9개 *_colors.dart, Bg1/KeyNumber 패턴) | — | — |
+| — | 리팩토링 R-10 Duration 7종·BorderRadius 토큰화 (34개 교체, 18파일) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

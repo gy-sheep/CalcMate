@@ -88,6 +88,29 @@ const TextStyle modalButtonLabel = TextStyle(
   fontWeight: FontWeight.w400,
 );
 
+/// ── 애니메이션 Duration ─────────────────────────────────────────
+
+/// 100ms — 즉각적 반응 (리플, 토글)
+const Duration durationAnimInstant = Duration(milliseconds: 100);
+
+/// 150ms — 빠른 전환 (칩 선택, 참가자 바)
+const Duration durationAnimFast = Duration(milliseconds: 150);
+
+/// 180ms — 빠른 전환 (필드 활성화)
+const Duration durationAnimQuick = Duration(milliseconds: 180);
+
+/// 200ms — 기본 전환 (탭, 리스트 항목)
+const Duration durationAnimDefault = Duration(milliseconds: 200);
+
+/// 250ms — 중간 전환 (게이지, 오버레이)
+const Duration durationAnimMedium = Duration(milliseconds: 250);
+
+/// 300ms — 느린 전환 (화면 진입, 탭 전환)
+const Duration durationAnimSlow = Duration(milliseconds: 300);
+
+/// 400ms — 페이지 전환
+const Duration durationPageTransition = Duration(milliseconds: 400);
+
 /// ── 키패드 ────────────────────────────────────────────────────
 
 /// 키패드 버튼 높이 — 기본 (기본·환율·부가세 계산기)

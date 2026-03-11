@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_design_tokens.dart';
+
 /// 스크롤 시 상태바 + AppBar 영역에 블러 + 그라디언트 오버레이를 표시하는 위젯.
 ///
 /// [Stack] 내부에 배치하며, [isVisible]이 true일 때 250ms 페이드인된다.
@@ -29,7 +31,7 @@ class BlurStatusBarOverlay extends StatelessWidget {
       height: overlayHeight,
       child: AnimatedOpacity(
         opacity: isVisible ? 1.0 : 0.0,
-        duration: const Duration(milliseconds: 250),
+        duration: durationAnimMedium,
         child: IgnorePointer(
           child: ShaderMask(
             shaderCallback: (bounds) => LinearGradient(

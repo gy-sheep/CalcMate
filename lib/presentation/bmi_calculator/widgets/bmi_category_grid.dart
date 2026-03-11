@@ -38,7 +38,7 @@ class BmiCategoryGrid extends StatelessWidget {
         final isActive = cat.label == currentCategory.label;
         return Expanded(
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
+            duration: durationAnimMedium,
             margin: const EdgeInsets.symmetric(horizontal: 3),
             padding:
                 const EdgeInsets.symmetric(vertical: 9, horizontal: 4),

@@ -30,8 +30,6 @@ class VatCalculatorScreen extends ConsumerStatefulWidget {
 }
 
 class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
-  void _showToast(String message) => showAppToast(context, message);
-
   // ── Build ──
 
   @override
@@ -43,7 +41,7 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
       vatCalculatorViewModelProvider.select((s) => s.toastMessage),
       (_, next) {
         if (next != null) {
-          _showToast(next);
+          showAppToast(context, next);
           vm.clearToast();
         }
       },
@@ -75,7 +73,7 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [kVatGradientTop, kVatGradientBottom],
+            colors: [kVatBg1, kVatBg2],
           ),
         ),
         child: SafeArea(

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../theme/app_design_tokens.dart';
+
 /// 계산기 화면 전환에 사용하는 공통 라우트.
 /// [transitionsBuilder]를 생략하면 기본 FadeTransition이 적용됩니다.
 /// iOS 엣지 스와이프 뒤로가기를 지원합니다.
@@ -29,9 +31,9 @@ class CalcPageRoute<T> extends PageRoute<T>
   })  : _builder = builder,
         _customTransition = transitionsBuilder,
         transitionDuration =
-            transitionDuration ?? const Duration(milliseconds: 400),
+            transitionDuration ?? durationPageTransition,
         reverseTransitionDuration =
-            reverseTransitionDuration ?? const Duration(milliseconds: 300);
+            reverseTransitionDuration ?? durationAnimSlow;
 
   @override
   Widget buildContent(BuildContext context) => _builder(context);

@@ -41,7 +41,7 @@ class _DutchPayScreenState extends ConsumerState<DutchPayScreen> {
   void _switchTab(int index) {
     _pageController.animateToPage(
       index,
-      duration: const Duration(milliseconds: 300),
+      duration: durationAnimSlow,
       curve: Curves.easeInOut,
     );
     ref

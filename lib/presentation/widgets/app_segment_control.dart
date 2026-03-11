@@ -67,7 +67,7 @@ class AppSegmentControl<T> extends StatelessWidget {
             child: GestureDetector(
               onTap: () => onChanged(seg.$1),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+                duration: durationAnimDefault,
                 margin: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   color: isSelected ? thumbColor : Colors.transparent,

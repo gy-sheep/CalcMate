@@ -29,7 +29,7 @@ class ParticipantChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: durationAnimFast,
         padding: EdgeInsets.symmetric(
           horizontal: showDelete ? 8 : 12,
           vertical: 6,

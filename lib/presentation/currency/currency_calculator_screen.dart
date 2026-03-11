@@ -80,9 +80,6 @@ class _CurrencyCalculatorScreenState
     return '${dt.year}.$month.$day. ${isPm ? '오후' : '오전'} $hour:$minute 기준';
   }
 
-  void _showToast(BuildContext context, String message) =>
-      showAppToast(context, message);
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(exchangeRateViewModelProvider);
@@ -92,7 +89,7 @@ class _CurrencyCalculatorScreenState
       exchangeRateViewModelProvider.select((s) => s.toastMessage),
       (_, message) {
         if (message != null) {
-          _showToast(context, message);
+          showAppToast(context, message);
           vm.clearToast();
         }
       },
@@ -124,7 +121,7 @@ class _CurrencyCalculatorScreenState
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [kCurrencyGradientTop, kCurrencyGradientBottom],
+            colors: [kCurrencyBg1, kCurrencyBg2],
           ),
         ),
         child: Stack(
@@ -228,9 +225,9 @@ class _CurrencyCalculatorScreenState
                                     end: Alignment.topCenter,
                                     stops: const [0.0, 0.6, 1.0],
                                     colors: [
-                                      kCurrencyGradientBottom.withValues(alpha: 0),
-                                      kCurrencyGradientBottom.withValues(alpha: 0.7),
-                                      kCurrencyGradientBottom,
+                                      kCurrencyBg2.withValues(alpha: 0),
+                                      kCurrencyBg2.withValues(alpha: 0.7),
+                                      kCurrencyBg2,
                                     ],
                                   ),
                                 ),
@@ -251,9 +248,9 @@ class _CurrencyCalculatorScreenState
                                     end: Alignment.bottomCenter,
                                     stops: const [0.0, 0.6, 1.0],
                                     colors: [
-                                      kCurrencyGradientBottom.withValues(alpha: 0),
-                                      kCurrencyGradientBottom.withValues(alpha: 0.7),
-                                      kCurrencyGradientBottom,
+                                      kCurrencyBg2.withValues(alpha: 0),
+                                      kCurrencyBg2.withValues(alpha: 0.7),
+                                      kCurrencyBg2,
                                     ],
                                   ),
                                 ),

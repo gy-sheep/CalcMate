@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 // Aged Newsprint — 뉴스프린트 테마
 // ── Background ────────────────────────────────────────────────
-const kSalaryBgTop    = Color(0xFFF5F0E8);   // aged newsprint
-const kSalaryBgBottom = Color(0xFFEDE7DD);   // warm newsprint
+const kSalaryBg1    = Color(0xFFF5F0E8);   // aged newsprint
+const kSalaryBg2 = Color(0xFFEDE7DD);   // warm newsprint
 
 // ── Accent ────────────────────────────────────────────────────
 const kSalaryAccent      = Color(0xFF1A1A1A);   // ink black

@@ -8,6 +8,7 @@ import '../../domain/models/exchange_rate_entity.dart';
 import '../../domain/usecases/evaluate_expression_usecase.dart';
 import '../../domain/usecases/get_exchange_rate_usecase.dart';
 import '../../domain/utils/calculator_input_utils.dart';
+import '../../domain/utils/digit_limit_policy.dart';
 import '../../domain/utils/number_formatter.dart';
 
 part 'currency_calculator_viewmodel.freezed.dart';
@@ -284,23 +285,12 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         final seg00 = CalculatorInputUtils.lastNumberSegment(input);
         if (seg00 == '0' || seg00 == '-0') break;
         // 자릿수 제한 체크
-        final clean00 = seg00.startsWith('-') ? seg00.substring(1) : seg00;
-        if (clean00.contains('.')) {
-          final fracLen = clean00.split('.')[1].length;
-          if (fracLen >= 8) {
-            state = state.copyWith(toastMessage: '소수점 이하 8자리까지 입력 가능합니다');
-            return;
-          }
-          // 남은 자릿수에 따라 0 1개 또는 2개 추가
-          input += (fracLen >= 7) ? '0' : '00';
-        } else {
-          final intLen = clean00.length;
-          if (intLen >= 12) {
-            state = state.copyWith(toastMessage: '최대 12자리까지 입력 가능합니다');
-            return;
-          }
-          input += (intLen >= 11) ? '0' : '00';
-        }
+        final add00 = DigitLimitPolicy.standard.adjustDoubleZero(seg00,
+            onExceed: (msg) {
+          if (msg != null) state = state.copyWith(toastMessage: msg);
+        });
+        if (add00 == null) return;
+        input += add00;
 
       default: // 숫자
         if (isResult) {
@@ -310,14 +300,9 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         }
         // 자릿수 제한 체크
         final seg = CalculatorInputUtils.lastNumberSegment(input);
-        final segClean = seg.startsWith('-') ? seg.substring(1) : seg;
-        if (segClean.contains('.')) {
-          if (segClean.split('.')[1].length >= 8) {
-            state = state.copyWith(toastMessage: '소수점 이하 8자리까지 입력 가능합니다');
-            return;
-          }
-        } else if (segClean.length >= 12) {
-          state = state.copyWith(toastMessage: '최대 12자리까지 입력 가능합니다');
+        final toast = DigitLimitPolicy.standard.check(seg, key);
+        if (toast != null) {
+          if (toast.isNotEmpty) state = state.copyWith(toastMessage: toast);
           return;
         }
         if (input == '0') {

@@ -78,8 +78,8 @@ class UnitKeypadButton extends StatelessWidget {
   });
 
   Color get _textColor => switch (type) {
-        UnitBtnType.number => kUnitColorNumber,
-        UnitBtnType.function => kUnitColorFunction,
+        UnitBtnType.number => kUnitKeyNumber,
+        UnitBtnType.function => kUnitKeyFunction,
       };
 
   @override
@@ -92,7 +92,7 @@ class UnitKeypadButton extends StatelessWidget {
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: keypadButtonHeightLarge,
+          height: keypadButtonHeightMedium,
           child: Center(
             child: label == '\u{232B}'
                 ? Icon(Icons.backspace_outlined, color: _textColor, size: keypadBackspaceSize)

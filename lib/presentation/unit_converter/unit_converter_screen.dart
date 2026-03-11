@@ -85,7 +85,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
       if (key == null || key.currentContext == null) return;
       Scrollable.ensureVisible(
         key.currentContext!,
-        duration: const Duration(milliseconds: 200),
+        duration: durationAnimDefault,
         curve: Curves.easeOut,
         alignmentPolicy: direction > 0
             ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
@@ -115,7 +115,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
       unitConverterViewModelProvider.select((s) => s.toastMessage),
       (_, message) {
         if (message != null) {
-          _showToast(context, message);
+          showAppToast(context, message);
           vm.clearToast();
         }
       },
@@ -144,7 +144,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [kUnitGradientTop, kUnitGradientBottom],
+            colors: [kUnitBg1, kUnitBg2],
           ),
         ),
         child: SafeArea(
@@ -207,6 +207,4 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
     );
   }
 
-  void _showToast(BuildContext context, String message) =>
-      showAppToast(context, message);
 }

@@ -16,7 +16,7 @@ void showSalaryKeypad(
     initialValue: 0,
     onConfirm: onConfirm,
     colors: KeypadColors(
-      sheetBg: kSalaryBgTop,
+      sheetBg: kSalaryBg1,
       handle: kSalaryCardBorder,
       inputBg: kSalaryDeductionBg,
       inputBorder: kSalaryGold.withValues(alpha: 0.4),
@@ -28,7 +28,7 @@ void showSalaryKeypad(
       backKeyBorder: kSalaryGold.withValues(alpha: 0.4),
       backIcon: kSalaryGold,
       confirmBg: kSalaryAccent,
-      confirmText: kSalaryBgTop,
+      confirmText: kSalaryBg1,
     ),
   );
 }

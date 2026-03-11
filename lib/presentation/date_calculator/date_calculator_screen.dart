@@ -85,7 +85,7 @@ class _DateCalculatorScreenState extends ConsumerState<DateCalculatorScreen> {
     _vm.handleIntent(DateCalculatorIntent.modeChanged(index));
     _pageController.animateToPage(
       index,
-      duration: const Duration(milliseconds: 300),
+      duration: durationAnimSlow,
       curve: Curves.easeInOut,
     );
   }

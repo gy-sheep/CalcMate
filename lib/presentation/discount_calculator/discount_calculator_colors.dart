@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // Peach Bunny — 복숭아 + 크림, 부드럽고 포근한 느낌
-const kDiscountGradientTop = Color(0xFFFFF7F2);
-const kDiscountGradientBottom = Color(0xFFFFEADD);
+const kDiscountBg1 = Color(0xFFFFF7F2);
+const kDiscountBg2 = Color(0xFFFFEADD);
 
 const kDiscountAccent = Color(0xFFE8845A);
 const kDiscountAccentSoft = Color(0x22E8845A);

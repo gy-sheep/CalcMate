@@ -1,6 +1,7 @@
 import 'package:calcmate/domain/models/calculator_state.dart';
 import 'package:calcmate/domain/usecases/evaluate_expression_usecase.dart';
 import 'package:calcmate/domain/utils/calculator_input_utils.dart';
+import 'package:calcmate/domain/utils/digit_limit_policy.dart';
 import 'package:calcmate/domain/utils/number_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -63,6 +64,7 @@ final basicCalculatorViewModelProvider =
 
 class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   final _useCase = EvaluateExpressionUseCase();
+  static const _limit = DigitLimitPolicy.standard;
 
   static const _nonMinusOps = {'+', '×', '÷'};
   static const _allOps = {'+', '-', '×', '÷'};
@@ -122,6 +124,9 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
         input: current.substring(0, current.length - 1) + digit,
       );
     } else {
+      // 자릿수 제한 체크
+      final seg = CalculatorInputUtils.lastNumberSegment(current);
+      if (_limit.check(seg, digit) != null) return;
       state = state.copyWith(input: current + digit);
     }
   }

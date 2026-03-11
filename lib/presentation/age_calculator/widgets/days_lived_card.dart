@@ -29,7 +29,7 @@ class DaysLivedCard extends StatelessWidget {
               Text(
                 '살아온 날',
                 style: CmBirthdayMiniCard.labelText.copyWith(
-                  color: kAgeSubText,
+                  color: kAgeTextSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -37,14 +37,14 @@ class DaysLivedCard extends StatelessWidget {
               Text(
                 '${NumberFormatter.addCommas(days.toString())}일',
                 style: textMediumResult.copyWith(
-                  color: kAgeText,
+                  color: kAgeTextPrimary,
                   fontWeight: FontWeight.w700,
                   height: 1.0,
                 ),
               ),
               const SizedBox(height: 4),
               Text(sub,
-                  style: CmBirthdayMiniCard.subText.copyWith(color: kAgeSubText)),
+                  style: CmBirthdayMiniCard.subText.copyWith(color: kAgeTextSecondary)),
             ],
           ),
         ),

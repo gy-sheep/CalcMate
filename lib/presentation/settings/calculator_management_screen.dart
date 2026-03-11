@@ -228,7 +228,7 @@ class _CalculatorTile extends StatelessWidget {
             const SizedBox(width: 10),
             // 체크 인디케이터
             AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: durationAnimDefault,
               width: 22,
               height: 22,
               decoration: BoxDecoration(

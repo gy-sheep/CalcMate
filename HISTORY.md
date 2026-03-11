@@ -2,6 +2,38 @@
 
 ---
 
+## 2026-03-11 — 리팩토링 R-01/R-06/R-10 및 전반 코드 정리
+
+### 완료 항목
+
+**리팩토링 R-01: 색상 상수 통합**
+- 9개 `*_colors.dart` 파일 네이밍 규칙 통일
+- 배경: `GradientTop/Bottom`, `BgStart/End`, `BgTop/Bottom` → `Bg1`/`Bg2`/`Bg3`
+- 키패드: `ColorNumber/ColorFunction` → `KeyNumber`/`KeyFunction`
+- 텍스트: `Text`/`SubText` → `TextPrimary`/`TextSecondary`
+- 칩: `ChipSelectedColor` → `ChipActiveBg`, 중복 `Color` 접미사 제거
+- `date_calculator_colors.dart` 비-색상 항목 → `date_format_utils.dart` 분리
+
+**리팩토링 R-06: DigitLimitPolicy 공용 클래스**
+- `lib/domain/utils/digit_limit_policy.dart` 신규 생성
+- 기본·환율·부가세·단위변환 4개 ViewModel에 적용 (인라인 제한 코드 ~100줄 제거)
+
+**리팩토링 R-10: UI 매직넘버 상수화**
+- `app_design_tokens.dart`에 Duration 상수 7개 추가 (100ms~400ms)
+- 34개 하드코딩 Duration → 토큰 교체 (18개 파일)
+- 9개 하드코딩 `BorderRadius.circular(16/12)` → 기존 토큰 교체 (6개 파일)
+
+**기타 개선**
+- 스플래시 배경색 앱 아이콘 일치 보정 (`#0D0D14` → `#0F0F19`)
+- 메인 앱바 다크모드 타이틀 glow 추가
+- 설정 화면: 완료 버튼 색상/크기, 메뉴 정렬/속도 개선
+- `package_info_plus` 버전 정보 동적 표시
+- 미사용 `DateKeypad` 삭제, 키패드 높이 Medium 통일
+- 대형 파일 분리: `discount_calculator_screen` (6파일), `individual_split_view` (6파일)
+- 더치페이 입력카드 타이틀 `textStyleCaption` → `CmInputCard.titleText` 수정
+
+---
+
 ## 2026-03-11 — 전월세·대출·취득세 계산기 삭제 및 실수령액 테마 변경
 
 ### 완료 항목

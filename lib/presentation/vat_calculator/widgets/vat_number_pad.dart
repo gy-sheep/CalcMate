@@ -70,7 +70,7 @@ class VatNumberPad extends StatelessWidget {
                 label: '=',
                 type: VatBtnType.equals,
                 onTap: () => onKeyTap('='),
-                height: keypadButtonHeightLarge * 2,
+                height: keypadButtonHeightMedium * 2,
               ),
             ),
           ],
@@ -100,22 +100,22 @@ class VatKeypadButton extends StatelessWidget {
   });
 
   Color get _textColor => switch (type) {
-        VatBtnType.number => kVatColorNumber,
-        VatBtnType.function => kVatColorFunction,
+        VatBtnType.number => kVatKeyNumber,
+        VatBtnType.function => kVatKeyFunction,
         VatBtnType.equals => Colors.white,
       };
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: type == VatBtnType.equals ? kVatColorEquals : Colors.transparent,
+      color: type == VatBtnType.equals ? kVatKeyEquals : Colors.transparent,
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
-          height: height ?? keypadButtonHeightLarge,
+          height: height ?? keypadButtonHeightMedium,
           child: Center(
             child: switch (label) {
               '\u{232B}' => Icon(Icons.backspace_outlined,

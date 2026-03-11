@@ -88,7 +88,7 @@ class _SalaryCalculatorScreenState
     _vm.handleIntent(SalaryCalculatorIntent.tabSwitched(mode));
     _pageController.animateToPage(
       index,
-      duration: const Duration(milliseconds: 300),
+      duration: durationAnimSlow,
       curve: Curves.easeInOut,
     );
   }
@@ -132,7 +132,7 @@ class _SalaryCalculatorScreenState
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [kSalaryBgTop, kSalaryBgBottom],
+                colors: [kSalaryBg1, kSalaryBg2],
               ),
             ),
           ),
@@ -181,7 +181,7 @@ class _SalaryCalculatorScreenState
           // 상단 블러 오버레이
           BlurStatusBarOverlay(
             isVisible: true,
-            backgroundColor: kSalaryBgTop,
+            backgroundColor: kSalaryBg1,
           ),
         ],
       ),
@@ -190,7 +190,7 @@ class _SalaryCalculatorScreenState
 
   Widget _buildContent(SalaryCalculatorState state, {required bool isAnnual}) {
     return ScrollFadeView(
-      fadeColor: kSalaryBgBottom,
+      fadeColor: kSalaryBg2,
       padding: const EdgeInsets.symmetric(
           horizontal: screenPaddingH),
       child: Column(

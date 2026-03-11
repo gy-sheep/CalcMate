@@ -8,14 +8,17 @@
 
 ## 높음 우선순위
 
-### R-01. 색상 상수 통합
+### R-01. 색상 상수 통합 ✅
 
-- **브랜치**: `refactor/theme-colors`
-- **현재 상태**: 환율·기본 계산기가 각각 Screen 파일 상단에 색상 로컬 정의
-  - `currency_calculator_screen.dart:55-61` — `_gradientTop`, `_gradientBottom`, `_colorNumber` 등
-  - `basic_calculator_screen.dart:9-10` — 별도 그라디언트 색상
-- **개선 방향**: `lib/core/theme/calculator_colors.dart` 생성, 계산기별 색상 프로필 정의
-- **재사용 대상**: 모든 계산기 (13종)
+- **브랜치**: `dev`
+- **완료**:
+  - 9개 `*_colors.dart` 파일 네이밍 규칙 통일
+  - 배경 그라데이션: `GradientTop/Bottom`, `BgStart/End`, `BgTop/Bottom` → `Bg1`/`Bg2`/`Bg3`
+  - 키패드 색상: `ColorNumber/ColorFunction` → `KeyNumber`/`KeyFunction`
+  - 텍스트: `Text`/`SubText` → `TextPrimary`/`TextSecondary`
+  - 칩: `ChipSelectedColor`/`ChipDefaultColor` → `ChipActiveBg`/`ChipBg`
+  - 중복 `Color` 접미사 제거 (`ActiveRowColor` → `ActiveRow`)
+  - `date_calculator_colors.dart` 비-색상 항목(포맷 헬퍼, 위젯) → `date_format_utils.dart`로 분리
 
 ---
 
@@ -71,14 +74,16 @@
 
 ---
 
-### R-06. 자릿수 제한 정책 통일
+### R-06. 자릿수 제한 정책 통일 ✅
 
-- **브랜치**: `refactor/input-limit-policy`
-- **현재 상태**:
-  - 환율: 정수 12자리, 소수 8자리 제한 + 토스트 안내 (`viewmodel.dart:282-298`)
-  - 기본: 제한 없음 (오버플로우 위험)
-- **개선 방향**: 공용 `InputLimitPolicy` 클래스 도입, 기본 계산기에도 적용
-- **재사용 대상**: 모든 키패드 입력 계산기
+- **브랜치**: `dev`
+- **완료**:
+  - `lib/domain/utils/digit_limit_policy.dart` — `DigitLimitPolicy` 클래스 생성 (`check()`, `adjustDoubleZero()`)
+  - 사전 정의 정책: `standard` (정수 12, 소수 8), `integerOnly9` (더치페이), `integerOnly10` (할인)
+  - `basic_calculator_viewmodel.dart` — 제한 없음 → `DigitLimitPolicy.standard` 적용
+  - `currency_calculator_viewmodel.dart` — 인라인 제한 코드 → `DigitLimitPolicy.standard` 교체
+  - `vat_calculator_viewmodel.dart` — `_checkDigitLimit` 헬퍼 → `DigitLimitPolicy.standard` 교체
+  - `unit_converter_viewmodel.dart` — 인라인 제한 코드 → `DigitLimitPolicy.standard` 교체
 
 ---
 
@@ -130,11 +135,13 @@
 
 ---
 
-### R-10. UI 매직넘버 상수화
+### R-10. UI 매직넘버 상수화 ✅
 
-- **브랜치**: `refactor/ui-constants`
-- **현재 상태**: 토스트 지연(1500ms), 키패드 버튼 높이(68), BottomSheet 비율(0.6), 새로고침 최소 시간(800ms) 등 하드코딩
-- **개선 방향**: `lib/core/constants/ui_constants.dart`로 분리
+- **브랜치**: `dev`
+- **완료**:
+  - `app_design_tokens.dart`에 Duration 상수 7개 추가 (`durationAnimInstant`~`durationPageTransition`)
+  - 34개 하드코딩 Duration → 토큰 교체 (18개 파일)
+  - 9개 하드코딩 `BorderRadius.circular(16/12)` → 기존 토큰(`radiusCard`, `radiusInput`) 교체 (6개 파일)
 
 ---
 
@@ -160,3 +167,6 @@
 | 2026-03-03 | R-09. 숫자 포맷팅 유틸리티 | 완료 |
 | 2026-03-07 | R-08. Toast 공용 컴포넌트 | 완료 |
 | 2026-03-07 | R-12. 스크롤 페이드 그라디언트 공통화 + AppAnimatedTabBar | 완료 |
+| 2026-03-11 | R-06. 자릿수 제한 정책 통일 (DigitLimitPolicy) | 완료 |
+| 2026-03-11 | R-01. 색상 상수 통합 (9개 파일 네이밍 통일) | 완료 |
+| 2026-03-11 | R-10. UI 매직넘버 상수화 (Duration·BorderRadius 토큰화) | 완료 |

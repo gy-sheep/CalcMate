@@ -10,8 +10,8 @@
 | 속성 | 값 |
 |------|----|
 | 종류 | `LinearGradient` · topCenter → bottomCenter |
-| 상단 | `kUnitGradientTop` #1B2838 |
-| 하단 | `kUnitGradientBottom` #2C3E50 |
+| 상단 | `kUnitBg1` #1B2838 |
+| 하단 | `kUnitBg2` #2C3E50 |
 | 비고 | `extendBodyBehindAppBar: true` → 그라디언트가 상태바 뒤까지 연장 |
 
 ---
@@ -70,13 +70,13 @@
 |---|------|------|------|------|
 | ❷ | 탭 전체 높이 | `SizedBox` | — | h: 48 |
 | ❷ | 스크롤 패딩 | `SingleChildScrollView` | — | horizontal: `screenPaddingH` |
-| ❷ | 칩 (선택) 배경 | `Positioned` > `DecoratedBox` | — | `kUnitChipSelectedColor` · `CmTab.radius` 20 · border `kUnitChipSelectedColor` 25% · glow shadow (blurRadius:8 spreadRadius:1 `kUnitChipSelectedColor` 25%) |
+| ❷ | 칩 (선택) 배경 | `Positioned` > `DecoratedBox` | — | `kUnitChipActiveBg` · `CmTab.radius` 20 · border `kUnitChipActiveBg` 25% · glow shadow (blurRadius:8 spreadRadius:1 `kUnitChipActiveBg` 25%) |
 | ❷ | 칩 내부 패딩 | `Container` | — | `CmTab.padding` (horizontal: 14 / vertical: 8) |
 | ❷ | 칩 스케일 | `Transform.scale` | — | 선택 시 최대 ×1.08 (`1.0 + proximity × 0.08`) |
 | ❷ | 칩 아이콘 | `Icon` | `sizeIconXSmall` 16 | `Color.lerp(Colors.white60, Colors.white, proximity)` |
 | ❷ | 칩 텍스트 | `Text` | `CmTab.text` 14sp · proximity>0.5: w600 / 그 외: w400 | `Color.lerp(Colors.white60, Colors.white, proximity)` |
 | ❷ | 칩 간격 | `Padding` | — | 첫 칩: 0 / 이후 칩: left 8 |
-| ❷ | 슬라이딩 언더라인 | `Positioned(left:rect.left+4, bottom:1, width:rect.width-8)` > `DecoratedBox` | h: 2.5 · radius: 2 | `kUnitChipSelectedColor` · glow shadow (blurRadius:6 spreadRadius:1 `kUnitChipSelectedColor` 60%) |
+| ❷ | 슬라이딩 언더라인 | `Positioned(left:rect.left+4, bottom:1, width:rect.width-8)` > `DecoratedBox` | h: 2.5 · radius: 2 | `kUnitChipActiveBg` · glow shadow (blurRadius:6 spreadRadius:1 `kUnitChipActiveBg` 60%) |
 | ❷ | 하단 divider | `Positioned(left:0, right:0, bottom:4)` > `Container` | h: 0.5 | `kUnitDivider` |
 
 **슬라이딩 하이라이트 보간**: 탭 전환 시 `tabAnimation.value` 기준으로 좌측은 `easeInCubic`, 우측은 `easeOutCubic`으로 탄성 스트레치 효과. 칩 Row 크기를 기준으로 각 칩의 `Rect`를 측정하여 보간한다.
@@ -87,9 +87,9 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❸ | 활성 행 배경 | `AnimatedContainer` | — | `kUnitActiveRowColor` · radius: `radiusCard` 16 |
-| ❸ | 활성 행 테두리 | `Border.all` | — | `kUnitChipSelectedColor` 40% |
-| ❸ | 단위 코드 (활성) | `Text` (SizedBox w:80) | `textStyle16` 16sp / w600 | `kUnitChipSelectedColor` |
+| ❸ | 활성 행 배경 | `AnimatedContainer` | — | `kUnitActiveRow` · radius: `radiusCard` 16 |
+| ❸ | 활성 행 테두리 | `Border.all` | — | `kUnitChipActiveBg` 40% |
+| ❸ | 단위 코드 (활성) | `Text` (SizedBox w:80) | `textStyle16` 16sp / w600 | `kUnitChipActiveBg` |
 | ❸ | 단위 이름 (활성) | `Text` | `textStyleCaption` 12sp / w400 | `Colors.white` |
 | ❸ | 변환값 (활성) | `Text` | `textStyle18` 18sp / w500(copyWith) / letterSpacing:-0.5 | `Colors.white` |
 | ❹ | 비활성 행 배경 | — | — | `Colors.transparent` |
@@ -109,7 +109,7 @@
 |------|----|
 | 위젯 | `Positioned(left:0, right:0, bottom:0)` > `IgnorePointer` > `DecoratedBox` (Stack 내부) |
 | 높이 | 48 |
-| 그라디언트 | `kUnitGradientBottom` α0 → α0.7 → α1.0 (topCenter → bottomCenter) |
+| 그라디언트 | `kUnitBg2` α0 → α0.7 → α1.0 (topCenter → bottomCenter) |
 | stops | `[0.0, 0.6, 1.0]` |
 | 숨김 조건 | `pos.pixels >= pos.maxScrollExtent - 8` 또는 스크롤 불가 시 |
 
@@ -122,12 +122,12 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❻ | 구분선 | `Divider` | — | `kUnitDivider` · thickness:0.5 |
-| ❼ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kUnitColorFunction` |
-| ❼ | AC · 00 | `UnitKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kUnitColorFunction` |
-| ❼ | 0~9 · . | `UnitKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kUnitColorNumber` |
-| ❽ | ▲ | `Icon(keyboard_arrow_up)` | size: 28 | `kUnitColorFunction` |
-| ❽ | ▼ | `Icon(keyboard_arrow_down)` | size: 28 | `kUnitColorFunction` |
-| ❽ | +/- (온도) | `Row` > `Text` × 3 | `+` 18sp w500 / `/` 20sp w300 / `-` **24sp** w500 | `kUnitColorFunction` |
+| ❼ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kUnitKeyFunction` |
+| ❼ | AC · 00 | `UnitKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kUnitKeyFunction` |
+| ❼ | 0~9 · . | `UnitKeypadButton` > `Text` | `keypadNumberText` 22sp / w400 | `kUnitKeyNumber` |
+| ❽ | ▲ | `Icon(keyboard_arrow_up)` | size: 28 | `kUnitKeyFunction` |
+| ❽ | ▼ | `Icon(keyboard_arrow_down)` | size: 28 | `kUnitKeyFunction` |
+| ❽ | +/- (온도) | `Row` > `Text` × 3 | `+` 18sp w500 / `/` 20sp w300 / `-` **24sp** w500 | `kUnitKeyFunction` |
 | ❼❽ | 버튼 높이 | `SizedBox` | — | h: 56 |
 
 ---
@@ -136,11 +136,11 @@
 
 | 상수 | hex / 값 | 용도 |
 |------|---------|------|
-| `kUnitGradientTop` | `#1B2838` | 배경 그라디언트 상단 |
-| `kUnitGradientBottom` | `#2C3E50` | 배경 그라디언트 하단 |
-| `kUnitActiveRowColor` | `Colors.red` 20% (`0x33E94560`) | 활성 단위 행 배경 |
-| `kUnitChipSelectedColor` | `#F0A500` | 선택된 탭 칩·언더라인·활성 행 테두리 |
+| `kUnitBg1` | `#1B2838` | 배경 그라디언트 상단 |
+| `kUnitBg2` | `#2C3E50` | 배경 그라디언트 하단 |
+| `kUnitActiveRow` | `Colors.red` 20% (`0x33E94560`) | 활성 단위 행 배경 |
+| `kUnitChipActiveBg` | `#F0A500` | 선택된 탭 칩·언더라인·활성 행 테두리 |
 | `kUnitDivider` | `Colors.white` 33% (`0x55FFFFFF`) | 탭 하단 divider · 키패드 상단 구분선 |
-| `kUnitChipDefaultColor` | `Colors.white` 27% (`0x44FFFFFF`) | 칩 기본 배경 (정의됨, 현재 미사용) |
-| `kUnitColorNumber` | `Colors.white` | 숫자 버튼 텍스트 |
-| `kUnitColorFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ AC ▲ ▼ +/-) |
+| `kUnitChipBg` | `Colors.white` 27% (`0x44FFFFFF`) | 칩 기본 배경 (정의됨, 현재 미사용) |
+| `kUnitKeyNumber` | `Colors.white` | 숫자 버튼 텍스트 |
+| `kUnitKeyFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ AC ▲ ▼ +/-) |

@@ -82,9 +82,9 @@ class AgeRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label,
-            style: inputFieldInnerLabel.copyWith(color: kAgeSubText)),
+            style: inputFieldInnerLabel.copyWith(color: kAgeTextSecondary)),
         Text(value,
-            style: textStyle16.copyWith(color: kAgeText)),
+            style: textStyle16.copyWith(color: kAgeTextPrimary)),
       ],
     );
   }
@@ -104,11 +104,11 @@ class BirthWeekdayRow extends StatelessWidget {
           children: [
             Text(
               '태어난 요일',
-              style: inputFieldInnerLabel.copyWith(color: kAgeSubText),
+              style: inputFieldInnerLabel.copyWith(color: kAgeTextSecondary),
             ),
             Text(
               kWeekdays[result.birthWeekday],
-              style: textStyle16.copyWith(color: kAgeText),
+              style: textStyle16.copyWith(color: kAgeTextPrimary),
             ),
           ],
         ),

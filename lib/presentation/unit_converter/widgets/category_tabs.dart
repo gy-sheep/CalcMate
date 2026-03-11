@@ -51,7 +51,7 @@ class _CategoryTabsState extends State<CategoryTabs> {
     if (key == null || key.currentContext == null) return;
     Scrollable.ensureVisible(
       key.currentContext!,
-      duration: const Duration(milliseconds: 250),
+      duration: durationAnimMedium,
       curve: Curves.easeOut,
       alignment: 0.3,
     );
@@ -121,14 +121,14 @@ class _CategoryTabsState extends State<CategoryTabs> {
                     height: rect.height,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        color: kUnitChipSelectedColor,
+                        color: kUnitChipActiveBg,
                         borderRadius: BorderRadius.circular(CmTab.radius),
                         border: Border.all(
-                          color: kUnitChipSelectedColor.withValues(alpha: 0.25),
+                          color: kUnitChipActiveBg.withValues(alpha: 0.25),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: kUnitChipSelectedColor.withValues(alpha: 0.25),
+                            color: kUnitChipActiveBg.withValues(alpha: 0.25),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -164,11 +164,11 @@ class _CategoryTabsState extends State<CategoryTabs> {
                     height: 2.5,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        color: kUnitChipSelectedColor,
+                        color: kUnitChipActiveBg,
                         borderRadius: BorderRadius.circular(2),
                         boxShadow: [
                           BoxShadow(
-                            color: kUnitChipSelectedColor.withValues(alpha: 0.6),
+                            color: kUnitChipActiveBg.withValues(alpha: 0.6),
                             blurRadius: 6,
                             spreadRadius: 1,
                           ),

@@ -102,18 +102,18 @@ class _UnitListState extends State<UnitList> {
               onTap: () => widget.onUnitTapped(unit.code),
               behavior: HitTestBehavior.opaque,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+                duration: durationAnimDefault,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 margin: const EdgeInsets.symmetric(vertical: 2),
                 decoration: BoxDecoration(
                   color: (widget.isActive && isActiveUnit)
-                      ? kUnitActiveRowColor
+                      ? kUnitActiveRow
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(radiusCard),
                   border: (widget.isActive && isActiveUnit)
                       ? Border.all(
-                          color: kUnitChipSelectedColor.withValues(alpha: 0.4),
+                          color: kUnitChipActiveBg.withValues(alpha: 0.4),
                         )
                       : null,
                 ),
@@ -127,7 +127,7 @@ class _UnitListState extends State<UnitList> {
                         overflow: TextOverflow.ellipsis,
                         style: textStyle16.copyWith(
                           color: (widget.isActive && isActiveUnit)
-                              ? kUnitChipSelectedColor
+                              ? kUnitChipActiveBg
                               : Colors.white70,
                         ),
                       ),
@@ -175,9 +175,9 @@ class _UnitListState extends State<UnitList> {
                     end: Alignment.topCenter,
                     stops: const [0.0, 0.6, 1.0],
                     colors: [
-                      kUnitGradientBottom.withValues(alpha: 0),
-                      kUnitGradientBottom.withValues(alpha: 0.7),
-                      kUnitGradientBottom,
+                      kUnitBg2.withValues(alpha: 0),
+                      kUnitBg2.withValues(alpha: 0.7),
+                      kUnitBg2,
                     ],
                   ),
                 ),
@@ -199,9 +199,9 @@ class _UnitListState extends State<UnitList> {
                     end: Alignment.bottomCenter,
                     stops: const [0.0, 0.6, 1.0],
                     colors: [
-                      kUnitGradientBottom.withValues(alpha: 0),
-                      kUnitGradientBottom.withValues(alpha: 0.7),
-                      kUnitGradientBottom,
+                      kUnitBg2.withValues(alpha: 0),
+                      kUnitBg2.withValues(alpha: 0.7),
+                      kUnitBg2,
                     ],
                   ),
                 ),

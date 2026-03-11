@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/date_calculate_usecase.dart';
 import '../date_calculator_colors.dart';
+import '../date_format_utils.dart';
 import '../date_calculator_viewmodel.dart';
 import 'date_card.dart';
 import 'result_card.dart';
@@ -105,15 +106,15 @@ class PeriodModeView extends ConsumerWidget {
           ),
           const Spacer(),
           AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+            duration: durationAnimDefault,
             width: 42,
             height: 24,
             decoration: BoxDecoration(
               color: isOn ? kDateAccent : kDateDivider,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(radiusInput),
             ),
             child: AnimatedAlign(
-              duration: const Duration(milliseconds: 200),
+              duration: durationAnimDefault,
               alignment:
                   isOn ? Alignment.centerRight : Alignment.centerLeft,
               child: Padding(

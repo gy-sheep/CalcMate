@@ -10,7 +10,7 @@ class EmptyState extends StatelessWidget {
     return const Center(
       child: Text(
         '미래 날짜는 계산할 수 없어요',
-        style: TextStyle(color: kAgeSubText, fontSize: 15),
+        style: TextStyle(color: kAgeTextSecondary, fontSize: 15),
       ),
     );
   }

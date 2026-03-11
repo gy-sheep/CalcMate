@@ -44,7 +44,7 @@ class PickerSection extends StatelessWidget {
               children: [
                 Text(
                   '생년월일',
-                  style: sectionLabel.copyWith(color: kAgeSubText),
+                  style: sectionLabel.copyWith(color: kAgeTextSecondary),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -62,7 +62,7 @@ class PickerSection extends StatelessWidget {
                         ),
                         activeColor: kAgeAccent,
                         checkColor: Colors.white,
-                        side: const BorderSide(color: kAgeSubText, width: 1.5),
+                        side: const BorderSide(color: kAgeTextSecondary, width: 1.5),
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                       ),
@@ -70,7 +70,7 @@ class PickerSection extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       '음력',
-                      style: CmCheckbox.labelMedium.copyWith(color: kAgeSubText),
+                      style: CmCheckbox.labelMedium.copyWith(color: kAgeTextSecondary),
                     ),
                   ],
                 ),
@@ -79,7 +79,7 @@ class PickerSection extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(radiusCard),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.5),
                 width: 1.0,
@@ -201,7 +201,7 @@ class PickerSection extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10, bottom: 8, left: 4),
             child: Text(
               '${_formatDate(DateTime.now())} 기준',
-              style: textStyleCaption.copyWith(color: kAgeSubText),
+              style: textStyleCaption.copyWith(color: kAgeTextSecondary),
             ),
           ),
         ],

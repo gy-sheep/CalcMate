@@ -40,7 +40,7 @@ class CalcModeCard extends StatelessWidget {
       elevation: 4,
       shadowColor: Colors.black,
       color: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusCard)),
       clipBehavior: Clip.hardEdge,
       child: Stack(
         children: [

@@ -5,6 +5,7 @@ import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/widgets/number_keypad.dart';
 import '../../../domain/models/date_calculator_state.dart';
 import '../date_calculator_colors.dart';
+import '../date_format_utils.dart';
 import '../date_calculator_viewmodel.dart';
 import 'date_card.dart';
 import 'result_card.dart';
@@ -126,7 +127,7 @@ class DateCalcModeView extends ConsumerWidget {
                   onTap: () =>
                       vm.handleIntent(DateCalculatorIntent.calcUnitChanged(i)),
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
+                    duration: durationAnimQuick,
                     padding: chipPadding,
                     constraints: BoxConstraints(minWidth: chipMinWidth),
                     decoration: BoxDecoration(

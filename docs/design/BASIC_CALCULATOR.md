@@ -10,8 +10,8 @@
 | 속성 | 값 |
 |------|----|
 | 종류 | `LinearGradient` · topCenter → bottomCenter |
-| 상단 | `kCalcGradientTop` #0D2137 |
-| 하단 | `kCalcGradientBottom` #0A3D2B |
+| 상단 | `kCalcBg1` #0D2137 |
+| 하단 | `kCalcBg2` #0A3D2B |
 | 비고 | `extendBodyBehindAppBar: true` → 그라디언트가 상태바 뒤까지 연장 |
 
 ---
@@ -47,12 +47,12 @@
 | ❸ | (동작) 넘칠 때 | 우측 기준 가로 스크롤 (`BouncingScrollPhysics`) | | |
 | ❹ | 하단 구분선 | `AppInputUnderline(full)` > `Container` | `thicknessInputUnderline` 1.5 | `Colors.white60` |
 | ❺ | 키패드 상단 구분선 | `Divider` | — | `Colors.white` 20% · thickness:0.5 |
-| ❻ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kCalcColorFunction` |
-| ❻ | AC · % · () | `CalcButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCalcColorFunction` |
-| ❻ | ÷ · × · - · + | `CalcButton` > `Text` | `keypadOperatorText` 28sp / w400 | `kCalcColorOperator` |
+| ❻ | ⌫ | `Icon(backspace_outlined)` | `keypadBackspaceSize` 26 | `kCalcKeyFunction` |
+| ❻ | AC · % · () | `CalcButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCalcKeyFunction` |
+| ❻ | ÷ · × · - · + | `CalcButton` > `Text` | `keypadOperatorText` 28sp / w400 | `kCalcKeyOperator` |
 | ❻ | 버튼 높이 | — | — | `keypadButtonHeightLarge` 68 |
-| ❼ | 0~9 · . | `CalcButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCalcColorNumber` |
-| ❽ | = | `CalcButton` > `Text` | `keypadOperatorText` 28sp / w400 | `Colors.white` · 배경 `kCalcColorEquals` |
+| ❼ | 0~9 · . | `CalcButton` > `Text` | `keypadNumberText` 22sp / w400 | `kCalcKeyNumber` |
+| ❽ | = | `CalcButton` > `Text` | `keypadOperatorText` 28sp / w400 | `Colors.white` · 배경 `kCalcKeyEquals` |
 
 ---
 
@@ -60,9 +60,9 @@
 
 | 상수 | hex / 값 | 용도 |
 |------|---------|------|
-| `kCalcGradientTop` | `#0D2137` | 배경 그라디언트 상단 |
-| `kCalcGradientBottom` | `#0A3D2B` | 배경 그라디언트 하단 |
-| `kCalcColorNumber` | `Colors.white` | 숫자 버튼 텍스트 |
-| `kCalcColorOperator` | `#FF9F7A` | 연산자 버튼 텍스트 (÷ × - +) |
-| `kCalcColorFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ AC %) |
-| `kCalcColorEquals` | `#FF6B4A` | = 버튼 배경 |
+| `kCalcBg1` | `#0D2137` | 배경 그라디언트 상단 |
+| `kCalcBg2` | `#0A3D2B` | 배경 그라디언트 하단 |
+| `kCalcKeyNumber` | `Colors.white` | 숫자 버튼 텍스트 |
+| `kCalcKeyOperator` | `#FF9F7A` | 연산자 버튼 텍스트 (÷ × - +) |
+| `kCalcKeyFunction` | `#FFFFFFCC` (80% 불투명) | 기능 버튼 텍스트 (⌫ AC %) |
+| `kCalcKeyEquals` | `#FF6B4A` | = 버튼 배경 |

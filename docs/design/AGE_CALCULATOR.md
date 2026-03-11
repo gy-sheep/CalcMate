@@ -10,8 +10,8 @@
 | 속성 | 값 |
 |------|----|
 | 종류 | `LinearGradient` · topCenter → bottomCenter |
-| 상단 | `kAgeBgStart` #FFF8F0 (크림) |
-| 하단 | `kAgeBgEnd` #FFE4CC (복숭아) |
+| 상단 | `kAgeBg1` #FFF8F0 (크림) |
+| 하단 | `kAgeBg2` #FFE4CC (복숭아) |
 | 비고 | `extendBodyBehindAppBar: true` → 그라디언트가 상태바 뒤까지 연장 |
 
 ---
@@ -50,7 +50,7 @@
 ```
 
 > **구조 메모**: `PickerSection` + `Divider` + `Expanded(ResultScrollView or EmptyState)` + `AdBannerPlaceholder` 의 세로 구성.
-> 결과 영역은 `ScrollFadeView(fadeColor: kAgeBgEnd, padding: fromLTRB(16,16,16,32))`로 스크롤 페이드 처리.
+> 결과 영역은 `ScrollFadeView(fadeColor: kAgeBg2, padding: fromLTRB(16,16,16,32))`로 스크롤 페이드 처리.
 > 미래 날짜 선택 시 결과 대신 `EmptyState`를 표시.
 
 ---
@@ -72,10 +72,10 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❷ | "생년월일" 라벨 | `Text` | `textStyleLabelLarge` 14sp / **w600** / letterSpacing:0.5 | `kAgeSubText` |
-| ❷ | 음력 체크박스 | `Checkbox` (`sizeCheckboxMedium` 18 × 18) | shrinkWrap / visualDensity(-4,-4) | 활성: `kAgeAccent` / 체크: `Colors.white` / 테두리: `kAgeSubText` w1.5 |
+| ❷ | "생년월일" 라벨 | `Text` | `textStyleLabelLarge` 14sp / **w600** / letterSpacing:0.5 | `kAgeTextSecondary` |
+| ❷ | 음력 체크박스 | `Checkbox` (`sizeCheckboxMedium` 18 × 18) | shrinkWrap / visualDensity(-4,-4) | 활성: `kAgeAccent` / 체크: `Colors.white` / 테두리: `kAgeTextSecondary` w1.5 |
 | ❷ | 체크박스↔라벨 간격 | `SizedBox` | — | width: 6 |
-| ❷ | "음력" 레이블 | `Text` | `textStyleCheckboxLabelMedium` 14sp / w400 / height:1.0 | `kAgeSubText` |
+| ❷ | "음력" 레이블 | `Text` | `textStyleCheckboxLabelMedium` 14sp / w400 / height:1.0 | `kAgeTextSecondary` |
 
 **❸ 피커 컨테이너**
 
@@ -125,7 +125,7 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| ❹ | "YYYY년 MM월 DD일 기준" | `Text` | `textStyleLabelLarge` 14sp / w500 | `kAgeSubText` |
+| ❹ | "YYYY년 MM월 DD일 기준" | `Text` | `textStyleLabelLarge` 14sp / w500 | `kAgeTextSecondary` |
 
 > 패딩: top:10 / bottom:8 / left:4
 
@@ -146,7 +146,7 @@
 | 상태 | 폰트 | 색상 |
 |------|------|------|
 | 선택됨 | 18sp / w700 | `kAgeAccent` |
-| 비선택 | 15sp / w400 | `kAgeText` 50% |
+| 비선택 | 15sp / w400 | `kAgeTextPrimary` 50% |
 
 ---
 
@@ -161,11 +161,11 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| — | "양력 " 레이블 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeSubText` |
-| — | 변환 날짜 | `Text` | `textStyleLabelMedium` 12sp / w400 | `kAgeText` |
-| — | "윤달" 레이블 | `Text` | `textStyleCheckboxLabelSmall` 12sp / **w600** / height:1.0 | `kAgeSubText` |
+| — | "양력 " 레이블 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeTextSecondary` |
+| — | 변환 날짜 | `Text` | `textStyleLabelMedium` 12sp / w400 | `kAgeTextPrimary` |
+| — | "윤달" 레이블 | `Text` | `textStyleCheckboxLabelSmall` 12sp / **w600** / height:1.0 | `kAgeTextSecondary` |
 | — | 라벨↔체크박스 간격 | `SizedBox` | — | width: 6 |
-| — | 윤달 체크박스 | `Checkbox` (`sizeCheckboxSmall` 16 × 16) | shrinkWrap / visualDensity(-4,-4) | 활성: `kAgeAccent` / 체크: `Colors.white` / 테두리: `kAgeSubText` w1.5 / 해당 연·월에 윤달 있을 때만 표시 |
+| — | 윤달 체크박스 | `Checkbox` (`sizeCheckboxSmall` 16 × 16) | shrinkWrap / visualDensity(-4,-4) | 활성: `kAgeAccent` / 체크: `Colors.white` / 테두리: `kAgeTextSecondary` w1.5 / 해당 연·월에 윤달 있을 때만 표시 |
 
 ---
 
@@ -194,7 +194,7 @@
 | ❻ | "세" 단위 | `Text` | `textStyleResult22` 22sp / w600 / baseline 정렬 | `kAgeAccent` |
 | ❻ | "세는 나이" 뱃지 | `Container` > `Text` | `textStyleLabelMedium` 12sp / w600 / padding h:8 v:3 / `radiusTag` 6 | `kAgeAccent` / 배경 `kAgeAccent` 12% |
 | ❻ | 구분선 | `Divider` | height:1 | `kAgeDivider` |
-| ❻ | 만 나이 · 연 나이 · 태어난 요일 | `AgeRow` | label: `textStyleBody` / value: `textStyleValue` | label: `kAgeSubText` / value: `kAgeText` |
+| ❻ | 만 나이 · 연 나이 · 태어난 요일 | `AgeRow` | label: `textStyleBody` / value: `textStyleValue` | label: `kAgeTextSecondary` / value: `kAgeTextPrimary` |
 
 > `AgeRow`: `Row(mainAxisAlignment: spaceBetween)` — 라벨 + 값
 
@@ -209,9 +209,9 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❼ | 카드 높이 / 패딩 | — | — | h:110 / all:14 |
-| ❼ | "다음 생일" 라벨 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeSubText` |
+| ❼ | "다음 생일" 라벨 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeTextSecondary` |
 | ❼ | D-N 숫자 | `Text` | `textStyleResult28` 28sp / w800 / height:1.0 | `kAgeAccent` |
-| ❼ | 날짜 문자열 | `Text` | `textStyleLabelSmall` 10sp / w500 | `kAgeSubText` |
+| ❼ | 날짜 문자열 | `Text` | `textStyleLabelSmall` 10sp / w500 | `kAgeTextSecondary` |
 
 > 오늘 생일인 경우: 🎂(`textStyleResult28` 28sp) + "오늘이 생일이에요!"(`textStyleSectionTitle` 13sp / w700 / `kAgeAccent`) · `Center` 배치
 
@@ -220,9 +220,9 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❼ | 카드 높이 / 패딩 | — | — | h:110 / all:14 |
-| ❼ | "살아온 날" 라벨 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeSubText` |
-| ❼ | N일 숫자 | `Text` | `textStyleResult22` 22sp / w700 / height:1.0 | `kAgeText` |
-| ❼ | "약 N년 M개월" | `Text` | `textStyleLabelSmall` 10sp / w500 | `kAgeSubText` |
+| ❼ | "살아온 날" 라벨 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeTextSecondary` |
+| ❼ | N일 숫자 | `Text` | `textStyleResult22` 22sp / w700 / height:1.0 | `kAgeTextPrimary` |
+| ❼ | "약 N년 M개월" | `Text` | `textStyleLabelSmall` 10sp / w500 | `kAgeTextSecondary` |
 
 ---
 
@@ -233,9 +233,9 @@
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
 | ❽ | 카드 패딩 | — | — | all:14 |
-| ❽ | "띠" · "별자리" 라벨 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeSubText` |
+| ❽ | "띠" · "별자리" 라벨 | `Text` | `textStyleLabelMedium` 12sp / w600 | `kAgeTextSecondary` |
 | ❽ | 아이콘 | `Image.asset` | 36×36 | — |
-| ❽ | 이름 | `Text` | `textStyleValue` 16sp / w700 | `kAgeText` |
+| ❽ | 이름 | `Text` | `textStyleValue` 16sp / w700 | `kAgeTextPrimary` |
 | — | 라벨↔아이콘 간격 | `SizedBox` | — | height:12 |
 | — | 아이콘↔이름 간격 | `SizedBox` | — | width:8 |
 
@@ -247,7 +247,7 @@
 
 | # | 영역 | 위젯 | 폰트 | 색상 |
 |---|------|------|------|------|
-| — | 안내 문구 | `Center` > `Text` | 15sp / w400 | `kAgeSubText` |
+| — | 안내 문구 | `Center` > `Text` | 15sp / w400 | `kAgeTextSecondary` |
 
 > 내용: "미래 날짜는 계산할 수 없어요"
 
@@ -257,12 +257,12 @@
 
 | 상수 | hex / 값 | 용도 |
 |------|---------|------|
-| `kAgeBgStart` | `#FFF8F0` | 배경 그라디언트 상단 (크림) |
-| `kAgeBgEnd` | `#FFE4CC` | 배경 그라디언트 하단 (복숭아) · 스크롤 페이드 색상 |
+| `kAgeBg1` | `#FFF8F0` | 배경 그라디언트 상단 (크림) |
+| `kAgeBg2` | `#FFE4CC` | 배경 그라디언트 하단 (복숭아) · 스크롤 페이드 색상 |
 | `kAgeAccent` | `#D4845A` | 강조 색상 (세는나이, D-N, 체크박스, 뱃지) |
 | `kAgeAccentLight` | `#F0A87A` | 보조 강조 |
-| `kAgeText` | `#3D2B1F` | 주 텍스트 (dark brown) |
-| `kAgeSubText` | `#8B6651` | 보조 텍스트 (라벨, 단위) |
+| `kAgeTextPrimary` | `#3D2B1F` | 주 텍스트 (dark brown) |
+| `kAgeTextSecondary` | `#8B6651` | 보조 텍스트 (라벨, 단위) |
 | `kAgePickerHighlight` | `#FFDCB8` | 피커 선택 하이라이트 바 |
 | `kAgeCardShadow` | `#D4845A` | 카드 그림자 (`kAgeAccent`와 동일) |
 | `kAgeDivider` | `#E8C9B0` | 구분선 (화면·카드 내부·LunarInfo 테두리) |

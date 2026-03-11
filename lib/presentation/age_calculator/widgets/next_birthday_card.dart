@@ -54,7 +54,7 @@ class NextBirthdayCard extends StatelessWidget {
               Text(
                 '다음 생일',
                 style: CmBirthdayMiniCard.labelText.copyWith(
-                  color: kAgeSubText,
+                  color: kAgeTextSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -70,7 +70,7 @@ class NextBirthdayCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 nextDateStr,
-                style: CmBirthdayMiniCard.subText.copyWith(color: kAgeSubText),
+                style: CmBirthdayMiniCard.subText.copyWith(color: kAgeTextSecondary),
               ),
             ],
           ),

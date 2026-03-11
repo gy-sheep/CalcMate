@@ -7,6 +7,7 @@ import '../../domain/models/vat_calculator_state.dart';
 import '../../domain/usecases/evaluate_expression_usecase.dart';
 import '../../domain/usecases/vat_calculate_usecase.dart';
 import '../../domain/utils/calculator_input_utils.dart';
+import '../../domain/utils/digit_limit_policy.dart';
 import '../../domain/utils/number_formatter.dart';
 
 // ──────────────────────────────────────────
@@ -247,8 +248,17 @@ class VatCalculatorViewModel
         if (CalculatorInputUtils.endsWithOperator(input)) return;
         final lastSeg = CalculatorInputUtils.lastNumberSegment(input);
         if (lastSeg == '0') return;
-        if (!_checkDigitLimit(lastSeg, '00')) return;
-        input += '00';
+        final toast00 = DigitLimitPolicy.standard.check(lastSeg, '00');
+        if (toast00 != null) {
+          if (toast00.isNotEmpty) state = state.copyWith(toastMessage: toast00);
+          return;
+        }
+        final add00 = DigitLimitPolicy.standard.adjustDoubleZero(lastSeg,
+            onExceed: (msg) {
+          if (msg != null) state = state.copyWith(toastMessage: msg);
+        });
+        if (add00 == null) return;
+        input += add00;
 
       default: // 숫자 0-9
         if (isResult) {
@@ -267,30 +277,15 @@ class VatCalculatorViewModel
           input = prefix + key;
           break;
         }
-        if (!_checkDigitLimit(lastSeg, key)) return;
+        final toast = DigitLimitPolicy.standard.check(lastSeg, key);
+        if (toast != null) {
+          if (toast.isNotEmpty) state = state.copyWith(toastMessage: toast);
+          return;
+        }
         input += key;
     }
 
     state = state.copyWith(input: input, isResult: isResult);
-  }
-
-  bool _checkDigitLimit(String segment, String adding) {
-    final combined = segment + adding;
-    final noSign =
-        combined.startsWith('-') ? combined.substring(1) : combined;
-    if (noSign.contains('.')) {
-      final parts = noSign.split('.');
-      if (parts[0].length > 12 || parts[1].length > 8) {
-        state = state.copyWith(toastMessage: '자릿수 제한을 초과했습니다');
-        return false;
-      }
-    } else {
-      if (noSign.length > 12) {
-        state = state.copyWith(toastMessage: '자릿수 제한을 초과했습니다');
-        return false;
-      }
-    }
-    return true;
   }
 
   void _handleTaxRateKey(String key) {

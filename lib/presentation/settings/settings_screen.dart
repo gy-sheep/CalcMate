@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 import '../main/main_screen_viewmodel.dart';
@@ -20,11 +21,18 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _scrollController = ScrollController();
   bool _isScrolled = false;
+  String _appVersion = '';
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) setState(() => _appVersion = info.version);
   }
 
   @override
@@ -146,7 +154,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   _SettingsTile(
                     label: '버전 정보',
-                    value: '1.0.0',
+                    value: _appVersion,
                     onTap: () {},
                   ),
                   _SettingsTile(

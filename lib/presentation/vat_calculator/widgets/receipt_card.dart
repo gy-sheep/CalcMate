@@ -165,17 +165,17 @@ class ReceiptCard extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: isEditing
-                      ? kVatColorEquals.withValues(alpha: 0.15)
+                      ? kVatKeyEquals.withValues(alpha: 0.15)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(4),
                   border: isEditing
-                      ? Border.all(color: kVatColorEquals, width: 1.5)
+                      ? Border.all(color: kVatKeyEquals, width: 1.5)
                       : null,
                 ),
                 child: Text(
                   '$rateText%',
                   style: sectionLabel.copyWith(
-                    color: isEditing ? kVatColorEquals : kVatReceiptSecondary,
+                    color: isEditing ? kVatKeyEquals : kVatReceiptSecondary,
                     fontWeight: isEditing ? FontWeight.w700 : FontWeight.w400,
                   ),
                 ),

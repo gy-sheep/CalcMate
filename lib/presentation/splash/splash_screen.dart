@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../main/main_screen.dart';
 
-const Color _kBackground = Color(0xFF0D0D14);
+const Color _kBackground = Color(0xFF0F0F19);
 const Color _kTagline = Color(0xFF9090A0);
 
 class SplashScreen extends StatefulWidget {
@@ -132,7 +132,7 @@ class _SplashScreenState extends State<SplashScreen>
                 letterSpacing: 0.5,
                 shadows: [
                   Shadow(
-                    color: Colors.black.withOpacity(0.35),
+                    color: Colors.black.withValues(alpha: 0.35),
                     offset: const Offset(0, 2),
                     blurRadius: 6,
                   ),
@@ -153,7 +153,7 @@ class _SplashScreenState extends State<SplashScreen>
                   letterSpacing: 0.5,
                   shadows: [
                     Shadow(
-                      color: Colors.black.withOpacity(0.35),
+                      color: Colors.black.withValues(alpha: 0.35),
                       offset: const Offset(0, 2),
                       blurRadius: 6,
                     ),

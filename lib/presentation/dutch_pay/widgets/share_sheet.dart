@@ -92,7 +92,7 @@ class _ShareSheetState extends State<ShareSheet> {
                 GestureDetector(
                   onTap: _sharing ? null : _share,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
+                    duration: durationAnimDefault,
                     height: 52,
                     decoration: BoxDecoration(
                       gradient: _sharing

@@ -61,7 +61,7 @@ class _KeypadBtn extends StatelessWidget {
       onLongPress: onLongPress,
       splashColor: kDutchAccent.withValues(alpha: 0.08),
       child: SizedBox(
-        height: 58,
+        height: keypadButtonHeightMedium,
         child: Center(
           child: switch (label) {
             '⌫' => const Icon(Icons.backspace_outlined,

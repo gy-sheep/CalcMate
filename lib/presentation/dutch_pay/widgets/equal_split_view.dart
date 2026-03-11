@@ -100,7 +100,7 @@ class _AmountCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('총 금액',
-                style: textStyleCaption
+                style: CmInputCard.titleText
                     .copyWith(color: kDutchTextTertiary)),
             const SizedBox(height: 6),
             Row(
@@ -185,7 +185,7 @@ class _PeopleRow extends StatelessWidget {
                       onTap: () => vm.handleIntent(
                           DutchPayIntent.peopleChanged(n - people)),
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
+                        duration: durationAnimFast,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 14, vertical: 7),
                         decoration: BoxDecoration(
@@ -243,7 +243,7 @@ class _StepBtn extends StatelessWidget {
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: durationAnimFast,
         width: 32,
         height: 32,
         decoration: BoxDecoration(
@@ -301,7 +301,7 @@ class _RemainderRow extends StatelessWidget {
                 onTap: () =>
                     vm.handleIntent(DutchPayIntent.remUnitChanged(u)),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
+                  duration: durationAnimFast,
                   padding: CmTab.padding,
                   decoration: BoxDecoration(
                     color: selected ? kDutchAccent : kDutchCardBg,
@@ -360,7 +360,7 @@ class _TipRow extends StatelessWidget {
                     onTap: () => vm.handleIntent(
                         DutchPayIntent.tipRateChanged(e.value)),
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
+                      duration: durationAnimFast,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
@@ -385,7 +385,7 @@ class _TipRow extends StatelessWidget {
                 onTap: () => vm.handleIntent(
                     const DutchPayIntent.tipRateChanged(-1)),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
+                  duration: durationAnimFast,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: eq.isCustomTip ? kDutchAccent : kDutchCardBg,
@@ -578,7 +578,7 @@ class _ShareBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasResult = result != null;
     return AnimatedOpacity(
-      duration: const Duration(milliseconds: 200),
+      duration: durationAnimDefault,
       opacity: hasResult ? 1.0 : 0.4,
       child: GestureDetector(
         onTap: hasResult ? () => _share(context) : null,

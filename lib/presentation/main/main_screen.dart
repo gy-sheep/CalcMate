@@ -123,13 +123,13 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: state.isScrolled ? 20.0 : 0.0),
-            duration: const Duration(milliseconds: 200),
+            duration: durationAnimDefault,
             builder: (context, sigma, _) {
               return ClipRect(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
+                    duration: durationAnimDefault,
                     color: state.isScrolled
                         ? (Theme.of(context).brightness == Brightness.dark
                             ? Colors.black.withValues(alpha: 0.75)
@@ -146,7 +146,14 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                           onPressed: () => ref
                               .read(mainScreenViewModelProvider.notifier)
                               .handleIntent(const MainScreenIntent.toggleEditMode()),
-                          child: const Text('완료'),
+                          child: Text(
+                            '완료',
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -174,7 +181,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AnimatedOpacity(
           opacity: isScrolled ? 0.0 : 1.0,
-          duration: const Duration(milliseconds: 100),
+          duration: durationAnimInstant,
           child: AppBar(
             systemOverlayStyle: Theme.of(context).brightness == Brightness.dark
                 ? SystemUiOverlayStyle.light
@@ -186,13 +193,20 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               'CalcMate',
               style: CmAppBar.titleText.copyWith(
                 letterSpacing: 0.5,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withValues(alpha: 0.35),
-                    offset: const Offset(0, 2),
-                    blurRadius: 6,
-                  ),
-                ],
+                shadows: Theme.of(context).brightness == Brightness.dark
+                    ? [
+                        Shadow(
+                          color: Colors.white.withValues(alpha: 0.6),
+                          blurRadius: 12,
+                        ),
+                      ]
+                    : [
+                        Shadow(
+                          color: Colors.black.withValues(alpha: 0.35),
+                          offset: const Offset(0, 2),
+                          blurRadius: 6,
+                        ),
+                      ],
               ),
             ),
             centerTitle: false,
@@ -232,9 +246,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               if (screen != null) {
                 card = RepaintBoundary(
                   child: OpenContainer(
-                    transitionDuration: const Duration(milliseconds: 400),
+                    transitionDuration: durationPageTransition,
                     closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(radiusCard),
                     ),
                     closedElevation: 0,
                     openElevation: 0,
@@ -649,7 +663,7 @@ class _SwipeToHideCardState extends State<_SwipeToHideCard>
             onHorizontalDragUpdate: _onDragUpdate,
             onHorizontalDragEnd: _onDragEnd,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(radiusCard),
               child: Stack(
                 children: [
                   // ── 숨기기 버튼 (오른쪽 고정, pill stretch) ──
@@ -769,7 +783,7 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: durationAnimMedium,
       vsync: this,
     )..forward();
   }
@@ -811,10 +825,10 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(radiusInput),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(radiusInput),
                   child: IntrinsicWidth(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -891,7 +905,6 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 20, color: colorScheme.onSurface),
               const SizedBox(width: 12),
@@ -899,7 +912,6 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
                 label,
                 style: TextStyle(color: colorScheme.onSurface),
               ),
-              const SizedBox(width: 8),
             ],
           ),
         ),
