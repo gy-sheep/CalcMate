@@ -14,8 +14,13 @@
 
 > 기획 명세: `docs/specs/SETTINGS.md`
 
-### Phase 10: 다음 계산기
-- [ ] 다음 Phase 계산기 선정 및 기획
+### Phase 11: 전월세 계산기
+- [x] 기획 명세 작성 (`docs/specs/RENT_CALCULATOR.md`)
+- [x] UI 프리뷰 A안(고정 상단 + 스와이프) / B안(일반 탭) 비교 → A안 확정
+- [ ] 구현 명세 작성 (`docs/dev/RENT_CALCULATOR_IMPL.md`)
+- [ ] 실제 구현 (State·UseCase·ViewModel·Screen·위젯 분리)
+
+### Phase 10: 기타
 - [ ] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)
 
 > **대출 계산기** (Phase 13으로 이동): `docs/specs/LOAN_CALCULATOR.md` 기획 명세 작성 완료, UI 안 선택 및 구현은 추후 진행
@@ -71,6 +76,7 @@
 | — | 단위 변환기 왕복 변환 정밀도 개선 및 테스트 추가 | — | — |
 | — | 더치페이 UI 개선 (테마 심화·그라데이션 테두리·탭 레이블·인원 프리셋 칩·정산 단위 인라인 칩·각출 단일 스크롤·바 차트 결과) | — | — |
 | — | 더치페이 각출 UX 개선 2차 (sticky compact 바·스크롤 페이드·금액 콤마·탭 전환 상태 유지·바텀시트 테마·차트 레이아웃 등) | — | — |
+| 11 | 전월세 계산기 기획 명세 및 UI 프리뷰 (A안 확정: 고정 상단 + 스와이프) | — | `docs/specs/RENT_CALCULATOR.md` |
 
 > 상세 작업 이력: `HISTORY.md`
 
