@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
 
-// Blush & Ivory — 아이보리 배경 + 핫핑크 포인트, 모던 쇼핑 앱 느낌
-const kDiscountGradientTop = Color(0xFFFFFAF9);
-const kDiscountGradientBottom = Color(0xFFFFF0EC);
+// Peach Bunny — 복숭아 + 크림, 부드럽고 포근한 느낌
+const kDiscountGradientTop = Color(0xFFFFF7F2);
+const kDiscountGradientBottom = Color(0xFFFFEADD);
 
-const kDiscountAccent = Color(0xFFFF3C6E);
-const kDiscountAccentSoft = Color(0x22FF3C6E);
+const kDiscountAccent = Color(0xFFE8845A);
+const kDiscountAccentSoft = Color(0x22E8845A);
 
-const kDiscountChipBg = Color(0xFFFFEBF0);
-const kDiscountChipActiveBg = Color(0xFFFF3C6E);
-const kDiscountChipText = Color(0xFF999999);
+const kDiscountChipBg = Color(0xFFFFE2D2);
+const kDiscountChipActiveBg = Color(0xFFE8845A);
+const kDiscountChipText = Color(0xFFB0A098);
 const kDiscountChipActiveText = Colors.white;
 
-const kDiscountFieldBg = Color(0xFFFFFFFF);
-const kDiscountFieldBorder = Color(0xFFEEDDDA);
-const kDiscountFieldBorderActive = Color(0xFFFF3C6E);
+const kDiscountFieldBg = Color(0xFFFFF2EB);
+const kDiscountFieldBorder = Color(0xFFF0DAD0);
+const kDiscountFieldBorderActive = Color(0xFFE8845A);
 
-const kDiscountCardBg = Color(0xFFFFFFFF);
-const kDiscountCardBorder = Color(0xFFEEDDDA);
+const kDiscountCardBg = Color(0xFFFFEEE5);
+const kDiscountCardBorder = Color(0xFFF0DAD0);
 
-const kDiscountDivider = Color(0xFFEEDDDA);
+const kDiscountDivider = Color(0xFFF0DAD0);
 
-const kDiscountTextPrimary = Color(0xFF1A1A1A);
-const kDiscountTextSecondary = Color(0xFF999999);
-const kDiscountTextSavings = Color(0xFFFF3C6E);
-const kDiscountTextFinalPrice = Color(0xFF1A1A1A);
+const kDiscountTextPrimary = Color(0xFF352420);
+const kDiscountTextSecondary = Color(0xFFB09890);
+const kDiscountTextSavings = Color(0xFFE8845A);
+const kDiscountTextFinalPrice = Color(0xFF352420);
 
-const kDiscountKeyNumber = Color(0xFF333333);
-const kDiscountKeyFunction = Color(0xFF999999);
-const kDiscountKeySpecial = Color(0xFFFF3C6E);
+const kDiscountKeyNumber = Color(0xFF352420);
+const kDiscountKeyFunction = Color(0xFFB09890);
+const kDiscountKeySpecial = Color(0xFFE8845A);
+
+// 활성 필드 그라데이션 테두리 (크림 피치 → 복숭아)
+const kDiscountBorderGradient = [
+  Color(0xFFF8C0A0), // 크림 피치
+  Color(0xFFF2A880), // 소프트 피치
+  Color(0xFFEC9468), // 복숭아
+];
+
+// 카드 그림자
+const kDiscountCardShadow = Color(0x14E8845A); // 피치 그림자 (alpha ~8%)

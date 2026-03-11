@@ -7,8 +7,9 @@ enum CurrencyBtnType { number, operator, function, equals }
 
 class CurrencyNumberPad extends StatelessWidget {
   final void Function(String) onKeyTap;
+  final VoidCallback? onLongPressBackspace;
 
-  const CurrencyNumberPad({super.key, required this.onKeyTap});
+  const CurrencyNumberPad({super.key, required this.onKeyTap, this.onLongPressBackspace});
 
   static const _rows = [
     [
@@ -51,11 +52,13 @@ class CurrencyNumberPad extends StatelessWidget {
         return Row(
           children: row.map((cell) {
             final label = cell.$1;
+            final isBack = label == '\u{232B}';
             return Expanded(
               child: CurrencyKeypadButton(
                 label: label,
                 type: cell.$2,
                 onTap: () => onKeyTap(label),
+                onLongPress: isBack ? (onLongPressBackspace ?? () => onKeyTap('AC')) : null,
               ),
             );
           }).toList(),
@@ -69,12 +72,14 @@ class CurrencyKeypadButton extends StatelessWidget {
   final String label;
   final CurrencyBtnType type;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   const CurrencyKeypadButton({
     super.key,
     required this.label,
     required this.type,
     required this.onTap,
+    this.onLongPress,
   });
 
   Color get _textColor => switch (type) {
@@ -92,6 +97,7 @@ class CurrencyKeypadButton extends StatelessWidget {
           : Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(

@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import '../dutch_pay_colors.dart';
 
 class DutchPayKeypad extends StatelessWidget {
-  const DutchPayKeypad({super.key, required this.onKeyPressed});
+  const DutchPayKeypad({super.key, required this.onKeyPressed, this.onLongPressBackspace});
 
   final ValueChanged<String> onKeyPressed;
+  final VoidCallback? onLongPressBackspace;
 
   static const _buttons = [
     ['7', '8', '9'],
@@ -33,6 +34,9 @@ class DutchPayKeypad extends StatelessWidget {
                     child: _KeypadBtn(
                       label: label,
                       onTap: () => onKeyPressed(label),
+                      onLongPress: label == '⌫'
+                          ? (onLongPressBackspace ?? () => onKeyPressed('AC'))
+                          : null,
                     ),
                   ),
               ],
@@ -44,15 +48,17 @@ class DutchPayKeypad extends StatelessWidget {
 }
 
 class _KeypadBtn extends StatelessWidget {
-  const _KeypadBtn({required this.label, required this.onTap});
+  const _KeypadBtn({required this.label, required this.onTap, this.onLongPress});
 
   final String label;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       splashColor: kDutchAccent.withValues(alpha: 0.08),
       child: SizedBox(
         height: 58,

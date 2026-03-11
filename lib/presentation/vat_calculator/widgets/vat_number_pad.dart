@@ -13,14 +13,18 @@ enum VatBtnType { number, function, equals }
 // ──────────────────────────────────────────
 class VatNumberPad extends StatelessWidget {
   final void Function(String) onKeyTap;
+  final VoidCallback? onLongPressBackspace;
 
-  const VatNumberPad({super.key, required this.onKeyTap});
+  const VatNumberPad({super.key, required this.onKeyTap, this.onLongPressBackspace});
 
   Widget _btn(String label, VatBtnType type) => Expanded(
         child: VatKeypadButton(
           label: label,
           type: type,
           onTap: () => onKeyTap(label),
+          onLongPress: label == '\u{232B}'
+              ? (onLongPressBackspace ?? () => onKeyTap('AC'))
+              : null,
         ),
       );
 
@@ -83,6 +87,7 @@ class VatKeypadButton extends StatelessWidget {
   final String label;
   final VatBtnType type;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   final double? height;
 
   const VatKeypadButton({
@@ -90,6 +95,7 @@ class VatKeypadButton extends StatelessWidget {
     required this.label,
     required this.type,
     required this.onTap,
+    this.onLongPress,
     this.height,
   });
 
@@ -105,6 +111,7 @@ class VatKeypadButton extends StatelessWidget {
       color: type == VatBtnType.equals ? kVatColorEquals : Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(

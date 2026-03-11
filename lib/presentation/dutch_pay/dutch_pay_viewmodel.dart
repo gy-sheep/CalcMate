@@ -287,7 +287,7 @@ class DutchPayViewModel extends AutoDisposeNotifier<DutchPayState> {
   // ── 균등 분배 키 처리 ───────────────────────────────────
 
   EqualSplitState _handleAmountKey(EqualSplitState s, String key) {
-    if (key == 'C') return s.copyWith(rawInput: '');
+    if (key == 'C' || key == 'AC') return s.copyWith(rawInput: '');
     String raw = s.rawInput;
     switch (key) {
       case '⌫':
@@ -305,6 +305,7 @@ class DutchPayViewModel extends AutoDisposeNotifier<DutchPayState> {
   }
 
   EqualSplitState _handleTipKey(EqualSplitState s, String key) {
+    if (key == 'AC') return s.copyWith(tipInput: '', tipRate: 0.0, isCustomTip: true);
     String tip = s.tipInput;
     switch (key) {
       case '⌫':
@@ -324,6 +325,7 @@ class DutchPayViewModel extends AutoDisposeNotifier<DutchPayState> {
 
   IndividualSplitState _handleAmtKey(IndividualSplitState s, String key) {
     if (key == '↵') return s.copyWith(amtFocused: false);
+    if (key == 'AC') return s.copyWith(amtInput: '');
     String amt = s.amtInput;
     switch (key) {
       case '⌫':

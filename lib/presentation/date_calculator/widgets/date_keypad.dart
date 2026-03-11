@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import '../date_calculator_colors.dart';
 
 class DateKeypad extends StatelessWidget {
-  const DateKeypad({super.key, required this.onKeyPressed});
+  const DateKeypad({super.key, required this.onKeyPressed, this.onLongPressBackspace});
 
   final ValueChanged<String> onKeyPressed;
+  final VoidCallback? onLongPressBackspace;
 
   static const _buttons = [
     ['7', '8', '9'],
@@ -49,6 +50,9 @@ class DateKeypad extends StatelessWidget {
   Widget _buildKeyButton(String label) {
     return GestureDetector(
       onTap: () => onKeyPressed(label),
+      onLongPress: label == '⌫'
+          ? (onLongPressBackspace ?? () => onKeyPressed('AC'))
+          : null,
       child: Container(
         height: 56,
         decoration: BoxDecoration(

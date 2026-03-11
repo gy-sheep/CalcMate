@@ -50,6 +50,9 @@ class ButtonPad extends ConsumerWidget {
                 label: cell.$1,
                 type: cell.$2,
                 onTap: () => vm.handleIntent(_intentFor(cell.$1)),
+                onLongPress: cell.$1 == '⌫'
+                    ? () => vm.handleIntent(const CalculatorIntent.clearPressed())
+                    : null,
               ),
             );
           }).toList(),
@@ -66,12 +69,14 @@ class CalcButton extends StatelessWidget {
   final String label;
   final CalcBtnType type;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   const CalcButton({
     super.key,
     required this.label,
     required this.type,
     required this.onTap,
+    this.onLongPress,
   });
 
   Color get _textColor => switch (type) {
@@ -87,6 +92,7 @@ class CalcButton extends StatelessWidget {
       color: type == CalcBtnType.equals ? kCalcColorEquals : Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(

@@ -179,7 +179,9 @@ class DateCalculatorViewModel
   void _handleKey(String key) {
     final current = state.calcNumberInput;
     String next;
-    if (key == '⌫') {
+    if (key == 'AC') {
+      next = '0';
+    } else if (key == '⌫') {
       next = current.length <= 1 ? '0' : current.substring(0, current.length - 1);
     } else {
       if (current == '0') {

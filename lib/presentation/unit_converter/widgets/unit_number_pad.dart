@@ -48,6 +48,9 @@ class UnitNumberPad extends StatelessWidget {
                         : cell.$1 == '\u{232B}'
                             ? () => onKey('⌫')
                             : () => onKey(cell.$1),
+                onLongPress: cell.$1 == '\u{232B}'
+                    ? () => onKey('AC')
+                    : null,
               ),
             );
           }).toList(),
@@ -64,12 +67,14 @@ class UnitKeypadButton extends StatelessWidget {
   final String label;
   final UnitBtnType type;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   const UnitKeypadButton({
     super.key,
     required this.label,
     required this.type,
     required this.onTap,
+    this.onLongPress,
   });
 
   Color get _textColor => switch (type) {
@@ -83,6 +88,7 @@ class UnitKeypadButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         splashColor: Colors.white24,
         highlightColor: Colors.white10,
         child: SizedBox(
