@@ -68,6 +68,8 @@ class SalaryDisplay extends StatelessWidget {
             const SizedBox(height: CmInputCard.titleSpacing),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
                 Flexible(
                   child: Text(

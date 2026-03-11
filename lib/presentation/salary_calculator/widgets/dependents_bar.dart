@@ -49,7 +49,7 @@ class DependentsBar extends StatelessWidget {
                 margin: EdgeInsets.symmetric(
                     horizontal: CmStepValue.horizontalMargin),
                 child: Text(
-                  '$dependents명',
+                  '$dependents',
                   textAlign: TextAlign.center,
                   style: CmStepValue.text.copyWith(color: kSalaryAccent),
                 ),

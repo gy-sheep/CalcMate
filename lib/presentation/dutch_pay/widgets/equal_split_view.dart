@@ -160,7 +160,7 @@ class _PeopleRow extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Text('$people명',
+                  child: Text('$people',
                       style: textStyle18.copyWith(
                           color: kDutchTextPrimary,
                           fontWeight: FontWeight.w600)),
@@ -201,7 +201,7 @@ class _PeopleRow extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          '$n명',
+                          '$n',
                           style: CmTab.text.copyWith(
                             color: selected
                                 ? Colors.white
