@@ -82,13 +82,10 @@ Freezed 불변 모델. 카드 한 장을 표현하는 단일 진실 공급원.
 | 3 | vat_calculator | 부가세 계산기 |
 | 4 | age_calculator | 나이 계산기 |
 | 5 | date_calculator | 날짜 계산기 |
-| 6 | loan_calculator | 대출 계산기 |
-| 7 | salary_calculator | 실수령액 계산기 |
-| 8 | discount_calculator | 할인 계산기 |
-| 9 | dutch_pay | 더치페이 계산기 |
-| 10 | rent_calculator | 전월세 계산기 |
-| 11 | acquisition_tax | 취득세 계산기 |
-| 12 | bmi_calculator | BMI 계산기 |
+| 6 | salary_calculator | 실수령액 계산기 |
+| 7 | discount_calculator | 할인 계산기 |
+| 8 | dutch_pay | 더치페이 계산기 |
+| 9 | bmi_calculator | BMI 계산기 |
 
 ---
 

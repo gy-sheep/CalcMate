@@ -24,12 +24,9 @@ CalcMate 프로젝트의 네이밍 규칙을 정리한 문서.
 | 부가세 계산기 | `vat_screen.dart` |
 | 나이 계산기 | `age_calculator_screen.dart` |
 | 날짜 계산기 | `date_calculator_screen.dart` |
-| 대출 계산기 | `loan_calculator_screen.dart` |
 | 실수령액 계산기 | `salary_calculator_screen.dart` |
 | 할인 계산기 | `discount_calculator_screen.dart` |
 | 더치페이 계산기 | `dutch_pay_screen.dart` |
-| 전월세 계산기 | `rent_calculator_screen.dart` |
-| 취득세 계산기 | `acquisition_tax_screen.dart` |
 | BMI 계산기 | `bmi_calculator_screen.dart` |
 
 ---
@@ -84,14 +81,11 @@ CalcMate 프로젝트의 네이밍 규칙을 정리한 문서.
 | Phase 4 | `feat/vat-calculator` | 부가세 계산기 |
 | Phase 5 | `feat/age-calculator` | 나이 계산기 |
 | Phase 6 | `feat/date-calculator` | 날짜 계산기 |
-| Phase 7 | `feat/loan-calculator` | 대출 계산기 |
-| Phase 8 | `feat/salary-calculator` | 실수령액 계산기 |
-| Phase 9 | `feat/discount-calculator` | 할인 계산기 |
-| Phase 10 | `feat/dutch-pay` | 더치페이 계산기 |
-| Phase 11 | `feat/rent-calculator` | 전월세 계산기 |
-| Phase 12 | `feat/acquisition-tax` | 취득세 계산기 |
-| Phase 13 | `feat/bmi-calculator` | BMI 계산기 |
-| Phase 14 | `feat/polish` | 마무리 및 출시 |
+| Phase 7 | `feat/salary-calculator` | 실수령액 계산기 |
+| Phase 8 | `feat/discount-calculator` | 할인 계산기 |
+| Phase 9 | `feat/dutch-pay` | 더치페이 계산기 |
+| Phase 10 | `feat/bmi-calculator` | BMI 계산기 |
+| Phase 11 | `feat/polish` | 마무리 및 출시 |
 
 ### 세부 분기 (하나의 Phase를 나눠 작업할 경우)
 

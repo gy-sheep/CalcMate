@@ -1,36 +1,45 @@
 import 'package:flutter/material.dart';
 
-// Black Onyx + Brilliant Silver
-const kSalaryBgTop    = Color(0xFF0A0A0F);   // 깊은 블랙
-const kSalaryBgBottom = Color(0xFF141420);   // 약간 밝은 블랙
+// Aged Newsprint — 뉴스프린트 테마
+// ── Background ────────────────────────────────────────────────
+const kSalaryBgTop    = Color(0xFFF5F0E8);   // aged newsprint
+const kSalaryBgBottom = Color(0xFFEDE7DD);   // warm newsprint
 
-const kSalaryAccent      = Color(0xFFE8ECF2);   // 브릴리언트 실버 (핵심 강조)
-const kSalaryAccentSoft  = Color(0x14E8ECF2);
-const kSalaryAccentGlow  = Color(0x40E8ECF2);
+// ── Accent ────────────────────────────────────────────────────
+const kSalaryAccent      = Color(0xFF1A1A1A);   // ink black
+const kSalaryAccentSoft  = Color(0x121A1A1A);
+const kSalaryAccentGlow  = Color(0x301A1A1A);
 
-const kSalaryGold        = Color(0xFFF0F4FF);   // 밝은 실버 화이트 (금액 하이라이트)
-const kSalaryGoldSoft    = Color(0x1EF0F4FF);
-const kSalaryGoldBorder  = Color(0x40E8ECF2);
+// ── Gold (포인트) ─────────────────────────────────────────────
+const kSalaryGold        = Color(0xFF8B6914);   // dark sepia gold
+const kSalaryGoldSoft    = Color(0x158B6914);
+const kSalaryGoldBorder  = Color(0x308B6914);
 
-const kSalaryCardBg      = Color(0xFF1A1A28);   // 다크 카드
-const kSalaryCardBorder  = Color(0xFF2A2A3A);
-const kSalaryCardShadow  = Color(0x28000000);
+// ── Cards ─────────────────────────────────────────────────────
+const kSalaryCardBg      = Color(0xFFFCF9F4);   // fresh newsprint
+const kSalaryCardBorder  = Color(0xFFD6CEBC);   // aged edge
+const kSalaryCardShadow  = Color(0x14000000);
 
-const kSalaryTabDivider  = Color(0xFF7A7A96);
-const kSalaryDivider     = Color(0xFF222230);
+// ── Tab / Divider ─────────────────────────────────────────────
+const kSalaryTabDivider  = Color(0xFF9A9288);
+const kSalaryDivider     = Color(0xFFD6CEBC);
 
-const kSalaryTextPrimary   = Color(0xFFF0EDE6);   // 아이보리 화이트
-const kSalaryTextSecondary = Color(0xFFC8C6D2);   // 미디엄 그레이
-const kSalaryTextDisabled  = Color(0xFF4A4A58);
+// ── Text ──────────────────────────────────────────────────────
+const kSalaryTextPrimary   = Color(0xFF1A1A1A);   // headline ink
+const kSalaryTextSecondary = Color(0xFF4A4540);   // body ink
+const kSalaryTextDisabled  = Color(0xFF8A8279);   // faded print
 
-const kSalarySliderTrack   = Color(0xFF2A2A3A);
-const kSalarySliderActive  = kSalaryAccent;
+// ── Slider ────────────────────────────────────────────────────
+const kSalarySliderTrack   = Color(0xFFD6CEBC);
+const kSalarySliderActive  = kSalaryGold;
 
-const kSalaryResultBg      = Color(0xFF1E1E2C);   // 결과 카드
-const kSalaryResultBorder  = Color(0xFF303042);
+// ── Result Card ───────────────────────────────────────────────
+const kSalaryResultBg      = Color(0xFFF0EBE0);   // column highlight
+const kSalaryResultBorder  = Color(0xFFCCC4B4);   // ruled line
 
-const kSalaryDeductionBg   = Color(0xFF1A1A28);   // 공제 카드
-const kSalaryDeductionLine = Color(0xFF2A2A3A);
+// ── Deduction Card ────────────────────────────────────────────
+const kSalaryDeductionBg   = Color(0xFFFCF9F4);
+const kSalaryDeductionLine = Color(0xFFD6CEBC);
 
 /// 카드 공통 그림자
 const kSalaryCardBoxShadow = [

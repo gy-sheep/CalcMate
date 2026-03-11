@@ -108,7 +108,7 @@ class _SalaryCalculatorScreenState
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,  // 밝은 배경 → 어두운 아이콘
         titleSpacing: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -144,7 +144,7 @@ class _SalaryCalculatorScreenState
                   labels: const ['월급', '연봉'],
                   pageOffset: _pageOffset,
                   onTabSelected: _onTabSelected,
-                  accentColor: kSalaryGold,
+                  accentColor: kSalaryAccent,
                   dividerColor: kSalaryTabDivider,
                   inactiveColor: kSalaryTextSecondary,
                 ),

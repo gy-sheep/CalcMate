@@ -10,11 +10,9 @@ import 'package:calcmate/presentation/unit_converter/unit_converter_screen.dart'
 import 'package:calcmate/presentation/age_calculator/age_calculator_screen.dart';
 import 'package:calcmate/presentation/vat_calculator/vat_calculator_screen.dart';
 import 'package:calcmate/presentation/date_calculator/date_calculator_screen.dart';
-import 'package:calcmate/presentation/loan_calculator/loan_prototype_hub.dart';
 import 'package:calcmate/presentation/dutch_pay/dutch_pay_screen.dart';
 import 'package:calcmate/presentation/discount_calculator/discount_calculator_screen.dart';
 import 'package:calcmate/presentation/bmi_calculator/bmi_calculator_screen.dart';
-import 'package:calcmate/presentation/rent_calculator/rent_preview_swipe_screen.dart';
 import 'package:calcmate/presentation/salary_calculator/salary_calculator_screen.dart';
 import 'package:calcmate/presentation/settings/settings_screen.dart';
 import 'package:calcmate/core/config/calc_mode_config.dart';
@@ -394,8 +392,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         );
       case 'date_calculator':
         return const DateCalculatorScreen();
-      case 'loan_calculator':
-        return const LoanPrototypeHub();
       case 'dutch_pay':
         return const DutchPayScreen();
       case 'salary_calculator':
@@ -404,8 +400,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         return DiscountCalculatorScreen(title: entry.title);
       case 'bmi_calculator':
         return const BmiCalculatorScreen();
-      case 'rent_calculator':
-        return const RentPreviewSwipeScreen();
       default:
         return null;
     }

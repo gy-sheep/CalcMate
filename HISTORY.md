@@ -2,6 +2,25 @@
 
 ---
 
+## 2026-03-11 — 전월세·대출·취득세 계산기 삭제 및 실수령액 테마 변경
+
+### 완료 항목
+
+**계산기 항목 축소 (13개 → 10개)**
+- 전월세 계산기, 대출 계산기, 취득세 계산기 삭제 (실효성 부족)
+- 코드: rent_calculator (화면·ViewModel·colors·widgets 6개·domain 모델·usecase·테스트), loan_calculator (hub·프로토타입 4종·helper·shared widgets) 전체 삭제
+- 문서: specs (RENT_CALCULATOR, LOAN_CALCULATOR), design (RENT_CALCULATOR), dev (RENT_CALCULATOR_IMPL), firebase (FIREBASE_TAX_RATE_BACKEND) 삭제
+- 설정: functions/.env.calcmate-353ed 삭제
+- calc_mode_config: 3개 항목 제거, 10개 항목 order 0~9 재정렬
+- main_screen: 2개 import 및 라우팅 케이스 제거
+- CLAUDE.md, README.md, ROADMAP.md, NAMING_CONVENTION.md, MAIN_SCREEN_IMPL.md, DUTCH_PAY_CALCULATOR_IMPL.md 현행화
+
+**실수령액 계산기 뉴스프린트 테마 적용**
+- salary_calculator_colors.dart: 다크 테마 → Aged Newsprint 테마로 전면 교체
+- accent 통일: 입력 카드 border, 카드 타이틀, 결과 텍스트, 슬라이더, 탭바, 부양가족 버튼 모두 kSalaryGold → kSalaryAccent (ink black)로 변경
+
+---
+
 ## 2026-03-11 — 더치페이 각출 UX 개선 2차
 
 ### 완료 항목
@@ -314,25 +333,6 @@
 - `dutch_pay_individual_split_usecase_test.dart`
 
 ---
-
-## 2026-03-05 — 대출 계산기 UI 프로토타입 4종
-
-### 완료 항목
-
-**기획 명세 (`docs/specs/LOAN_CALCULATOR.md`)**
-- 4가지 UI 안(A~D) 화면 구성 및 기획 의도 정의
-
-**UI 프로토타입 (`lib/presentation/loan_calculator/`)**
-- 안 A: 표준 입력형 — 조건 입력 후 결과 확인 (전통적 흐름)
-- 안 B: 결과 우선형 — 진입 즉시 결과 노출, 슬라이더로 조건 탐색
-- 안 C: 타임라인형 — 연도별 누적 원금/이자 스택 바 차트 시각화
-- 안 D: 목표 역산형 — 월 납입 예산 입력 → 최대 대출 가능금액 역산
-- 허브 화면(`loan_prototype_hub.dart`)으로 4가지 안 선택 진입
-- 공유 계산 헬퍼 및 공유 위젯 분리 (`_loan_calc_helper.dart`, `_loan_shared_widgets.dart`)
-- 원리금균등·원금균등·만기일시 3가지 상환 방식 실시간 계산 지원
-
-**메인 화면 연결**
-- `main_screen.dart` — `loan_calculator` 케이스에 허브 화면 연결
 
 ---
 

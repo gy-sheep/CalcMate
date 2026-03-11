@@ -35,7 +35,7 @@ class ResultCard extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text('실수령액',
                 style: CmResultCard.titleText
-                    .copyWith(color: kSalaryTextSecondary)),
+                    .copyWith(color: kSalaryAccent)),
           ),
           const SizedBox(height: CmResultCard.titleSpacing),
           Row(
@@ -48,7 +48,7 @@ class ResultCard extends StatelessWidget {
                       ? NumberFormatter.addCommas(netPay.toString())
                       : '—',
                   style: CmResultCard.resultText.copyWith(
-                    color: kSalaryGold,
+                    color: kSalaryAccent,
                     fontWeight: FontWeight.w400,
                   ),
                   overflow: TextOverflow.ellipsis,

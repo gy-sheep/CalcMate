@@ -43,8 +43,14 @@ class SalaryDisplay extends StatelessWidget {
         decoration: BoxDecoration(
           color: kSalaryCardBg,
           borderRadius: BorderRadius.circular(CmInputCard.radius),
-          border: Border.all(color: kSalaryCardBorder),
-          boxShadow: kSalaryCardBoxShadow,
+          border: Border.all(color: kSalaryAccent, width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: kSalaryAccent.withValues(alpha: 0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -54,8 +60,8 @@ class SalaryDisplay extends StatelessWidget {
               children: [
                 Text(title,
                     style: CmInputCard.titleText
-                        .copyWith(color: kSalaryTextSecondary)),
-                const Icon(Icons.edit_outlined,
+                        .copyWith(color: kSalaryAccent)),
+                Icon(Icons.edit_outlined,
                     color: kSalaryTextSecondary, size: CmIcon.inputCard),
               ],
             ),
@@ -94,10 +100,10 @@ class SalaryDisplay extends StatelessWidget {
                     enabledThumbRadius: CmSlider.thumbRadius),
                 overlayShape: const RoundSliderOverlayShape(
                     overlayRadius: CmSlider.overlayRadius),
-                activeTrackColor: kSalaryGold,
+                activeTrackColor: kSalaryAccent,
                 inactiveTrackColor: kSalarySliderTrack,
-                thumbColor: kSalaryGold,
-                overlayColor: kSalaryGoldSoft,
+                thumbColor: kSalaryAccent,
+                overlayColor: kSalaryAccentSoft,
               ),
               child: Slider(
                 value: sliderValue,

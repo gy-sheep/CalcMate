@@ -1,6 +1,6 @@
 # CalcMate Implementation Roadmap
 
-생활 속 계산을 하나로 해결하는 Flutter 계산기 앱. 총 13개 계산기를 Phase별로 순차 구현한다.
+생활 속 계산을 하나로 해결하는 Flutter 계산기 앱. 총 10개 계산기를 Phase별로 순차 구현한다.
 
 ---
 
@@ -101,32 +101,7 @@
 
 ---
 
-## Phase 11: 전월세 계산기
-
-- [ ] **Domain**: `RentCalculateUseCase` — 전세↔월세 전환, 보증금 이자 환산 (TDD)
-- [ ] **Presentation**: 전환 방향 선택, 보증금/금리/월세 입력, 결과 표시
-- [ ] **ViewModel**: `RentViewModel`
-
----
-
-## Phase 12: 취득세 계산기
-
-- [ ] **Domain**: `AcquisitionTaxCalculateUseCase` — 매매가 기준 취득세 산출 (TDD)
-- [ ] 취득세율 상수 파일 분리 (`core/constants/acquisition_tax_rates.dart`)
-- [ ] **Presentation**: 매매가/주택 유형 입력, 세율 및 세액 표시
-- [ ] **ViewModel**: `AcquisitionTaxViewModel`
-
----
-
-## Phase 13: 대출 계산기
-
-- [ ] **Domain**: `LoanCalculateUseCase` — 원리금균등상환, 원금균등상환, 만기일시상환 (TDD)
-- [ ] **Presentation**: 대출금/금리/기간 입력, 월납입금 및 총이자 결과 표시, 상환 일정표
-- [ ] **ViewModel**: `LoanViewModel`
-
----
-
-## Phase 14: 마무리 및 출시 (Polish)
+## Phase 11: 마무리 및 출시 (Polish)
 
 - [ ] 계산 히스토리 저장 (`shared_preferences`)
 - [ ] 설정 화면 구현 (테마, 기본 통화 등)

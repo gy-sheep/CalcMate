@@ -51,7 +51,7 @@ class DependentsBar extends StatelessWidget {
                 child: Text(
                   '$dependents명',
                   textAlign: TextAlign.center,
-                  style: CmStepValue.text.copyWith(color: kSalaryGold),
+                  style: CmStepValue.text.copyWith(color: kSalaryAccent),
                 ),
               ),
               _StepButton(
@@ -85,18 +85,18 @@ class _StepButton extends StatelessWidget {
         width: CmRoundButton.medium.size,
         height: CmRoundButton.medium.size,
         decoration: BoxDecoration(
-          color: enabled ? kSalaryGoldSoft : Colors.transparent,
+          color: enabled ? kSalaryAccentSoft : Colors.transparent,
           borderRadius: BorderRadius.circular(CmRoundButton.medium.radius),
           border: Border.all(
             color: enabled
-                ? kSalaryGold.withValues(alpha: 0.4)
+                ? kSalaryAccent.withValues(alpha: 0.3)
                 : kSalaryTextDisabled,
           ),
         ),
         child: Icon(
           icon,
           size: CmRoundButton.medium.iconSize,
-          color: enabled ? kSalaryGold : kSalaryTextDisabled,
+          color: enabled ? kSalaryAccent : kSalaryTextDisabled,
         ),
       ),
     );

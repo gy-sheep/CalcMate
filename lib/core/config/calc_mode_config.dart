@@ -51,20 +51,12 @@ const List<CalcModeEntry> kCalcModeEntries = [
     order: 5,
   ),
   CalcModeEntry(
-    id: 'loan_calculator',
-    title: '대출 계산기',
-    description: '월납입금 및 총이자 계산',
-    icon: Icons.account_balance,
-    imagePath: 'assets/images/backgrounds/loan_calculator.png',
-    order: 6,
-  ),
-  CalcModeEntry(
     id: 'salary_calculator',
     title: '실수령액 계산기',
     description: '연봉 기준 세후 실수령액 계산',
     icon: Icons.payments,
     imagePath: 'assets/images/backgrounds/salary_calculator.png',
-    order: 7,
+    order: 6,
   ),
   CalcModeEntry(
     id: 'discount_calculator',
@@ -72,7 +64,7 @@ const List<CalcModeEntry> kCalcModeEntries = [
     description: '할인율 적용 최종금액 계산',
     icon: Icons.local_offer,
     imagePath: 'assets/images/backgrounds/discount_calculator.png',
-    order: 8,
+    order: 7,
   ),
   CalcModeEntry(
     id: 'dutch_pay',
@@ -80,23 +72,7 @@ const List<CalcModeEntry> kCalcModeEntries = [
     description: '인원수별 1/N 금액 계산',
     icon: Icons.group,
     imagePath: 'assets/images/backgrounds/dutch_pay.png',
-    order: 9,
-  ),
-  CalcModeEntry(
-    id: 'rent_calculator',
-    title: '전월세 계산기',
-    description: '전세↔월세 전환 및 보증금 계산',
-    icon: Icons.apartment,
-    imagePath: 'assets/images/backgrounds/rent_calculator.png',
-    order: 10,
-  ),
-  CalcModeEntry(
-    id: 'acquisition_tax',
-    title: '취득세 계산기',
-    description: '매매가 기준 취득세 계산',
-    icon: Icons.real_estate_agent,
-    imagePath: 'assets/images/backgrounds/acquisition_tax.png',
-    order: 11,
+    order: 8,
   ),
   CalcModeEntry(
     id: 'bmi_calculator',
@@ -104,6 +80,6 @@ const List<CalcModeEntry> kCalcModeEntries = [
     description: '신장·체중 기준 체질량지수 계산',
     icon: Icons.monitor_weight,
     imagePath: 'assets/images/backgrounds/bmi_calculator.png',
-    order: 12,
+    order: 9,
   ),
 ];

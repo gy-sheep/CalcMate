@@ -2,10 +2,10 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/salary-calculator`
-> **마지막 완료**: 실수령액 계산기 로직 구현 및 Clean Architecture 전환
+> **현재 브랜치**: `feat/rent-calculator`
+> **마지막 완료**: 전월세·대출·취득세 계산기 삭제 및 실수령액 테마 변경
 
-### Phase 14: 설정 화면 — 나머지 기능 연동
+### Phase 11: 설정 화면 — 나머지 기능 연동
 - [ ] 언어 설정 실제 l10n 전환 (현재 UI만 구현)
 - [ ] 환율 기준 통화 바텀시트 + SharedPreferences 연동
 - [ ] BMI 단위 바텀시트 + SharedPreferences 연동
@@ -14,16 +14,8 @@
 
 > 기획 명세: `docs/specs/SETTINGS.md`
 
-### Phase 11: 전월세 계산기
-- [x] 기획 명세 작성 (`docs/specs/RENT_CALCULATOR.md`)
-- [x] UI 프리뷰 A안(고정 상단 + 스와이프) / B안(일반 탭) 비교 → A안 확정
-- [ ] 구현 명세 작성 (`docs/dev/RENT_CALCULATOR_IMPL.md`)
-- [ ] 실제 구현 (State·UseCase·ViewModel·Screen·위젯 분리)
-
 ### Phase 10: 기타
 - [ ] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)
-
-> **대출 계산기** (Phase 13으로 이동): `docs/specs/LOAN_CALCULATOR.md` 기획 명세 작성 완료, UI 안 선택 및 구현은 추후 진행
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
@@ -61,7 +53,7 @@
 | — | 스크롤 상단 페이드 그라디언트 추가 (ScrollFadeView·환율·단위변환기) | — | — |
 | — | 탭바(더치페이·날짜) UX 개선 (높이 48·탭 구분선·비활성 opacity·폰트 굵기) | — | — |
 | — | 전체 화면 AppBar.systemOverlayStyle 일괄 적용 (배경색 기준 light/dark 분기) | — | — |
-| 14 | 설정 화면 (다크 모드·계산기 관리·메인 카드 스와이프 숨기기) | — | `docs/specs/SETTINGS.md` |
+| 11 | 설정 화면 (다크 모드·계산기 관리·메인 카드 스와이프 숨기기) | — | `docs/specs/SETTINGS.md` |
 | — | 설정 UI 전체 구현 (카드 레이아웃·언어·앱 정보·라이선스·블러 오버레이·iOS Switch) | — | `docs/specs/SETTINGS.md` |
 | 10 | 실수령액 계산기 UI 구현 (입력 카드·슬라이더 통합·결과 카드·공제 내역·부양가족 바) | — | `docs/design/SALARY_CALCULATOR.md` |
 | 10 | 실수령액 계산기 로직 구현 (TaxRates·SalaryCalculatorState·CalculateSalaryUseCase·ViewModel·위젯 분리) | 19케이스 | `docs/dev/SALARY_CALCULATOR_IMPL.md` |
@@ -76,7 +68,8 @@
 | — | 단위 변환기 왕복 변환 정밀도 개선 및 테스트 추가 | — | — |
 | — | 더치페이 UI 개선 (테마 심화·그라데이션 테두리·탭 레이블·인원 프리셋 칩·정산 단위 인라인 칩·각출 단일 스크롤·바 차트 결과) | — | — |
 | — | 더치페이 각출 UX 개선 2차 (sticky compact 바·스크롤 페이드·금액 콤마·탭 전환 상태 유지·바텀시트 테마·차트 레이아웃 등) | — | — |
-| 11 | 전월세 계산기 기획 명세 및 UI 프리뷰 (A안 확정: 고정 상단 + 스와이프) | — | `docs/specs/RENT_CALCULATOR.md` |
+| — | 전월세·대출·취득세 계산기 삭제 (10개 계산기로 축소) | — | — |
+| — | 실수령액 계산기 뉴스프린트 테마 적용 (accent black 통일) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 
