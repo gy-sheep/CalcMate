@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../config/app_config.dart';
-import '../theme/app_design_tokens.dart';
-
 /// 배너 광고 위젯.
-/// 로드 전: 빈 영역 확보. 로드 성공/실패 시 페이드인으로 표시.
+/// 로드 전: 빈 영역 확보. 로드 완료 시 바로 표시.
 /// [AppConfig.isPremium]이 true이면 높이 0으로 렌더링된다.
 class AdBannerPlaceholder extends StatefulWidget {
   const AdBannerPlaceholder({super.key});
@@ -64,31 +63,19 @@ class _AdBannerPlaceholderState extends State<AdBannerPlaceholder> {
 
     return SizedBox(
       height: AdBannerPlaceholder.height,
-      child: AnimatedSwitcher(
-        duration: durationAnimSlow,
-        child: switch (_state) {
-          _AdState.loading => const SizedBox.shrink(key: ValueKey('loading')),
-          _AdState.loaded => SizedBox(
-              key: const ValueKey('loaded'),
-              height: AdBannerPlaceholder.height,
-              child: AdWidget(ad: _bannerAd!),
-            ),
-          _AdState.failed => Container(
-              key: const ValueKey('failed'),
-              height: AdBannerPlaceholder.height,
-              color: const Color(0xFFE8E8E8),
-              child: const Center(
-                child: Text(
-                  'Ad not available',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFFAAAAAA),
-                  ),
-                ),
+      child: switch (_state) {
+        _AdState.loading => const SizedBox.shrink(),
+        _AdState.loaded => AdWidget(ad: _bannerAd!),
+        _AdState.failed => Container(
+            color: const Color(0xFFE8E8E8),
+            child: const Center(
+              child: Text(
+                AppLocalizations.of(context).ad_bannerNotAvailable,
+                style: const TextStyle(fontSize: 12, color: Color(0xFFAAAAAA)),
               ),
             ),
-        },
-      ),
+          ),
+      },
     );
   }
 }

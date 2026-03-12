@@ -1290,6 +1290,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'임시 환율을 사용 중입니다'**
   String get error_exchangeRateUsingFallback;
+
+  /// No description provided for @ad_interstitialToast.
+  ///
+  /// In ko, this message translates to:
+  /// **'광고가 표시됩니다'**
+  String get ad_interstitialToast;
+
+  /// No description provided for @ad_bannerNotAvailable.
+  ///
+  /// In ko, this message translates to:
+  /// **'광고를 불러올 수 없습니다'**
+  String get ad_bannerNotAvailable;
 }
 
 class _AppLocalizationsDelegate

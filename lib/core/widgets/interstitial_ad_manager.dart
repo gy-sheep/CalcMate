@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../config/app_config.dart';
 import '../utils/app_toast.dart';
 
@@ -16,6 +17,7 @@ class InterstitialAdManager {
   int _screenEntryCount = 0;
   DateTime? _lastShownTime;
   InterstitialAd? _interstitialAd;
+  bool _isLoading = false;
 
   /// 광고가 전면을 덮고 있는 동안 true.
   bool _isAdShowing = false;
@@ -26,31 +28,20 @@ class InterstitialAdManager {
   String? _pendingToast;
   ToastType _pendingType = ToastType.info;
 
-  /// 계산기 화면 진입 시 호출.
-  /// 광고 표시 조건을 만족하면 광고를 로드 후 표시한다.
-  void onScreenEntry(BuildContext context) {
-    _screenEntryCount++;
+  /// 다음 전면 광고를 미리 로드한다.
+  /// 첫 번째 화면 진입 후 또는 광고 표시 후 호출.
+  void preload() {
+    if (AppConfig.isPremium) return;
+    if (_interstitialAd != null || _isLoading) return;
 
-    if (!_canShow) return;
-
-    _loadAd(context);
-  }
-
-  bool get _canShow {
-    if (AppConfig.isPremium) return false;
-    if (_screenEntryCount <= 1) return false;
-    if (_lastShownTime == null) return true;
-    return DateTime.now().difference(_lastShownTime!) >=
-        const Duration(hours: 1);
-  }
-
-  void _loadAd(BuildContext context) {
+    _isLoading = true;
     InterstitialAd.load(
       adUnitId: _testAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialAd = ad;
+          _isLoading = false;
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
@@ -61,19 +52,47 @@ class InterstitialAdManager {
               _onAdClosed();
             },
           );
-          // 토스트 먼저 표시 → 딜레이 후 광고 표시
-          showAppToast(context, '광고가 표시됩니다');
-          Future.delayed(const Duration(milliseconds: 800), () {
-            _isAdShowing = true;
-            ad.show();
-            _lastShownTime = DateTime.now();
-          });
         },
         onAdFailedToLoad: (error) {
-          // 로드 실패 — 토스트·카운트 변경 없이 다음 기회에 재시도
+          _isLoading = false;
         },
       ),
     );
+  }
+
+  /// 계산기 화면 진입 시 호출.
+  /// 광고가 미리 로드되어 있으면 즉시 표시, 없으면 패스.
+  void onScreenEntry(BuildContext context) {
+    _screenEntryCount++;
+
+    if (!_canShow) {
+      // 첫 화면 진입 후 preload 시작
+      if (_screenEntryCount == 1) preload();
+      return;
+    }
+
+    _showAd(context);
+  }
+
+  bool get _canShow {
+    if (AppConfig.isPremium) return false;
+    if (_screenEntryCount <= 1) return false;
+    if (_interstitialAd == null) return false;
+    if (_lastShownTime == null) return true;
+    return DateTime.now().difference(_lastShownTime!) >=
+        const Duration(hours: 1);
+  }
+
+  void _showAd(BuildContext context) {
+    final ad = _interstitialAd!;
+    _interstitialAd = null;
+
+    showAppToast(context, AppLocalizations.of(context).ad_interstitialToast);
+    Future.delayed(const Duration(milliseconds: 800), () {
+      _isAdShowing = true;
+      ad.show();
+      _lastShownTime = DateTime.now();
+    });
   }
 
   void _onAdClosed() {
@@ -84,6 +103,8 @@ class InterstitialAdManager {
     _pendingToast = null;
     _pendingContext = null;
     _pendingType = ToastType.info;
+    // 다음 광고를 미리 로드
+    preload();
   }
 
   /// 광고 표시 중이면 보류, 아니면 즉시 표시.

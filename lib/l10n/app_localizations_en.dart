@@ -669,4 +669,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_exchangeRateUsingFallback => 'Using cached exchange rates';
+
+  @override
+  String get ad_interstitialToast => 'An ad will be shown';
+
+  @override
+  String get ad_bannerNotAvailable => 'Ad not available';
 }

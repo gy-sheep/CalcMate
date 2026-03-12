@@ -26,6 +26,7 @@ Clean Architecture 3계층 + MVVM + Intent 패턴.
 4. **UseCase 단위**: 비즈니스 로직은 UseCase 단위로 분리 (e.g. `CalculateResultUseCase`)
 5. **단계별 진행**: Phase별 최소 기능 완성 후 다음 Phase로 이동
 6. **위젯 파일 분리**: 실제 구현 단계에서는 위젯을 `widgets/` 폴더로 분리한다 (상세 규칙은 `docs/architecture/ARCHITECTURE.md` 참고)
+7. **문자열 l10n 필수**: 사용자에게 노출되는 모든 문자열은 반드시 ARB 파일(`lib/l10n/app_ko.arb`, `app_en.arb`)에 정의하고 `AppLocalizations`를 통해 참조한다. 하드코딩 금지
 
 ## 주요 문서
 

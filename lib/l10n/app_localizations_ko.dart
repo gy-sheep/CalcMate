@@ -666,4 +666,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get error_exchangeRateUsingFallback => '임시 환율을 사용 중입니다';
+
+  @override
+  String get ad_interstitialToast => '광고가 표시됩니다';
+
+  @override
+  String get ad_bannerNotAvailable => '광고를 불러올 수 없습니다';
 }

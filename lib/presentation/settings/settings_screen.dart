@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../core/theme/app_design_tokens.dart';
-import '../../core/utils/app_toast.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 import '../main/main_screen_viewmodel.dart';
@@ -233,28 +232,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _SettingsTile(
                     label: l10n.settings_privacyPolicy,
                     onTap: () {},
-                  ),
-                ],
-              ),
-              // TODO: 토스트 테스트용 — 확인 후 제거
-              const SizedBox(height: 12),
-              _SectionCard(
-                title: 'Toast Test',
-                children: [
-                  _SettingsTile(
-                    label: 'Info Toast',
-                    value: 'info',
-                    onTap: () => showAppToast(context, '클립보드에 복사되었습니다'),
-                  ),
-                  _SettingsTile(
-                    label: 'Success Toast',
-                    value: 'success',
-                    onTap: () => showAppToast(context, '저장이 완료되었습니다', type: ToastType.success),
-                  ),
-                  _SettingsTile(
-                    label: 'Error Toast',
-                    value: 'error',
-                    onTap: () => showAppToast(context, '네트워크 연결을 확인해주세요', type: ToastType.error),
                   ),
                 ],
               ),

@@ -216,5 +216,8 @@
   "common_toast_fractionalExceeded": "Up to 8 decimal places allowed",
 
   "error_exchangeRateLoadFailed": "Unable to load exchange rates",
-  "error_exchangeRateUsingFallback": "Using cached exchange rates"
+  "error_exchangeRateUsingFallback": "Using cached exchange rates",
+
+  "ad_interstitialToast": "An ad will be shown",
+  "ad_bannerNotAvailable": "Ad not available"
 }
