@@ -291,7 +291,7 @@ class _RemainderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) {
-    final l10n = AppLocalizations.of(ctx)!;
+    final l10n = AppLocalizations.of(ctx);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

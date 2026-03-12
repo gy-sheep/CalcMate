@@ -175,13 +175,13 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(AppLocalizations.of(ctx)!.common_cancel,
+            child: Text(AppLocalizations.of(ctx).common_cancel,
                 style:
                     textStyleCaption.copyWith(color: _kTextSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(ctrl.text),
-            child: Text(AppLocalizations.of(ctx)!.common_confirm,
+            child: Text(AppLocalizations.of(ctx).common_confirm,
                 style: textStyleCaption.copyWith(color: _kAccent)),
           ),
         ],
