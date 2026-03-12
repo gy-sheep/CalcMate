@@ -10,6 +10,7 @@ import '../../domain/usecases/get_exchange_rate_usecase.dart';
 import '../../domain/utils/calculator_input_utils.dart';
 import '../../domain/utils/digit_limit_policy.dart';
 import '../../domain/utils/number_formatter.dart';
+import '../settings/settings_viewmodel.dart';
 
 part 'currency_calculator_viewmodel.freezed.dart';
 
@@ -84,8 +85,14 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   @override
   ExchangeRateState build() {
     _getExchangeRateUseCase = ref.read(getExchangeRateUseCaseProvider);
+    final baseCurrency = ref.read(baseCurrencyProvider);
+    // fromCode와 겹치지 않는 기본 toCodes 구성
+    final defaultToCodes = ['USD', 'EUR', 'JPY', 'KRW']
+        .where((c) => c != baseCurrency)
+        .take(3)
+        .toList();
     Future.delayed(const Duration(milliseconds: 400), _loadRates);
-    return const ExchangeRateState();
+    return ExchangeRateState(fromCode: baseCurrency, toCodes: defaultToCodes);
   }
 
   void handleIntent(ExchangeRateIntent intent) {

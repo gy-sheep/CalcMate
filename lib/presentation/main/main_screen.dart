@@ -22,6 +22,7 @@ import 'package:calcmate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/di/providers.dart';
 import '../widgets/calc_mode_card.dart';
 import 'main_screen_viewmodel.dart';
 
@@ -267,6 +268,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         imagePath: entry.imagePath,
                         onTap: () {
                           _swipeResetNotifier.value++;
+                          ref
+                              .read(interstitialAdManagerProvider)
+                              .onScreenEntry(context);
                           openContainer();
                         },
                       );

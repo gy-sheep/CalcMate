@@ -85,6 +85,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_currencyGBP => 'GBP (파운드)';
 
   @override
+  String get settings_currencyAUD => 'AUD (호주 달러)';
+
+  @override
+  String get settings_currencyCAD => 'CAD (캐나다 달러)';
+
+  @override
+  String get settings_currencyCHF => 'CHF (스위스 프랑)';
+
+  @override
+  String get settings_currencyHKD => 'HKD (홍콩 달러)';
+
+  @override
+  String get settings_bmiMetric => 'kg / cm';
+
+  @override
+  String get settings_bmiImperial => 'lb / in';
+
+  @override
   String get settings_languageSystem => '시스템 기본';
 
   @override

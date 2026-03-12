@@ -11,6 +11,13 @@ import 'open_source_licenses_screen.dart';
 import '../../domain/models/currency_unit.dart';
 import 'settings_viewmodel.dart';
 
+// ── 환율 기준 통화 선택지 (10개) ──
+
+const _kBaseCurrencyCodes = [
+  'KRW', 'USD', 'EUR', 'JPY', 'CNY',
+  'GBP', 'AUD', 'CAD', 'CHF', 'HKD',
+];
+
 // ── 설정 화면 ──
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -110,10 +117,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  void _showBaseCurrencySheet(BuildContext context, WidgetRef ref) {
+    final resolved = ref.read(baseCurrencyProvider);
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(CmSheet.radius),
+        ),
+      ),
+      builder: (_) => _BaseCurrencySheet(
+        selected: resolved,
+        onSelected: (code) {
+          ref
+              .read(settingsViewModelProvider.notifier)
+              .handleIntent(SettingsIntent.baseCurrencyChanged(code));
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsViewModelProvider);
     final resolvedCurrency = ref.watch(displayCurrencyProvider);
+    final resolvedBaseCurrency = ref.watch(baseCurrencyProvider);
     final entries = ref.watch(mainScreenViewModelProvider).entries;
     final visibleCount = entries.where((e) => e.isVisible).length;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -178,13 +207,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   _SettingsTile(
                     label: l10n.settings_baseCurrency,
-                    value: 'KRW',
-                    onTap: () {},
-                  ),
-                  _SettingsTile(
-                    label: l10n.settings_bmiUnit,
-                    value: 'kg/cm',
-                    onTap: () {},
+                    value: resolvedBaseCurrency,
+                    onTap: () => _showBaseCurrencySheet(context, ref),
                   ),
                 ],
               ),
@@ -491,6 +515,89 @@ class _DisplayCurrencySheet extends StatelessWidget {
       ),
     );
   }
+}
+
+// ── 환율 기준 통화 선택 바텀시트 ──
+
+class _BaseCurrencySheet extends StatelessWidget {
+  final String selected;
+  final ValueChanged<String> onSelected;
+  const _BaseCurrencySheet({required this.selected, required this.onSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: CmSheet.handleWidth,
+            height: CmSheet.handleHeight,
+            margin: const EdgeInsets.only(
+              top: CmSheet.handleTopSpacing,
+              bottom: CmSheet.handleBottomSpacing,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(CmSheet.handleRadius),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                l10n.settings_baseCurrency,
+                style: textStyle16.copyWith(color: colorScheme.onSurface),
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (int i = 0; i < _kBaseCurrencyCodes.length; i++) ...[
+                    if (i > 0) const Divider(
+                      thickness: CmSheet.dividerThickness,
+                      height: CmSheet.dividerHeight,
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    _SheetRadioTile(
+                      label: _baseCurrencyCodeLabel(l10n, _kBaseCurrencyCodes[i]),
+                      isSelected: selected == _kBaseCurrencyCodes[i],
+                      onTap: () => onSelected(_kBaseCurrencyCodes[i]),
+                    ),
+                  ],
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _baseCurrencyCodeLabel(AppLocalizations l10n, String code) =>
+      switch (code) {
+        'KRW' => l10n.settings_currencyKRW,
+        'USD' => l10n.settings_currencyUSD,
+        'EUR' => l10n.settings_currencyEUR,
+        'JPY' => l10n.settings_currencyJPY,
+        'CNY' => l10n.settings_currencyCNY,
+        'GBP' => l10n.settings_currencyGBP,
+        'AUD' => l10n.settings_currencyAUD,
+        'CAD' => l10n.settings_currencyCAD,
+        'CHF' => l10n.settings_currencyCHF,
+        'HKD' => l10n.settings_currencyHKD,
+        _ => code,
+      };
 }
 
 // ── 다크 모드 선택 바텀시트 ──

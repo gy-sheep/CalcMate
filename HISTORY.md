@@ -2,6 +2,33 @@
 
 ---
 
+## 2026-03-12 — 환율 기준 통화 설정 추가
+
+### 완료 항목
+
+**설정 화면 — 환율 기준 통화**
+- `SettingsState`에 `baseCurrency` 필드 추가 (null = 기기 지역 기반)
+- `baseCurrencyProvider` — 기기 countryCode → 통화 코드 자동 감지 (10개 통화)
+- `_BaseCurrencySheet` 바텀시트 — 10개 주요 통화 라디오 리스트 선택
+- `_kBaseCurrencyKey = 'default_currency'` SharedPreferences 저장/삭제
+- `_detectBaseCurrencyFromDevice()` — KRW/USD/EUR/JPY/CNY/GBP/AUD/CAD/CHF/HKD 매핑
+
+**환율 계산기 연동**
+- `ExchangeRateViewModel.build()` — `baseCurrencyProvider`에서 `fromCode` 초기값 읽기
+- `toCodes` — `fromCode`와 겹치지 않도록 자동 필터링
+
+**BMI 단위 설정 제외**
+- BMI 계산기 내 토글과 중복으로 설정 항목에서 제외 결정
+- BMI ViewModel은 기존 직접 SharedPreferences 방식 유지
+
+**l10n**
+- ARB 키 6개 추가: `settings_currencyAUD/CAD/CHF/HKD`, `settings_bmiMetric/Imperial`
+
+**테스트**
+- `base_currency_setting_test.dart` — 8케이스 (State 로드, Provider 해석, SP 저장/삭제/덮어쓰기/기기 기본값 복귀)
+
+---
+
 ## 2026-03-11 — 리팩토링 R-01/R-06/R-10 및 전반 코드 정리
 
 ### 완료 항목

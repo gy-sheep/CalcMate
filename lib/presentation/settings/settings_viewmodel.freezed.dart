@@ -19,7 +19,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SettingsState {
   ThemeMode get themeMode => throw _privateConstructorUsedError;
   Locale? get locale => throw _privateConstructorUsedError; // null = 시스템 기본
-  CurrencyUnit? get displayCurrency => throw _privateConstructorUsedError;
+  CurrencyUnit? get displayCurrency =>
+      throw _privateConstructorUsedError; // null = 자동(기기 지역)
+  String? get baseCurrency => throw _privateConstructorUsedError;
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -39,6 +41,7 @@ abstract class $SettingsStateCopyWith<$Res> {
     ThemeMode themeMode,
     Locale? locale,
     CurrencyUnit? displayCurrency,
+    String? baseCurrency,
   });
 }
 
@@ -60,6 +63,7 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
     Object? themeMode = null,
     Object? locale = freezed,
     Object? displayCurrency = freezed,
+    Object? baseCurrency = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -75,6 +79,10 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
                 ? _value.displayCurrency
                 : displayCurrency // ignore: cast_nullable_to_non_nullable
                       as CurrencyUnit?,
+            baseCurrency: freezed == baseCurrency
+                ? _value.baseCurrency
+                : baseCurrency // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -94,6 +102,7 @@ abstract class _$$SettingsStateImplCopyWith<$Res>
     ThemeMode themeMode,
     Locale? locale,
     CurrencyUnit? displayCurrency,
+    String? baseCurrency,
   });
 }
 
@@ -114,6 +123,7 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
     Object? themeMode = null,
     Object? locale = freezed,
     Object? displayCurrency = freezed,
+    Object? baseCurrency = freezed,
   }) {
     return _then(
       _$SettingsStateImpl(
@@ -129,6 +139,10 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
             ? _value.displayCurrency
             : displayCurrency // ignore: cast_nullable_to_non_nullable
                   as CurrencyUnit?,
+        baseCurrency: freezed == baseCurrency
+            ? _value.baseCurrency
+            : baseCurrency // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -141,6 +155,7 @@ class _$SettingsStateImpl implements _SettingsState {
     this.themeMode = ThemeMode.system,
     this.locale,
     this.displayCurrency,
+    this.baseCurrency,
   });
 
   @override
@@ -151,10 +166,13 @@ class _$SettingsStateImpl implements _SettingsState {
   // null = 시스템 기본
   @override
   final CurrencyUnit? displayCurrency;
+  // null = 자동(기기 지역)
+  @override
+  final String? baseCurrency;
 
   @override
   String toString() {
-    return 'SettingsState(themeMode: $themeMode, locale: $locale, displayCurrency: $displayCurrency)';
+    return 'SettingsState(themeMode: $themeMode, locale: $locale, displayCurrency: $displayCurrency, baseCurrency: $baseCurrency)';
   }
 
   @override
@@ -166,12 +184,19 @@ class _$SettingsStateImpl implements _SettingsState {
                 other.themeMode == themeMode) &&
             (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.displayCurrency, displayCurrency) ||
-                other.displayCurrency == displayCurrency));
+                other.displayCurrency == displayCurrency) &&
+            (identical(other.baseCurrency, baseCurrency) ||
+                other.baseCurrency == baseCurrency));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, themeMode, locale, displayCurrency);
+  int get hashCode => Object.hash(
+    runtimeType,
+    themeMode,
+    locale,
+    displayCurrency,
+    baseCurrency,
+  );
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -187,6 +212,7 @@ abstract class _SettingsState implements SettingsState {
     final ThemeMode themeMode,
     final Locale? locale,
     final CurrencyUnit? displayCurrency,
+    final String? baseCurrency,
   }) = _$SettingsStateImpl;
 
   @override
@@ -194,7 +220,9 @@ abstract class _SettingsState implements SettingsState {
   @override
   Locale? get locale; // null = 시스템 기본
   @override
-  CurrencyUnit? get displayCurrency;
+  CurrencyUnit? get displayCurrency; // null = 자동(기기 지역)
+  @override
+  String? get baseCurrency;
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.

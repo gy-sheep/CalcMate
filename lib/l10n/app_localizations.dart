@@ -242,6 +242,42 @@ abstract class AppLocalizations {
   /// **'GBP (파운드)'**
   String get settings_currencyGBP;
 
+  /// No description provided for @settings_currencyAUD.
+  ///
+  /// In ko, this message translates to:
+  /// **'AUD (호주 달러)'**
+  String get settings_currencyAUD;
+
+  /// No description provided for @settings_currencyCAD.
+  ///
+  /// In ko, this message translates to:
+  /// **'CAD (캐나다 달러)'**
+  String get settings_currencyCAD;
+
+  /// No description provided for @settings_currencyCHF.
+  ///
+  /// In ko, this message translates to:
+  /// **'CHF (스위스 프랑)'**
+  String get settings_currencyCHF;
+
+  /// No description provided for @settings_currencyHKD.
+  ///
+  /// In ko, this message translates to:
+  /// **'HKD (홍콩 달러)'**
+  String get settings_currencyHKD;
+
+  /// No description provided for @settings_bmiMetric.
+  ///
+  /// In ko, this message translates to:
+  /// **'kg / cm'**
+  String get settings_bmiMetric;
+
+  /// No description provided for @settings_bmiImperial.
+  ///
+  /// In ko, this message translates to:
+  /// **'lb / in'**
+  String get settings_bmiImperial;
+
   /// No description provided for @settings_languageSystem.
   ///
   /// In ko, this message translates to:

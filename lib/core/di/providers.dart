@@ -10,6 +10,7 @@ import '../../data/repositories/exchange_rate_repository_impl.dart';
 import '../../domain/repositories/exchange_rate_repository.dart';
 import '../../domain/usecases/get_exchange_rate_usecase.dart';
 import '../network/error_interceptor.dart';
+import '../widgets/interstitial_ad_manager.dart';
 
 /// 앱 전체에서 공유하는 Dio 인스턴스
 final dioProvider = Provider<Dio>((ref) {
@@ -64,6 +65,13 @@ final exchangeRateRepositoryProvider =
     remote: ref.read(exchangeRateRemoteDataSourceProvider),
     local: ref.read(exchangeRateLocalDataSourceProvider),
   );
+});
+
+/// 전면 광고 매니저 (앱 전체 싱글턴)
+final interstitialAdManagerProvider = Provider<InterstitialAdManager>((ref) {
+  final manager = InterstitialAdManager();
+  ref.onDispose(manager.dispose);
+  return manager;
 });
 
 /// UseCase

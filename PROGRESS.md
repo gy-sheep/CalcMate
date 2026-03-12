@@ -17,9 +17,9 @@
 - [x] Phase 6: UI 레이아웃 대응
 - [x] Phase 7: 테스트 및 마무리 (36개 테스트, ARB 184키 ko/en 일치)
 
-### Phase 11: 설정 화면 — 나머지 기능 연동
-- [ ] 환율 기준 통화 바텀시트 + SharedPreferences 연동
-- [ ] BMI 단위 바텀시트 + SharedPreferences 연동
+### Phase 11: 설정 화면 — 나머지 기능 연동 ✅ 완료
+- [x] 환율 기준 통화 바텀시트 + SharedPreferences 연동
+- [x] BMI 단위 — 계산기 내 토글과 중복으로 설정 항목에서 제외
 
 > 기획 명세: `docs/specs/SETTINGS.md`
 
@@ -100,6 +100,7 @@
 | — | 리팩토링 R-10 Duration 7종·BorderRadius 토큰화 (34개 교체, 18파일) | — | — |
 | 12-1 | l10n 전환 (ko/en 2개 언어, ARB 184키, DataStrings 120+항목, Phase 1~7 완료) | 36케이스 | `docs/plans/L10N_PLAN.md` |
 | — | 표시 통화 설정 (CurrencyUnit enum·CurrencyFormatter 확장·설정 바텀시트·부가세/할인/더치페이 적용, 실수령액 KRW 고정) | 30케이스 | — |
+| 11 | 환율 기준 통화 설정 (baseCurrencyProvider·바텀시트 10개 통화·환율 계산기 fromCode 연동) | 8케이스 | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

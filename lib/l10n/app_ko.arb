@@ -38,6 +38,12 @@
   "settings_currencyJPY": "JPY (엔)",
   "settings_currencyCNY": "CNY (위안)",
   "settings_currencyGBP": "GBP (파운드)",
+  "settings_currencyAUD": "AUD (호주 달러)",
+  "settings_currencyCAD": "CAD (캐나다 달러)",
+  "settings_currencyCHF": "CHF (스위스 프랑)",
+  "settings_currencyHKD": "HKD (홍콩 달러)",
+  "settings_bmiMetric": "kg / cm",
+  "settings_bmiImperial": "lb / in",
 
   "settings_languageSystem": "시스템 기본",
   "settings_languageKo": "한국어",

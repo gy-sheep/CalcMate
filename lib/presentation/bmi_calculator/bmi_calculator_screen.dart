@@ -59,9 +59,11 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
     if (!_localeInitialized) {
       _localeInitialized = true;
       final locale = Localizations.localeOf(context);
-      ref
-          .read(bmiCalculatorViewModelProvider.notifier)
-          .handleIntent(BmiCalculatorIntent.initialized(locale));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref
+            .read(bmiCalculatorViewModelProvider.notifier)
+            .handleIntent(BmiCalculatorIntent.initialized(locale));
+      });
     }
   }
 

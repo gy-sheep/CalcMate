@@ -85,6 +85,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_currencyGBP => 'GBP (Pound)';
 
   @override
+  String get settings_currencyAUD => 'AUD (Australian Dollar)';
+
+  @override
+  String get settings_currencyCAD => 'CAD (Canadian Dollar)';
+
+  @override
+  String get settings_currencyCHF => 'CHF (Swiss Franc)';
+
+  @override
+  String get settings_currencyHKD => 'HKD (Hong Kong Dollar)';
+
+  @override
+  String get settings_bmiMetric => 'kg / cm';
+
+  @override
+  String get settings_bmiImperial => 'lb / in';
+
+  @override
   String get settings_languageSystem => 'System Default';
 
   @override
