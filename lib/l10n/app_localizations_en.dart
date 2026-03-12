@@ -360,6 +360,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get salary_slider_annualMax => '300M';
 
   @override
+  String salary_taxBasis_year(int year) {
+    return 'Deductions are based on $year tax rates';
+  }
+
+  @override
+  String salary_taxBasis_halfYear(int year) {
+    return 'Deductions are based on $year H2 tax rates';
+  }
+
+  @override
+  String get salary_loading => 'Loading tax rates...';
+
+  @override
   String get discount_label_originalPrice => 'Original Price';
 
   @override

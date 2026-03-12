@@ -164,6 +164,19 @@
   "salary_slider_monthlyMax": "1,000만",
   "salary_slider_annualMin": "2,000만",
   "salary_slider_annualMax": "3억",
+  "salary_taxBasis_year": "공제 항목은 {year}년 세율 기준으로 계산됩니다",
+  "@salary_taxBasis_year": {
+    "placeholders": {
+      "year": { "type": "int" }
+    }
+  },
+  "salary_taxBasis_halfYear": "공제 항목은 {year}년 하반기 세율 기준으로 계산됩니다",
+  "salary_loading": "세율 정보를 가져오는 중...",
+  "@salary_taxBasis_halfYear": {
+    "placeholders": {
+      "year": { "type": "int" }
+    }
+  },
 
   "discount_label_originalPrice": "원가",
   "discount_label_discountRate": "할인율",

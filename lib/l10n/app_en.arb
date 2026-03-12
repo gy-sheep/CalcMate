@@ -123,6 +123,9 @@
   "salary_slider_monthlyMax": "10M",
   "salary_slider_annualMin": "20M",
   "salary_slider_annualMax": "300M",
+  "salary_taxBasis_year": "Deductions are based on {year} tax rates",
+  "salary_taxBasis_halfYear": "Deductions are based on {year} H2 tax rates",
+  "salary_loading": "Loading tax rates...",
 
   "discount_label_originalPrice": "Original Price",
   "discount_label_discountRate": "Discount Rate",

@@ -358,6 +358,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get salary_slider_annualMax => '3억';
 
   @override
+  String salary_taxBasis_year(int year) {
+    return '공제 항목은 $year년 세율 기준으로 계산됩니다';
+  }
+
+  @override
+  String salary_taxBasis_halfYear(int year) {
+    return '공제 항목은 $year년 하반기 세율 기준으로 계산됩니다';
+  }
+
+  @override
+  String get salary_loading => '세율 정보를 가져오는 중...';
+
+  @override
   String get discount_label_originalPrice => '원가';
 
   @override

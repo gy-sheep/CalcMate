@@ -25,7 +25,10 @@ mixin _$SalaryCalculatorState {
   int get longTermCare => throw _privateConstructorUsedError;
   int get employmentInsurance => throw _privateConstructorUsedError;
   int get incomeTax => throw _privateConstructorUsedError;
-  int get localTax => throw _privateConstructorUsedError;
+  int get localTax => throw _privateConstructorUsedError; // 세율 기준 정보
+  bool get isLoading => throw _privateConstructorUsedError;
+  int get basedYear => throw _privateConstructorUsedError;
+  int? get basedHalf => throw _privateConstructorUsedError;
 
   /// Create a copy of SalaryCalculatorState
   /// with the given fields replaced by the non-null parameter values.
@@ -51,6 +54,9 @@ abstract class $SalaryCalculatorStateCopyWith<$Res> {
     int employmentInsurance,
     int incomeTax,
     int localTax,
+    bool isLoading,
+    int basedYear,
+    int? basedHalf,
   });
 }
 
@@ -81,6 +87,9 @@ class _$SalaryCalculatorStateCopyWithImpl<
     Object? employmentInsurance = null,
     Object? incomeTax = null,
     Object? localTax = null,
+    Object? isLoading = null,
+    Object? basedYear = null,
+    Object? basedHalf = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -120,6 +129,18 @@ class _$SalaryCalculatorStateCopyWithImpl<
                 ? _value.localTax
                 : localTax // ignore: cast_nullable_to_non_nullable
                       as int,
+            isLoading: null == isLoading
+                ? _value.isLoading
+                : isLoading // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            basedYear: null == basedYear
+                ? _value.basedYear
+                : basedYear // ignore: cast_nullable_to_non_nullable
+                      as int,
+            basedHalf: freezed == basedHalf
+                ? _value.basedHalf
+                : basedHalf // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -145,6 +166,9 @@ abstract class _$$SalaryCalculatorStateImplCopyWith<$Res>
     int employmentInsurance,
     int incomeTax,
     int localTax,
+    bool isLoading,
+    int basedYear,
+    int? basedHalf,
   });
 }
 
@@ -172,6 +196,9 @@ class __$$SalaryCalculatorStateImplCopyWithImpl<$Res>
     Object? employmentInsurance = null,
     Object? incomeTax = null,
     Object? localTax = null,
+    Object? isLoading = null,
+    Object? basedYear = null,
+    Object? basedHalf = freezed,
   }) {
     return _then(
       _$SalaryCalculatorStateImpl(
@@ -211,6 +238,18 @@ class __$$SalaryCalculatorStateImplCopyWithImpl<$Res>
             ? _value.localTax
             : localTax // ignore: cast_nullable_to_non_nullable
                   as int,
+        isLoading: null == isLoading
+            ? _value.isLoading
+            : isLoading // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        basedYear: null == basedYear
+            ? _value.basedYear
+            : basedYear // ignore: cast_nullable_to_non_nullable
+                  as int,
+        basedHalf: freezed == basedHalf
+            ? _value.basedHalf
+            : basedHalf // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -229,6 +268,9 @@ class _$SalaryCalculatorStateImpl implements _SalaryCalculatorState {
     this.employmentInsurance = 0,
     this.incomeTax = 0,
     this.localTax = 0,
+    this.isLoading = false,
+    this.basedYear = 0,
+    this.basedHalf,
   });
 
   @override
@@ -259,10 +301,19 @@ class _$SalaryCalculatorStateImpl implements _SalaryCalculatorState {
   @override
   @JsonKey()
   final int localTax;
+  // 세율 기준 정보
+  @override
+  @JsonKey()
+  final bool isLoading;
+  @override
+  @JsonKey()
+  final int basedYear;
+  @override
+  final int? basedHalf;
 
   @override
   String toString() {
-    return 'SalaryCalculatorState(mode: $mode, salary: $salary, dependents: $dependents, nationalPension: $nationalPension, healthInsurance: $healthInsurance, longTermCare: $longTermCare, employmentInsurance: $employmentInsurance, incomeTax: $incomeTax, localTax: $localTax)';
+    return 'SalaryCalculatorState(mode: $mode, salary: $salary, dependents: $dependents, nationalPension: $nationalPension, healthInsurance: $healthInsurance, longTermCare: $longTermCare, employmentInsurance: $employmentInsurance, incomeTax: $incomeTax, localTax: $localTax, isLoading: $isLoading, basedYear: $basedYear, basedHalf: $basedHalf)';
   }
 
   @override
@@ -285,7 +336,13 @@ class _$SalaryCalculatorStateImpl implements _SalaryCalculatorState {
             (identical(other.incomeTax, incomeTax) ||
                 other.incomeTax == incomeTax) &&
             (identical(other.localTax, localTax) ||
-                other.localTax == localTax));
+                other.localTax == localTax) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.basedYear, basedYear) ||
+                other.basedYear == basedYear) &&
+            (identical(other.basedHalf, basedHalf) ||
+                other.basedHalf == basedHalf));
   }
 
   @override
@@ -300,6 +357,9 @@ class _$SalaryCalculatorStateImpl implements _SalaryCalculatorState {
     employmentInsurance,
     incomeTax,
     localTax,
+    isLoading,
+    basedYear,
+    basedHalf,
   );
 
   /// Create a copy of SalaryCalculatorState
@@ -326,6 +386,9 @@ abstract class _SalaryCalculatorState implements SalaryCalculatorState {
     final int employmentInsurance,
     final int incomeTax,
     final int localTax,
+    final bool isLoading,
+    final int basedYear,
+    final int? basedHalf,
   }) = _$SalaryCalculatorStateImpl;
 
   @override
@@ -345,7 +408,13 @@ abstract class _SalaryCalculatorState implements SalaryCalculatorState {
   @override
   int get incomeTax;
   @override
-  int get localTax;
+  int get localTax; // 세율 기준 정보
+  @override
+  bool get isLoading;
+  @override
+  int get basedYear;
+  @override
+  int? get basedHalf;
 
   /// Create a copy of SalaryCalculatorState
   /// with the given fields replaced by the non-null parameter values.

@@ -14,7 +14,7 @@
 
 | 파일 | 작업 |
 |------|------|
-| `lib/domain/models/tax_rates.dart` | 신규 — 도메인 TaxRates Freezed 모델 + kFallbackTaxRates 상수 |
+| `lib/domain/models/tax_rates.dart` | 신규 — 도메인 TaxRates Freezed 모델 (Firestore 연동 후 IncomeTaxBracket 등 확장) |
 | `lib/domain/models/salary_calculator_state.dart` | 신규 — UI 전체 상태 Freezed 모델 |
 | `lib/domain/usecases/calculate_salary_usecase.dart` | 신규 — 실수령액 계산 UseCase (간이세액표 산출 공식) |
 | `lib/presentation/salary_calculator/salary_calculator_viewmodel.dart` | 신규 — ViewModel (AutoDisposeNotifier) |
@@ -30,10 +30,11 @@
 **데이터 흐름**
 
 ```
-[kFallbackTaxRates 상수 (2024년 기준)]
+[Firestore tax_rates/latest → 캐시(7일) → kFallbackTaxRates 폴백]
         │
         ▼
 [SalaryCalculatorViewModel (AutoDisposeNotifier<SalaryCalculatorState>)]
+        │  build() → _loadTaxRates() (fire-and-forget)
         │  handleIntent(intent)
         │
         ├── SalaryChanged    → _salary 업데이트 → CalculateSalaryUseCase
@@ -98,8 +99,9 @@ const kFallbackTaxRates = TaxRates(
 );
 ```
 
-> **설계 결정**: 소득세는 간이세액표 2D 배열 대신 소득세법 시행령 별표2 산출 공식으로 계산한다.
-> Firestore 연동 시 실제 간이세액표 데이터로 전환 예정.
+> **설계 결정**: 소득세는 Firestore 간이세액표 646행 룩업으로 계산한다 (테이블 없으면 산출 공식 폴백).
+> 폴백 상수는 `lib/data/datasources/tax_rates_fallback.dart`로 이동 (2026년 기준).
+> Firestore 세율 연동 상세: [`docs/dev/firebase/FIRESTORE_TAX_RATES.md`](firebase/FIRESTORE_TAX_RATES.md)
 
 ---
 
@@ -231,8 +233,8 @@ final salaryCalculatorViewModelProvider =
         SalaryCalculatorViewModel.new);
 ```
 
-> **설계 결정**: Firestore 연동이 없으므로 `AsyncNotifier` 대신 동기 `AutoDisposeNotifier` 사용.
-> Firestore 세율 조회 추가 시 `AsyncNotifier`로 전환 예정.
+> **설계 결정**: 동기 `AutoDisposeNotifier` 유지. Firestore 세율은 `_loadTaxRates()`에서 fire-and-forget으로 비동기 로딩하고, 완료 시 state를 갱신한다.
+> 로딩 중에는 `isLoading: true` + 환율 계산기와 동일한 블러 오버레이를 표시한다.
 
 ---
 

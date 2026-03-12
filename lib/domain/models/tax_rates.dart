@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'tax_rates.freezed.dart';
+part 'tax_rates.g.dart';
 
 @freezed
 class TaxRates with _$TaxRates {
@@ -12,16 +14,51 @@ class TaxRates with _$TaxRates {
     required double longTermCareRate,
     required double employmentInsuranceRate,
     required int basedYear,
+    int? basedHalf,
+    List<IncomeTaxBracket>? incomeTaxTable,
+    List<OverTenMillionBracket>? overTenMillionBrackets,
+    ChildTaxCredit? childTaxCredit,
   }) = _TaxRates;
+
+  factory TaxRates.fromJson(Map<String, dynamic> json) =>
+      _$TaxRatesFromJson(json);
 }
 
-/// 2024년 기준 오프라인 폴백 상수.
-const kFallbackTaxRates = TaxRates(
-  nationalPensionRate: 0.045,
-  nationalPensionMin: 370000,
-  nationalPensionMax: 6170000,
-  healthInsuranceRate: 0.03545,
-  longTermCareRate: 0.1295,
-  employmentInsuranceRate: 0.009,
-  basedYear: 2024,
-);
+@freezed
+class IncomeTaxBracket with _$IncomeTaxBracket {
+  const factory IncomeTaxBracket({
+    required int min,
+    required int max,
+    required List<int> taxes,
+  }) = _IncomeTaxBracket;
+
+  factory IncomeTaxBracket.fromJson(Map<String, dynamic> json) =>
+      _$IncomeTaxBracketFromJson(json);
+}
+
+@freezed
+class OverTenMillionBracket with _$OverTenMillionBracket {
+  const factory OverTenMillionBracket({
+    required int min,
+    required int max,
+    required int baseAdd,
+    required double rate,
+    required double applyRatio,
+    required int excessFrom,
+  }) = _OverTenMillionBracket;
+
+  factory OverTenMillionBracket.fromJson(Map<String, dynamic> json) =>
+      _$OverTenMillionBracketFromJson(json);
+}
+
+@freezed
+class ChildTaxCredit with _$ChildTaxCredit {
+  const factory ChildTaxCredit({
+    required int one,
+    required int two,
+    required int perExtra,
+  }) = _ChildTaxCredit;
+
+  factory ChildTaxCredit.fromJson(Map<String, dynamic> json) =>
+      _$ChildTaxCreditFromJson(json);
+}

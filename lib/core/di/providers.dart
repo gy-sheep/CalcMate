@@ -6,9 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/datasources/exchange_rate_local_datasource.dart';
 import '../../data/datasources/exchange_rate_remote_datasource.dart';
+import '../../data/datasources/tax_rates_local_datasource.dart';
+import '../../data/datasources/tax_rates_remote_datasource.dart';
 import '../../data/repositories/exchange_rate_repository_impl.dart';
+import '../../data/repositories/tax_rates_repository_impl.dart';
 import '../../domain/repositories/exchange_rate_repository.dart';
+import '../../domain/repositories/tax_rates_repository.dart';
 import '../../domain/usecases/get_exchange_rate_usecase.dart';
+import '../../domain/usecases/get_tax_rates_usecase.dart';
 import '../network/error_interceptor.dart';
 import '../widgets/interstitial_ad_manager.dart';
 
@@ -78,4 +83,35 @@ final interstitialAdManagerProvider = Provider<InterstitialAdManager>((ref) {
 final getExchangeRateUseCaseProvider =
     Provider<GetExchangeRateUseCase>((ref) {
   return GetExchangeRateUseCase(ref.read(exchangeRateRepositoryProvider));
+});
+
+// ── 세율 (TaxRates) ────────────────────────────────────────────────────────
+
+/// Remote DataSource (세율)
+final taxRatesRemoteDataSourceProvider =
+    Provider<TaxRatesRemoteDataSource>((ref) {
+  return TaxRatesRemoteDataSource(
+    firestore: ref.read(firestoreProvider),
+  );
+});
+
+/// Local DataSource (세율)
+final taxRatesLocalDataSourceProvider =
+    Provider<TaxRatesLocalDataSource>((ref) {
+  return TaxRatesLocalDataSource(ref.read(sharedPreferencesProvider));
+});
+
+/// Repository (세율)
+final taxRatesRepositoryProvider =
+    Provider<TaxRatesRepository>((ref) {
+  return TaxRatesRepositoryImpl(
+    remote: ref.read(taxRatesRemoteDataSourceProvider),
+    local: ref.read(taxRatesLocalDataSourceProvider),
+  );
+});
+
+/// UseCase (세율)
+final getTaxRatesUseCaseProvider =
+    Provider<GetTaxRatesUseCase>((ref) {
+  return GetTaxRatesUseCase(ref.read(taxRatesRepositoryProvider));
 });

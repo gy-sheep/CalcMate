@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/di/providers.dart';
+import '../../data/datasources/tax_rates_fallback.dart';
 import '../../domain/models/salary_calculator_state.dart';
-import '../../domain/models/tax_rates.dart';
 import '../../domain/usecases/calculate_salary_usecase.dart';
 
 // ── Intent ──────────────────────────────────────────────────────────────────
@@ -44,13 +46,35 @@ final salaryCalculatorViewModelProvider =
 // ── ViewModel ───────────────────────────────────────────────────────────────
 
 class SalaryCalculatorViewModel extends AutoDisposeNotifier<SalaryCalculatorState> {
-  late final CalculateSalaryUseCase _useCase;
+  late CalculateSalaryUseCase _useCase;
 
   @override
   SalaryCalculatorState build() {
+    // 폴백으로 즉시 시작, 비동기로 Firestore 세율 로딩
     _useCase = const CalculateSalaryUseCase(kFallbackTaxRates);
-    const initial = SalaryCalculatorState();
+    _loadTaxRates();
+
+    final initial = SalaryCalculatorState(
+      isLoading: true,
+      basedYear: kFallbackTaxRates.basedYear,
+    );
     return _recalculate(initial);
+  }
+
+  Future<void> _loadTaxRates() async {
+    try {
+      final getTaxRates = ref.read(getTaxRatesUseCaseProvider);
+      final taxRates = await getTaxRates.execute();
+      _useCase = CalculateSalaryUseCase(taxRates);
+      state = _recalculate(state.copyWith(
+        isLoading: false,
+        basedYear: taxRates.basedYear,
+        basedHalf: taxRates.basedHalf,
+      ));
+    } catch (e) {
+      debugPrint('[SalaryVM] tax rates load failed: $e');
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   void handleIntent(SalaryCalculatorIntent intent) {

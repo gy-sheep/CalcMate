@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +43,8 @@ class _SalaryCalculatorScreenState
   late final PageController _pageController;
   double _pageOffset = 0.0; // 0 = 월급, 1 = 연봉
 
-  SalaryCalculatorViewModel get _vm => ref.read(salaryCalculatorViewModelProvider.notifier);
+  SalaryCalculatorViewModel get _vm =>
+      ref.read(salaryCalculatorViewModelProvider.notifier);
 
   @override
   void initState() {
@@ -189,6 +192,52 @@ class _SalaryCalculatorScreenState
             isVisible: true,
             backgroundColor: kSalaryBg1,
           ),
+          // 로딩 오버레이
+          if (state.isLoading)
+            Container(color: Colors.black45),
+          if (state.isLoading)
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(CmLoadingOverlay.radius),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: CmLoadingOverlay.blurSigma,
+                    sigmaY: CmLoadingOverlay.blurSigma,
+                  ),
+                  child: Container(
+                    padding: CmLoadingOverlay.padding,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(CmLoadingOverlay.radius),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.24),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: CmLoadingOverlay.spinnerSize,
+                          height: CmLoadingOverlay.spinnerSize,
+                          child: CircularProgressIndicator(
+                            strokeWidth: CmLoadingOverlay.spinnerStroke,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        SizedBox(width: CmLoadingOverlay.spinnerTextSpacing),
+                        Text(
+                          l10n.salary_loading,
+                          style: CmLoadingOverlay.text.copyWith(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -247,6 +296,21 @@ class _SalaryCalculatorScreenState
             incomeTax: state.incomeTax,
             localTax: state.localTax,
           ),
+
+          const SizedBox(height: spacingSection),
+
+          // 세율 기준 캡션
+          if (state.basedYear > 0)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                state.basedHalf == 2
+                    ? l10n.salary_taxBasis_halfYear(state.basedYear)
+                    : l10n.salary_taxBasis_year(state.basedYear),
+                style: textStyleCaption.copyWith(
+                    color: kSalaryTextDisabled),
+              ),
+            ),
 
           const SizedBox(height: spacingSection),
         ],

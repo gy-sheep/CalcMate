@@ -94,11 +94,68 @@ class CalculateSalaryUseCase {
     return (monthSalary * _rates.employmentInsuranceRate).floor();
   }
 
-  // ── 소득세 (간이세액표 산출 공식) ─────────────────────────────
+  // ── 소득세 ──────────────────────────────────────────────────
 
-  /// 간이세액표 산출 공식에 따라 월 소득세를 계산한다.
-  /// 소득세법 시행령 별표2 기준.
+  /// 간이세액표 룩업 또는 산출 공식으로 월 소득세를 계산한다.
   int _calcIncomeTax(int monthSalary, int dependents) {
+    final table = _rates.incomeTaxTable;
+    if (table != null && table.isNotEmpty) {
+      return _lookupIncomeTax(monthSalary, dependents);
+    }
+    return _calcIncomeTaxByFormula(monthSalary, dependents);
+  }
+
+  /// 간이세액표 2D 룩업.
+  /// monthSalary: 원 단위, 테이블: 천원 단위.
+  int _lookupIncomeTax(int monthSalary, int dependents) {
+    final salaryInThousand = monthSalary ~/ 1000;
+    final depIndex = dependents.clamp(1, 11) - 1;
+    final table = _rates.incomeTaxTable!;
+
+    // 테이블 범위 내 → 순차 탐색
+    for (final bracket in table) {
+      if (salaryInThousand >= bracket.min && salaryInThousand < bracket.max) {
+        return bracket.taxes[depIndex];
+      }
+    }
+
+    // 1,000만원 초과 → 초과 산식 적용
+    if (salaryInThousand >= table.last.max &&
+        _rates.overTenMillionBrackets != null) {
+      return _calcOverTenMillion(monthSalary, dependents);
+    }
+
+    // 테이블 최저 미만 → 세액 0
+    return 0;
+  }
+
+  /// 1,000만원 초과 산식.
+  /// "(10,000천원인 경우의 해당 세액) + baseAdd + 초과분 × applyRatio × rate"
+  int _calcOverTenMillion(int monthSalary, int dependents) {
+    final depIndex = dependents.clamp(1, 11) - 1;
+    final table = _rates.incomeTaxTable!;
+
+    // 10,000천원(1,000만원) 행의 세액을 기준값으로 사용
+    final baseTax = table.last.taxes[depIndex];
+
+    final salaryInThousand = monthSalary ~/ 1000;
+    for (final bracket in _rates.overTenMillionBrackets!) {
+      if (salaryInThousand >= bracket.min && salaryInThousand < bracket.max) {
+        final excess = monthSalary - bracket.excessFrom * 1000;
+        final adjusted = (excess * bracket.applyRatio).floor();
+        final additionalTax = bracket.baseAdd + (adjusted * bracket.rate).floor();
+        return baseTax + additionalTax;
+      }
+    }
+
+    return baseTax;
+  }
+
+  // ── 소득세 산출 공식 (폴백) ───────────────────────────────────
+
+  /// 간이세액표가 없을 때 산출 공식으로 월 소득세를 계산한다.
+  /// 소득세법 시행령 별표2 기준.
+  int _calcIncomeTaxByFormula(int monthSalary, int dependents) {
     final annualGross = monthSalary * 12;
 
     // 1. 근로소득공제

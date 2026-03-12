@@ -2,6 +2,31 @@
 
 ---
 
+## 2026-03-12 — 실수령액 계산기 Firestore 세율 연동
+
+### 완료 항목
+
+**Firestore 데이터**
+- `tax_rates/latest` 문서: 4대보험 요율(2026년) + 간이세액표 646행 + 1,000만원 초과 산식 6구간 + 자녀세액공제
+- `firestore.rules`: tax_rates 읽기 허용 규칙 배포
+- `functions/scripts/seed_tax_rates.ts`: Excel → Firestore 시딩 스크립트 (basedHalf 자동 판단)
+
+**앱 구현**
+- TaxRates 모델 확장 (IncomeTaxBracket, OverTenMillionBracket, ChildTaxCredit, basedHalf)
+- Data 계층: RemoteDataSource(Firestore) → LocalDataSource(SharedPreferences 7일 캐시) → Fallback 3단계
+- CalculateSalaryUseCase: 간이세액표 룩업 + 1,000만원 초과 산식 + 산출 공식 폴백
+- ViewModel: 동기 Notifier 유지, fire-and-forget 비동기 세율 로딩 + isLoading 오버레이
+- Screen: 환율 계산기와 동일한 블러 로딩 오버레이 + 세율 기준 캡션 표시
+
+**스킬**
+- `/seed-tax`: 세율 갱신 스킬 (요율 입력 → 변경 비교 → Excel 파싱 → Firestore 업로드)
+
+**테스트**
+- calculate_salary_usecase_test: 30케이스 (4대보험 2026년 요율 + 룩업 + 초과 산식 + 폴백)
+- tax_rates_repository_impl_test: 4케이스 (캐시 정책)
+
+---
+
 ## 2026-03-12 — 환율 기준 통화 설정 추가
 
 ### 완료 항목

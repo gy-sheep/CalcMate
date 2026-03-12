@@ -764,6 +764,24 @@ abstract class AppLocalizations {
   /// **'3억'**
   String get salary_slider_annualMax;
 
+  /// No description provided for @salary_taxBasis_year.
+  ///
+  /// In ko, this message translates to:
+  /// **'공제 항목은 {year}년 세율 기준으로 계산됩니다'**
+  String salary_taxBasis_year(int year);
+
+  /// No description provided for @salary_taxBasis_halfYear.
+  ///
+  /// In ko, this message translates to:
+  /// **'공제 항목은 {year}년 하반기 세율 기준으로 계산됩니다'**
+  String salary_taxBasis_halfYear(int year);
+
+  /// No description provided for @salary_loading.
+  ///
+  /// In ko, this message translates to:
+  /// **'세율 정보를 가져오는 중...'**
+  String get salary_loading;
+
   /// No description provided for @discount_label_originalPrice.
   ///
   /// In ko, this message translates to:

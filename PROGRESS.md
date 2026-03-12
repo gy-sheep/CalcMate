@@ -34,7 +34,7 @@
 - [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
 
 ### Phase 10: 기타
-- [ ] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)
+- [x] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)
 
 ### 리팩토링 (Phase 2 후속)
 > 체크리스트: `docs/plans/REFACTORING_CHECKLIST.md`
@@ -77,14 +77,14 @@
 | 10 | 실수령액 계산기 UI 구현 (입력 카드·슬라이더 통합·결과 카드·공제 내역·부양가족 바) | — | `docs/design/SALARY_CALCULATOR.md` |
 | 10 | 실수령액 계산기 로직 구현 (TaxRates·SalaryCalculatorState·CalculateSalaryUseCase·ViewModel·위젯 분리) | 19케이스 | `docs/dev/SALARY_CALCULATOR_IMPL.md` |
 | — | Cm* 컴포넌트 토큰 시스템 추가 (CmTab·CmInputCard·CmResultCard·CmListCard·CmRoundButton·CmSlider 등) | — | `docs/conventions/UI_TOKEN_CONVENTION.md` |
-| — | 단위 변환기 단위 전환 정밀도 개선 (rawConvertedValues) | — | — |
+| — | 단위 변환기 단위 전환 정밀도 개선 (rawConvertedValues) | 450+케이스 | — |
 | — | 구 AppTokens 클래스 제거 및 전체 코드베이스를 Cm* 신규 토큰·전역 상수로 전면 교체 | — | — |
 | — | Cm* 토큰 기준 설계 문서 전체 현행화 (ARCHITECTURE·UI_TOKEN_CONVENTION·4개 design docs) | — | — |
 | — | 부가세 계산기 합계금액 디폴트·토글 순서 수정 | — | — |
 | — | 날짜 계산기 UX 개선 (CmTab 칩·이후/이전 토글·CmInputCard 숫자·카드 레이아웃·오늘 표시) | — | `docs/dev/DATE_CALCULATOR_IMPL.md` |
 | — | DateKeypad 제거 → showNumberKeypad 공통 모달 전환 | — | — |
 | — | 숫자 키패드 공통 모듈화: KeypadColors + showNumberKeypad (core/widgets) | — | — |
-| — | 단위 변환기 왕복 변환 정밀도 개선 및 테스트 추가 | — | — |
+| — | 단위 변환기 왕복 변환 정밀도 개선 및 테스트 추가 | (위 항목에 포함) | — |
 | — | 더치페이 UI 개선 (테마 심화·그라데이션 테두리·탭 레이블·인원 프리셋 칩·정산 단위 인라인 칩·각출 단일 스크롤·바 차트 결과) | — | — |
 | — | 더치페이 각출 UX 개선 2차 (sticky compact 바·스크롤 페이드·금액 콤마·탭 전환 상태 유지·바텀시트 테마·차트 레이아웃 등) | — | — |
 | — | 전월세·대출·취득세 계산기 삭제 (10개 계산기로 축소) | — | — |

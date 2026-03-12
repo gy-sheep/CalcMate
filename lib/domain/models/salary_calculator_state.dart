@@ -17,6 +17,10 @@ class SalaryCalculatorState with _$SalaryCalculatorState {
     @Default(0) int employmentInsurance,
     @Default(0) int incomeTax,
     @Default(0) int localTax,
+    // 세율 기준 정보
+    @Default(false) bool isLoading,
+    @Default(0) int basedYear,
+    int? basedHalf,
   }) = _SalaryCalculatorState;
 }
 

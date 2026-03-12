@@ -5,4 +5,10 @@ abstract final class FirebaseConfig {
 
   /// 환율 데이터 문서 이름.
   static const exchangeRateDocument = 'latest';
+
+  /// 세율 데이터 컬렉션 이름.
+  static const taxRatesCollection = 'tax_rates';
+
+  /// 세율 데이터 문서 이름.
+  static const taxRatesDocument = 'latest';
 }
