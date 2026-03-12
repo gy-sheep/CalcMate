@@ -121,7 +121,7 @@ class _ShareSheetState extends State<ShareSheet> {
                                 const Icon(Icons.share_outlined,
                                     color: Colors.white, size: 18),
                                 const SizedBox(width: 8),
-                                Text(AppLocalizations.of(context)!.common_share,
+                                Text(AppLocalizations.of(context).common_share,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -134,7 +134,7 @@ class _ShareSheetState extends State<ShareSheet> {
                 const SizedBox(height: 12),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
-                  child: Text(AppLocalizations.of(context)!.common_close,
+                  child: Text(AppLocalizations.of(context).common_close,
                       style: modalButtonLabel.copyWith(
                           color: kDutchTextTertiary)),
                 ),
@@ -163,7 +163,8 @@ class _ShareSheetState extends State<ShareSheet> {
       final file = File('${dir.path}/dutch_pay_receipt.png');
       await file.writeAsBytes(bytes);
 
-      final l10n = AppLocalizations.of(context)!;
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       await Share.shareXFiles(
         [XFile(file.path)],
         text: l10n.dutchPay_share_text,
@@ -172,7 +173,7 @@ class _ShareSheetState extends State<ShareSheet> {
     } catch (e, st) {
       debugPrint('Share error: $e\n$st');
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${l10n.dutchPay_error_share}: $e')),
         );
@@ -208,7 +209,7 @@ class _ReceiptWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     return ClipPath(
       clipper: _ReceiptClipper(),

@@ -14,7 +14,7 @@ class TaxRateInfoSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final rates = DataStrings.vatTaxRates(locale);
     return Container(
@@ -57,7 +57,7 @@ class TaxRateInfoSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   horizontal: 16, vertical: 8),
               itemCount: rates.length,
-              separatorBuilder: (_, __) => const Divider(
+              separatorBuilder: (_, _) => const Divider(
                 color: kVatDivider,
                 thickness: CmSheet.dividerThickness,
                 height: CmSheet.dividerHeight,

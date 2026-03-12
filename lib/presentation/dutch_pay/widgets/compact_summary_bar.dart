@@ -101,7 +101,7 @@ class _CompactSummaryBarState extends State<CompactSummaryBar> {
   Widget build(BuildContext context) {
     final s = widget.s;
     final result = widget.result;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
 
     return Container(

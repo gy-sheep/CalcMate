@@ -3,7 +3,7 @@
 ## 다음 작업
 
 > **현재 브랜치**: `feat/currency-unit-setting`
-> **마지막 완료**: 표시 통화 설정 (부가세·할인·더치페이 적용)
+> **마지막 완료**: AdMob·Analytics·Crashlytics 연동
 
 ### Phase 12-1: l10n 전환 ✅ 완료
 
@@ -25,13 +25,15 @@
 
 ### Phase 12: 출시 준비
 - [x] 버전 정보 `package_info_plus` 동적 표시
-- [ ] 언어 설정 실제 l10n 전환 (현재 UI만 구현)
-- [ ] 개인정보 처리방침 URL 확정 + `url_launcher` 연동
-- [ ] 공통 팝업, 공통 토스트
+- [x] 언어 설정 실제 l10n 전환
+- [x] 공통 토스트 (`showAppToast`)
+- [x] Google Analytics (Firebase Analytics) 연동
+- [x] AdMob 배너 + 전면 광고 연동
+- [x] Firebase Crashlytics 연동
+- [ ] 공통 팝업 (공용 다이얼로그)
 - [ ] 에러 메시지 config
-- [ ] Google Analytics (Firebase Analytics) 연동
-- [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
 - [ ] 개인정보 처리방침 작성 + URL 확정 + `url_launcher` 연동
+- [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
 
 ### Phase 10: 기타
 - [ ] 실수령액 계산기 Firestore 세율 연동 (간이세액표 실데이터)

@@ -25,7 +25,7 @@ class DDayModeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(dateCalculatorViewModelProvider);
     final vm = ref.read(dateCalculatorViewModelProvider.notifier);
     final result = vm.ddayResult;
@@ -55,7 +55,7 @@ class DDayModeView extends ConsumerWidget {
     bool isToday,
     DateCalculatorViewModel vm,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final label = isToday ? l10n.date_label_refDateToday : l10n.date_label_refDate;
     return DateCard(
       label: label,
@@ -67,7 +67,7 @@ class DDayModeView extends ConsumerWidget {
   }
 
   Widget _buildDDayResult(BuildContext context, DDayResult r, DateTime target) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final String mainText;
     final Color mainColor;

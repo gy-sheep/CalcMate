@@ -24,7 +24,7 @@ class PeriodModeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(dateCalculatorViewModelProvider);
     final vm = ref.read(dateCalculatorViewModelProvider.notifier);
     final result = vm.periodResult;
@@ -59,7 +59,7 @@ class PeriodModeView extends ConsumerWidget {
   }
 
   Widget _buildPeriodResult(BuildContext context, PeriodResult r) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Text(
@@ -94,7 +94,7 @@ class PeriodModeView extends ConsumerWidget {
     bool isOn,
     DateCalculatorViewModel vm,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return GestureDetector(
       onTap: () =>
           vm.handleIntent(const DateCalculatorIntent.includeStartDayToggled()),

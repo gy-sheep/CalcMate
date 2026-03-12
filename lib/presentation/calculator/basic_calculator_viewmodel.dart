@@ -67,7 +67,6 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   static const _limit = DigitLimitPolicy.standard;
 
   static const _nonMinusOps = {'+', '×', '÷'};
-  static const _allOps = {'+', '-', '×', '÷'};
 
   // 반복 = 를 위한 마지막 연산자/피연산자
   String _repeatOperator = '';
@@ -368,7 +367,7 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
     // 연산자 뒤 → 연산자를 %로 교체
     if (CalculatorInputUtils.endsWithOperator(current)) {
       state = state.copyWith(
-        input: current.substring(0, current.length - 1) + '%',
+        input: '${current.substring(0, current.length - 1)}%',
         isResult: false,
       );
       return;

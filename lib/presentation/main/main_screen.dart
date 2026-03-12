@@ -142,7 +142,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                       scrolledUnderElevation: 0,
-                      title: Text(AppLocalizations.of(context)!.main_editOrder),
+                      title: Text(AppLocalizations.of(context).main_editOrder),
                       centerTitle: false,
                       actions: [
                         TextButton(
@@ -150,7 +150,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                               .read(mainScreenViewModelProvider.notifier)
                               .handleIntent(const MainScreenIntent.toggleEditMode()),
                           child: Text(
-                            AppLocalizations.of(context)!.main_done,
+                            AppLocalizations.of(context).main_done,
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
@@ -854,7 +854,7 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
   }
 
   Widget _buildItem(int index, BuildContext context) {
-    final (value, icon, label) = _items(AppLocalizations.of(context)!)[index];
+    final (value, icon, label) = _items(AppLocalizations.of(context))[index];
     final animation = _itemAnimation(index);
     final colorScheme = Theme.of(context).colorScheme;
 

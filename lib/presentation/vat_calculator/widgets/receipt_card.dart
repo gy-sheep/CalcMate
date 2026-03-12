@@ -110,7 +110,7 @@ class ReceiptCard extends StatelessWidget {
           NumberFormatter.formatVatResult(n), currencyUnit, locale);
 
   List<Widget> _buildTaxRows(BuildContext context, bool isExclusive) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     return [
       if (isExclusive) ...[
@@ -156,7 +156,7 @@ class ReceiptCard extends StatelessWidget {
   }
 
   Widget _buildTaxRateRow(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final displayRate = vm.displayRate;
     final isEditing = state.inputTarget == InputTarget.taxRate;
@@ -237,7 +237,7 @@ class VatModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

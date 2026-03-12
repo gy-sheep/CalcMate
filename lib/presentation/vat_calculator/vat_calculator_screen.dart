@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
-import '../../domain/models/vat_calculator_state.dart';
-import '../../domain/usecases/vat_calculate_usecase.dart';
 import '../settings/settings_viewmodel.dart';
 import 'vat_calculator_colors.dart';
 import 'vat_calculator_viewmodel.dart';

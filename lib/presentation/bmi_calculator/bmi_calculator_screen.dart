@@ -114,7 +114,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
 
   // ── 직접 입력 다이얼로그 ────────────────────────────────────────────────────
   Future<void> _editHeight() async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.read(bmiCalculatorViewModelProvider);
     final result = await _showNumberDialog(
       title: l10n.bmi_dialog_editHeight,
@@ -130,7 +130,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
   }
 
   Future<void> _editWeight() async {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.read(bmiCalculatorViewModelProvider);
     final result = await _showNumberDialog(
       title: l10n.bmi_dialog_editWeight,
@@ -192,7 +192,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
   // ── Build ───────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final state = ref.watch(bmiCalculatorViewModelProvider);
     final vm = ref.read(bmiCalculatorViewModelProvider.notifier);

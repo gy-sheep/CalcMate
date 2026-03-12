@@ -108,7 +108,7 @@ class _SalaryCalculatorScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(salaryCalculatorViewModelProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -195,7 +195,7 @@ class _SalaryCalculatorScreenState
   }
 
   Widget _buildContent(SalaryCalculatorState state, {required bool isAnnual}) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return ScrollFadeView(
       fadeColor: kSalaryBg2,
       padding: const EdgeInsets.symmetric(

@@ -36,7 +36,7 @@ class SalaryDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final title = isAnnual ? l10n.salary_tab_annual : l10n.salary_tab_monthly;
 

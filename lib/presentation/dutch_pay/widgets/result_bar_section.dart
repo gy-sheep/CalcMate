@@ -34,7 +34,7 @@ class ResultBarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final maxAmt = result.personAmounts.isEmpty
         ? 1
@@ -163,7 +163,7 @@ class ShareResultBtn extends StatelessWidget {
           children: [
             Icon(Icons.share_outlined, color: Colors.white, size: CmIcon.small),
             const SizedBox(width: 8),
-            Text(AppLocalizations.of(context)!.dutchPay_button_shareResult,
+            Text(AppLocalizations.of(context).dutchPay_button_shareResult,
                 style: textStyle16.copyWith(color: Colors.white)),
           ],
         ),

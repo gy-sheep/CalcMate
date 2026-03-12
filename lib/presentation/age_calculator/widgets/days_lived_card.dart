@@ -13,7 +13,7 @@ class DaysLivedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final days = result.daysLived;
     final years  = days ~/ 365;
     final months = (days % 365) ~/ 30;

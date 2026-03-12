@@ -16,7 +16,7 @@ class DateTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return AppAnimatedTabBar(
       labels: [l10n.date_tab_period, l10n.date_tab_dateCalc, l10n.date_tab_dday],
       pageOffset: pageOffset,

@@ -25,7 +25,7 @@ class DateCalcModeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(dateCalculatorViewModelProvider);
     final vm = ref.read(dateCalculatorViewModelProvider.notifier);
     final result = vm.calcResult;
@@ -53,7 +53,7 @@ class DateCalcModeView extends ConsumerWidget {
 
   Widget _buildDateCalcResult(
       BuildContext context, WidgetRef ref, DateCalculatorState state, DateTime result) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final now = DateTime.now();
     final todayNorm = DateTime(now.year, now.month, now.day);
@@ -92,7 +92,7 @@ class DateCalcModeView extends ConsumerWidget {
 
   Widget _buildNumberAndUnit(
       BuildContext context, DateCalculatorState state, DateCalculatorViewModel vm) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final units = [l10n.date_unit_day, l10n.date_unit_week, l10n.date_unit_month, l10n.date_unit_year];
     final isForward = state.calcDirection == 0;
 
@@ -179,7 +179,7 @@ class DateCalcModeView extends ConsumerWidget {
             initialValue: 0,
             onConfirm: (v) =>
                 vm.handleIntent(DateCalculatorIntent.calcNumberChanged(v)),
-            confirmLabel: AppLocalizations.of(context)!.common_confirm,
+            confirmLabel: AppLocalizations.of(context).common_confirm,
             colors: KeypadColors(
               sheetBg: kDateBg1,
               handle: kDateCardBorder,

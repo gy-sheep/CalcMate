@@ -20,7 +20,7 @@ class BmiCategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final use2Row = categories.length > 4;
     if (use2Row) {
       final row1 = categories.sublist(0, 3);

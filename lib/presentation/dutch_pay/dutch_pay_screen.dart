@@ -65,7 +65,7 @@ class _DutchPayScreenState extends ConsumerState<DutchPayScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          AppLocalizations.of(context)!.dutchPay_title,
+          AppLocalizations.of(context).dutchPay_title,
           style: CmAppBar.titleText.copyWith(
             color: kDutchTextPrimary,
           ),

@@ -13,7 +13,7 @@ class AgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     return AgeInfoCard(
       child: Padding(
@@ -104,7 +104,7 @@ class BirthWeekdayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     return AgeInfoCard(
       child: Padding(

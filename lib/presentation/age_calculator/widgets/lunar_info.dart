@@ -13,7 +13,7 @@ class LunarInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final solarDate = state.convertedSolarDate;
     final hasLeap = vm.hasLeapMonth;
     return Container(

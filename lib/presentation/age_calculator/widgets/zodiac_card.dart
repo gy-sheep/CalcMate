@@ -13,7 +13,7 @@ class ZodiacCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context);
     final name = DataStrings.zodiacName(result.zodiacIndex, locale);
     return AgeInfoCard(

@@ -105,7 +105,7 @@ class _AmountCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.dutchPay_label_totalAmount,
+            Text(AppLocalizations.of(context).dutchPay_label_totalAmount,
                 style: CmInputCard.titleText
                     .copyWith(color: kDutchTextTertiary)),
             const SizedBox(height: 6),
@@ -153,7 +153,7 @@ class _PeopleRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(AppLocalizations.of(context)!.dutchPay_label_people,
+                Text(AppLocalizations.of(context).dutchPay_label_people,
                     style: CmStepValue.text.copyWith(
                         color: kDutchTextPrimary,
                         fontWeight: FontWeight.w500)),
@@ -226,7 +226,7 @@ class _PeopleRow extends StatelessWidget {
             if (people > 8) ...[
               const SizedBox(height: 8),
               Text(
-                AppLocalizations.of(context)!.dutchPay_hint_plusButton,
+                AppLocalizations.of(context).dutchPay_hint_plusButton,
                 style: textStyleCaption.copyWith(color: kDutchTextTertiary),
               ),
             ],
@@ -349,7 +349,7 @@ class _TipRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final tipLabels = [l10n.dutchPay_tip_none, '10%', '15%', '20%'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,7 +451,7 @@ class _ResultCard extends StatelessWidget {
       ),
       child: result == null
           ? Center(
-              child: Text(AppLocalizations.of(context)!.dutchPay_hint_enterTotal,
+              child: Text(AppLocalizations.of(context).dutchPay_hint_enterTotal,
                   style: textEmptyGuide
                       .copyWith(color: kDutchTextTertiary)))
           : _buildContent(context),
@@ -459,7 +459,7 @@ class _ResultCard extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     if (!isKorea) {
       return Column(
         children: [
@@ -628,7 +628,7 @@ class _ShareBtn extends StatelessWidget {
             children: [
               Icon(Icons.share_outlined, color: Colors.white, size: CmIcon.small),
               const SizedBox(width: 8),
-              Text(AppLocalizations.of(context)!.dutchPay_button_shareResult,
+              Text(AppLocalizations.of(context).dutchPay_button_shareResult,
                   style: textStyle16.copyWith(
                       color: Colors.white)),
             ],

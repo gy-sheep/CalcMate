@@ -186,7 +186,7 @@ class ItemsCard extends StatelessWidget {
                   Icon(Icons.add_circle_outline,
                       color: kDutchAccent, size: CmIcon.small),
                   const SizedBox(width: 8),
-                  Text(AppLocalizations.of(context)!.dutchPay_label_addItem,
+                  Text(AppLocalizations.of(context).dutchPay_label_addItem,
                       style: textStyle16.copyWith(color: kDutchAccent)),
                 ],
               ),

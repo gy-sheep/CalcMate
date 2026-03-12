@@ -101,14 +101,14 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
                 children: [
                   AppTextField.search(
                     controller: _controller,
-                    hintText: AppLocalizations.of(context)!.currency_search_hint,
+                    hintText: AppLocalizations.of(context).currency_search_hint,
                     onChanged: (v) => setState(() => _query = v),
                   ),
                   const SizedBox(height: 12),
                   Expanded(
                     child: ListView.separated(
                       itemCount: filtered.length,
-                      separatorBuilder: (_, __) => const Divider(
+                      separatorBuilder: (_, _) => const Divider(
                         color: Colors.white24,
                         thickness: CmSheet.dividerThickness,
                         height: CmSheet.dividerHeight,
@@ -146,7 +146,7 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
                               : null,
                           onTap: () {
                             if (isUsed) {
-                              final l10n = AppLocalizations.of(context)!;
+                              final l10n = AppLocalizations.of(context);
                               final message = item.code == widget.fromCode
                                   ? l10n.currency_toast_baseCurrency
                                   : l10n.currency_toast_alreadySelected;

@@ -95,7 +95,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
           );
         }
         if (s.participants.length >= 10 && mounted) {
-          showAppToast(context, AppLocalizations.of(context)!.dutchPay_toast_maxMembers);
+          showAppToast(context, AppLocalizations.of(context).dutchPay_toast_maxMembers);
         }
       });
     } else if (s.participants.length < _prevCount) {
@@ -126,7 +126,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(AppLocalizations.of(context)!.dutchPay_label_members,
+                  Text(AppLocalizations.of(context).dutchPay_label_members,
                       style: CmInputCard.titleText
                           .copyWith(color: kDutchTextSecondary)),
                   const Spacer(),
@@ -148,7 +148,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                             const Icon(Icons.add,
                                 size: CmTab.iconSize, color: kDutchAccent),
                             const SizedBox(width: 2),
-                            Text(AppLocalizations.of(context)!.common_add,
+                            Text(AppLocalizations.of(context).common_add,
                                 style:
                                     CmTab.text.copyWith(color: kDutchAccent)),
                           ],
@@ -168,8 +168,8 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                       ),
                       child: Text(
                         s.isParticipantEditMode
-                            ? AppLocalizations.of(context)!.common_done
-                            : AppLocalizations.of(context)!.common_edit,
+                            ? AppLocalizations.of(context).common_done
+                            : AppLocalizations.of(context).common_edit,
                         style: CmTab.text.copyWith(
                             color: kDutchAccent,
                             fontWeight: FontWeight.w500),
@@ -352,7 +352,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                   child: widget.filterPerson != null
                       ? HintChip(
                           icon: Icons.touch_app_outlined,
-                          label: AppLocalizations.of(context)!
+                          label: AppLocalizations.of(context)
                               .dutchPay_hint_filterActive(
                                   s.participants[widget.filterPerson!].name),
                         )
@@ -361,12 +361,12 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                           children: [
                             HintChip(
                               icon: Icons.touch_app_outlined,
-                              label: AppLocalizations.of(context)!.dutchPay_hint_tapRename,
+                              label: AppLocalizations.of(context).dutchPay_hint_tapRename,
                             ),
                             const SizedBox(width: 20),
                             HintChip(
                               icon: Icons.touch_app,
-                              label: AppLocalizations.of(context)!.dutchPay_hint_longPressFilter,
+                              label: AppLocalizations.of(context).dutchPay_hint_longPressFilter,
                             ),
                           ],
                         ),
@@ -386,7 +386,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
     final ctrl = TextEditingController();
     final isLast = idx == participants.length - 1;
 
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -432,7 +432,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
   }
 
   void _confirmRemove(BuildContext context, int idx, IndividualSplitState s) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     if (s.participants.length <= 1) {
       showAppToast(context, l10n.dutchPay_toast_minMember);
       return;

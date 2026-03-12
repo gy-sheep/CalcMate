@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/error_messages.dart';
+import '../../core/di/providers.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
@@ -91,9 +92,14 @@ class _CurrencyCalculatorScreenState
         _ => key,
       };
 
+  ToastType _toastType(String key) => switch (key) {
+        ErrorMessages.exchangeRateLoadFailed => ToastType.error,
+        _ => ToastType.info,
+      };
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(exchangeRateViewModelProvider);
     final vm = ref.read(exchangeRateViewModelProvider.notifier);
 
@@ -102,7 +108,10 @@ class _CurrencyCalculatorScreenState
       (_, message) {
         if (message != null) {
           final resolved = _resolveMessage(message, l10n);
-          if (resolved.isNotEmpty) showAppToast(context, resolved);
+          if (resolved.isNotEmpty) {
+            final type = _toastType(message);
+            ref.read(interstitialAdManagerProvider).showToastOrEnqueue(context, resolved, type: type);
+          }
           vm.clearToast();
         }
       },

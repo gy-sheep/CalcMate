@@ -67,7 +67,7 @@ class _ExtraDiscountSectionState extends State<ExtraDiscountSection> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -105,7 +105,7 @@ class _ExtraDiscountSectionState extends State<ExtraDiscountSection> {
   }
 
   Widget _buildExtraField() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -709,3 +709,38 @@ abstract class CmCalendarCard {
   static const double chevronSize = 18;
 }
 
+/// ================================================
+///                  CmToast
+/// ================================================
+abstract class CmToast {
+  /// 내부 패딩
+  static const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+
+  /// 좌우 마진
+  static const EdgeInsets margin = EdgeInsets.symmetric(horizontal: screenPaddingH);
+
+  /// borderRadius
+  static const double radius = 16;
+
+  /// 아이콘 크기
+  static const double iconSize = 20;
+
+  /// 아이콘 ↔ 텍스트 간격
+  static const double iconTextSpacing = 10;
+
+  /// 배경 블러 sigma
+  static const double blurSigma = 10;
+
+  /// 테두리 alpha
+  static const double borderAlpha = 0.15;
+
+  /// 슬라이드 시작 오프셋
+  static const Offset slideBeginOffset = Offset(0, -1.0);
+
+  /// 자동 소멸 시간
+  static const Duration displayDuration = Duration(milliseconds: 2000);
+
+  /// 텍스트 스타일
+  static const TextStyle text = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, decoration: TextDecoration.none);
+}
+

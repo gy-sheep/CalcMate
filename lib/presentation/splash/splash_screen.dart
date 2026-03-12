@@ -67,8 +67,8 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const MainScreen(),
-        transitionsBuilder: (_, anim, __, child) =>
+        pageBuilder: (_, _, _) => const MainScreen(),
+        transitionsBuilder: (_, anim, _, child) =>
             FadeTransition(opacity: anim, child: child),
         transitionDuration: const Duration(milliseconds: 500),
       ),
@@ -147,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen>
               child: SlideTransition(
                 position: _taglineSlide,
                 child: Text(
-                AppLocalizations.of(context)!.splash_tagline,
+                AppLocalizations.of(context).splash_tagline,
                 style: CmAppBar.titleText.copyWith(
                   color: _kTagline,
                   fontSize: 16,

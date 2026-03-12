@@ -16,7 +16,7 @@ void showSalaryKeypad(
     context,
     initialValue: 0,
     onConfirm: onConfirm,
-    confirmLabel: AppLocalizations.of(context)!.common_confirm,
+    confirmLabel: AppLocalizations.of(context).common_confirm,
     colors: KeypadColors(
       sheetBg: kSalaryBg1,
       handle: kSalaryCardBorder,

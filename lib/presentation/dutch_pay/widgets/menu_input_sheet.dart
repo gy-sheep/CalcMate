@@ -81,7 +81,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
   @override
   Widget build(BuildContext context) {
     final s = ref.watch(dutchPayViewModelProvider).individualSplit;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final canSubmit = _vm.canSubmitItem;
     final isEditing = s.editingIndex != null;
 

@@ -16,7 +16,7 @@ class DutchPayTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return AppAnimatedTabBar(
       labels: [l10n.dutchPay_tab_equal, l10n.dutchPay_tab_individual],
       pageOffset: pageOffset,
