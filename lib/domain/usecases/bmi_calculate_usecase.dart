@@ -1,52 +1,61 @@
 import 'dart:ui';
 
+// ── BMI 카테고리 코드 ──────────────────────────────────────────────────────────
+
+enum BmiCategoryCode {
+  underweight,
+  normal,
+  overweight,
+  obese,
+  obese1,
+  obese2,
+}
+
 // ── BMI 판정 기준 ──────────────────────────────────────────────────────────────
 
 enum BmiStandard { global, asian }
 
 class BmiCategoryDef {
   const BmiCategoryDef({
-    required this.label,
-    required this.rangeLabel,
+    required this.code,
     required this.color,
     required this.min,
     required this.max,
   });
 
-  final String label;
-  final String rangeLabel;
+  final BmiCategoryCode code;
   final Color color;
   final double min;
   final double max; // 마지막 범주는 double.infinity
 
   bool contains(double bmi) => bmi >= min && bmi < max;
+
+  /// 정상 범주 여부
+  bool get isNormal =>
+      code == BmiCategoryCode.normal;
 }
 
 const kGlobalCategories = [
   BmiCategoryDef(
-    label: '저체중',
-    rangeLabel: '18.5 미만',
+    code: BmiCategoryCode.underweight,
     color: Color(0xFF5B9BD5),
     min: 0,
     max: 18.5,
   ),
   BmiCategoryDef(
-    label: '정상 체중',
-    rangeLabel: '18.5 – 24.9',
+    code: BmiCategoryCode.normal,
     color: Color(0xFF4CAF50),
     min: 18.5,
     max: 25.0,
   ),
   BmiCategoryDef(
-    label: '과체중',
-    rangeLabel: '25.0 – 29.9',
+    code: BmiCategoryCode.overweight,
     color: Color(0xFFFF9800),
     min: 25.0,
     max: 30.0,
   ),
   BmiCategoryDef(
-    label: '비만',
-    rangeLabel: '30.0 이상',
+    code: BmiCategoryCode.obese,
     color: Color(0xFFF44336),
     min: 30.0,
     max: double.infinity,
@@ -55,36 +64,31 @@ const kGlobalCategories = [
 
 const kAsianCategories = [
   BmiCategoryDef(
-    label: '저체중',
-    rangeLabel: '18.5 미만',
+    code: BmiCategoryCode.underweight,
     color: Color(0xFF5B9BD5),
     min: 0,
     max: 18.5,
   ),
   BmiCategoryDef(
-    label: '정상',
-    rangeLabel: '18.5 – 22.9',
+    code: BmiCategoryCode.normal,
     color: Color(0xFF4CAF50),
     min: 18.5,
     max: 23.0,
   ),
   BmiCategoryDef(
-    label: '과체중',
-    rangeLabel: '23.0 – 24.9',
+    code: BmiCategoryCode.overweight,
     color: Color(0xFFFFCC02),
     min: 23.0,
     max: 25.0,
   ),
   BmiCategoryDef(
-    label: '비만 1단계',
-    rangeLabel: '25.0 – 29.9',
+    code: BmiCategoryCode.obese1,
     color: Color(0xFFFF9800),
     min: 25.0,
     max: 30.0,
   ),
   BmiCategoryDef(
-    label: '비만 2단계',
-    rangeLabel: '30.0 이상',
+    code: BmiCategoryCode.obese2,
     color: Color(0xFFF44336),
     min: 30.0,
     max: double.infinity,
@@ -135,7 +139,7 @@ class BmiCalculateUseCase {
         categories.lastWhere((c) => bmi >= c.min, orElse: () => categories.first);
 
     // 정상 범주 기반 건강 체중 역산
-    final normal = categories.firstWhere((c) => c.label.startsWith('정상'));
+    final normal = categories.firstWhere((c) => c.isNormal);
     final hmSq = hm * hm;
     final healthyMin = normal.min * hmSq;
     final maxBmi = normal.max == double.infinity ? 24.9 : normal.max;

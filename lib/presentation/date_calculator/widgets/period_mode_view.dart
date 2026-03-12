@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/date_calculate_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../date_calculator_colors.dart';
 import '../date_format_utils.dart';
 import '../date_calculator_viewmodel.dart';
@@ -23,6 +24,7 @@ class PeriodModeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(dateCalculatorViewModelProvider);
     final vm = ref.read(dateCalculatorViewModelProvider.notifier);
     final result = vm.periodResult;
@@ -32,10 +34,10 @@ class PeriodModeView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ResultCard(child: _buildPeriodResult(result)),
+        ResultCard(child: _buildPeriodResult(context, result)),
         const SizedBox(height: 16),
         DateCard(
-          label: state.periodStart == today ? '시작 날짜 (오늘)' : '시작 날짜',
+          label: state.periodStart == today ? l10n.date_label_startDateToday : l10n.date_label_startDate,
           date: state.periodStart,
           onTap: () => pickDate(context, state.periodStart, (d) {
             vm.handleIntent(DateCalculatorIntent.periodStartChanged(d));
@@ -43,24 +45,25 @@ class PeriodModeView extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         DateCard(
-          label: state.periodEnd == today ? '종료 날짜 (오늘)' : '종료 날짜',
+          label: state.periodEnd == today ? l10n.date_label_endDateToday : l10n.date_label_endDate,
           date: state.periodEnd,
           onTap: () => pickDate(context, state.periodEnd, (d) {
             vm.handleIntent(DateCalculatorIntent.periodEndChanged(d));
           }),
         ),
         const SizedBox(height: 12),
-        _buildStartDayToggle(ref, state.includeStartDay, vm),
+        _buildStartDayToggle(context, ref, state.includeStartDay, vm),
         const SizedBox(height: 24),
       ],
     );
   }
 
-  Widget _buildPeriodResult(PeriodResult r) {
+  Widget _buildPeriodResult(BuildContext context, PeriodResult r) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Text(
-          '${r.totalDays}일',
+          l10n.date_result_days(r.totalDays.toString()),
           style: CmInfoCard.displayText.copyWith(
             fontWeight: FontWeight.w700,
             color: kDateAccent,
@@ -73,12 +76,12 @@ class PeriodModeView extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildSubText('${r.weeks}주 ${r.remainingDaysAfterWeeks}일'),
+            Flexible(child: buildSubText(l10n.date_result_weeksAndDays(r.weeks, r.remainingDaysAfterWeeks))),
             Container(width: 1, height: 16, color: kDateDivider),
-            buildSubText('${r.months}개월 ${r.remainingDaysAfterMonths}일'),
+            Flexible(child: buildSubText(l10n.date_result_monthsAndDays(r.months, r.remainingDaysAfterMonths))),
             Container(width: 1, height: 16, color: kDateDivider),
-            buildSubText(
-                '${r.years}년 ${r.monthsAfterYears}개월 ${r.daysAfterYearsMonths}일'),
+            Flexible(child: buildSubText(
+                l10n.date_result_yearsMonthsDays(r.years, r.monthsAfterYears, r.daysAfterYearsMonths))),
           ],
         ),
       ],
@@ -86,23 +89,31 @@ class PeriodModeView extends ConsumerWidget {
   }
 
   Widget _buildStartDayToggle(
+    BuildContext context,
     WidgetRef ref,
     bool isOn,
     DateCalculatorViewModel vm,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () =>
           vm.handleIntent(const DateCalculatorIntent.includeStartDayToggled()),
       child: Row(
         children: [
-          Text(
-            '시작일 포함',
-            style: rowLabel.copyWith(color: kDateTextSecondary),
+          Flexible(
+            child: Text(
+              l10n.date_label_includeStartDay,
+              overflow: TextOverflow.ellipsis,
+              style: rowLabel.copyWith(color: kDateTextSecondary),
+            ),
           ),
           const SizedBox(width: 6),
-          Text(
-            '(기념일 계산 시 ON 권장)',
-            style: textStyleCaption.copyWith(color: kDateTextTertiary),
+          Flexible(
+            child: Text(
+              l10n.date_hint_includeStartDay,
+              overflow: TextOverflow.ellipsis,
+              style: textStyleCaption.copyWith(color: kDateTextTertiary),
+            ),
           ),
           const Spacer(),
           AnimatedContainer(

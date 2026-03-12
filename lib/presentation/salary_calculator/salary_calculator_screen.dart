@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../domain/models/salary_calculator_state.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/app_animated_tab_bar.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 import '../widgets/scroll_fade_view.dart';
@@ -75,11 +76,15 @@ class _SalaryCalculatorScreenState
   double _sliderValue(SalaryCalculatorState s) =>
       s.salary.clamp(_sliderMin(s), _sliderMax(s)).toDouble();
 
-  String _sliderMinLabel(SalaryCalculatorState s) =>
-      s.mode == SalaryMode.monthly ? '100만' : '2,000만';
+  String _sliderMinLabel(SalaryCalculatorState s, AppLocalizations l10n) =>
+      s.mode == SalaryMode.monthly
+          ? l10n.salary_slider_monthlyMin
+          : l10n.salary_slider_annualMin;
 
-  String _sliderMaxLabel(SalaryCalculatorState s) =>
-      s.mode == SalaryMode.monthly ? '1,000만' : '3억';
+  String _sliderMaxLabel(SalaryCalculatorState s, AppLocalizations l10n) =>
+      s.mode == SalaryMode.monthly
+          ? l10n.salary_slider_monthlyMax
+          : l10n.salary_slider_annualMax;
 
   // ── 탭 전환 ──────────────────────────────────────────────────────────────
 
@@ -103,6 +108,7 @@ class _SalaryCalculatorScreenState
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(salaryCalculatorViewModelProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -141,7 +147,7 @@ class _SalaryCalculatorScreenState
               children: [
                 // ── 모드 탭 ─────────────────────────────────────────
                 AppAnimatedTabBar(
-                  labels: const ['월급', '연봉'],
+                  labels: [l10n.salary_tab_monthly, l10n.salary_tab_annual],
                   pageOffset: _pageOffset,
                   onTabSelected: _onTabSelected,
                   accentColor: kSalaryAccent,
@@ -189,6 +195,7 @@ class _SalaryCalculatorScreenState
   }
 
   Widget _buildContent(SalaryCalculatorState state, {required bool isAnnual}) {
+    final l10n = AppLocalizations.of(context)!;
     return ScrollFadeView(
       fadeColor: kSalaryBg2,
       padding: const EdgeInsets.symmetric(
@@ -213,8 +220,8 @@ class _SalaryCalculatorScreenState
             sliderMin: _sliderMin(state).toDouble(),
             sliderMax: _sliderMax(state).toDouble(),
             sliderDivisions: _sliderDivisions(state),
-            sliderMinLabel: _sliderMinLabel(state),
-            sliderMaxLabel: _sliderMaxLabel(state),
+            sliderMinLabel: _sliderMinLabel(state, l10n),
+            sliderMaxLabel: _sliderMaxLabel(state, l10n),
             onSliderChanged: (v) => _vm.handleIntent(
                 SalaryCalculatorIntent.salaryChanged(v.round())),
           ),

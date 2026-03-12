@@ -4,13 +4,13 @@ class ConvertUnitUseCase {
   /// [fromCode] 단위의 [value]를 [units] 내 모든 단위로 변환한 결과를 반환한다.
   /// 온도/연비는 특수 공식, 나머지는 비율 기반.
   Map<String, double> execute({
-    required String categoryName,
+    required String categoryCode,
     required String fromCode,
     required double value,
     required List<UnitDef> units,
   }) {
-    if (categoryName == '온도') return _convertTemperature(fromCode, value, units);
-    if (categoryName == '연비') return _convertFuelEfficiency(fromCode, value, units);
+    if (categoryCode == 'temperature') return _convertTemperature(fromCode, value, units);
+    if (categoryCode == 'fuelEfficiency') return _convertFuelEfficiency(fromCode, value, units);
 
     if (value == 0) {
       return {for (final u in units) u.code: 0.0};

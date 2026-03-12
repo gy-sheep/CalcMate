@@ -1,7 +1,9 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 import '../vat_calculator_colors.dart';
 
 // ──────────────────────────────────────────
@@ -10,29 +12,11 @@ import '../vat_calculator_colors.dart';
 class TaxRateInfoSheet extends StatelessWidget {
   const TaxRateInfoSheet({super.key});
 
-  static const _rates = [
-    ('KR', '대한민국', '부가가치세', '10%'),
-    ('JP', '일본', '소비세 (일반)', '10%'),
-    ('JP', '일본', '소비세 (경감세율)', '8%'),
-    ('GB', '영국', 'VAT (표준)', '20%'),
-    ('GB', '영국', 'VAT (경감)', '5%'),
-    ('DE', '독일', 'VAT (표준)', '19%'),
-    ('DE', '독일', 'VAT (경감)', '7%'),
-    ('FR', '프랑스', 'VAT (표준)', '20%'),
-    ('IT', '이탈리아', 'VAT (표준)', '22%'),
-    ('ES', '스페인', 'VAT (표준)', '21%'),
-    ('AU', '호주', 'GST', '10%'),
-    ('CA', '캐나다', 'GST', '5%'),
-    ('NZ', '뉴질랜드', 'GST', '15%'),
-    ('SG', '싱가포르', 'GST', '9%'),
-    ('IN', '인도', 'GST (표준)', '18%'),
-    ('CN', '중국', 'VAT (일반)', '13%'),
-    ('BR', '브라질', 'ICMS (일반)', '17%'),
-    ('US', '미국', 'Sales Tax', '주마다 상이'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+    final rates = DataStrings.vatTaxRates(locale);
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -62,7 +46,7 @@ class TaxRateInfoSheet extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                '세율 참고',
+                l10n.vat_label_taxRateRef,
                 style: CmSheet.titleText.copyWith(color: Colors.white),
               ),
             ),
@@ -72,14 +56,14 @@ class TaxRateInfoSheet extends StatelessWidget {
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(
                   horizontal: 16, vertical: 8),
-              itemCount: _rates.length,
+              itemCount: rates.length,
               separatorBuilder: (_, __) => const Divider(
                 color: kVatDivider,
                 thickness: CmSheet.dividerThickness,
                 height: CmSheet.dividerHeight,
               ),
               itemBuilder: (_, index) {
-                final (flag, country, taxName, rate) = _rates[index];
+                final (flag, country, taxName, rate) = rates[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(

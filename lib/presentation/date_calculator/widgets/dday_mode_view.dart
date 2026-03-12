@@ -4,6 +4,7 @@ import '../../../core/theme/app_design_tokens.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/usecases/date_calculate_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../date_calculator_colors.dart';
 import '../date_format_utils.dart';
 import '../date_calculator_viewmodel.dart';
@@ -24,6 +25,7 @@ class DDayModeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(dateCalculatorViewModelProvider);
     final vm = ref.read(dateCalculatorViewModelProvider.notifier);
     final result = vm.ddayResult;
@@ -31,12 +33,12 @@ class DDayModeView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ResultCard(child: _buildDDayResult(result, state.ddayTarget)),
+        ResultCard(child: _buildDDayResult(context, result, state.ddayTarget)),
         const SizedBox(height: 16),
         _buildReferenceDateRow(context, state.ddayReference, state.ddayRefIsToday, vm),
         const SizedBox(height: 12),
         DateCard(
-          label: '목표 날짜',
+          label: l10n.date_label_targetDate,
           date: state.ddayTarget,
           onTap: () => pickDate(context, state.ddayTarget, (d) {
             vm.handleIntent(DateCalculatorIntent.ddayTargetChanged(d));
@@ -53,7 +55,8 @@ class DDayModeView extends ConsumerWidget {
     bool isToday,
     DateCalculatorViewModel vm,
   ) {
-    final label = isToday ? '기준일 (오늘)' : '기준일';
+    final l10n = AppLocalizations.of(context)!;
+    final label = isToday ? l10n.date_label_refDateToday : l10n.date_label_refDate;
     return DateCard(
       label: label,
       date: reference,
@@ -63,7 +66,9 @@ class DDayModeView extends ConsumerWidget {
     );
   }
 
-  Widget _buildDDayResult(DDayResult r, DateTime target) {
+  Widget _buildDDayResult(BuildContext context, DDayResult r, DateTime target) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final String mainText;
     final Color mainColor;
     if (r.isToday) {
@@ -77,7 +82,7 @@ class DDayModeView extends ConsumerWidget {
       mainColor = kDateAccent;
     }
 
-    final suffix = r.isPast ? '전' : '후';
+    final suffix = r.isPast ? l10n.date_suffix_before : l10n.date_suffix_after;
 
     return Column(
       children: [
@@ -94,9 +99,9 @@ class DDayModeView extends ConsumerWidget {
           const Divider(color: kDateDivider),
           const SizedBox(height: 10),
           buildSubText(
-              '${r.weeks}주 ${r.remainingDaysAfterWeeks}일 $suffix  (${formatDateShort(target)})'),
+              '${l10n.date_result_weeksAndDays(r.weeks, r.remainingDaysAfterWeeks)} $suffix  (${formatDateShort(target, locale)})'),
           const SizedBox(height: 4),
-          buildSubText('${r.months}개월 ${r.remainingDaysAfterMonths}일 $suffix'),
+          buildSubText('${l10n.date_result_monthsAndDays(r.months, r.remainingDaysAfterMonths)} $suffix'),
         ],
       ],
     );

@@ -248,14 +248,15 @@ class VatCalculatorViewModel
         if (CalculatorInputUtils.endsWithOperator(input)) return;
         final lastSeg = CalculatorInputUtils.lastNumberSegment(input);
         if (lastSeg == '0') return;
-        final toast00 = DigitLimitPolicy.standard.check(lastSeg, '00');
-        if (toast00 != null) {
-          if (toast00.isNotEmpty) state = state.copyWith(toastMessage: toast00);
+        final check00 = DigitLimitPolicy.standard.check(lastSeg, '00');
+        if (check00 != null) {
+          final msg00 = _digitCheckToast(check00);
+          if (msg00.isNotEmpty) state = state.copyWith(toastMessage: msg00);
           return;
         }
         final add00 = DigitLimitPolicy.standard.adjustDoubleZero(lastSeg,
-            onExceed: (msg) {
-          if (msg != null) state = state.copyWith(toastMessage: msg);
+            onExceed: (result) {
+          state = state.copyWith(toastMessage: _digitCheckToast(result));
         });
         if (add00 == null) return;
         input += add00;
@@ -277,9 +278,10 @@ class VatCalculatorViewModel
           input = prefix + key;
           break;
         }
-        final toast = DigitLimitPolicy.standard.check(lastSeg, key);
-        if (toast != null) {
-          if (toast.isNotEmpty) state = state.copyWith(toastMessage: toast);
+        final digitCheck = DigitLimitPolicy.standard.check(lastSeg, key);
+        if (digitCheck != null) {
+          final msg = _digitCheckToast(digitCheck);
+          if (msg.isNotEmpty) state = state.copyWith(toastMessage: msg);
           return;
         }
         input += key;
@@ -329,3 +331,10 @@ class VatCalculatorViewModel
     );
   }
 }
+
+// TODO: Phase 5에서 l10n으로 전환
+String _digitCheckToast(DigitCheckResult result) => switch (result) {
+      DigitCheckResult.integerExceeded => '최대 12자리까지 입력 가능합니다',
+      DigitCheckResult.fractionalExceeded => '소수점 이하 8자리까지 입력 가능합니다',
+      DigitCheckResult.decimalNotAllowed => '',
+    };

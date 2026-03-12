@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/widgets/cm_gradient_border_card.dart';
 import '../../../domain/usecases/calculate_discount_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../discount_calculator_colors.dart';
 
 // ──────────────────────────────────────────
@@ -32,6 +33,7 @@ class DiscountResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hasExtra = extraRate != null && extraRate! > 0;
     final rateLabel = hasExtra
         ? '${discountRate.toStringAsFixed(discountRate % 1 == 0 ? 0 : 1)}% + ${extraRate!.toStringAsFixed(extraRate! % 1 == 0 ? 0 : 1)}%'
@@ -47,12 +49,15 @@ class DiscountResultCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(
-                  '${_fmt(originalPrice)}$currencySymbol',
-                  style: CmResultCard.unitText.copyWith(
-                    color: kDiscountTextSecondary,
-                    decoration: TextDecoration.lineThrough,
-                    decorationColor: kDiscountTextSecondary,
+                Flexible(
+                  child: Text(
+                    '${_fmt(originalPrice)}$currencySymbol',
+                    overflow: TextOverflow.ellipsis,
+                    style: CmResultCard.unitText.copyWith(
+                      color: kDiscountTextSecondary,
+                      decoration: TextDecoration.lineThrough,
+                      decorationColor: kDiscountTextSecondary,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -60,11 +65,14 @@ class DiscountResultCard extends StatelessWidget {
                     color: kDiscountTextSecondary,
                     size: CmTab.iconSize),
                 const SizedBox(width: 8),
-                Text(
-                  '${_fmt(finalPrice)}$currencySymbol',
-                  style: CmResultCard.unitText.copyWith(
-                    color: kDiscountTextPrimary,
-                    fontWeight: FontWeight.w500,
+                Flexible(
+                  child: Text(
+                    '${_fmt(finalPrice)}$currencySymbol',
+                    overflow: TextOverflow.ellipsis,
+                    style: CmResultCard.unitText.copyWith(
+                      color: kDiscountTextPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
@@ -75,11 +83,15 @@ class DiscountResultCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '할인 금액',
-                  style: CmResultCard.unitText.copyWith(
-                      color: kDiscountTextSecondary),
+                Flexible(
+                  child: Text(
+                    l10n.discount_label_savedAmount,
+                    overflow: TextOverflow.ellipsis,
+                    style: CmResultCard.unitText.copyWith(
+                        color: kDiscountTextSecondary),
+                  ),
                 ),
+                const SizedBox(width: 8),
                 Text(
                   '- ${_fmt(savedAmount)}$currencySymbol',
                   style: CmResultCard.unitText.copyWith(
@@ -93,11 +105,17 @@ class DiscountResultCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  hasExtra ? '실질 할인율 ($rateLabel)' : '할인율',
-                  style: CmResultCard.unitText.copyWith(
-                      color: kDiscountTextSecondary),
+                Flexible(
+                  child: Text(
+                    hasExtra
+                        ? l10n.discount_label_effectiveRate(rateLabel)
+                        : l10n.discount_label_discountRate,
+                    overflow: TextOverflow.ellipsis,
+                    style: CmResultCard.unitText.copyWith(
+                        color: kDiscountTextSecondary),
+                  ),
                 ),
+                const SizedBox(width: 8),
                 Text(
                   '${effectiveRate.toStringAsFixed(effectiveRate % 1 == 0 ? 0 : 1)}%',
                   style: CmResultCard.unitText.copyWith(
@@ -112,7 +130,7 @@ class DiscountResultCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  '최종가',
+                  l10n.discount_label_finalPrice,
                   style: CmResultCard.unitText.copyWith(
                       color: kDiscountTextSecondary),
                 ),

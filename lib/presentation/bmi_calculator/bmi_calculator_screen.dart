@@ -3,9 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/l10n/data_strings.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/usecases/bmi_calculate_usecase.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 import '../widgets/scroll_fade_view.dart';
 import 'bmi_calculator_viewmodel.dart';
@@ -110,9 +112,10 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
 
   // ── 직접 입력 다이얼로그 ────────────────────────────────────────────────────
   Future<void> _editHeight() async {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.read(bmiCalculatorViewModelProvider);
     final result = await _showNumberDialog(
-      title: '키 입력',
+      title: l10n.bmi_dialog_editHeight,
       suffix: state.isMetric ? 'cm' : 'ft',
       initial: state.isMetric
           ? state.heightCm.round().toString()
@@ -125,9 +128,10 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
   }
 
   Future<void> _editWeight() async {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.read(bmiCalculatorViewModelProvider);
     final result = await _showNumberDialog(
-      title: '몸무게 입력',
+      title: l10n.bmi_dialog_editWeight,
       suffix: state.isMetric ? 'kg' : 'lb',
       initial: state.isMetric
           ? state.weightKg.toStringAsFixed(1)
@@ -169,13 +173,13 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('취소',
+            child: Text(AppLocalizations.of(ctx)!.common_cancel,
                 style:
                     textStyleCaption.copyWith(color: _kTextSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(ctrl.text),
-            child: Text('확인',
+            child: Text(AppLocalizations.of(ctx)!.common_confirm,
                 style: textStyleCaption.copyWith(color: _kAccent)),
           ),
         ],
@@ -186,6 +190,8 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
   // ── Build ───────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final state = ref.watch(bmiCalculatorViewModelProvider);
     final vm = ref.read(bmiCalculatorViewModelProvider.notifier);
     final result = vm.result;
@@ -216,7 +222,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
                 size: CmAppBar.backIconSize, color: _kTextPrimary),
             onPressed: () => Navigator.of(context).maybePop(),
           ),
-          title: Text('BMI 계산기',
+          title: Text(DataStrings.calcTitle('bmi_calculator', locale),
               style: CmAppBar.titleText.copyWith(color: _kTextPrimary)),
           centerTitle: false,
           actions: [
@@ -272,13 +278,13 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
                       category: result.category,
                       categories: result.categories,
                       standardLabel: isAsian
-                          ? 'WHO 아시아태평양 기준 (대한비만학회 준용)'
-                          : 'WHO 글로벌 기준',
+                          ? l10n.bmi_standard_asian
+                          : l10n.bmi_standard_global,
                     ),
 
                     // ── 키 슬라이더 ─────────────────────────────────────────
                     BmiInputSlider(
-                      label: '키',
+                      label: l10n.bmi_label_height,
                       valueLabel: _heightLabel(state.heightCm, state.isMetric),
                       value: state.heightCm,
                       min: 100,
@@ -293,7 +299,7 @@ class _BmiCalculatorScreenState extends ConsumerState<BmiCalculatorScreen>
 
                     // ── 몸무게 슬라이더 ─────────────────────────────────────
                     BmiInputSlider(
-                      label: '몸무게',
+                      label: l10n.bmi_label_weight,
                       valueLabel: _weightLabel(state.weightKg, state.isMetric),
                       value: state.weightKg,
                       min: 20,

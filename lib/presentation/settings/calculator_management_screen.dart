@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/l10n/data_strings.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 import '../main/main_screen_viewmodel.dart';
 
@@ -55,7 +57,7 @@ class _CalculatorManagementScreenState
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: const Text('계산기 관리'),
+        title: Text(AppLocalizations.of(context).settings_calcManagement_title),
         centerTitle: false,
         titleSpacing: 0,
       ),
@@ -72,41 +74,44 @@ class _CalculatorManagementScreenState
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '메인 화면에 표시할 계산기를 선택하세요.',
-                        style: textStyleCaption
-                            .copyWith(color: colorScheme.onSurfaceVariant),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        final allVisible =
-                            entries.every((e) => e.isVisible);
-                        ref
-                            .read(mainScreenViewModelProvider.notifier)
-                            .handleIntent(
-                              MainScreenIntent.setAllVisibility(
-                                  !allVisible),
-                            );
-                      },
-                      child: Text(
-                        entries.every((e) => e.isVisible)
-                            ? '전체 해제'
-                            : '전체 선택',
-                        style: textStyleCaption.copyWith(
-                          color: isDark
-                              ? _kActiveColorDark
-                              : _kActiveColorLight,
-                          fontWeight: FontWeight.w600,
+                child: Builder(builder: (context) {
+                  final l10n = AppLocalizations.of(context);
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l10n.settings_calcManagement_description,
+                          style: textStyleCaption
+                              .copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          final allVisible =
+                              entries.every((e) => e.isVisible);
+                          ref
+                              .read(mainScreenViewModelProvider.notifier)
+                              .handleIntent(
+                                MainScreenIntent.setAllVisibility(
+                                    !allVisible),
+                              );
+                        },
+                        child: Text(
+                          entries.every((e) => e.isVisible)
+                              ? l10n.settings_calcManagement_deselectAll
+                              : l10n.settings_calcManagement_selectAll,
+                          style: textStyleCaption.copyWith(
+                            color: isDark
+                                ? _kActiveColorDark
+                                : _kActiveColorLight,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -119,7 +124,7 @@ class _CalculatorManagementScreenState
                     for (int i = 0; i < entries.length; i++) ...[
                       _CalculatorTile(
                         icon: entries[i].icon,
-                        title: entries[i].title,
+                        title: DataStrings.calcTitle(entries[i].id, Localizations.localeOf(context)),
                         isVisible: entries[i].isVisible,
                         onTap:
                             entries[i].isVisible && visibleCount <= 1

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
 
@@ -11,6 +13,8 @@ class NextBirthdayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     if (result.isBirthdayToday) {
       return AgeInfoCard(
         child: Container(
@@ -23,7 +27,7 @@ class NextBirthdayCard extends StatelessWidget {
               Text('🎂', style: CmBirthdayMiniCard.resultText.copyWith()),
               const SizedBox(height: 6),
               Text(
-                '오늘이 생일이에요!',
+                l10n.age_label_birthdayToday,
                 style: CmBirthdayMiniCard.titleText.copyWith(
                   color: kAgeAccent,
                   fontWeight: FontWeight.w700,
@@ -41,7 +45,7 @@ class NextBirthdayCard extends StatelessWidget {
     final dDays = result.nextBirthday.difference(todayOnly).inDays;
     final nb = result.nextBirthday;
     final nextDateStr =
-        '${nb.month}월 ${nb.day}일 (${kWeekdays[nb.weekday].replaceAll('요일', '')})';
+        l10n.age_format_mdWeekday(nb.month, nb.day, DataStrings.weekdayShort(nb.weekday, locale));
 
     return AgeInfoCard(
       child: SizedBox(
@@ -52,7 +56,7 @@ class NextBirthdayCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '다음 생일',
+                l10n.age_label_nextBirthday,
                 style: CmBirthdayMiniCard.labelText.copyWith(
                   color: kAgeTextSecondary,
                   fontWeight: FontWeight.w600,

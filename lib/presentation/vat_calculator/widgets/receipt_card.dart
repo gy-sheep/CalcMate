@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../domain/models/vat_calculator_state.dart';
 import '../../../domain/usecases/vat_calculate_usecase.dart';
 import '../../../domain/utils/number_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../vat_calculator_colors.dart';
 import '../vat_calculator_viewmodel.dart';
 
@@ -91,47 +93,7 @@ class ReceiptCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 // ── 세액 명세 ──
-                if (isExclusive) ...[
-                  ReceiptRow(
-                    label: '공급가액',
-                    amount: '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTaxRateRow(),
-                ] else ...[
-                  ReceiptRow(
-                    label: '합계',
-                    amount: '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTaxRateRow(),
-                ],
-                const SizedBox(height: 16),
-                // ── 실선 구분선 ──
-                Container(height: 1.5, color: kVatReceiptDivider),
-                const SizedBox(height: 16),
-                // ── 강조 행 ──
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      isExclusive ? '합계' : '공급가액',
-                      style: textStyle18.copyWith(
-                        color: kVatReceiptText,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      isExclusive
-                          ? '${NumberFormatter.formatVatResult(vatResult.totalAmount)}원'
-                          : '${NumberFormatter.formatVatResult(vatResult.supplyAmount)}원',
-                      style: textMediumResult.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: kVatReceiptText,
-                      ),
-                    ),
-                  ],
-                ),
+                ..._buildTaxRows(context, isExclusive),
               ],
             ),
           ),
@@ -140,7 +102,59 @@ class ReceiptCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTaxRateRow() {
+  String _fmtCurrency(double n, Locale locale) =>
+      CurrencyFormatter.formatKrw(
+          NumberFormatter.formatVatResult(n), locale);
+
+  List<Widget> _buildTaxRows(BuildContext context, bool isExclusive) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+    return [
+      if (isExclusive) ...[
+        ReceiptRow(
+          label: l10n.vat_label_supplyAmount,
+          amount: _fmtCurrency(vatResult.supplyAmount, locale),
+        ),
+        const SizedBox(height: 16),
+        _buildTaxRateRow(context),
+      ] else ...[
+        ReceiptRow(
+          label: l10n.vat_label_total,
+          amount: _fmtCurrency(vatResult.totalAmount, locale),
+        ),
+        const SizedBox(height: 16),
+        _buildTaxRateRow(context),
+      ],
+      const SizedBox(height: 16),
+      Container(height: 1.5, color: kVatReceiptDivider),
+      const SizedBox(height: 16),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            isExclusive ? l10n.vat_label_total : l10n.vat_label_supplyAmount,
+            style: textStyle18.copyWith(
+              color: kVatReceiptText,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Text(
+            isExclusive
+                ? _fmtCurrency(vatResult.totalAmount, locale)
+                : _fmtCurrency(vatResult.supplyAmount, locale),
+            style: textMediumResult.copyWith(
+              fontWeight: FontWeight.w700,
+              color: kVatReceiptText,
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  Widget _buildTaxRateRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final displayRate = vm.displayRate;
     final isEditing = state.inputTarget == InputTarget.taxRate;
     final rateText = isEditing && state.taxRateInput.isNotEmpty
@@ -154,7 +168,7 @@ class ReceiptCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              '부가세 (',
+              '${l10n.vat_label_vat} (',
               style: sectionLabel.copyWith(color: kVatReceiptSecondary),
             ),
             GestureDetector(
@@ -197,7 +211,7 @@ class ReceiptCard extends StatelessWidget {
           ],
         ),
         Text(
-          '${NumberFormatter.formatVatResult(vatResult.vatAmount)}원',
+          _fmtCurrency(vatResult.vatAmount, locale),
           style: sectionLabel.copyWith(color: kVatReceiptSecondary),
         ),
       ],
@@ -220,10 +234,11 @@ class VatModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildOption('합계금액', VatMode.inclusive),
+        _buildOption(l10n.vat_label_totalAmount, VatMode.inclusive),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Container(
@@ -232,7 +247,7 @@ class VatModeToggle extends StatelessWidget {
             color: kVatReceiptDash,
           ),
         ),
-        _buildOption('공급가액', VatMode.exclusive),
+        _buildOption(l10n.vat_label_supplyAmount, VatMode.exclusive),
       ],
     );
   }

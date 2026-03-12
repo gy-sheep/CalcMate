@@ -4,6 +4,10 @@ import 'dart:math';
 ///
 /// 천 단위 콤마, 후행 0 제거, 지수 표기법 등 기본 빌딩블록과
 /// 계산기별 결과 표시 포맷터를 제공한다.
+/// Domain에서 NaN/Infinite 결과를 나타내는 센티널 상수.
+/// Presentation 계층에서 이 값을 감지하여 로컬라이즈된 문자열로 치환.
+const kUndefinedResult = '__UNDEFINED__';
+
 abstract final class NumberFormatter {
   // ── 빌딩 블록 ──
 
@@ -69,7 +73,7 @@ abstract final class NumberFormatter {
 
   /// 기본 계산기 결과 표시 (정수화, 후행 0 제거, Infinity/NaN 처리).
   static String formatResult(double value) {
-    if (value.isNaN || value.isInfinite) return '정의되지 않음';
+    if (value.isNaN || value.isInfinite) return kUndefinedResult;
     if (value == value.truncateToDouble()) return value.toInt().toString();
     final str = value.toStringAsFixed(9);
     return str.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');

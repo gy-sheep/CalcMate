@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../salary_calculator_colors.dart';
 
 class SalaryDisplay extends StatelessWidget {
@@ -34,7 +36,9 @@ class SalaryDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = isAnnual ? '연봉' : '월급';
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+    final title = isAnnual ? l10n.salary_tab_annual : l10n.salary_tab_monthly;
 
     return GestureDetector(
       onTap: onTap,
@@ -82,7 +86,7 @@ class SalaryDisplay extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: spacingUnit),
-                Text('원',
+                Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
                     style:
                         CmInputCard.unitText.copyWith(color: kSalaryTextSecondary)),
               ],
@@ -90,7 +94,10 @@ class SalaryDisplay extends StatelessWidget {
             if (isAnnual && salary > 0) ...[
               const SizedBox(height: CmInputCard.subSpacing),
               Text(
-                '월 ${NumberFormatter.addCommas(monthSalary.toString())} 원',
+                l10n.salary_sub_monthly(
+                  NumberFormatter.addCommas(monthSalary.toString()),
+                  CurrencyFormatter.krwUnit(locale),
+                ),
                 style: CmInputCard.subText.copyWith(color: kSalaryTextSecondary),
               ),
             ],

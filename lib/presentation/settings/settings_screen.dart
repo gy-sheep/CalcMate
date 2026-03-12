@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 import '../main/main_screen_viewmodel.dart';
 import 'calculator_management_screen.dart';
@@ -46,7 +47,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (scrolled != _isScrolled) setState(() => _isScrolled = scrolled);
   }
 
-  void _showLanguageSheet(BuildContext context) {
+  void _showLanguageSheet(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.read(settingsViewModelProvider).locale;
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -54,7 +56,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           top: Radius.circular(CmSheet.radius),
         ),
       ),
-      builder: (_) => const _LanguageSheet(selected: '한국어'),
+      builder: (_) => _LanguageSheet(
+        selectedLocale: currentLocale,
+        onSelected: (locale) {
+          ref
+              .read(settingsViewModelProvider.notifier)
+              .handleIntent(SettingsIntent.localeChanged(locale));
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -79,11 +89,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeMode = ref.watch(settingsViewModelProvider).themeMode;
+    final settings = ref.watch(settingsViewModelProvider);
     final entries = ref.watch(mainScreenViewModelProvider).entries;
     final visibleCount = entries.where((e) => e.isVisible).length;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final statusBarHeight = MediaQuery.of(context).padding.top;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -94,7 +105,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: const Text('설정'),
+        title: Text(l10n.settings_title),
         centerTitle: false,
         titleSpacing: 0,
       ),
@@ -112,24 +123,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               _SectionCard(
                 children: [
                   _SettingsTile(
-                    label: '언어',
-                    value: '한국어',
-                    onTap: () => _showLanguageSheet(context),
+                    label: l10n.settings_language,
+                    value: _localeLabel(l10n, settings.locale),
+                    onTap: () => _showLanguageSheet(context, ref),
                   ),
                   _SettingsTile(
-                    label: '화면 테마',
-                    value: _themeModeLabel(themeMode),
+                    label: l10n.settings_theme,
+                    value: _themeModeLabel(l10n, settings.themeMode),
                     onTap: () => _showThemeModeSheet(context, ref),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
               _SectionCard(
-                title: '일반',
+                title: l10n.settings_sectionGeneral,
                 children: [
                   _SettingsTile(
-                    label: '계산기 관리',
-                    value: '$visibleCount개',
+                    label: l10n.settings_calculatorManagement,
+                    value: l10n.settings_calculatorCount(visibleCount),
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const CalculatorManagementScreen(),
@@ -137,12 +148,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                   ),
                   _SettingsTile(
-                    label: '환율 기준 통화',
+                    label: l10n.settings_baseCurrency,
                     value: 'KRW',
                     onTap: () {},
                   ),
                   _SettingsTile(
-                    label: 'BMI 단위',
+                    label: l10n.settings_bmiUnit,
                     value: 'kg/cm',
                     onTap: () {},
                   ),
@@ -150,15 +161,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(height: 12),
               _SectionCard(
-                title: '앱 정보',
+                title: l10n.settings_sectionAppInfo,
                 children: [
                   _SettingsTile(
-                    label: '버전 정보',
+                    label: l10n.settings_version,
                     value: _appVersion,
                     onTap: () {},
                   ),
                   _SettingsTile(
-                    label: '오픈소스 라이선스',
+                    label: l10n.settings_openSourceLicenses,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const OpenSourceLicensesScreen(),
@@ -166,7 +177,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                   ),
                   _SettingsTile(
-                    label: '개인정보 처리방침',
+                    label: l10n.settings_privacyPolicy,
                     onTap: () {},
                   ),
                 ],
@@ -182,10 +193,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  String _themeModeLabel(ThemeMode mode) => switch (mode) {
-        ThemeMode.system => '시스템 기준',
-        ThemeMode.light => '라이트',
-        ThemeMode.dark => '다크',
+  String _localeLabel(AppLocalizations l10n, Locale? locale) => switch (locale?.languageCode) {
+        'ko' => l10n.settings_languageKo,
+        'en' => l10n.settings_languageEn,
+        _ => l10n.settings_languageSystem,
+      };
+
+  String _themeModeLabel(AppLocalizations l10n, ThemeMode mode) => switch (mode) {
+        ThemeMode.system => l10n.settings_themeSystem,
+        ThemeMode.light => l10n.settings_themeLight,
+        ThemeMode.dark => l10n.settings_themeDark,
       };
 }
 
@@ -289,14 +306,21 @@ class _SettingsTile extends StatelessWidget {
 // ── 언어 선택 바텀시트 ──
 
 class _LanguageSheet extends StatelessWidget {
-  final String selected;
-  const _LanguageSheet({required this.selected});
-
-  static const _languages = ['한국어', 'English', '中文', '日本語'];
+  final Locale? selectedLocale;
+  final ValueChanged<Locale?> onSelected;
+  const _LanguageSheet({required this.selectedLocale, required this.onSelected});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+
+    final labels = [
+      l10n.settings_languageSystem,
+      l10n.settings_languageKo,
+      l10n.settings_languageEn,
+    ];
+    final locales = [null, const Locale('ko'), const Locale('en')];
 
     return SafeArea(
       child: Column(
@@ -319,14 +343,13 @@ class _LanguageSheet extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '언어',
-                style: textStyle16
-                    .copyWith(color: colorScheme.onSurface),
+                l10n.settings_language,
+                style: textStyle16.copyWith(color: colorScheme.onSurface),
               ),
             ),
           ),
           const Divider(height: 1),
-          for (int i = 0; i < _languages.length; i++) ...[
+          for (int i = 0; i < labels.length; i++) ...[
             if (i > 0) const Divider(
               thickness: CmSheet.dividerThickness,
               height: CmSheet.dividerHeight,
@@ -334,9 +357,9 @@ class _LanguageSheet extends StatelessWidget {
               endIndent: 16,
             ),
             _SheetRadioTile(
-              label: _languages[i],
-              isSelected: _languages[i] == selected,
-              onTap: () => Navigator.pop(context),
+              label: labels[i],
+              isSelected: selectedLocale?.languageCode == locales[i]?.languageCode,
+              onTap: () => onSelected(locales[i]),
             ),
           ],
           const SizedBox(height: 8),
@@ -355,6 +378,7 @@ class _ThemeModeSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     return SafeArea(
       child: Column(
@@ -377,9 +401,8 @@ class _ThemeModeSheet extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '화면 테마',
-                style: textStyle16
-                    .copyWith(color: colorScheme.onSurface),
+                l10n.settings_theme,
+                style: textStyle16.copyWith(color: colorScheme.onSurface),
               ),
             ),
           ),
@@ -392,7 +415,7 @@ class _ThemeModeSheet extends StatelessWidget {
               endIndent: 16,
             ),
             _SheetRadioTile(
-              label: _themeModeLabel(ThemeMode.values[i]),
+              label: _themeModeLabel(l10n, ThemeMode.values[i]),
               isSelected: ThemeMode.values[i] == selected,
               onTap: () => Navigator.pop(context, ThemeMode.values[i]),
             ),
@@ -403,10 +426,10 @@ class _ThemeModeSheet extends StatelessWidget {
     );
   }
 
-  String _themeModeLabel(ThemeMode mode) => switch (mode) {
-        ThemeMode.system => '시스템 기준',
-        ThemeMode.light => '라이트',
-        ThemeMode.dark => '다크',
+  String _themeModeLabel(AppLocalizations l10n, ThemeMode mode) => switch (mode) {
+        ThemeMode.system => l10n.settings_themeSystem,
+        ThemeMode.light => l10n.settings_themeLight,
+        ThemeMode.dark => l10n.settings_themeDark,
       };
 }
 

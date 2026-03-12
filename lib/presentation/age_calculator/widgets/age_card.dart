@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
 
@@ -11,6 +13,8 @@ class AgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     return AgeInfoCard(
       child: Padding(
         padding: CmInfoCard.padding,
@@ -32,7 +36,7 @@ class AgeCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  '세',
+                  l10n.age_unit_years,
                   style: textMediumResult.copyWith(
                     color: kAgeAccent,
                     fontWeight: FontWeight.w600,
@@ -47,7 +51,7 @@ class AgeCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(CmInfoCard.tagRadius),
                   ),
                   child: Text(
-                    '세는 나이',
+                    l10n.age_label_countingAge,
                     style: CmInfoCard.tagLabel.copyWith(
                       color: kAgeAccent,
                       fontWeight: FontWeight.w600,
@@ -59,11 +63,11 @@ class AgeCard extends StatelessWidget {
             const SizedBox(height: 14),
             const Divider(color: kAgeDivider, height: 1),
             const SizedBox(height: 14),
-            AgeRow(label: '만 나이', value: '${result.koreanAge}세'),
+            AgeRow(label: l10n.age_label_koreanAge, value: l10n.age_value_years(result.koreanAge)),
             const SizedBox(height: 10),
-            AgeRow(label: '연 나이', value: '${result.yearAge}세'),
+            AgeRow(label: l10n.age_label_yearAge, value: l10n.age_value_years(result.yearAge)),
             const SizedBox(height: 10),
-            AgeRow(label: '태어난 요일', value: kWeekdays[result.birthWeekday]),
+            AgeRow(label: l10n.age_label_birthWeekday, value: DataStrings.weekdayFull(result.birthWeekday, locale)),
           ],
         ),
       ),
@@ -81,8 +85,12 @@ class AgeRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: inputFieldInnerLabel.copyWith(color: kAgeTextSecondary)),
+        Flexible(
+          child: Text(label,
+              overflow: TextOverflow.ellipsis,
+              style: inputFieldInnerLabel.copyWith(color: kAgeTextSecondary)),
+        ),
+        const SizedBox(width: 8),
         Text(value,
             style: textStyle16.copyWith(color: kAgeTextPrimary)),
       ],
@@ -96,18 +104,24 @@ class BirthWeekdayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     return AgeInfoCard(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '태어난 요일',
-              style: inputFieldInnerLabel.copyWith(color: kAgeTextSecondary),
+            Flexible(
+              child: Text(
+                l10n.age_label_birthWeekday,
+                overflow: TextOverflow.ellipsis,
+                style: inputFieldInnerLabel.copyWith(color: kAgeTextSecondary),
+              ),
             ),
+            const SizedBox(width: 8),
             Text(
-              kWeekdays[result.birthWeekday],
+              DataStrings.weekdayFull(result.birthWeekday, locale),
               style: textStyle16.copyWith(color: kAgeTextPrimary),
             ),
           ],

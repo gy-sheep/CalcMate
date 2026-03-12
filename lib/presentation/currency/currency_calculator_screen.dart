@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/constants/error_messages.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/currency_info.dart';
+import '../../l10n/app_localizations.dart';
 import 'currency_calculator_colors.dart';
 import 'currency_calculator_viewmodel.dart';
 import 'widgets/amount_display.dart';
@@ -70,18 +72,28 @@ class _CurrencyCalculatorScreenState
     }
   }
 
-  String _formatLastUpdated(DateTime? dt, {required bool hasRates}) {
-    if (dt == null) return hasRates ? '임시 환율 사용 중' : '환율 정보 없음';
+  String _formatLastUpdated(DateTime? dt, {required bool hasRates, required AppLocalizations l10n}) {
+    if (dt == null) return hasRates ? l10n.currency_status_fallback : l10n.currency_status_noRates;
     final isPm = dt.hour >= 12;
     final hour = dt.hour % 12 == 0 ? 12 : dt.hour % 12;
     final minute = dt.minute.toString().padLeft(2, '0');
     final month = dt.month.toString().padLeft(2, '0');
     final day = dt.day.toString().padLeft(2, '0');
-    return '${dt.year}.$month.$day. ${isPm ? '오후' : '오전'} $hour:$minute 기준';
+    final amPm = isPm ? l10n.common_pm : l10n.common_am;
+    return l10n.currency_label_asOf('${dt.year}.$month.$day $amPm $hour:$minute');
   }
+
+  String _resolveMessage(String key, AppLocalizations l10n) => switch (key) {
+        ErrorMessages.exchangeRateLoadFailed => l10n.error_exchangeRateLoadFailed,
+        ErrorMessages.exchangeRateUsingFallback => l10n.error_exchangeRateUsingFallback,
+        'toast_integerExceeded' => l10n.common_toast_integerExceeded,
+        'toast_fractionalExceeded' => l10n.common_toast_fractionalExceeded,
+        _ => key,
+      };
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(exchangeRateViewModelProvider);
     final vm = ref.read(exchangeRateViewModelProvider.notifier);
 
@@ -89,7 +101,8 @@ class _CurrencyCalculatorScreenState
       exchangeRateViewModelProvider.select((s) => s.toastMessage),
       (_, message) {
         if (message != null) {
-          showAppToast(context, message);
+          final resolved = _resolveMessage(message, l10n);
+          if (resolved.isNotEmpty) showAppToast(context, resolved);
           vm.clearToast();
         }
       },
@@ -133,7 +146,7 @@ class _CurrencyCalculatorScreenState
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(
-                        state.error!,
+                        _resolveMessage(state.error!, l10n),
                         style: textStyleCaption.copyWith(
                           color: Colors.redAccent,
                         ),
@@ -270,6 +283,7 @@ class _CurrencyCalculatorScreenState
                           _formatLastUpdated(
                             state.lastUpdated,
                             hasRates: state.rates.isNotEmpty,
+                            l10n: l10n,
                           ),
                           style: textStyleCaption.copyWith(
                             color: Colors.white38,
@@ -345,7 +359,7 @@ class _CurrencyCalculatorScreenState
                           ),
                           SizedBox(width: CmLoadingOverlay.spinnerTextSpacing),
                           Text(
-                            '환율 정보를 가져오는 중...',
+                            l10n.currency_loading,
                             style: CmLoadingOverlay.text.copyWith(
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,

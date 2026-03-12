@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/dutch_pay_state.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../domain/usecases/dutch_pay_equal_split_usecase.dart';
 import '../../../presentation/widgets/scroll_fade_view.dart';
 import '../dutch_pay_colors.dart';
@@ -99,7 +101,7 @@ class _AmountCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('총 금액',
+            Text(AppLocalizations.of(context)!.dutchPay_label_totalAmount,
                 style: CmInputCard.titleText
                     .copyWith(color: kDutchTextTertiary)),
             const SizedBox(height: 6),
@@ -114,7 +116,7 @@ class _AmountCard extends StatelessWidget {
                       .copyWith(color: kDutchTextPrimary),
                 ),
                 const SizedBox(width: 4),
-                Text('원',
+                Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
                     style: CmInputCard.unitText
                         .copyWith(color: kDutchTextTertiary)),
               ],
@@ -147,7 +149,7 @@ class _PeopleRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text('인원',
+                Text(AppLocalizations.of(context)!.dutchPay_label_people,
                     style: CmStepValue.text.copyWith(
                         color: kDutchTextPrimary,
                         fontWeight: FontWeight.w500)),
@@ -220,7 +222,7 @@ class _PeopleRow extends StatelessWidget {
             if (people > 8) ...[
               const SizedBox(height: 8),
               Text(
-                '위 + 버튼으로 조절하세요',
+                AppLocalizations.of(context)!.dutchPay_hint_plusButton,
                 style: textStyleCaption.copyWith(color: kDutchTextTertiary),
               ),
             ],
@@ -274,23 +276,27 @@ class _RemainderRow extends StatelessWidget {
   final DutchPayViewModel vm;
   final BuildContext context;
 
-  static String _chipLabel(RemUnit u) {
+  static String _chipLabel(RemUnit u, AppLocalizations l10n) {
     switch (u) {
       case RemUnit.hundred:
-        return '100원';
+        return l10n.dutchPay_chip_100;
       case RemUnit.thousand:
-        return '1,000원';
+        return l10n.dutchPay_chip_1000;
     }
   }
 
   @override
   Widget build(BuildContext ctx) {
+    final l10n = AppLocalizations.of(ctx)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('정산 단위',
-            style: CmStepValue.text.copyWith(
-                color: kDutchTextSecondary, fontWeight: FontWeight.w500)),
+        Flexible(
+          child: Text(l10n.dutchPay_label_roundingUnit,
+              overflow: TextOverflow.ellipsis,
+              style: CmStepValue.text.copyWith(
+                  color: kDutchTextSecondary, fontWeight: FontWeight.w500)),
+        ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: RemUnit.values.map((u) {
@@ -311,7 +317,7 @@ class _RemainderRow extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    _chipLabel(u),
+                    _chipLabel(u, l10n),
                     style: CmTab.text.copyWith(
                       color: selected ? Colors.white : kDutchTextPrimary,
                       fontWeight:
@@ -336,14 +342,15 @@ class _TipRow extends StatelessWidget {
   final DutchPayViewModel vm;
 
   static const _tipOptions = [0.0, 10.0, 15.0, 20.0];
-  static const _tipLabels = ['없음', '10%', '15%', '20%'];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final tipLabels = [l10n.dutchPay_tip_none, '10%', '15%', '20%'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('팁 추가',
+        Text(l10n.dutchPay_label_addTip,
             style: CmStepValue.text.copyWith(
                 color: kDutchTextSecondary, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
@@ -371,7 +378,7 @@ class _TipRow extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        _tipLabels[e.key],
+                        tipLabels[e.key],
                         style: CmTab.text.copyWith(
                           color: selected ? Colors.white : kDutchTextPrimary,
                           fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
@@ -396,7 +403,7 @@ class _TipRow extends StatelessWidget {
                   child: Text(
                     eq.isCustomTip && eq.tipInput.isNotEmpty
                         ? '${eq.tipInput}%'
-                        : '직접입력',
+                        : l10n.dutchPay_tip_custom,
                     style: CmTab.text.copyWith(
                       color: eq.isCustomTip ? Colors.white : kDutchTextPrimary,
                       fontWeight: eq.isCustomTip ? FontWeight.w600 : FontWeight.w400,
@@ -439,18 +446,19 @@ class _ResultCard extends StatelessWidget {
       ),
       child: result == null
           ? Center(
-              child: Text('총액을 입력하면 결과가 표시돼요',
+              child: Text(AppLocalizations.of(context)!.dutchPay_hint_enterTotal,
                   style: textEmptyGuide
                       .copyWith(color: kDutchTextTertiary)))
-          : _buildContent(),
+          : _buildContent(context),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (!isKorea) {
       return Column(
         children: [
-          Text('1인당',
+          Text(l10n.dutchPay_label_perPerson,
               style: CmResultCard.titleText
                   .copyWith(color: kDutchTextTertiary)),
           const SizedBox(height: 4),
@@ -468,7 +476,7 @@ class _ResultCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Text('원',
+              Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
                   style: CmResultCard.unitText
                       .copyWith(color: kDutchTextTertiary)),
             ],
@@ -480,7 +488,7 @@ class _ResultCard extends StatelessWidget {
     if (result!.isEven) {
       return Column(
         children: [
-          Text('1인당',
+          Text(l10n.dutchPay_label_perPerson,
               style: CmResultCard.titleText
                   .copyWith(color: kDutchTextTertiary)),
           const SizedBox(height: 4),
@@ -498,7 +506,7 @@ class _ResultCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Text('원',
+              Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
                   style: CmResultCard.unitText
                       .copyWith(color: kDutchTextTertiary)),
             ],
@@ -510,12 +518,12 @@ class _ResultCard extends StatelessWidget {
     return Column(
       children: [
         _ResultRow(
-          label: '참여자 ${result!.people - 1}명',
+          label: l10n.dutchPay_label_participantCount(result!.people - 1),
           amount: vm.fmt(result!.rounded),
         ),
         Divider(height: 20, color: kDutchDivider.withValues(alpha: 0.5)),
         _ResultRow(
-          label: '계산한 사람',
+          label: l10n.dutchPay_label_organizer,
           amount: vm.fmt(result!.organizer),
           highlight: true,
         ),
@@ -536,10 +544,14 @@ class _ResultRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: rowLabel.copyWith(
-                color: highlight ? kDutchTextPrimary : kDutchTextSecondary,
-                fontWeight: highlight ? FontWeight.w600 : FontWeight.w400)),
+        Flexible(
+          child: Text(label,
+              overflow: TextOverflow.ellipsis,
+              style: rowLabel.copyWith(
+                  color: highlight ? kDutchTextPrimary : kDutchTextSecondary,
+                  fontWeight: highlight ? FontWeight.w600 : FontWeight.w400)),
+        ),
+        const SizedBox(width: 8),
         RichText(
           text: TextSpan(children: [
             TextSpan(
@@ -551,7 +563,7 @@ class _ResultRow extends StatelessWidget {
             ),
             const TextSpan(text: ' '),
             TextSpan(
-              text: '원',
+              text: CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
               style: textStyleCaption.copyWith(color: kDutchTextTertiary),
             ),
           ]),
@@ -606,7 +618,7 @@ class _ShareBtn extends StatelessWidget {
             children: [
               Icon(Icons.share_outlined, color: Colors.white, size: CmIcon.small),
               const SizedBox(width: 8),
-              Text('결과 공유',
+              Text(AppLocalizations.of(context)!.dutchPay_button_shareResult,
                   style: textStyle16.copyWith(
                       color: Colors.white)),
             ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/widgets/cm_gradient_border_card.dart';
+import '../../../l10n/app_localizations.dart';
 import '../discount_calculator_colors.dart';
 
 // ──────────────────────────────────────────
@@ -66,6 +67,7 @@ class _ExtraDiscountSectionState extends State<ExtraDiscountSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -83,7 +85,9 @@ class _ExtraDiscountSectionState extends State<ExtraDiscountSection> {
               ),
               const SizedBox(width: 6),
               Text(
-                widget.show ? '추가 할인 제거' : '추가 할인',
+                widget.show
+                    ? l10n.discount_label_removeExtra
+                    : l10n.discount_label_addExtra,
                 style: rowLabel.copyWith(color: kDiscountAccent),
               ),
             ],
@@ -101,10 +105,11 @@ class _ExtraDiscountSectionState extends State<ExtraDiscountSection> {
   }
 
   Widget _buildExtraField() {
+    final l10n = AppLocalizations.of(context)!;
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('추가 할인율',
+        Text(l10n.discount_label_extraRate,
             style: CmInputCard.titleText.copyWith(
                 color: kDiscountTextSecondary)),
         const SizedBox(height: CmInputCard.titleSpacing),

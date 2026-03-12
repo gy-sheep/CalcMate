@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/number_keypad.dart';
+import '../../../l10n/app_localizations.dart';
 import '../salary_calculator_colors.dart';
 
 /// 급여 직접 입력 키패드 모달.
@@ -15,6 +16,7 @@ void showSalaryKeypad(
     context,
     initialValue: 0,
     onConfirm: onConfirm,
+    confirmLabel: AppLocalizations.of(context)!.common_confirm,
     colors: KeypadColors(
       sheetBg: kSalaryBg1,
       handle: kSalaryCardBorder,

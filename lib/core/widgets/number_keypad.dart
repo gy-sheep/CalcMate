@@ -45,7 +45,7 @@ void showNumberKeypad(
   required ValueChanged<int> onConfirm,
   required KeypadColors colors,
   int maxDigits = 10,
-  String confirmLabel = '확인',
+  required String confirmLabel,
 }) {
   String input = initialValue > 0 ? initialValue.toString() : '';
 

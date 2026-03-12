@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../age_calculator_colors.dart';
 
 class EmptyState extends StatelessWidget {
@@ -7,10 +8,11 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context)!;
+    return Center(
       child: Text(
-        '미래 날짜는 계산할 수 없어요',
-        style: TextStyle(color: kAgeTextSecondary, fontSize: 15),
+        l10n.age_label_futureDate,
+        style: const TextStyle(color: kAgeTextSecondary, fontSize: 15),
       ),
     );
   }

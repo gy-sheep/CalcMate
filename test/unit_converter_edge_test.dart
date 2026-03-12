@@ -9,17 +9,17 @@ void main() {
 
   /// _onUnitTapped 시뮬레이션
   Map<String, String> simulateTap({
-    required String categoryName,
+    required String categoryCode,
     required String fromCode,
     required String input,
     required String toCode,
     required List<UnitDef> units,
   }) {
-    final isTemp = categoryName == '온도';
+    final isTemp = categoryCode == 'temperature';
     final inputValue = double.tryParse(input) ?? 0;
 
     final rawResults1 = useCase.execute(
-      categoryName: categoryName,
+      categoryCode: categoryCode,
       fromCode: fromCode,
       value: inputValue,
       units: units,
@@ -39,7 +39,7 @@ void main() {
     final newInputValue = double.tryParse(newInput) ?? 0;
 
     final rawResults2 = useCase.execute(
-      categoryName: categoryName,
+      categoryCode: categoryCode,
       fromCode: toCode,
       value: newInputValue,
       units: units,
@@ -72,7 +72,7 @@ void main() {
     test('길이: -100 cm → in', () {
       final cat = unitCategories[0];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'cm', input: '-100',
+        categoryCode: cat.code, fromCode: 'cm', input: '-100',
         toCode: 'in', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -83,7 +83,7 @@ void main() {
     test('온도: -40 °C → °F (교차점)', () {
       final cat = unitCategories[2];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: '°C', input: '-40',
+        categoryCode: cat.code, fromCode: '°C', input: '-40',
         toCode: '°F', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -96,7 +96,7 @@ void main() {
       // 속도에 음수가 들어갈 수 있는지는 UI 제한에 따라 다르지만 로직 검증
       final cat = unitCategories[6];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'km/h', input: '-100',
+        categoryCode: cat.code, fromCode: 'km/h', input: '-100',
         toCode: 'm/s', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -109,7 +109,7 @@ void main() {
     test('길이: 999999999999 mm → km', () {
       final cat = unitCategories[0];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'mm', input: '999999999999',
+        categoryCode: cat.code, fromCode: 'mm', input: '999999999999',
         toCode: 'km', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -119,7 +119,7 @@ void main() {
     test('시간: 999999999999 ms → year', () {
       final cat = unitCategories[4];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'ms', input: '999999999999',
+        categoryCode: cat.code, fromCode: 'ms', input: '999999999999',
         toCode: 'year', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -129,7 +129,7 @@ void main() {
     test('데이터: 999999999999 B → PB', () {
       final cat = unitCategories[8];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'B', input: '999999999999',
+        categoryCode: cat.code, fromCode: 'B', input: '999999999999',
         toCode: 'PB', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -142,7 +142,7 @@ void main() {
     test('길이: 1.23456789 cm → in → cm 왕복', () {
       final cat = unitCategories[0];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'cm', input: '1.23456789',
+        categoryCode: cat.code, fromCode: 'cm', input: '1.23456789',
         toCode: 'in', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -153,7 +153,7 @@ void main() {
     test('온도: 36.666666 °C → °F → °C 왕복', () {
       final cat = unitCategories[2];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: '°C', input: '36.666666',
+        categoryCode: cat.code, fromCode: '°C', input: '36.666666',
         toCode: '°F', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -167,7 +167,7 @@ void main() {
     test('길이: 0 cm → in', () {
       final cat = unitCategories[0];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'cm', input: '0',
+        categoryCode: cat.code, fromCode: 'cm', input: '0',
         toCode: 'in', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -178,7 +178,7 @@ void main() {
     test('온도: 0 °C → °F', () {
       final cat = unitCategories[2];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: '°C', input: '0',
+        categoryCode: cat.code, fromCode: '°C', input: '0',
         toCode: '°F', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -188,7 +188,7 @@ void main() {
     test('연비: 0 km/L → L/100km (0으로 나누기)', () {
       final cat = unitCategories[7];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'km/L', input: '0',
+        categoryCode: cat.code, fromCode: 'km/L', input: '0',
         toCode: 'L/100km', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -204,9 +204,9 @@ void main() {
       for (final fromUnit in cat.units) {
         for (final toUnit in cat.units) {
           if (fromUnit.code == toUnit.code) continue;
-          test('${cat.name}: 1 ${fromUnit.code} → ${toUnit.code}', () {
+          test('${cat.code}: 1 ${fromUnit.code} → ${toUnit.code}', () {
             final r = simulateTap(
-              categoryName: cat.name,
+              categoryCode: cat.code,
               fromCode: fromUnit.code,
               input: '1',
               toCode: toUnit.code,
@@ -214,7 +214,7 @@ void main() {
             );
             expect(r['displayBefore'], equals(r['displayAfter']),
                 reason:
-                    '${cat.name}: ${fromUnit.code}→${toUnit.code} 표시 불일치\n'
+                    '${cat.code}: ${fromUnit.code}→${toUnit.code} 표시 불일치\n'
                     '비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}\n'
                     'rawFromDouble: ${r['rawFromDouble']}');
           });
@@ -235,7 +235,7 @@ void main() {
         final nextCode = codes[i];
         final inputValue = double.tryParse(currentInput) ?? 0;
         final rawResults = useCase.execute(
-          categoryName: cat.name,
+          categoryCode: cat.code,
           fromCode: currentCode,
           value: inputValue,
           units: cat.units,
@@ -253,7 +253,7 @@ void main() {
         // 재계산
         final newInputValue = double.tryParse(currentInput) ?? 0;
         final rawResults2 = useCase.execute(
-          categoryName: cat.name,
+          categoryCode: cat.code,
           fromCode: nextCode,
           value: newInputValue,
           units: cat.units,
@@ -279,7 +279,7 @@ void main() {
     test('L/100km → km/L → L/100km 왕복', () {
       final cat = unitCategories[7];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'L/100km', input: '7.5',
+        categoryCode: cat.code, fromCode: 'L/100km', input: '7.5',
         toCode: 'km/L', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -290,7 +290,7 @@ void main() {
     test('L/100km → mpg(US) → L/100km 왕복', () {
       final cat = unitCategories[7];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'L/100km', input: '8.3',
+        categoryCode: cat.code, fromCode: 'L/100km', input: '8.3',
         toCode: 'mpg(US)', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -301,7 +301,7 @@ void main() {
     test('mpg(US) → mpg(UK) → mpg(US) 왕복', () {
       final cat = unitCategories[7];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'mpg(US)', input: '30',
+        categoryCode: cat.code, fromCode: 'mpg(US)', input: '30',
         toCode: 'mpg(UK)', units: cat.units,
       );
       print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');

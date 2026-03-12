@@ -12,8 +12,7 @@ class ErrorInterceptor extends Interceptor {
       DioExceptionType.sendTimeout =>
         ErrorMessages.networkTimeout,
       DioExceptionType.connectionError => ErrorMessages.networkUnavailable,
-      DioExceptionType.badResponse =>
-        ErrorMessages.serverError(err.response?.statusCode),
+      DioExceptionType.badResponse => ErrorMessages.serverError,
       _ => ErrorMessages.unknownError,
     };
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/unit_converter_state.dart';
 import '../../../domain/models/unit_definition.dart';
@@ -134,7 +135,7 @@ class _UnitListState extends State<UnitList> {
                     ),
                     Expanded(
                       child: Text(
-                        unit.label,
+                        DataStrings.unitLabel(unit.code, Localizations.localeOf(context)),
                         style: textStyleCaption.copyWith(
                           color: (widget.isActive && isActiveUnit)
                               ? Colors.white

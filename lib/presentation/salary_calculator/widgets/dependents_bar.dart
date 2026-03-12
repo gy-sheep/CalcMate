@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 import '../salary_calculator_colors.dart';
 
 class DependentsBar extends StatelessWidget {
@@ -17,6 +18,7 @@ class DependentsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: CmBottomBar.padding,
       decoration: BoxDecoration(
@@ -28,11 +30,11 @@ class DependentsBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('부양가족 수',
+              Text(l10n.salary_label_dependents,
                   style: rowLabel.copyWith(color: kSalaryTextPrimary)),
               const SizedBox(width: CmBottomBar.labelIconSpacing),
               Tooltip(
-                message: '본인 포함 기준, 소득세 계산에 반영됩니다',
+                message: l10n.salary_tooltip_dependents,
                 child: Icon(Icons.info_outline,
                     size: CmIcon.tooltip, color: kSalaryTextSecondary),
               ),

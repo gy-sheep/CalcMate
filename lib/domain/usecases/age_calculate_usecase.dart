@@ -146,11 +146,10 @@ class AgeCalculateUseCase {
 // 정적 데이터
 // ─────────────────────────────────────────
 
-/// 띠 (이름, 이모지) — 인덱스 0=쥐 … 11=돼지
-const List<(String, String)> kZodiacs = [
-  ('쥐', '🐭'), ('소', '🐮'), ('호랑이', '🐯'), ('토끼', '🐰'),
-  ('용', '🐲'), ('뱀', '🐍'), ('말', '🐴'), ('양', '🐑'),
-  ('원숭이', '🐵'), ('닭', '🐔'), ('개', '🐶'), ('돼지', '🐷'),
+/// 띠 이모지 — 인덱스 0=쥐 … 11=돼지
+const List<String> kZodiacEmojis = [
+  '🐭', '🐮', '🐯', '🐰', '🐲', '🐍',
+  '🐴', '🐑', '🐵', '🐔', '🐶', '🐷',
 ];
 
 /// 띠 아이콘 경로 — kZodiacs와 동일 인덱스
@@ -169,11 +168,10 @@ const List<String> kZodiacIcons = [
   'assets/icons/zodiac/zodiac_pig.png',
 ];
 
-/// 별자리 (이름, 기호) — 인덱스 0=염소 … 11=사수
-const List<(String, String)> kConstellations = [
-  ('염소자리', '♑'), ('물병자리', '♒'), ('물고기자리', '♓'), ('양자리', '♈'),
-  ('황소자리', '♉'), ('쌍둥이자리', '♊'), ('게자리', '♋'),  ('사자자리', '♌'),
-  ('처녀자리', '♍'), ('천칭자리', '♎'), ('전갈자리', '♏'),  ('사수자리', '♐'),
+/// 별자리 기호 — 인덱스 0=염소 … 11=사수
+const List<String> kConstellationSymbols = [
+  '♑', '♒', '♓', '♈', '♉', '♊',
+  '♋', '♌', '♍', '♎', '♏', '♐',
 ];
 
 /// 별자리 아이콘 경로 — kConstellations와 동일 인덱스
@@ -192,7 +190,3 @@ const List<String> kConstellationIcons = [
   'assets/icons/constellation/constellation_sagittarius.png',
 ];
 
-/// 요일 이름 (weekday 1=월 … 7=일)
-const List<String> kWeekdays = [
-  '', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일',
-];

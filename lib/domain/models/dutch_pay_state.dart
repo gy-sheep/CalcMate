@@ -7,7 +7,6 @@ enum RemUnit { hundred, thousand }
 
 extension RemUnitExt on RemUnit {
   int get value => this == RemUnit.hundred ? 100 : 1000;
-  String get label => this == RemUnit.hundred ? '100원 단위' : '1,000원 단위';
 }
 
 // ── 참여자 ─────────────────────────────────────────────

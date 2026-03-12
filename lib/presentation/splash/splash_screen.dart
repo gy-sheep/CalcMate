@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../l10n/app_localizations.dart';
 import '../main/main_screen.dart';
 
 const Color _kBackground = Color(0xFF0F0F19);
@@ -146,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen>
               child: SlideTransition(
                 position: _taglineSlide,
                 child: Text(
-                '생활 속 모든 계산',
+                AppLocalizations.of(context)!.splash_tagline,
                 style: CmAppBar.titleText.copyWith(
                   color: _kTagline,
                   fontSize: 16,

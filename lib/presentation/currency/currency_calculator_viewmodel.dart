@@ -123,7 +123,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   /// 현재 입력값을 수치로 평가 (수식 포함)
   double get evaluatedInput {
     final input = state.input;
-    if (input == '정의되지 않음') return 0;
+    if (input == kUndefinedResult) return 0;
     final simple = double.tryParse(input);
     if (simple != null) return simple;
     if (CalculatorInputUtils.endsWithOperator(input)) return 0;
@@ -140,7 +140,7 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   /// 입력값에 천 단위 콤마를 적용한 표시 문자열
   String get formattedInput {
     final input = state.input;
-    if (input == '정의되지 않음') return input;
+    if (input == kUndefinedResult) return input;
     return input.replaceAllMapped(
       RegExp(r'(\d+\.?\d*)'),
       (m) {
@@ -286,8 +286,8 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         if (seg00 == '0' || seg00 == '-0') break;
         // 자릿수 제한 체크
         final add00 = DigitLimitPolicy.standard.adjustDoubleZero(seg00,
-            onExceed: (msg) {
-          if (msg != null) state = state.copyWith(toastMessage: msg);
+            onExceed: (result) {
+          state = state.copyWith(toastMessage: _digitCheckToast(result));
         });
         if (add00 == null) return;
         input += add00;
@@ -300,9 +300,10 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
         }
         // 자릿수 제한 체크
         final seg = CalculatorInputUtils.lastNumberSegment(input);
-        final toast = DigitLimitPolicy.standard.check(seg, key);
-        if (toast != null) {
-          if (toast.isNotEmpty) state = state.copyWith(toastMessage: toast);
+        final digitCheck = DigitLimitPolicy.standard.check(seg, key);
+        if (digitCheck != null) {
+          final msg = _digitCheckToast(digitCheck);
+          if (msg.isNotEmpty) state = state.copyWith(toastMessage: msg);
           return;
         }
         if (input == '0') {
@@ -321,3 +322,9 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
     state = state.copyWith(toastMessage: null);
   }
 }
+
+String _digitCheckToast(DigitCheckResult result) => switch (result) {
+      DigitCheckResult.integerExceeded => 'toast_integerExceeded',
+      DigitCheckResult.fractionalExceeded => 'toast_fractionalExceeded',
+      DigitCheckResult.decimalNotAllowed => '',
+    };

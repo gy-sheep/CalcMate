@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/bmi_calculate_usecase.dart';
 
@@ -66,8 +67,8 @@ class BmiGauge extends StatelessWidget {
                     AnimatedSwitcher(
                       duration: durationAnimMedium,
                       child: Text(
-                        category.label,
-                        key: ValueKey(category.label),
+                        DataStrings.bmiCategory(category.code.name, Localizations.localeOf(context)),
+                        key: ValueKey(category.code),
                         textAlign: TextAlign.center,
                         style: textStyle16
                             .copyWith(color: category.color),
@@ -190,3 +191,4 @@ class _GaugePainter extends CustomPainter {
   bool shouldRepaint(_GaugePainter old) =>
       old.needleAngle != needleAngle || old.categories != categories;
 }
+

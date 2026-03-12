@@ -6,6 +6,7 @@ import '../../domain/models/unit_definition.dart';
 const unitCategories = <UnitCategory>[
   // ── 길이 ──
   UnitCategory(
+    code: 'length',
     name: '길이',
     icon: Icons.straighten,
     defaultCode: 'cm',
@@ -23,6 +24,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 질량 ──
   UnitCategory(
+    code: 'mass',
     name: '질량',
     icon: Icons.fitness_center,
     defaultCode: 'kg',
@@ -38,6 +40,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 온도 (특수 공식 — ratio null) ──
   UnitCategory(
+    code: 'temperature',
     name: '온도',
     icon: Icons.thermostat,
     defaultCode: '°C',
@@ -50,6 +53,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 넓이 ──
   UnitCategory(
+    code: 'area',
     name: '넓이',
     icon: Icons.crop_square,
     defaultCode: 'm²',
@@ -67,6 +71,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 시간 ──
   UnitCategory(
+    code: 'time',
     name: '시간',
     icon: Icons.access_time,
     defaultCode: 'h',
@@ -84,6 +89,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 부피 ──
   UnitCategory(
+    code: 'volume',
     name: '부피',
     icon: Icons.local_drink,
     defaultCode: 'L',
@@ -101,6 +107,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 속도 ──
   UnitCategory(
+    code: 'speed',
     name: '속도',
     icon: Icons.directions_car,
     defaultCode: 'km/h',
@@ -115,6 +122,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 연비 (특수 공식 — ratio null) ──
   UnitCategory(
+    code: 'fuelEfficiency',
     name: '연비',
     icon: Icons.local_gas_station,
     defaultCode: 'km/L',
@@ -128,6 +136,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 데이터 ──
   UnitCategory(
+    code: 'data',
     name: '데이터',
     icon: Icons.storage,
     defaultCode: 'GB',
@@ -144,6 +153,7 @@ const unitCategories = <UnitCategory>[
 
   // ── 압력 ──
   UnitCategory(
+    code: 'pressure',
     name: '압력',
     icon: Icons.speed,
     defaultCode: 'atm',

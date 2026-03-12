@@ -387,8 +387,9 @@ class DutchPayViewModel extends AutoDisposeNotifier<DutchPayState> {
     final amt = int.tryParse(s.amtInput) ?? 0;
     if (amt == 0 || s.selectedParticipants.isEmpty) return;
 
+    // TODO: l10n — ViewModel은 locale 접근 불가, 추후 UI에서 전달 방식으로 전환
     final name = s.nameInput.trim().isEmpty
-        ? '메뉴 ${s.items.length + 1}'
+        ? 'Item ${s.items.length + 1}'
         : s.nameInput.trim();
 
     final item = DutchItem(

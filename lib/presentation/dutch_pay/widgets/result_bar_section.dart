@@ -3,9 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../domain/usecases/dutch_pay_individual_split_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 import 'dutch_card.dart';
 import 'share_sheet.dart';
@@ -30,6 +32,8 @@ class ResultBarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final maxAmt = result.personAmounts.isEmpty
         ? 1
         : result.personAmounts.reduce(math.max);
@@ -44,10 +48,10 @@ class ResultBarSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('결과',
+                Text(l10n.dutchPay_label_result,
                     style: CmInputCard.titleText
                         .copyWith(color: kDutchTextSecondary)),
-                Text('합계 ${_fmt(result.totalAmount)}원',
+                Text('${l10n.dutchPay_label_total} ${CurrencyFormatter.formatKrw(_fmt(result.totalAmount), locale)}',
                     style: textStyleCaption.copyWith(
                         color: kDutchTextTertiary)),
               ],
@@ -104,7 +108,7 @@ class ResultBarSection extends StatelessWidget {
                     SizedBox(
                       width: 96,
                       child: Text(
-                        '${_fmt(amt)}원',
+                        CurrencyFormatter.formatKrw(_fmt(amt), locale),
                         textAlign: TextAlign.right,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -156,7 +160,7 @@ class ShareResultBtn extends StatelessWidget {
           children: [
             Icon(Icons.share_outlined, color: Colors.white, size: CmIcon.small),
             const SizedBox(width: 8),
-            Text('결과 공유',
+            Text(AppLocalizations.of(context)!.dutchPay_button_shareResult,
                 style: textStyle16.copyWith(color: Colors.white)),
           ],
         ),

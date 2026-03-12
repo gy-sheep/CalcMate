@@ -22,18 +22,18 @@ void main() {
   ///   'originalDisplay': 원래 입력의 표시값,
   /// }
   Map<String, String> simulateTap({
-    required String categoryName,
+    required String categoryCode,
     required String fromCode,
     required String input,
     required String toCode,
     required List<UnitDef> units,
   }) {
-    final isTemp = categoryName == '온도';
+    final isTemp = categoryCode == 'temperature';
 
     // 1단계: 입력값으로 변환 계산
     final inputValue = double.tryParse(input) ?? 0;
     final rawResults1 = useCase.execute(
-      categoryName: categoryName,
+      categoryCode: categoryCode,
       fromCode: fromCode,
       value: inputValue,
       units: units,
@@ -56,7 +56,7 @@ void main() {
     // 3단계: newInput으로 재계산
     final newInputValue = double.tryParse(newInput) ?? 0;
     final rawResults2 = useCase.execute(
-      categoryName: categoryName,
+      categoryCode: categoryCode,
       fromCode: toCode,
       value: newInputValue,
       units: units,
@@ -95,7 +95,7 @@ void main() {
 
       test('1 cm → in → 포커스 이동 시 값 일치', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'cm', input: '1',
+          categoryCode: cat.code, fromCode: 'cm', input: '1',
           toCode: 'in', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -106,7 +106,7 @@ void main() {
 
       test('6666 km → in → 포커스 이동 시 값 일치', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'km', input: '6666',
+          categoryCode: cat.code, fromCode: 'km', input: '6666',
           toCode: 'in', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -116,7 +116,7 @@ void main() {
 
       test('0.001 mm → mi → 매우 작은 값', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'mm', input: '0.001',
+          categoryCode: cat.code, fromCode: 'mm', input: '0.001',
           toCode: 'mi', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -126,7 +126,7 @@ void main() {
 
       test('999999 m → mm → 큰 값 경계', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'm', input: '999999',
+          categoryCode: cat.code, fromCode: 'm', input: '999999',
           toCode: 'mm', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -135,7 +135,7 @@ void main() {
 
       test('1000000 m → mm → 백만 이상', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'm', input: '1000000',
+          categoryCode: cat.code, fromCode: 'm', input: '1000000',
           toCode: 'mm', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -149,7 +149,7 @@ void main() {
 
       test('100 kg → oz', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'kg', input: '100',
+          categoryCode: cat.code, fromCode: 'kg', input: '100',
           toCode: 'oz', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -159,7 +159,7 @@ void main() {
 
       test('0.5 mg → t → 매우 작은 값', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'mg', input: '0.5',
+          categoryCode: cat.code, fromCode: 'mg', input: '0.5',
           toCode: 't', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -173,7 +173,7 @@ void main() {
 
       test('100 °C → °F', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: '°C', input: '100',
+          categoryCode: cat.code, fromCode: '°C', input: '100',
           toCode: '°F', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -183,7 +183,7 @@ void main() {
 
       test('100.12345 °C → °F → 소수점', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: '°C', input: '100.12345',
+          categoryCode: cat.code, fromCode: '°C', input: '100.12345',
           toCode: '°F', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -193,7 +193,7 @@ void main() {
 
       test('0 K → °C → 절대영도', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'K', input: '0',
+          categoryCode: cat.code, fromCode: 'K', input: '0',
           toCode: '°C', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -202,7 +202,7 @@ void main() {
 
       test('-272.65 °C → K → 절대영도 근처 (< 1)', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: '°C', input: '-272.65',
+          categoryCode: cat.code, fromCode: '°C', input: '-272.65',
           toCode: 'K', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -216,7 +216,7 @@ void main() {
 
       test('10 평 → m²', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: '평', input: '10',
+          categoryCode: cat.code, fromCode: '평', input: '10',
           toCode: 'm²', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -226,7 +226,7 @@ void main() {
 
       test('1 m² → ac → 에이커', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'm²', input: '1',
+          categoryCode: cat.code, fromCode: 'm²', input: '1',
           toCode: 'ac', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -240,7 +240,7 @@ void main() {
 
       test('1 h → ms → 큰 차이', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'h', input: '1',
+          categoryCode: cat.code, fromCode: 'h', input: '1',
           toCode: 'ms', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -249,7 +249,7 @@ void main() {
 
       test('1 ms → year → 매우 작은 값', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'ms', input: '1',
+          categoryCode: cat.code, fromCode: 'ms', input: '1',
           toCode: 'year', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -263,7 +263,7 @@ void main() {
 
       test('10.5 L → gal', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'L', input: '10.5',
+          categoryCode: cat.code, fromCode: 'L', input: '10.5',
           toCode: 'gal', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -273,7 +273,7 @@ void main() {
 
       test('1 mL → m³ → 매우 작은 값', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'mL', input: '1',
+          categoryCode: cat.code, fromCode: 'mL', input: '1',
           toCode: 'm³', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -287,7 +287,7 @@ void main() {
 
       test('360 km/h → m/s → 반복소수', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'km/h', input: '360',
+          categoryCode: cat.code, fromCode: 'km/h', input: '360',
           toCode: 'm/s', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -297,7 +297,7 @@ void main() {
 
       test('100 m/s → km/h', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'm/s', input: '100',
+          categoryCode: cat.code, fromCode: 'm/s', input: '100',
           toCode: 'km/h', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -312,7 +312,7 @@ void main() {
 
       test('33.33 km/L → L/100km → 나눗셈', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'km/L', input: '33.33',
+          categoryCode: cat.code, fromCode: 'km/L', input: '33.33',
           toCode: 'L/100km', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -322,7 +322,7 @@ void main() {
 
       test('10 km/L → mpg(US)', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'km/L', input: '10',
+          categoryCode: cat.code, fromCode: 'km/L', input: '10',
           toCode: 'mpg(US)', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -332,7 +332,7 @@ void main() {
 
       test('25 km/L → L/100km → 정수 나눗셈', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'km/L', input: '25',
+          categoryCode: cat.code, fromCode: 'km/L', input: '25',
           toCode: 'L/100km', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -347,7 +347,7 @@ void main() {
 
       test('1 TB → bit → 큰 값', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'TB', input: '1',
+          categoryCode: cat.code, fromCode: 'TB', input: '1',
           toCode: 'bit', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -357,7 +357,7 @@ void main() {
 
       test('1 GB → MB', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'GB', input: '1',
+          categoryCode: cat.code, fromCode: 'GB', input: '1',
           toCode: 'MB', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -366,7 +366,7 @@ void main() {
 
       test('1 bit → PB → 매우 작은 값', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'bit', input: '1',
+          categoryCode: cat.code, fromCode: 'bit', input: '1',
           toCode: 'PB', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -380,7 +380,7 @@ void main() {
 
       test('1 atm → Pa', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'atm', input: '1',
+          categoryCode: cat.code, fromCode: 'atm', input: '1',
           toCode: 'Pa', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -390,7 +390,7 @@ void main() {
 
       test('1.23456 atm → psi', () {
         final r = simulateTap(
-          categoryName: cat.name, fromCode: 'atm', input: '1.23456',
+          categoryCode: cat.code, fromCode: 'atm', input: '1.23456',
           toCode: 'psi', units: cat.units,
         );
         print('  비활성: ${r['displayBefore']}, 활성: ${r['displayAfter']}');
@@ -404,7 +404,7 @@ void main() {
     test('1 cm → in → cm 왕복 시 원래 값 유지', () {
       final cat = unitCategories[0];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'cm', input: '1',
+        categoryCode: cat.code, fromCode: 'cm', input: '1',
         toCode: 'in', units: cat.units,
       );
       print('  왕복 cm: ${r['roundTrip']}, 원래: ${r['originalDisplay']}');
@@ -414,7 +414,7 @@ void main() {
     test('100 °C → °F → °C 왕복', () {
       final cat = unitCategories[2];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: '°C', input: '100',
+        categoryCode: cat.code, fromCode: '°C', input: '100',
         toCode: '°F', units: cat.units,
       );
       print('  왕복 °C: ${r['roundTrip']}, 원래: ${r['originalDisplay']}');
@@ -424,7 +424,7 @@ void main() {
     test('360 km/h → m/s → km/h 왕복', () {
       final cat = unitCategories[6];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'km/h', input: '360',
+        categoryCode: cat.code, fromCode: 'km/h', input: '360',
         toCode: 'm/s', units: cat.units,
       );
       print('  왕복 km/h: ${r['roundTrip']}, 원래: ${r['originalDisplay']}');
@@ -434,7 +434,7 @@ void main() {
     test('33.33 km/L → L/100km → km/L 왕복', () {
       final cat = unitCategories[7];
       final r = simulateTap(
-        categoryName: cat.name, fromCode: 'km/L', input: '33.33',
+        categoryCode: cat.code, fromCode: 'km/L', input: '33.33',
         toCode: 'L/100km', units: cat.units,
       );
       print('  왕복 km/L: ${r['roundTrip']}, 원래: ${r['originalDisplay']}');

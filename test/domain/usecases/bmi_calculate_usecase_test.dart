@@ -44,7 +44,7 @@ void main() {
         weightKg: 49,
         standard: BmiStandard.global,
       );
-      expect(result.category.label, '저체중');
+      expect(result.category.code, BmiCategoryCode.underweight);
       expect(result.categories.length, 4);
     });
 
@@ -54,7 +54,7 @@ void main() {
         weightKg: 65,
         standard: BmiStandard.global,
       );
-      expect(result.category.label, '정상 체중');
+      expect(result.category.code, BmiCategoryCode.normal);
     });
 
     test('BMI 26.0 → 과체중', () {
@@ -65,7 +65,7 @@ void main() {
       );
       expect(result.bmi, greaterThanOrEqualTo(25.0));
       expect(result.bmi, lessThan(30.0));
-      expect(result.category.label, '과체중');
+      expect(result.category.code, BmiCategoryCode.overweight);
     });
 
     test('BMI 30.0 이상 → 비만', () {
@@ -75,7 +75,7 @@ void main() {
         standard: BmiStandard.global,
       );
       expect(result.bmi, greaterThanOrEqualTo(30.0));
-      expect(result.category.label, '비만');
+      expect(result.category.code, BmiCategoryCode.obese);
     });
   });
 
@@ -86,7 +86,7 @@ void main() {
         weightKg: 65,
         standard: BmiStandard.asian,
       );
-      expect(result.category.label, '정상');
+      expect(result.category.code, BmiCategoryCode.normal);
       expect(result.categories.length, 5);
     });
 
@@ -98,7 +98,7 @@ void main() {
       );
       expect(result.bmi, greaterThanOrEqualTo(23.0));
       expect(result.bmi, lessThan(25.0));
-      expect(result.category.label, '과체중');
+      expect(result.category.code, BmiCategoryCode.overweight);
     });
 
     test('BMI 27.0 → 비만 1단계', () {
@@ -109,7 +109,7 @@ void main() {
       );
       expect(result.bmi, greaterThanOrEqualTo(25.0));
       expect(result.bmi, lessThan(30.0));
-      expect(result.category.label, '비만 1단계');
+      expect(result.category.code, BmiCategoryCode.obese1);
     });
 
     test('BMI 30.0 이상 → 비만 2단계', () {
@@ -118,7 +118,7 @@ void main() {
         weightKg: 90,
         standard: BmiStandard.asian,
       );
-      expect(result.category.label, '비만 2단계');
+      expect(result.category.code, BmiCategoryCode.obese2);
     });
   });
 
@@ -129,7 +129,6 @@ void main() {
         weightKg: 65,
         standard: BmiStandard.global,
       );
-      // 18.5 × 1.7² = 53.465, 25.0 × 1.7² = 72.25 (max는 exclusive이지만 역산에 사용)
       expect(result.healthyWeightMinKg, closeTo(53.47, 0.01));
       expect(result.healthyWeightMaxKg, closeTo(72.25, 0.01));
     });
@@ -140,7 +139,6 @@ void main() {
         weightKg: 65,
         standard: BmiStandard.asian,
       );
-      // 18.5 × 1.7² = 53.465, 23.0 × 1.7² = 66.47 (max는 exclusive이지만 역산에 사용)
       expect(result.healthyWeightMinKg, closeTo(53.47, 0.01));
       expect(result.healthyWeightMaxKg, closeTo(66.47, 0.01));
     });
@@ -166,14 +164,13 @@ void main() {
 
   group('경계값 테스트', () {
     test('BMI 정확히 18.5 → 글로벌 정상 체중', () {
-      // 170cm에서 BMI 18.5가 되려면: 18.5 × 1.7² = 53.465
       final result = useCase.calculate(
         heightCm: 170,
         weightKg: 53.465,
         standard: BmiStandard.global,
       );
       expect(result.bmi, closeTo(18.5, 0.01));
-      expect(result.category.label, '정상 체중');
+      expect(result.category.code, BmiCategoryCode.normal);
     });
 
     test('BMI 정확히 25.0 → 글로벌 과체중', () {
@@ -183,7 +180,7 @@ void main() {
         standard: BmiStandard.global,
       );
       expect(result.bmi, closeTo(25.0, 0.01));
-      expect(result.category.label, '과체중');
+      expect(result.category.code, BmiCategoryCode.overweight);
     });
 
     test('BMI 정확히 23.0 → 아시아 과체중', () {
@@ -193,7 +190,7 @@ void main() {
         standard: BmiStandard.asian,
       );
       expect(result.bmi, closeTo(23.0, 0.01));
-      expect(result.category.label, '과체중');
+      expect(result.category.code, BmiCategoryCode.overweight);
     });
   });
 

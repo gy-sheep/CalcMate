@@ -3,6 +3,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/unit_definitions.dart';
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../unit_converter_colors.dart';
 
@@ -217,7 +218,7 @@ class _CategoryTabsState extends State<CategoryTabs> {
                 Icon(category.icon, size: CmTab.iconSize, color: color),
                 const SizedBox(width: 6),
                 Text(
-                  category.name,
+                  DataStrings.categoryName(category.code, Localizations.localeOf(context)),
                   style: CmTab.text.copyWith(
                     color: color,
                     fontWeight: fontWeight,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/dutch_pay_state.dart';
+import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
 import 'dutch_card.dart';
@@ -156,7 +158,7 @@ class ItemsCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Text('${_fmt(item.amount)}원',
+                          Text(CurrencyFormatter.formatKrw(_fmt(item.amount), Localizations.localeOf(context)),
                               style: textStyle16.copyWith(
                                   color: editing
                                       ? kDutchAccent
@@ -181,7 +183,7 @@ class ItemsCard extends StatelessWidget {
                   Icon(Icons.add_circle_outline,
                       color: kDutchAccent, size: CmIcon.small),
                   const SizedBox(width: 8),
-                  Text('메뉴 추가',
+                  Text(AppLocalizations.of(context)!.dutchPay_label_addItem,
                       style: textStyle16.copyWith(color: kDutchAccent)),
                 ],
               ),

@@ -16,7 +16,9 @@ import 'package:calcmate/presentation/bmi_calculator/bmi_calculator_screen.dart'
 import 'package:calcmate/presentation/salary_calculator/salary_calculator_screen.dart';
 import 'package:calcmate/presentation/settings/settings_screen.dart';
 import 'package:calcmate/core/config/calc_mode_config.dart';
+import 'package:calcmate/core/l10n/data_strings.dart';
 import 'package:calcmate/core/theme/app_design_tokens.dart';
+import 'package:calcmate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -139,7 +141,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                       scrolledUnderElevation: 0,
-                      title: const Text('순서 편집'),
+                      title: Text(AppLocalizations.of(context)!.main_editOrder),
                       centerTitle: false,
                       actions: [
                         TextButton(
@@ -147,7 +149,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                               .read(mainScreenViewModelProvider.notifier)
                               .handleIntent(const MainScreenIntent.toggleEditMode()),
                           child: Text(
-                            '완료',
+                            AppLocalizations.of(context)!.main_done,
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
@@ -239,7 +241,10 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             separatorBuilder: (context, _) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final entry = visibleEntries[index];
-              final screen = _buildScreen(entry);
+              final locale = Localizations.localeOf(context);
+              final title = DataStrings.calcTitle(entry.id, locale);
+              final description = DataStrings.calcDescription(entry.id, locale);
+              final screen = _buildScreen(entry, locale);
               final canHide = visibleEntries.length > 1;
 
               Widget card;
@@ -256,8 +261,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     openColor: Colors.transparent,
                     closedBuilder: (context, openContainer) {
                       return CalcModeCard(
-                        title: entry.title,
-                        description: entry.description,
+                        title: title,
+                        description: description,
                         icon: entry.icon,
                         imagePath: entry.imagePath,
                         onTap: () {
@@ -274,8 +279,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               } else {
                 card = RepaintBoundary(
                   child: CalcModeCard(
-                    title: entry.title,
-                    description: entry.description,
+                    title: title,
+                    description: description,
                     icon: entry.icon,
                     imagePath: entry.imagePath,
                     onTap: () {
@@ -364,8 +369,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           padding: const EdgeInsets.only(bottom: 16),
           child: RepaintBoundary(
             child: CalcModeCard(
-              title: entry.title,
-              description: entry.description,
+              title: DataStrings.calcTitle(entry.id, Localizations.localeOf(context)),
+              description: DataStrings.calcDescription(entry.id, Localizations.localeOf(context)),
               icon: entry.icon,
               imagePath: entry.imagePath,
               trailingOverride: Listener(
@@ -382,36 +387,27 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
   }
 
-  Widget? _buildScreen(CalcModeEntry entry) {
+  Widget? _buildScreen(CalcModeEntry entry, Locale locale) {
+    final title = DataStrings.calcTitle(entry.id, locale);
     switch (entry.id) {
       case 'basic_calculator':
-        return BasicCalculatorScreen(
-          title: entry.title,
-        );
+        return BasicCalculatorScreen(title: title);
       case 'exchange_rate':
-        return CurrencyCalculatorScreen(
-          title: entry.title,
-        );
+        return CurrencyCalculatorScreen(title: title);
       case 'unit_converter':
-        return UnitConverterScreen(
-          title: entry.title,
-        );
+        return UnitConverterScreen(title: title);
       case 'vat_calculator':
-        return VatCalculatorScreen(
-          title: entry.title,
-        );
+        return VatCalculatorScreen(title: title);
       case 'age_calculator':
-        return AgeCalculatorScreen(
-          title: entry.title,
-        );
+        return AgeCalculatorScreen(title: title);
       case 'date_calculator':
         return const DateCalculatorScreen();
       case 'dutch_pay':
         return const DutchPayScreen();
       case 'salary_calculator':
-        return SalaryCalculatorScreen(title: entry.title);
+        return SalaryCalculatorScreen(title: title);
       case 'discount_calculator':
-        return DiscountCalculatorScreen(title: entry.title);
+        return DiscountCalculatorScreen(title: title);
       case 'bmi_calculator':
         return const BmiCalculatorScreen();
       default:
@@ -774,9 +770,9 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
-  static const _items = [
-    (_SettingsMenu.editOrder, Icons.edit_outlined, '순서 편집'),
-    (_SettingsMenu.settings, Icons.settings_outlined, '설정'),
+  static List<(_SettingsMenu, IconData, String)> _items(AppLocalizations l10n) => [
+    (_SettingsMenu.editOrder, Icons.edit_outlined, l10n.main_editOrder),
+    (_SettingsMenu.settings, Icons.settings_outlined, l10n.settings_title),
   ];
 
   @override
@@ -794,9 +790,11 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
     super.dispose();
   }
 
+  static const _itemCount = 2;
+
   // 아이템마다 순서대로 펼쳐지도록 구간 분할 (linear — 물리 커브는 builder에서 처리)
   Animation<double> _itemAnimation(int index) {
-    final count = _items.length;
+    final count = _itemCount;
     final start = index / count;
     final end = (index + 1) / count;
     return CurvedAnimation(
@@ -834,7 +832,7 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        for (int i = 0; i < _items.length; i++) ...[
+                        for (int i = 0; i < _itemCount; i++) ...[
                           if (i > 0)
                             const Divider(height: 1, thickness: 1, indent: 0, endIndent: 0),
                           _buildItem(i, context),
@@ -852,7 +850,7 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
   }
 
   Widget _buildItem(int index, BuildContext context) {
-    final (value, icon, label) = _items[index];
+    final (value, icon, label) = _items(AppLocalizations.of(context)!)[index];
     final animation = _itemAnimation(index);
     final colorScheme = Theme.of(context).colorScheme;
 

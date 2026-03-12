@@ -11,6 +11,7 @@ part 'settings_viewmodel.freezed.dart';
 class SettingsState with _$SettingsState {
   const factory SettingsState({
     @Default(ThemeMode.system) ThemeMode themeMode,
+    Locale? locale, // null = 시스템 기본
   }) = _SettingsState;
 }
 
@@ -20,11 +21,17 @@ sealed class SettingsIntent {
   const SettingsIntent();
   const factory SettingsIntent.themeModeChanged(ThemeMode mode) =
       _ThemeModeChanged;
+  const factory SettingsIntent.localeChanged(Locale? locale) = _LocaleChanged;
 }
 
 class _ThemeModeChanged extends SettingsIntent {
   final ThemeMode mode;
   const _ThemeModeChanged(this.mode);
+}
+
+class _LocaleChanged extends SettingsIntent {
+  final Locale? locale;
+  const _LocaleChanged(this.locale);
 }
 
 // ── Provider ──
@@ -36,18 +43,22 @@ final settingsViewModelProvider =
 // ── ViewModel ──
 
 const _kThemeModeKey = 'theme_mode';
+const _kLocaleKey = 'locale';
 
 class SettingsViewModel extends Notifier<SettingsState> {
   @override
   SettingsState build() {
-    final saved =
-        ref.read(sharedPreferencesProvider).getString(_kThemeModeKey);
+    final prefs = ref.read(sharedPreferencesProvider);
+    final savedTheme = prefs.getString(_kThemeModeKey);
+    final savedLocale = prefs.getString(_kLocaleKey);
+
     return SettingsState(
-      themeMode: switch (saved) {
+      themeMode: switch (savedTheme) {
         'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,
         _ => ThemeMode.system,
       },
+      locale: savedLocale != null ? Locale(savedLocale) : null,
     );
   }
 
@@ -63,6 +74,14 @@ class SettingsViewModel extends Notifier<SettingsState> {
                 ThemeMode.system => 'system',
               },
             );
+      case _LocaleChanged(:final locale):
+        state = state.copyWith(locale: locale);
+        final prefs = ref.read(sharedPreferencesProvider);
+        if (locale != null) {
+          prefs.setString(_kLocaleKey, locale.languageCode);
+        } else {
+          prefs.remove(_kLocaleKey);
+        }
     }
   }
 }

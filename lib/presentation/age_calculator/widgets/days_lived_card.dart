@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
 import '../../../domain/utils/number_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
 
@@ -12,11 +13,13 @@ class DaysLivedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final days = result.daysLived;
-    // 약 몇 년 몇 개월
     final years  = days ~/ 365;
     final months = (days % 365) ~/ 30;
-    final sub = months > 0 ? '약 $years년 $months개월' : '약 $years년';
+    final sub = months > 0
+        ? l10n.age_result_approxYearsMonths(years, months)
+        : l10n.age_result_approxYears(years);
 
     return AgeInfoCard(
       child: SizedBox(
@@ -27,7 +30,7 @@ class DaysLivedCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '살아온 날',
+                l10n.age_label_daysLived,
                 style: CmBirthdayMiniCard.labelText.copyWith(
                   color: kAgeTextSecondary,
                   fontWeight: FontWeight.w600,
@@ -35,7 +38,7 @@ class DaysLivedCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '${NumberFormatter.addCommas(days.toString())}일',
+                l10n.age_result_days(NumberFormatter.addCommas(days.toString())),
                 style: textMediumResult.copyWith(
                   color: kAgeTextPrimary,
                   fontWeight: FontWeight.w700,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../domain/usecases/dutch_pay_individual_split_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 
 // ── Compact 바 슬리버 델리게이트 ─────────────────────────────
@@ -72,9 +74,13 @@ class _CompactSummaryBarState extends State<CompactSummaryBar> {
     }
   }
 
-  String _compact(int n) {
-    if (n >= 10000) return '${(n / 10000).toStringAsFixed(n % 10000 == 0 ? 0 : 1)}만';
-    if (n >= 1000) return '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}천';
+  String _compact(int n, Locale locale) {
+    if (locale.languageCode == 'ko') {
+      if (n >= 10000) return '${(n / 10000).toStringAsFixed(n % 10000 == 0 ? 0 : 1)}만';
+      if (n >= 1000) return '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}천';
+      return n.toString();
+    }
+    if (n >= 1000) return '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}k';
     return n.toString();
   }
 
@@ -93,6 +99,8 @@ class _CompactSummaryBarState extends State<CompactSummaryBar> {
   Widget build(BuildContext context) {
     final s = widget.s;
     final result = widget.result;
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -105,7 +113,7 @@ class _CompactSummaryBarState extends State<CompactSummaryBar> {
       child: Row(
         children: [
           Text(
-            '합계 ${_fmt(result.totalAmount)}원',
+            '${l10n.dutchPay_label_total} ${CurrencyFormatter.formatKrw(_fmt(result.totalAmount), locale)}',
             style: textStyleCaption.copyWith(
               color: kDutchAccent,
               fontWeight: FontWeight.w700,
@@ -157,7 +165,7 @@ class _CompactSummaryBarState extends State<CompactSummaryBar> {
                                 size: 10, color: fg.withValues(alpha: 0.7)),
                             const SizedBox(width: 2),
                             Text(
-                              '${e.value.name} ${_compact(amt)}',
+                              '${e.value.name} ${_compact(amt, locale)}',
                               style: textStyleCaption.copyWith(
                                 color: fg,
                                 fontWeight: FontWeight.w700,

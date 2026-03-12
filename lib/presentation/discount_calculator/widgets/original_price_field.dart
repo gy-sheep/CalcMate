@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/widgets/cm_gradient_border_card.dart';
+import '../../../l10n/app_localizations.dart';
 import '../discount_calculator_colors.dart';
 
 // ──────────────────────────────────────────
@@ -23,10 +24,11 @@ class OriginalPriceField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('원가',
+        Text(l10n.discount_label_originalPrice,
             style: CmInputCard.titleText.copyWith(
                 color: kDiscountTextSecondary)),
         const SizedBox(height: CmInputCard.titleSpacing),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../salary_calculator_colors.dart';
 
 class DeductionCard extends StatelessWidget {
@@ -28,13 +30,15 @@ class DeductionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final items = [
-      ('국민연금', nationalPension),
-      ('건강보험', healthInsurance),
-      ('장기요양', longTermCare),
-      ('고용보험', employmentInsurance),
-      ('소득세', incomeTax),
-      ('지방소득세', localTax),
+      (l10n.salary_label_nationalPension, nationalPension),
+      (l10n.salary_label_healthInsurance, healthInsurance),
+      (l10n.salary_label_longTermCare, longTermCare),
+      (l10n.salary_label_employmentInsurance, employmentInsurance),
+      (l10n.salary_label_incomeTax, incomeTax),
+      (l10n.salary_label_localTax, localTax),
     ];
 
     return Container(
@@ -51,11 +55,18 @@ class DeductionCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('공제 합계',
-                    style: CmListCard.headerLabel
-                        .copyWith(color: kSalaryTextSecondary)),
+                Flexible(
+                  child: Text(l10n.salary_label_deductionTotal,
+                      overflow: TextOverflow.ellipsis,
+                      style: CmListCard.headerLabel
+                          .copyWith(color: kSalaryTextSecondary)),
+                ),
+                const SizedBox(width: 8),
                 Text(
-                  totalDeduction > 0 ? '${_fmt(totalDeduction)} 원' : '—',
+                  totalDeduction > 0
+                      ? CurrencyFormatter.formatKrw(
+                          _fmt(totalDeduction), locale)
+                      : '—',
                   style:
                       CmListCard.headerValue.copyWith(color: kSalaryTextPrimary),
                 ),
@@ -73,11 +84,18 @@ class DeductionCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(label,
-                          style: CmListCard.itemLabel
-                              .copyWith(color: kSalaryTextSecondary)),
+                      Flexible(
+                        child: Text(label,
+                            overflow: TextOverflow.ellipsis,
+                            style: CmListCard.itemLabel
+                                .copyWith(color: kSalaryTextSecondary)),
+                      ),
+                      const SizedBox(width: 8),
                       Text(
-                        amount > 0 ? '${_fmt(amount)} 원' : '—',
+                        amount > 0
+                            ? CurrencyFormatter.formatKrw(
+                                _fmt(amount), locale)
+                            : '—',
                         style: CmListCard.itemValue
                             .copyWith(color: kSalaryTextPrimary),
                       ),

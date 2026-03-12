@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/usecases/age_calculate_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../age_calculator_colors.dart';
 import 'age_info_card.dart';
 
@@ -11,7 +13,9 @@ class ZodiacCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (name, _) = kZodiacs[result.zodiacIndex];
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+    final name = DataStrings.zodiacName(result.zodiacIndex, locale);
     return AgeInfoCard(
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -19,7 +23,7 @@ class ZodiacCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '띠',
+              l10n.age_label_zodiac,
               style: CmBirthdayMiniCard.labelText.copyWith(
                 color: kAgeTextSecondary,
                 fontWeight: FontWeight.w600,
@@ -35,7 +39,7 @@ class ZodiacCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '$name띠',
+                  l10n.age_label_zodiacValue(name),
                   style: textStyle16.copyWith(
                     color: kAgeTextPrimary,
                     fontWeight: FontWeight.w700,

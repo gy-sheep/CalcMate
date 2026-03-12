@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 
 const _kTextPrimary = Colors.white;
 const _kTextSecondary = Color(0xFFB0BEC5);
@@ -26,6 +27,7 @@ class BmiHealthyWeightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: CmInfoCard.padding,
       decoration: BoxDecoration(
@@ -59,14 +61,14 @@ class BmiHealthyWeightCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('건강 체중 범위',
+                Text(l10n.bmi_label_healthyRange,
                     style: CmInfoCard.captionText.copyWith(color: _kTextSecondary)),
                 const SizedBox(height: 2),
                 Text('${_fmt(minKg)} – ${_fmt(maxKg)}',
                     style: CmInfoCard.bodyText.copyWith(color: _kTextPrimary)),
                 if (isInRange) ...[
                   const SizedBox(height: 2),
-                  Text('현재 체중이 건강 범위 안에 있습니다',
+                  Text(l10n.bmi_label_inRange,
                       style: textStyleCaption
                           .copyWith(color: _kGreen)),
                 ],

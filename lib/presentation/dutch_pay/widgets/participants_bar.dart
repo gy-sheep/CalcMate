@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/utils/app_toast.dart';
 import '../../../domain/models/dutch_pay_state.dart';
+import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
 import 'dutch_card.dart';
@@ -94,7 +95,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
           );
         }
         if (s.participants.length >= 10 && mounted) {
-          showAppToast(context, '최대 10명까지 추가할 수 있어요');
+          showAppToast(context, AppLocalizations.of(context)!.dutchPay_toast_maxMembers);
         }
       });
     } else if (s.participants.length < _prevCount) {
@@ -125,7 +126,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('참여인원',
+                  Text(AppLocalizations.of(context)!.dutchPay_label_members,
                       style: CmInputCard.titleText
                           .copyWith(color: kDutchTextSecondary)),
                   const Spacer(),
@@ -147,7 +148,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                             const Icon(Icons.add,
                                 size: CmTab.iconSize, color: kDutchAccent),
                             const SizedBox(width: 2),
-                            Text('추가',
+                            Text(AppLocalizations.of(context)!.common_add,
                                 style:
                                     CmTab.text.copyWith(color: kDutchAccent)),
                           ],
@@ -166,7 +167,9 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                         borderRadius: BorderRadius.circular(CmTab.radius),
                       ),
                       child: Text(
-                        s.isParticipantEditMode ? '완료' : '편집',
+                        s.isParticipantEditMode
+                            ? AppLocalizations.of(context)!.common_done
+                            : AppLocalizations.of(context)!.common_edit,
                         style: CmTab.text.copyWith(
                             color: kDutchAccent,
                             fontWeight: FontWeight.w500),
@@ -349,20 +352,21 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                   child: widget.filterPerson != null
                       ? HintChip(
                           icon: Icons.touch_app_outlined,
-                          label:
-                              '${s.participants[widget.filterPerson!].name} 강조 중  ·  탭하면 해제',
+                          label: AppLocalizations.of(context)!
+                              .dutchPay_hint_filterActive(
+                                  s.participants[widget.filterPerson!].name),
                         )
-                      : const Row(
+                      : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             HintChip(
                               icon: Icons.touch_app_outlined,
-                              label: '탭 → 이름 변경',
+                              label: AppLocalizations.of(context)!.dutchPay_hint_tapRename,
                             ),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             HintChip(
                               icon: Icons.touch_app,
-                              label: '길게 누르기 → 항목 강조',
+                              label: AppLocalizations.of(context)!.dutchPay_hint_longPressFilter,
                             ),
                           ],
                         ),
@@ -382,10 +386,11 @@ class _ParticipantsBarState extends State<ParticipantsBar>
     final ctrl = TextEditingController();
     final isLast = idx == participants.length - 1;
 
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('$defaultName 이름 변경'),
+        title: Text(l10n.dutchPay_dialog_renameTitle(defaultName)),
         content: TextField(
           controller: ctrl,
           autofocus: true,
@@ -397,7 +402,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('취소')),
+              onPressed: () => Navigator.pop(ctx), child: Text(l10n.common_cancel)),
           if (!isLast)
             TextButton(
               onPressed: () {
@@ -409,7 +414,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
                 Navigator.pop(ctx);
                 _showRenameDialogAt(context, idx + 1);
               },
-              child: const Text('다음'),
+              child: Text(l10n.common_next),
             ),
           TextButton(
             onPressed: () {
@@ -419,7 +424,7 @@ class _ParticipantsBarState extends State<ParticipantsBar>
               }
               Navigator.pop(ctx);
             },
-            child: const Text('확인'),
+            child: Text(l10n.common_confirm),
           ),
         ],
       ),
@@ -427,8 +432,9 @@ class _ParticipantsBarState extends State<ParticipantsBar>
   }
 
   void _confirmRemove(BuildContext context, int idx, IndividualSplitState s) {
+    final l10n = AppLocalizations.of(context)!;
     if (s.participants.length <= 1) {
-      showAppToast(context, '최소 1명은 있어야 해요');
+      showAppToast(context, l10n.dutchPay_toast_minMember);
       return;
     }
     final hasItems = s.items.any((item) => item.assignees.contains(idx));
@@ -436,18 +442,18 @@ class _ParticipantsBarState extends State<ParticipantsBar>
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('참여자 삭제'),
-          content: Text('${s.participants[idx].name}의 메뉴가 함께 삭제됩니다.'),
+          title: Text(l10n.dutchPay_dialog_removeTitle),
+          content: Text(l10n.dutchPay_dialog_removeContent(s.participants[idx].name)),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('취소')),
+                child: Text(l10n.common_cancel)),
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
                 vm.handleIntent(DutchPayIntent.participantRemoved(idx));
               },
-              child: const Text('삭제', style: TextStyle(color: Colors.red)),
+              child: Text(l10n.common_delete, style: const TextStyle(color: Colors.red)),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 import '../date_calculator_colors.dart';
 import '../date_format_utils.dart';
 
@@ -18,6 +19,8 @@ class DateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -42,12 +45,12 @@ class DateCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      formatYear(date),
+                      formatYear(date, l10n),
                       style: CmCalendarCard.yearText.copyWith(color: kDateTextSecondary),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      formatMonthDay(date),
+                      formatMonthDay(date, l10n),
                       style: CmCalendarCard.dateText.copyWith(
                         color: kDateAccent,
                         fontWeight: FontWeight.w600,
@@ -57,7 +60,7 @@ class DateCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  formatWeekday(date),
+                  formatWeekday(date, locale),
                   style: CmCalendarCard.weekdayText.copyWith(color: kDateAccent),
                 ),
                 const SizedBox(width: 6),

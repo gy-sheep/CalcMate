@@ -1,8 +1,10 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/data_strings.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/currency_info.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../presentation/widgets/app_text_field.dart';
 import '../currency_calculator_colors.dart';
 
@@ -61,10 +63,11 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
     final filtered = widget.currencies
         .where((c) =>
             c.code.toLowerCase().contains(_query.toLowerCase()) ||
-            c.name.contains(_query))
+            DataStrings.currencyName(c.code, locale).contains(_query))
         .toList();
 
     return Container(
@@ -98,7 +101,7 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
                 children: [
                   AppTextField.search(
                     controller: _controller,
-                    hintText: '통화 검색 (USD, 달러...)',
+                    hintText: AppLocalizations.of(context)!.currency_search_hint,
                     onChanged: (v) => setState(() => _query = v),
                   ),
                   const SizedBox(height: 12),
@@ -133,7 +136,7 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
                             ),
                           ),
                           subtitle: Text(
-                            item.name,
+                            DataStrings.currencyName(item.code, locale),
                             style: textStyleCaption.copyWith(
                               color: isUsed ? Colors.white24 : Colors.white60,
                             ),
@@ -143,9 +146,10 @@ class _CurrencyPickerSheetState extends State<CurrencyPickerSheet> {
                               : null,
                           onTap: () {
                             if (isUsed) {
+                              final l10n = AppLocalizations.of(context)!;
                               final message = item.code == widget.fromCode
-                                  ? '기준 통화로 사용 중입니다'
-                                  : '이미 선택된 통화입니다';
+                                  ? l10n.currency_toast_baseCurrency
+                                  : l10n.currency_toast_alreadySelected;
                               _showCenterToast(context, message);
                               return;
                             }

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../l10n/app_localizations.dart';
 import '../widgets/blur_status_bar_overlay.dart';
 
 // ── 라이선스 목록 화면 ──
@@ -70,7 +71,7 @@ class _OpenSourceLicensesScreenState extends State<OpenSourceLicensesScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: const Text('오픈소스 라이선스'),
+        title: Text(AppLocalizations.of(context).settings_openSourceLicenses),
         centerTitle: false,
         titleSpacing: 0,
       ),
@@ -98,7 +99,7 @@ class _OpenSourceLicensesScreenState extends State<OpenSourceLicensesScreen> {
                             .copyWith(color: colorScheme.onSurface),
                       ),
                       subtitle: Text(
-                        '$count개의 라이선스',
+                        AppLocalizations.of(context).settings_licenseCount(count),
                         style: textStyleCaption
                             .copyWith(color: colorScheme.onSurfaceVariant),
                       ),

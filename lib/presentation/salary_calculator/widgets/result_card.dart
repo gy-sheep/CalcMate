@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/utils/number_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../salary_calculator_colors.dart';
 
 class ResultCard extends StatelessWidget {
@@ -18,7 +20,9 @@ class ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final subLabel = isAnnual ? '연 실수령' : '연 환산';
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
+    final subLabel = isAnnual ? l10n.salary_label_annualNet : l10n.salary_label_annualEquiv;
 
     return Container(
       padding: CmResultCard.padding,
@@ -33,7 +37,7 @@ class ResultCard extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Text('실수령액',
+            child: Text(l10n.salary_label_netPay,
                 style: CmResultCard.titleText
                     .copyWith(color: kSalaryAccent)),
           ),
@@ -59,7 +63,7 @@ class ResultCard extends StatelessWidget {
                 const SizedBox(width: spacingUnit),
                 Padding(
                   padding: const EdgeInsets.only(bottom: CmResultCard.subSpacing),
-                  child: Text('원',
+                  child: Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
                       style: CmResultCard.unitText
                           .copyWith(color: kSalaryTextSecondary)),
                 ),
@@ -69,7 +73,8 @@ class ResultCard extends StatelessWidget {
           if (netPay > 0) ...[
             const SizedBox(height: CmResultCard.subSpacing),
             Text(
-              '$subLabel  ${NumberFormatter.addCommas(netPayAnnual.toString())} 원',
+              '$subLabel  ${NumberFormatter.addCommas(netPayAnnual.toString())} ${CurrencyFormatter.krwUnit(locale)}',
+              overflow: TextOverflow.ellipsis,
               style:
                   CmResultCard.subText.copyWith(color: kSalaryTextSecondary),
             ),

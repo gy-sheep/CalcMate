@@ -179,7 +179,7 @@ class _UnitConverterScreenState extends ConsumerState<UnitConverterScreen>
               ),
               const Divider(color: kUnitDivider, thickness: 0.5, height: 1),
               UnitNumberPad(
-                isTemperature: unitCategories[state.selectedCategoryIndex].name == '온도',
+                isTemperature: unitCategories[state.selectedCategoryIndex].code == 'temperature',
                 onKey: (key) => vm.handleIntent(
                   UnitConverterIntent.keyTapped(key),
                 ),

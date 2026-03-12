@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
+import '../../l10n/app_localizations.dart';
 import 'dutch_pay_colors.dart';
 import 'dutch_pay_viewmodel.dart';
 import 'widgets/dutch_pay_tab_bar.dart';
@@ -64,7 +65,7 @@ class _DutchPayScreenState extends ConsumerState<DutchPayScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          '더치페이',
+          AppLocalizations.of(context)!.dutchPay_title,
           style: CmAppBar.titleText.copyWith(
             color: kDutchTextPrimary,
           ),

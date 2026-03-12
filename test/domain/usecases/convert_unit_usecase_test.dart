@@ -21,7 +21,7 @@ void main() {
 
     test('cm → m 변환', () {
       final result = useCase.execute(
-        categoryName: '길이',
+        categoryCode: 'length',
         fromCode: 'cm',
         value: 100,
         units: lengthUnits,
@@ -31,7 +31,7 @@ void main() {
 
     test('m → km 변환', () {
       final result = useCase.execute(
-        categoryName: '길이',
+        categoryCode: 'length',
         fromCode: 'm',
         value: 1500,
         units: lengthUnits,
@@ -41,7 +41,7 @@ void main() {
 
     test('km → mm 변환', () {
       final result = useCase.execute(
-        categoryName: '길이',
+        categoryCode: 'length',
         fromCode: 'km',
         value: 1,
         units: lengthUnits,
@@ -51,7 +51,7 @@ void main() {
 
     test('같은 단위 변환은 입력값과 동일', () {
       final result = useCase.execute(
-        categoryName: '길이',
+        categoryCode: 'length',
         fromCode: 'm',
         value: 42,
         units: lengthUnits,
@@ -61,7 +61,7 @@ void main() {
 
     test('입력값 0이면 모든 결과 0', () {
       final result = useCase.execute(
-        categoryName: '길이',
+        categoryCode: 'length',
         fromCode: 'cm',
         value: 0,
         units: lengthUnits,
@@ -73,7 +73,7 @@ void main() {
 
     test('모든 단위에 대한 결과를 반환', () {
       final result = useCase.execute(
-        categoryName: '길이',
+        categoryCode: 'length',
         fromCode: 'cm',
         value: 100,
         units: lengthUnits,
@@ -97,7 +97,7 @@ void main() {
 
     test('kg → lb 변환', () {
       final result = useCase.execute(
-        categoryName: '질량',
+        categoryCode: 'mass',
         fromCode: 'kg',
         value: 1,
         units: massUnits,
@@ -117,7 +117,7 @@ void main() {
 
     test('GB → KB 변환', () {
       final result = useCase.execute(
-        categoryName: '데이터',
+        categoryCode: 'data',
         fromCode: 'GB',
         value: 1,
         units: dataUnits,
@@ -127,7 +127,7 @@ void main() {
 
     test('KB → GB 변환', () {
       final result = useCase.execute(
-        categoryName: '데이터',
+        categoryCode: 'data',
         fromCode: 'KB',
         value: 1048576,
         units: dataUnits,
@@ -147,7 +147,7 @@ void main() {
 
     test('°C 0 → °F 32', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: '°C',
         value: 0,
         units: tempUnits,
@@ -158,7 +158,7 @@ void main() {
 
     test('°C 100 → °F 212', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: '°C',
         value: 100,
         units: tempUnits,
@@ -169,7 +169,7 @@ void main() {
 
     test('°F 32 → °C 0', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: '°F',
         value: 32,
         units: tempUnits,
@@ -180,7 +180,7 @@ void main() {
 
     test('K 0 → °C -273.15', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: 'K',
         value: 0,
         units: tempUnits,
@@ -190,7 +190,7 @@ void main() {
 
     test('°C -40 → °F -40 (교차점)', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: '°C',
         value: -40,
         units: tempUnits,
@@ -200,7 +200,7 @@ void main() {
 
     test('같은 단위 변환은 입력값과 동일', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: '°C',
         value: 37,
         units: tempUnits,
@@ -221,7 +221,7 @@ void main() {
 
     test('km/L 10 → L/100km 10', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'km/L',
         value: 10,
         units: fuelUnits,
@@ -231,7 +231,7 @@ void main() {
 
     test('km/L 10 → mpg(US)', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'km/L',
         value: 10,
         units: fuelUnits,
@@ -241,7 +241,7 @@ void main() {
 
     test('km/L 10 → mpg(UK)', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'km/L',
         value: 10,
         units: fuelUnits,
@@ -251,7 +251,7 @@ void main() {
 
     test('L/100km 10 → km/L 10', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'L/100km',
         value: 10,
         units: fuelUnits,
@@ -261,7 +261,7 @@ void main() {
 
     test('L/100km 5 → mpg(US)', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'L/100km',
         value: 5,
         units: fuelUnits,
@@ -271,7 +271,7 @@ void main() {
 
     test('mpg(US) → km/L', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'mpg(US)',
         value: 23.52145,
         units: fuelUnits,
@@ -281,7 +281,7 @@ void main() {
 
     test('연비 입력값 0이면 모든 결과 0', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'km/L',
         value: 0,
         units: fuelUnits,
@@ -293,7 +293,7 @@ void main() {
 
     test('같은 단위 변환은 입력값과 동일', () {
       final result = useCase.execute(
-        categoryName: '연비',
+        categoryCode: 'fuelEfficiency',
         fromCode: 'km/L',
         value: 15,
         units: fuelUnits,
@@ -313,7 +313,7 @@ void main() {
 
     test('음수 온도 변환', () {
       final result = useCase.execute(
-        categoryName: '온도',
+        categoryCode: 'temperature',
         fromCode: '°C',
         value: -20,
         units: tempUnits,

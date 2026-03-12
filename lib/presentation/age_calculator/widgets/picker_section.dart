@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../domain/models/age_calculator_state.dart';
+import '../../../l10n/app_localizations.dart';
 import '../age_calculator_colors.dart';
 import '../age_calculator_viewmodel.dart';
 import 'lunar_info.dart';
@@ -32,6 +33,7 @@ class PickerSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -42,9 +44,12 @@ class PickerSection extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '생년월일',
-                  style: sectionLabel.copyWith(color: kAgeTextSecondary),
+                Flexible(
+                  child: Text(
+                    l10n.age_label_birthDate,
+                    overflow: TextOverflow.ellipsis,
+                    style: sectionLabel.copyWith(color: kAgeTextSecondary),
+                  ),
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -69,7 +74,7 @@ class PickerSection extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '음력',
+                      l10n.age_label_lunar,
                       style: CmCheckbox.labelMedium.copyWith(color: kAgeTextSecondary),
                     ),
                   ],
@@ -133,7 +138,7 @@ class PickerSection extends StatelessWidget {
                             child: AgePicker(
                               controller: yearCtrl,
                               itemCount: _maxYear - _minYear + 1,
-                              label: (i) => '${_minYear + i}년',
+                              label: (i) => l10n.age_picker_year(_minYear + i),
                               onChanged: (i) => vm.handleIntent(
                                 AgeCalculatorIntent.yearChanged(_minYear + i),
                               ),
@@ -145,7 +150,7 @@ class PickerSection extends StatelessWidget {
                             child: AgePicker(
                               controller: monthCtrl,
                               itemCount: 12,
-                              label: (i) => '${i + 1}월',
+                              label: (i) => l10n.age_picker_month(i + 1),
                               onChanged: (i) => vm.handleIntent(
                                 AgeCalculatorIntent.monthChanged(i + 1),
                               ),
@@ -157,7 +162,7 @@ class PickerSection extends StatelessWidget {
                             child: AgePicker(
                               controller: dayCtrl,
                               itemCount: _maxDay,
-                              label: (i) => '${i + 1}일',
+                              label: (i) => l10n.age_picker_day(i + 1),
                               onChanged: (i) => vm.handleIntent(
                                 AgeCalculatorIntent.dayChanged(i + 1),
                               ),
@@ -200,7 +205,7 @@ class PickerSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 8, left: 4),
             child: Text(
-              '${_formatDate(DateTime.now())} 기준',
+              l10n.age_label_asOf(_formatDate(DateTime.now(), l10n)),
               style: textStyleCaption.copyWith(color: kAgeTextSecondary),
             ),
           ),
@@ -209,6 +214,6 @@ class PickerSection extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime d) =>
-      '${d.year}년 ${d.month}월 ${d.day}일';
+  String _formatDate(DateTime d, AppLocalizations l10n) =>
+      l10n.date_format_ymd(d.year, d.month, d.day);
 }

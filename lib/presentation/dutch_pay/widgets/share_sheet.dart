@@ -6,7 +6,9 @@ import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 
 // ── 공유 데이터 sealed class ────────────────────────────────
@@ -111,14 +113,14 @@ class _ShareSheetState extends State<ShareSheet> {
                               child: CircularProgressIndicator(
                                   strokeWidth: 2, color: kDutchAccent),
                             )
-                          : const Row(
+                          : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.share_outlined,
+                                const Icon(Icons.share_outlined,
                                     color: Colors.white, size: 18),
-                                SizedBox(width: 8),
-                                Text('공유하기',
-                                    style: TextStyle(
+                                const SizedBox(width: 8),
+                                Text(AppLocalizations.of(context)!.common_share,
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
@@ -130,7 +132,7 @@ class _ShareSheetState extends State<ShareSheet> {
                 const SizedBox(height: 12),
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
-                  child: Text('닫기',
+                  child: Text(AppLocalizations.of(context)!.common_close,
                       style: modalButtonLabel.copyWith(
                           color: kDutchTextTertiary)),
                 ),
@@ -159,16 +161,18 @@ class _ShareSheetState extends State<ShareSheet> {
       final file = File('${dir.path}/dutch_pay_receipt.png');
       await file.writeAsBytes(bytes);
 
+      final l10n = AppLocalizations.of(context)!;
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'CalcMate 더치페이 결과',
+        text: l10n.dutchPay_share_text,
         sharePositionOrigin: origin,
       );
     } catch (e, st) {
       debugPrint('Share error: $e\n$st');
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('공유 오류: $e')),
+          SnackBar(content: Text('${l10n.dutchPay_error_share}: $e')),
         );
       }
     } finally {
@@ -201,6 +205,8 @@ class _ReceiptWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     return ClipPath(
       clipper: _ReceiptClipper(),
       child: Container(
@@ -219,7 +225,7 @@ class _ReceiptWidget extends StatelessWidget {
             _DashedDivider(),
             const SizedBox(height: 12),
             // 본문
-            ..._buildRows(),
+            ..._buildRows(l10n, locale),
             const SizedBox(height: 12),
             _DashedDivider(),
             const SizedBox(height: 12),
@@ -238,47 +244,50 @@ class _ReceiptWidget extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRows() {
+  List<Widget> _buildRows(AppLocalizations l10n, Locale locale) {
     return switch (data) {
-      EqualShareData d => _buildEqualRows(d),
-      IndividualShareData d => _buildIndividualRows(d),
+      EqualShareData d => _buildEqualRows(d, l10n, locale),
+      IndividualShareData d => _buildIndividualRows(d, l10n, locale),
     };
   }
 
-  List<Widget> _buildEqualRows(EqualShareData d) {
+  String _fmtCurrency(int n, Locale locale) =>
+      CurrencyFormatter.formatKrw(_fmt(n), locale);
+
+  List<Widget> _buildEqualRows(EqualShareData d, AppLocalizations l10n, Locale locale) {
     return [
-      _Row(label: '총 금액', value: '${_fmt(d.totalAmount)}원'),
-      _Row(label: '인원', value: '${d.people}명'),
+      _Row(label: l10n.dutchPay_label_totalAmount, value: _fmtCurrency(d.totalAmount, locale)),
+      _Row(label: l10n.dutchPay_label_people, value: l10n.dutchPay_peopleCount(d.people)),
       if (!d.isKorea && d.tipRate > 0)
-        _Row(label: '팁', value: '${d.tipRate.toStringAsFixed(0)}%'),
+        _Row(label: l10n.dutchPay_label_tip, value: '${d.tipRate.toStringAsFixed(0)}%'),
       const SizedBox(height: 12),
       _DashedDivider(),
       const SizedBox(height: 12),
       if (d.isKorea && d.isEven)
         _Row(
-            label: '1인당',
-            value: '${_fmt(d.rounded)}원',
+            label: l10n.dutchPay_label_perPerson,
+            value: _fmtCurrency(d.rounded, locale),
             highlight: true)
       else if (d.isKorea) ...[
         _Row(
-            label: '참여자 ${d.people - 1}명',
-            value: '${_fmt(d.rounded)}원'),
+            label: l10n.dutchPay_label_participantCount(d.people - 1),
+            value: _fmtCurrency(d.rounded, locale)),
         _Row(
-            label: '계산한 사람',
-            value: '${_fmt(d.organizer)}원',
+            label: l10n.dutchPay_label_organizer,
+            value: _fmtCurrency(d.organizer, locale),
             highlight: true),
       ] else
         _Row(
-            label: '1인당',
-            value: '${_fmt(d.perPersonWithTip.round())}원',
+            label: l10n.dutchPay_label_perPerson,
+            value: _fmtCurrency(d.perPersonWithTip.round(), locale),
             highlight: true),
     ];
   }
 
-  List<Widget> _buildIndividualRows(IndividualShareData d) {
+  List<Widget> _buildIndividualRows(IndividualShareData d, AppLocalizations l10n, Locale locale) {
     return [
-      _Row(label: '총 금액', value: '${_fmt(d.totalAmount)}원'),
-      _Row(label: '인원', value: '${d.participants.length}명'),
+      _Row(label: l10n.dutchPay_label_totalAmount, value: _fmtCurrency(d.totalAmount, locale)),
+      _Row(label: l10n.dutchPay_label_people, value: l10n.dutchPay_peopleCount(d.participants.length)),
       const SizedBox(height: 12),
       _DashedDivider(),
       const SizedBox(height: 12),
@@ -295,7 +304,7 @@ class _ReceiptWidget extends StatelessWidget {
                   Text(e.value,
                       style: TextStyle(
                           color: kDutchTextSecondary, fontSize: 13)),
-                  Text('${_fmt(d.personAmounts[e.key])}원',
+                  Text(_fmtCurrency(d.personAmounts[e.key], locale),
                       style: const TextStyle(
                           color: kDutchTextPrimary,
                           fontSize: 13,

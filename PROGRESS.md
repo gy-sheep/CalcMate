@@ -5,18 +5,17 @@
 > **현재 브랜치**: `dev`
 > **마지막 완료**: 리팩토링 R-01/R-06/R-10 완료 및 전반 코드 정리
 
-### Phase 12-1: l10n 전환 (다음 세션 즉시 시작)
+### Phase 12-1: l10n 전환 ✅ 완료
 
 > **작업 계획서**: `docs/plans/L10N_PLAN.md`
-> **Phase 1(인프라)부터 순서대로 진행** — 계획서의 Phase/커밋 전략 그대로 따를 것
 
-- [ ] Phase 1: 인프라 구축 (l10n.yaml, arb, Riverpod locale, 설정 연동)
-- [ ] Phase 2: Domain 계층 하드코딩 → 상수/enum 전환
-- [ ] Phase 3: 데이터성 문자열 분리 (단위/통화/카테고리)
-- [ ] Phase 4: 통화 포맷터 도입
-- [ ] Phase 5: 화면별 문자열 전환 (5-1~5-4)
-- [ ] Phase 6: UI 레이아웃 대응
-- [ ] Phase 7: 테스트 및 마무리
+- [x] Phase 1: 인프라 구축 (l10n.yaml, arb, Riverpod locale, 설정 연동)
+- [x] Phase 2: Domain 계층 하드코딩 → 상수/enum 전환
+- [x] Phase 3: 데이터성 문자열 분리 (단위/통화/카테고리)
+- [x] Phase 4: 통화 포맷터 도입
+- [x] Phase 5: 화면별 문자열 전환 (5-1~5-4)
+- [x] Phase 6: UI 레이아웃 대응
+- [x] Phase 7: 테스트 및 마무리 (36개 테스트, ARB 184키 ko/en 일치)
 
 ### Phase 11: 설정 화면 — 나머지 기능 연동
 - [ ] 환율 기준 통화 바텀시트 + SharedPreferences 연동
@@ -99,6 +98,7 @@
 | — | 미사용 DateKeypad 삭제, 키패드 높이 Medium 통일 (기본 계산기만 Large) | — | — |
 | — | 리팩토링 R-01 색상 네이밍 통일 (9개 *_colors.dart, Bg1/KeyNumber 패턴) | — | — |
 | — | 리팩토링 R-10 Duration 7종·BorderRadius 토큰화 (34개 교체, 18파일) | — | — |
+| 12-1 | l10n 전환 (ko/en 2개 언어, ARB 184키, DataStrings 120+항목, Phase 1~7 완료) | 36케이스 | `docs/plans/L10N_PLAN.md` |
 
 > 상세 작업 이력: `HISTORY.md`
 

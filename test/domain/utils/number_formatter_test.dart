@@ -81,9 +81,9 @@ void main() {
       });
 
       test('무한대/NaN', () {
-        expect(NumberFormatter.formatResult(double.infinity), '정의되지 않음');
-        expect(NumberFormatter.formatResult(double.negativeInfinity), '정의되지 않음');
-        expect(NumberFormatter.formatResult(double.nan), '정의되지 않음');
+        expect(NumberFormatter.formatResult(double.infinity), kUndefinedResult);
+        expect(NumberFormatter.formatResult(double.negativeInfinity), kUndefinedResult);
+        expect(NumberFormatter.formatResult(double.nan), kUndefinedResult);
       });
     });
 

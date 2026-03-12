@@ -16,12 +16,14 @@ class UnitDef {
 
 /// 단위 카테고리 정의.
 class UnitCategory {
+  final String code;
   final String name;
   final IconData icon;
   final List<UnitDef> units;
   final String defaultCode;
 
   const UnitCategory({
+    required this.code,
     required this.name,
     required this.icon,
     required this.units,

@@ -133,8 +133,8 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
         if (input == '0' || input == '-0') break;
         // 자릿수 제한 체크
         final add00 = DigitLimitPolicy.standard.adjustDoubleZero(input,
-            onExceed: (msg) {
-          if (msg != null) state = state.copyWith(toastMessage: msg);
+            onExceed: (result) {
+          state = state.copyWith(toastMessage: _digitCheckToast(result));
         });
         if (add00 == null) return;
         input += add00;
@@ -155,9 +155,10 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
           break;
         }
         // 자릿수 제한 체크
-        final toast = DigitLimitPolicy.standard.check(input, key);
-        if (toast != null) {
-          if (toast.isNotEmpty) state = state.copyWith(toastMessage: toast);
+        final digitCheck = DigitLimitPolicy.standard.check(input, key);
+        if (digitCheck != null) {
+          final msg = _digitCheckToast(digitCheck);
+          if (msg.isNotEmpty) state = state.copyWith(toastMessage: msg);
           return;
         }
 
@@ -217,13 +218,13 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
     final inputValue = _parseInput(s.input);
 
     final rawResults = _convertUseCase.execute(
-      categoryName: category.name,
+      categoryCode: category.code,
       fromCode: s.activeUnitCode,
       value: inputValue,
       units: category.units,
     );
 
-    final isTemperature = category.name == '온도';
+    final isTemperature = category.code == 'temperature';
     final formatted = <String, String>{};
     for (final entry in rawResults.entries) {
       formatted[entry.key] = isTemperature
@@ -243,5 +244,11 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
     final clean = input.endsWith('.') ? input.substring(0, input.length - 1) : input;
     return double.tryParse(clean) ?? 0;
   }
-
 }
+
+// TODO: Phase 5에서 l10n으로 전환
+String _digitCheckToast(DigitCheckResult result) => switch (result) {
+      DigitCheckResult.integerExceeded => '최대 12자리까지 입력 가능합니다',
+      DigitCheckResult.fractionalExceeded => '소수점 이하 8자리까지 입력 가능합니다',
+      DigitCheckResult.decimalNotAllowed => '',
+    };

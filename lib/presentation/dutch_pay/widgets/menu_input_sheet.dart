@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
 import 'participant_chip.dart';
@@ -80,6 +81,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
   @override
   Widget build(BuildContext context) {
     final s = ref.watch(dutchPayViewModelProvider).individualSplit;
+    final l10n = AppLocalizations.of(context)!;
     final canSubmit = _vm.canSubmitItem;
     final isEditing = s.editingIndex != null;
 
@@ -117,7 +119,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            Text(isEditing ? '메뉴 수정' : '메뉴 추가',
+            Text(isEditing ? l10n.dutchPay_label_editItem : l10n.dutchPay_label_addItem,
                 style:
                     CmSheet.titleText.copyWith(color: kDutchTextPrimary)),
             const SizedBox(height: 16),
@@ -141,7 +143,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
                       style: inputFieldInnerLabel
                           .copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
-                        hintText: '메뉴명',
+                        hintText: l10n.dutchPay_hint_menuName,
                         hintStyle:
                             TextStyle(color: kDutchTextTertiary),
                         border: InputBorder.none,
@@ -174,7 +176,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
                       style: inputFieldInnerLabel
                           .copyWith(color: kDutchTextPrimary),
                       decoration: InputDecoration(
-                        hintText: '금액',
+                        hintText: l10n.dutchPay_hint_amount,
                         hintStyle:
                             TextStyle(color: kDutchTextTertiary),
                         border: InputBorder.none,
@@ -246,7 +248,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
                               color: kDutchAccent.withValues(alpha: 0.3)),
                         ),
                         child: Center(
-                          child: Text('삭제',
+                          child: Text(l10n.common_delete,
                               style: textStyle16.copyWith(
                                   color: kDutchAccent)),
                         ),
@@ -257,7 +259,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
                   Expanded(
                     flex: 2,
                     child: SubmitButton(
-                      label: '수정',
+                      label: l10n.dutchPay_button_modify,
                       enabled: canSubmit,
                       onTap: () {
                         _vm.handleIntent(
@@ -270,7 +272,7 @@ class _MenuInputSheetState extends ConsumerState<MenuInputSheet> {
               )
             else
               SubmitButton(
-                label: '추가',
+                label: l10n.common_add,
                 enabled: canSubmit,
                 onTap: () {
                   _vm.handleIntent(const DutchPayIntent.itemSubmitted());
