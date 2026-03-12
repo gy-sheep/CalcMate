@@ -23,6 +23,7 @@ enum _AdState { loading, loaded, failed }
 
 class _AdBannerPlaceholderState extends State<AdBannerPlaceholder> {
   BannerAd? _bannerAd;
+  Widget? _adWidget;
   _AdState _state = _AdState.loading;
 
   @override
@@ -40,7 +41,12 @@ class _AdBannerPlaceholderState extends State<AdBannerPlaceholder> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          if (mounted) setState(() => _state = _AdState.loaded);
+          if (mounted) {
+            setState(() {
+              _adWidget = AdWidget(ad: ad as BannerAd);
+              _state = _AdState.loaded;
+            });
+          }
         },
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
@@ -65,10 +71,10 @@ class _AdBannerPlaceholderState extends State<AdBannerPlaceholder> {
       height: AdBannerPlaceholder.height,
       child: switch (_state) {
         _AdState.loading => const SizedBox.shrink(),
-        _AdState.loaded => AdWidget(ad: _bannerAd!),
+        _AdState.loaded => _adWidget ?? const SizedBox.shrink(),
         _AdState.failed => Container(
             color: const Color(0xFFE8E8E8),
-            child: const Center(
+            child: Center(
               child: Text(
                 AppLocalizations.of(context).ad_bannerNotAvailable,
                 style: const TextStyle(fontSize: 12, color: Color(0xFFAAAAAA)),

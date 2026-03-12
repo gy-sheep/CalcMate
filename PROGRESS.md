@@ -30,8 +30,6 @@
 - [x] Google Analytics (Firebase Analytics) 연동
 - [x] AdMob 배너 + 전면 광고 연동
 - [x] Firebase Crashlytics 연동
-- [ ] 공통 팝업 (공용 다이얼로그)
-- [ ] 에러 메시지 config
 - [ ] 개인정보 처리방침 작성 + URL 확정 + `url_launcher` 연동
 - [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
 

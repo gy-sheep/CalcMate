@@ -6,7 +6,7 @@ import '../config/app_config.dart';
 import '../utils/app_toast.dart';
 
 /// 전면 광고 매니저.
-/// 앱 전체 기준 1시간에 1회, 첫 번째 화면 진입은 패스.
+/// 앱 전체 기준 5분에 1회, 첫 번째 화면 진입은 패스.
 /// [AppConfig.isPremium]이 true이면 광고를 표시하지 않는다.
 class InterstitialAdManager {
   InterstitialAdManager();
@@ -80,7 +80,7 @@ class InterstitialAdManager {
     if (_interstitialAd == null) return false;
     if (_lastShownTime == null) return true;
     return DateTime.now().difference(_lastShownTime!) >=
-        const Duration(hours: 1);
+        const Duration(minutes: 5);
   }
 
   void _showAd(BuildContext context) {
