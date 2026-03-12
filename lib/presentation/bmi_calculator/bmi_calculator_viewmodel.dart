@@ -14,7 +14,7 @@ sealed class BmiCalculatorIntent {
   const factory BmiCalculatorIntent.heightEdited(String input) = _HeightEdited;
   const factory BmiCalculatorIntent.weightEdited(String input) = _WeightEdited;
   const factory BmiCalculatorIntent.unitToggled() = _UnitToggled;
-  const factory BmiCalculatorIntent.initialized(Locale locale) = _Initialized;
+  const factory BmiCalculatorIntent.initialized() = _Initialized;
 }
 
 class _HeightChanged extends BmiCalculatorIntent {
@@ -42,8 +42,7 @@ class _UnitToggled extends BmiCalculatorIntent {
 }
 
 class _Initialized extends BmiCalculatorIntent {
-  final Locale locale;
-  const _Initialized(this.locale);
+  const _Initialized();
 }
 
 // ── SharedPreferences key ──────────────────────────────────────────────────
@@ -85,18 +84,19 @@ class BmiCalculatorViewModel
         _handleWeightEdit(input);
       case _UnitToggled():
         _toggleUnit();
-      case _Initialized(:final locale):
-        _initialize(locale);
+      case _Initialized():
+        _initialize();
     }
   }
 
   // ── 초기화 ──────────────────────────────────────────────────────────────
 
-  Future<void> _initialize(Locale locale) async {
+  Future<void> _initialize() async {
     if (_initialized) return;
     _initialized = true;
 
-    final countryCode = locale.countryCode;
+    // 기기의 시스템 지역 설정에서 국가 코드를 가져옴 (앱 내 언어 설정과 무관)
+    final countryCode = PlatformDispatcher.instance.locale.countryCode;
     final standard = BmiCalculateUseCase.standardForCountryCode(countryCode);
 
     // SharedPreferences에서 저장된 단위 읽기

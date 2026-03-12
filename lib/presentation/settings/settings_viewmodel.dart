@@ -14,7 +14,7 @@ part 'settings_viewmodel.freezed.dart';
 class SettingsState with _$SettingsState {
   const factory SettingsState({
     @Default(ThemeMode.system) ThemeMode themeMode,
-    Locale? locale, // null = 시스템 기본
+    String? appLanguage, // 앱 표시 언어 코드 ('ko', 'en'), null = 시스템 기본
     CurrencyUnit? displayCurrency, // null = 자동(기기 지역)
     String? baseCurrency, // null = 기기 지역 기반
   }) = _SettingsState;
@@ -26,7 +26,7 @@ sealed class SettingsIntent {
   const SettingsIntent();
   const factory SettingsIntent.themeModeChanged(ThemeMode mode) =
       _ThemeModeChanged;
-  const factory SettingsIntent.localeChanged(Locale? locale) = _LocaleChanged;
+  const factory SettingsIntent.languageChanged(String? languageCode) = _LanguageChanged;
   const factory SettingsIntent.displayCurrencyChanged(CurrencyUnit? currency) =
       _DisplayCurrencyChanged;
   const factory SettingsIntent.baseCurrencyChanged(String? code) =
@@ -38,9 +38,9 @@ class _ThemeModeChanged extends SettingsIntent {
   const _ThemeModeChanged(this.mode);
 }
 
-class _LocaleChanged extends SettingsIntent {
-  final Locale? locale;
-  const _LocaleChanged(this.locale);
+class _LanguageChanged extends SettingsIntent {
+  final String? languageCode;
+  const _LanguageChanged(this.languageCode);
 }
 
 class _DisplayCurrencyChanged extends SettingsIntent {
@@ -93,7 +93,7 @@ class SettingsViewModel extends Notifier<SettingsState> {
         'dark' => ThemeMode.dark,
         _ => ThemeMode.system,
       },
-      locale: savedLocale != null ? Locale(savedLocale) : null,
+      appLanguage: savedLocale,
       displayCurrency: CurrencyUnit.tryFromCode(savedCurrency),
       baseCurrency: savedBaseCurrency,
     );
@@ -111,11 +111,11 @@ class SettingsViewModel extends Notifier<SettingsState> {
                 ThemeMode.system => 'system',
               },
             );
-      case _LocaleChanged(:final locale):
-        state = state.copyWith(locale: locale);
+      case _LanguageChanged(:final languageCode):
+        state = state.copyWith(appLanguage: languageCode);
         final prefs = ref.read(sharedPreferencesProvider);
-        if (locale != null) {
-          prefs.setString(_kLocaleKey, locale.languageCode);
+        if (languageCode != null) {
+          prefs.setString(_kLocaleKey, languageCode);
         } else {
           prefs.remove(_kLocaleKey);
         }

@@ -21,19 +21,16 @@ class BmiCategoryGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
     final l10n = AppLocalizations.of(context);
-    final use2Row = categories.length > 4;
-    if (use2Row) {
-      final row1 = categories.sublist(0, 3);
-      final row2 = categories.sublist(3);
-      return Column(
-        children: [
-          _buildRow(row1, locale, l10n),
-          const SizedBox(height: 8),
-          _buildRow(row2, locale, l10n),
-        ],
-      );
-    }
-    return _buildRow(categories, locale, l10n);
+    final midpoint = (categories.length + 1) ~/ 2; // 4→2+2, 5→3+2
+    final row1 = categories.sublist(0, midpoint);
+    final row2 = categories.sublist(midpoint);
+    return Column(
+      children: [
+        _buildRow(row1, locale, l10n),
+        const SizedBox(height: 8),
+        _buildRow(row2, locale, l10n),
+      ],
+    );
   }
 
   Widget _buildRow(List<BmiCategoryDef> cats, Locale locale, AppLocalizations l10n) {

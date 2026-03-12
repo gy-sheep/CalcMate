@@ -164,7 +164,7 @@ class BmiCalculatorState with _$BmiCalculatorState {
 | `heightEdited(String input)` | 사용자 입력값 | 다이얼로그 입력 → cm 변환 후 clamp |
 | `weightEdited(String input)` | 사용자 입력값 | 다이얼로그 입력 → kg 변환 후 clamp |
 | `unitToggled()` | — | metric ↔ imperial 전환 + SharedPreferences 저장 |
-| `initialized(Locale locale)` | locale | 최초 진입 시 locale 기반 기본값 설정 |
+| `initialized()` | — | 최초 진입 시 시스템 locale 기반 기본값 설정 |
 
 **BmiCalculatorViewModel**
 

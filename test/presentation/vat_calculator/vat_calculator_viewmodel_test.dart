@@ -35,7 +35,7 @@ void main() {
     test('기본값', () {
       final s = readState();
       expect(s.input, '0');
-      expect(s.mode, VatMode.exclusive);
+      expect(s.mode, VatMode.inclusive);
       expect(s.inputTarget, InputTarget.amount);
       expect(s.taxRate, 10);
       expect(s.isResult, false);
@@ -278,7 +278,9 @@ void main() {
   // ── 계산 결과 (evaluatedInput / vatResult) ──
 
   group('계산 결과', () {
-    test('부가세 별도 — 기본', () {
+    test('부가세 별도', () {
+      vm.handleIntent(
+          const VatCalculatorIntent.modeChanged(VatMode.exclusive));
       keys('1 0 0 0 0 0 0');
       final result = vm.vatResult;
       expect(result.supplyAmount, 1000000);
@@ -287,8 +289,6 @@ void main() {
     });
 
     test('부가세 포함 — 역산', () {
-      vm.handleIntent(
-          const VatCalculatorIntent.modeChanged(VatMode.inclusive));
       keys('1 1 0 0 0 0 0');
       final result = vm.vatResult;
       expect(result.supplyAmount, 1000000);
@@ -297,6 +297,8 @@ void main() {
     });
 
     test('연산자로 끝나는 수식 — 연산자 무시하고 계산', () {
+      vm.handleIntent(
+          const VatCalculatorIntent.modeChanged(VatMode.exclusive));
       keys('1 0 0 +');
       final result = vm.vatResult;
       expect(result.supplyAmount, 100);

@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SettingsState {
   ThemeMode get themeMode => throw _privateConstructorUsedError;
-  Locale? get locale => throw _privateConstructorUsedError; // null = 시스템 기본
+  String? get appLanguage =>
+      throw _privateConstructorUsedError; // 앱 표시 언어 코드 ('ko', 'en'), null = 시스템 기본
   CurrencyUnit? get displayCurrency =>
       throw _privateConstructorUsedError; // null = 자동(기기 지역)
   String? get baseCurrency => throw _privateConstructorUsedError;
@@ -39,7 +40,7 @@ abstract class $SettingsStateCopyWith<$Res> {
   @useResult
   $Res call({
     ThemeMode themeMode,
-    Locale? locale,
+    String? appLanguage,
     CurrencyUnit? displayCurrency,
     String? baseCurrency,
   });
@@ -61,7 +62,7 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
   @override
   $Res call({
     Object? themeMode = null,
-    Object? locale = freezed,
+    Object? appLanguage = freezed,
     Object? displayCurrency = freezed,
     Object? baseCurrency = freezed,
   }) {
@@ -71,10 +72,10 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
                 ? _value.themeMode
                 : themeMode // ignore: cast_nullable_to_non_nullable
                       as ThemeMode,
-            locale: freezed == locale
-                ? _value.locale
-                : locale // ignore: cast_nullable_to_non_nullable
-                      as Locale?,
+            appLanguage: freezed == appLanguage
+                ? _value.appLanguage
+                : appLanguage // ignore: cast_nullable_to_non_nullable
+                      as String?,
             displayCurrency: freezed == displayCurrency
                 ? _value.displayCurrency
                 : displayCurrency // ignore: cast_nullable_to_non_nullable
@@ -100,7 +101,7 @@ abstract class _$$SettingsStateImplCopyWith<$Res>
   @useResult
   $Res call({
     ThemeMode themeMode,
-    Locale? locale,
+    String? appLanguage,
     CurrencyUnit? displayCurrency,
     String? baseCurrency,
   });
@@ -121,7 +122,7 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? themeMode = null,
-    Object? locale = freezed,
+    Object? appLanguage = freezed,
     Object? displayCurrency = freezed,
     Object? baseCurrency = freezed,
   }) {
@@ -131,10 +132,10 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
             ? _value.themeMode
             : themeMode // ignore: cast_nullable_to_non_nullable
                   as ThemeMode,
-        locale: freezed == locale
-            ? _value.locale
-            : locale // ignore: cast_nullable_to_non_nullable
-                  as Locale?,
+        appLanguage: freezed == appLanguage
+            ? _value.appLanguage
+            : appLanguage // ignore: cast_nullable_to_non_nullable
+                  as String?,
         displayCurrency: freezed == displayCurrency
             ? _value.displayCurrency
             : displayCurrency // ignore: cast_nullable_to_non_nullable
@@ -153,7 +154,7 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
 class _$SettingsStateImpl implements _SettingsState {
   const _$SettingsStateImpl({
     this.themeMode = ThemeMode.system,
-    this.locale,
+    this.appLanguage,
     this.displayCurrency,
     this.baseCurrency,
   });
@@ -162,8 +163,8 @@ class _$SettingsStateImpl implements _SettingsState {
   @JsonKey()
   final ThemeMode themeMode;
   @override
-  final Locale? locale;
-  // null = 시스템 기본
+  final String? appLanguage;
+  // 앱 표시 언어 코드 ('ko', 'en'), null = 시스템 기본
   @override
   final CurrencyUnit? displayCurrency;
   // null = 자동(기기 지역)
@@ -172,7 +173,7 @@ class _$SettingsStateImpl implements _SettingsState {
 
   @override
   String toString() {
-    return 'SettingsState(themeMode: $themeMode, locale: $locale, displayCurrency: $displayCurrency, baseCurrency: $baseCurrency)';
+    return 'SettingsState(themeMode: $themeMode, appLanguage: $appLanguage, displayCurrency: $displayCurrency, baseCurrency: $baseCurrency)';
   }
 
   @override
@@ -182,7 +183,8 @@ class _$SettingsStateImpl implements _SettingsState {
             other is _$SettingsStateImpl &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode) &&
-            (identical(other.locale, locale) || other.locale == locale) &&
+            (identical(other.appLanguage, appLanguage) ||
+                other.appLanguage == appLanguage) &&
             (identical(other.displayCurrency, displayCurrency) ||
                 other.displayCurrency == displayCurrency) &&
             (identical(other.baseCurrency, baseCurrency) ||
@@ -193,7 +195,7 @@ class _$SettingsStateImpl implements _SettingsState {
   int get hashCode => Object.hash(
     runtimeType,
     themeMode,
-    locale,
+    appLanguage,
     displayCurrency,
     baseCurrency,
   );
@@ -210,7 +212,7 @@ class _$SettingsStateImpl implements _SettingsState {
 abstract class _SettingsState implements SettingsState {
   const factory _SettingsState({
     final ThemeMode themeMode,
-    final Locale? locale,
+    final String? appLanguage,
     final CurrencyUnit? displayCurrency,
     final String? baseCurrency,
   }) = _$SettingsStateImpl;
@@ -218,7 +220,7 @@ abstract class _SettingsState implements SettingsState {
   @override
   ThemeMode get themeMode;
   @override
-  Locale? get locale; // null = 시스템 기본
+  String? get appLanguage; // 앱 표시 언어 코드 ('ko', 'en'), null = 시스템 기본
   @override
   CurrencyUnit? get displayCurrency; // null = 자동(기기 지역)
   @override

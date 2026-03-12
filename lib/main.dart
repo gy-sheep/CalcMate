@@ -50,9 +50,14 @@ class CalcmateApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsViewModelProvider);
+    final appLanguage = settings.appLanguage;
+    // 앱 표시 언어가 설정된 경우, 시스템 국가 코드를 보존하여 Locale 생성
+    final locale = appLanguage != null
+        ? Locale(appLanguage, PlatformDispatcher.instance.locale.countryCode)
+        : null;
     return MaterialApp(
       title: 'CalcMate',
-      locale: settings.locale,
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: AppTheme.lightTheme,

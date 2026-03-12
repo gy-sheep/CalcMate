@@ -115,8 +115,12 @@ void main() {
         expect(NumberFormatter.formatUnitResult(0), '0');
       });
 
-      test('아주 작은 값은 지수 표기', () {
-        final result = NumberFormatter.formatUnitResult(0.00001);
+      test('아주 작은 값은 소수점 표시 (1e-12 이상)', () {
+        expect(NumberFormatter.formatUnitResult(0.00001), '0.00001');
+      });
+
+      test('극소값은 지수 표기 (1e-12 미만)', () {
+        final result = NumberFormatter.formatUnitResult(1e-13);
         expect(result, contains('e'));
       });
 
@@ -145,8 +149,8 @@ void main() {
         expect(NumberFormatter.formatTemperature(0), '0');
       });
 
-      test('소수점 최대 3자리 + 콤마', () {
-        expect(NumberFormatter.formatTemperature(1234.5678), '1,234.568');
+      test('소수점 최대 6자리 + 콤마', () {
+        expect(NumberFormatter.formatTemperature(1234.5678), '1,234.5678');
         expect(NumberFormatter.formatTemperature(100.0), '100');
       });
     });

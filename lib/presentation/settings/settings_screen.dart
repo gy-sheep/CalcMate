@@ -56,7 +56,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _showLanguageSheet(BuildContext context, WidgetRef ref) {
-    final currentLocale = ref.read(settingsViewModelProvider).locale;
+    final currentLanguage = ref.read(settingsViewModelProvider).appLanguage;
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -65,11 +65,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
       ),
       builder: (_) => _LanguageSheet(
-        selectedLocale: currentLocale,
-        onSelected: (locale) {
+        selectedLanguage: currentLanguage,
+        onSelected: (languageCode) {
           ref
               .read(settingsViewModelProvider.notifier)
-              .handleIntent(SettingsIntent.localeChanged(locale));
+              .handleIntent(SettingsIntent.languageChanged(languageCode));
           Navigator.pop(context);
         },
       ),
@@ -177,7 +177,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   _SettingsTile(
                     label: l10n.settings_language,
-                    value: _localeLabel(l10n, settings.locale),
+                    value: _languageLabel(l10n, settings.appLanguage),
                     onTap: () => _showLanguageSheet(context, ref),
                   ),
                   _SettingsTile(
@@ -246,7 +246,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  String _localeLabel(AppLocalizations l10n, Locale? locale) => switch (locale?.languageCode) {
+  String _languageLabel(AppLocalizations l10n, String? languageCode) => switch (languageCode) {
         'ko' => l10n.settings_languageKo,
         'en' => l10n.settings_languageEn,
         _ => l10n.settings_languageSystem,
@@ -375,9 +375,9 @@ class _SettingsTile extends StatelessWidget {
 // ── 언어 선택 바텀시트 ──
 
 class _LanguageSheet extends StatelessWidget {
-  final Locale? selectedLocale;
-  final ValueChanged<Locale?> onSelected;
-  const _LanguageSheet({required this.selectedLocale, required this.onSelected});
+  final String? selectedLanguage;
+  final ValueChanged<String?> onSelected;
+  const _LanguageSheet({required this.selectedLanguage, required this.onSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -389,7 +389,7 @@ class _LanguageSheet extends StatelessWidget {
       l10n.settings_languageKo,
       l10n.settings_languageEn,
     ];
-    final locales = [null, const Locale('ko'), const Locale('en')];
+    final languageCodes = <String?>[null, 'ko', 'en'];
 
     return SafeArea(
       child: Column(
@@ -427,8 +427,8 @@ class _LanguageSheet extends StatelessWidget {
             ),
             _SheetRadioTile(
               label: labels[i],
-              isSelected: selectedLocale?.languageCode == locales[i]?.languageCode,
-              onTap: () => onSelected(locales[i]),
+              isSelected: selectedLanguage == languageCodes[i],
+              onTap: () => onSelected(languageCodes[i]),
             ),
           ],
           const SizedBox(height: 8),

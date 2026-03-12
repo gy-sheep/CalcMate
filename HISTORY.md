@@ -2,6 +2,24 @@
 
 ---
 
+## 2026-03-12 — 앱 언어 설정과 시스템 locale(국가 코드) 분리
+
+### 완료 항목
+
+**핵심 수정**
+- SettingsState.locale(Locale?) → appLanguage(String?) 변경: 앱 표시 언어와 시스템 국가 코드 개념 분리
+- MaterialApp.locale 생성 시 시스템 국가 코드 보존 (PlatformDispatcher.instance.locale.countryCode)
+- BMI viewmodel: Localizations.localeOf(context) 대신 PlatformDispatcher에서 국가 코드 직접 조회
+- BMI 카테고리 그리드: 4단계도 2+2 두 행 레이아웃 적용 (카드 높이 깨짐 방지)
+
+**테스트 수정**
+- number_formatter_test: 구현과 불일치하던 기대값 수정 (2건)
+- vat_calculator_viewmodel_test: 기본 모드 inclusive 반영 (3건)
+- main_screen_test: l10n delegate 추가 + 변경된 아이콘 반영 (2건)
+- 전체 906건 통과
+
+---
+
 ## 2026-03-12 — 실수령액 계산기 Firestore 세율 연동
 
 ### 완료 항목

@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `feat/currency-unit-setting`
-> **마지막 완료**: AdMob·Analytics·Crashlytics 연동
+> **현재 브랜치**: `dev`
+> **마지막 완료**: 앱 언어/시스템 locale 분리
 
 ### Phase 12-1: l10n 전환 ✅ 완료
 
@@ -30,6 +30,7 @@
 - [x] Google Analytics (Firebase Analytics) 연동
 - [x] AdMob 배너 + 전면 광고 연동
 - [x] Firebase Crashlytics 연동
+- [x] 앱 언어 설정과 시스템 locale(국가 코드) 분리
 - [ ] 개인정보 처리방침 작성 + URL 확정 + `url_launcher` 연동
 - [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
 
@@ -101,6 +102,7 @@
 | 12-1 | l10n 전환 (ko/en 2개 언어, ARB 184키, DataStrings 120+항목, Phase 1~7 완료) | 36케이스 | `docs/plans/L10N_PLAN.md` |
 | — | 표시 통화 설정 (CurrencyUnit enum·CurrencyFormatter 확장·설정 바텀시트·부가세/할인/더치페이 적용, 실수령액 KRW 고정) | 30케이스 | — |
 | 11 | 환율 기준 통화 설정 (baseCurrencyProvider·바텀시트 10개 통화·환율 계산기 fromCode 연동) | 8케이스 | — |
+| — | 앱 언어/시스템 locale 분리 (settings locale→appLanguage, BMI 시스템 locale 직접 조회, 카테고리 그리드 2행 통일) | — | — |
 
 > 상세 작업 이력: `HISTORY.md`
 
