@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../domain/models/currency_unit.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
@@ -17,11 +18,13 @@ class ItemsCard extends StatelessWidget {
     required this.vm,
     required this.filterPerson,
     required this.onAddTap,
+    required this.currencyUnit,
   });
   final IndividualSplitState s;
   final DutchPayViewModel vm;
   final int? filterPerson;
   final VoidCallback onAddTap;
+  final CurrencyUnit currencyUnit;
 
   String _fmt(int n) {
     if (n == 0) return '0';
@@ -158,7 +161,7 @@ class ItemsCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Text(CurrencyFormatter.formatKrw(_fmt(item.amount), Localizations.localeOf(context)),
+                          Text(CurrencyFormatter.format(_fmt(item.amount), currencyUnit, Localizations.localeOf(context)),
                               style: textStyle16.copyWith(
                                   color: editing
                                       ? kDutchAccent

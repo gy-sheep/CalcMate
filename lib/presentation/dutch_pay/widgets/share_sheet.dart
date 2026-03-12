@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../domain/models/currency_unit.dart';
 import '../../../l10n/app_localizations.dart';
 import '../dutch_pay_colors.dart';
 
@@ -56,8 +57,9 @@ class IndividualShareData extends ShareData {
 // ── 공유 바텀시트 ────────────────────────────────────────────
 
 class ShareSheet extends StatefulWidget {
-  const ShareSheet({super.key, required this.shareData});
+  const ShareSheet({super.key, required this.shareData, required this.currencyUnit});
   final ShareData shareData;
+  final CurrencyUnit currencyUnit;
 
   @override
   State<ShareSheet> createState() => _ShareSheetState();
@@ -81,7 +83,7 @@ class _ShareSheetState extends State<ShareSheet> {
             padding: const EdgeInsets.fromLTRB(32, 24, 32, 0),
             child: RepaintBoundary(
               key: _receiptKey,
-              child: _ReceiptWidget(data: widget.shareData),
+              child: _ReceiptWidget(data: widget.shareData, currencyUnit: widget.currencyUnit),
             ),
           ),
           const SizedBox(height: 24),
@@ -184,8 +186,9 @@ class _ShareSheetState extends State<ShareSheet> {
 // ── 영수증 위젯 ──────────────────────────────────────────────
 
 class _ReceiptWidget extends StatelessWidget {
-  const _ReceiptWidget({required this.data});
+  const _ReceiptWidget({required this.data, required this.currencyUnit});
   final ShareData data;
+  final CurrencyUnit currencyUnit;
 
   String _fmt(int n) {
     if (n == 0) return '0';
@@ -252,7 +255,7 @@ class _ReceiptWidget extends StatelessWidget {
   }
 
   String _fmtCurrency(int n, Locale locale) =>
-      CurrencyFormatter.formatKrw(_fmt(n), locale);
+      CurrencyFormatter.format(_fmt(n), currencyUnit, locale);
 
   List<Widget> _buildEqualRows(EqualShareData d, AppLocalizations l10n, Locale locale) {
     return [

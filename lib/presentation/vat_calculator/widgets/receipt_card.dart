@@ -4,6 +4,7 @@ import 'package:calcmate/core/theme/app_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/currency_formatter.dart';
+import '../../../domain/models/currency_unit.dart';
 import '../../../domain/models/vat_calculator_state.dart';
 import '../../../domain/usecases/vat_calculate_usecase.dart';
 import '../../../domain/utils/number_formatter.dart';
@@ -19,6 +20,7 @@ class ReceiptCard extends StatelessWidget {
   final VatCalculatorViewModel vm;
   final VatResult vatResult;
   final VoidCallback onTaxRateInfoTapped;
+  final CurrencyUnit currencyUnit;
 
   const ReceiptCard({
     super.key,
@@ -26,6 +28,7 @@ class ReceiptCard extends StatelessWidget {
     required this.vm,
     required this.vatResult,
     required this.onTaxRateInfoTapped,
+    required this.currencyUnit,
   });
 
   @override
@@ -103,8 +106,8 @@ class ReceiptCard extends StatelessWidget {
   }
 
   String _fmtCurrency(double n, Locale locale) =>
-      CurrencyFormatter.formatKrw(
-          NumberFormatter.formatVatResult(n), locale);
+      CurrencyFormatter.format(
+          NumberFormatter.formatVatResult(n), currencyUnit, locale);
 
   List<Widget> _buildTaxRows(BuildContext context, bool isExclusive) {
     final l10n = AppLocalizations.of(context)!;

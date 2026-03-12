@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../domain/models/currency_unit.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../domain/usecases/dutch_pay_equal_split_usecase.dart';
+import '../../../presentation/settings/settings_viewmodel.dart';
 import '../../../presentation/widgets/scroll_fade_view.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
@@ -23,6 +25,7 @@ class EqualSplitView extends ConsumerWidget {
     final vm = ref.read(dutchPayViewModelProvider.notifier);
     final eq = state.equalSplit;
     final result = vm.equalSplitResult;
+    final currencyUnit = ref.watch(displayCurrencyProvider);
 
     return Column(
       children: [
@@ -33,7 +36,7 @@ class EqualSplitView extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _AmountCard(eq: eq, vm: vm),
+                _AmountCard(eq: eq, vm: vm, currencyUnit: currencyUnit),
                 const SizedBox(height: 14),
                 _PeopleRow(people: eq.people, vm: vm),
                 const SizedBox(height: 14),
@@ -45,9 +48,9 @@ class EqualSplitView extends ConsumerWidget {
                   const SizedBox(height: 14),
                 ],
                 if (result != null) ...[
-                  _ResultCard(result: result, isKorea: state.isKorea, vm: vm),
+                  _ResultCard(result: result, isKorea: state.isKorea, vm: vm, currencyUnit: currencyUnit),
                   const SizedBox(height: 14),
-                  _ShareBtn(result: result, isKorea: state.isKorea, eq: eq, vm: vm),
+                  _ShareBtn(result: result, isKorea: state.isKorea, eq: eq, vm: vm, currencyUnit: currencyUnit),
                 ],
               ],
             ),
@@ -67,9 +70,10 @@ class EqualSplitView extends ConsumerWidget {
 // ── 총 금액 카드 ────────────────────────────────────────────
 
 class _AmountCard extends StatelessWidget {
-  const _AmountCard({required this.eq, required this.vm});
+  const _AmountCard({required this.eq, required this.vm, required this.currencyUnit});
   final EqualSplitState eq;
   final DutchPayViewModel vm;
+  final CurrencyUnit currencyUnit;
 
   String get _displayText {
     if (eq.rawInput.isEmpty) return '0';
@@ -116,7 +120,7 @@ class _AmountCard extends StatelessWidget {
                       .copyWith(color: kDutchTextPrimary),
                 ),
                 const SizedBox(width: 4),
-                Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
+                Text(CurrencyFormatter.unitLabel(currencyUnit, Localizations.localeOf(context)),
                     style: CmInputCard.unitText
                         .copyWith(color: kDutchTextTertiary)),
               ],
@@ -423,10 +427,11 @@ class _TipRow extends StatelessWidget {
 
 class _ResultCard extends StatelessWidget {
   const _ResultCard(
-      {required this.result, required this.isKorea, required this.vm});
+      {required this.result, required this.isKorea, required this.vm, required this.currencyUnit});
   final EqualSplitResult? result;
   final bool isKorea;
   final DutchPayViewModel vm;
+  final CurrencyUnit currencyUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -476,7 +481,7 @@ class _ResultCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
+              Text(CurrencyFormatter.unitLabel(currencyUnit, Localizations.localeOf(context)),
                   style: CmResultCard.unitText
                       .copyWith(color: kDutchTextTertiary)),
             ],
@@ -506,7 +511,7 @@ class _ResultCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Text(CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
+              Text(CurrencyFormatter.unitLabel(currencyUnit, Localizations.localeOf(context)),
                   style: CmResultCard.unitText
                       .copyWith(color: kDutchTextTertiary)),
             ],
@@ -520,12 +525,14 @@ class _ResultCard extends StatelessWidget {
         _ResultRow(
           label: l10n.dutchPay_label_participantCount(result!.people - 1),
           amount: vm.fmt(result!.rounded),
+          currencyUnit: currencyUnit,
         ),
         Divider(height: 20, color: kDutchDivider.withValues(alpha: 0.5)),
         _ResultRow(
           label: l10n.dutchPay_label_organizer,
           amount: vm.fmt(result!.organizer),
           highlight: true,
+          currencyUnit: currencyUnit,
         ),
       ],
     );
@@ -534,10 +541,11 @@ class _ResultCard extends StatelessWidget {
 
 class _ResultRow extends StatelessWidget {
   const _ResultRow(
-      {required this.label, required this.amount, this.highlight = false});
+      {required this.label, required this.amount, this.highlight = false, required this.currencyUnit});
   final String label;
   final String amount;
   final bool highlight;
+  final CurrencyUnit currencyUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -563,7 +571,7 @@ class _ResultRow extends StatelessWidget {
             ),
             const TextSpan(text: ' '),
             TextSpan(
-              text: CurrencyFormatter.krwUnit(Localizations.localeOf(context)),
+              text: CurrencyFormatter.unitLabel(currencyUnit, Localizations.localeOf(context)),
               style: textStyleCaption.copyWith(color: kDutchTextTertiary),
             ),
           ]),
@@ -580,11 +588,13 @@ class _ShareBtn extends StatelessWidget {
       {required this.result,
       required this.isKorea,
       required this.eq,
-      required this.vm});
+      required this.vm,
+      required this.currencyUnit});
   final EqualSplitResult? result;
   final bool isKorea;
   final EqualSplitState eq;
   final DutchPayViewModel vm;
+  final CurrencyUnit currencyUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -646,6 +656,7 @@ class _ShareBtn extends StatelessWidget {
           tipRate: eq.tipRate,
           perPersonWithTip: result!.perPersonWithTip,
         ),
+        currencyUnit: currencyUnit,
       ),
     );
   }

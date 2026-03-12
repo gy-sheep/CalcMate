@@ -7,6 +7,7 @@ import '../../core/utils/app_toast.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/vat_calculator_state.dart';
 import '../../domain/usecases/vat_calculate_usecase.dart';
+import '../settings/settings_viewmodel.dart';
 import 'vat_calculator_colors.dart';
 import 'vat_calculator_viewmodel.dart';
 import 'widgets/receipt_card.dart';
@@ -36,6 +37,7 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(vatCalculatorViewModelProvider);
     final vm = ref.read(vatCalculatorViewModelProvider.notifier);
+    final currencyUnit = ref.watch(displayCurrencyProvider);
 
     ref.listen(
       vatCalculatorViewModelProvider.select((s) => s.toastMessage),
@@ -85,6 +87,7 @@ class _VatCalculatorScreenState extends ConsumerState<VatCalculatorScreen> {
                   vm: vm,
                   vatResult: vatResult,
                   onTaxRateInfoTapped: () => _showTaxRateInfo(context),
+                  currencyUnit: currencyUnit,
                 ),
               ),
               const Divider(

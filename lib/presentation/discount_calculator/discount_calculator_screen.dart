@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +6,7 @@ import '../../core/l10n/currency_formatter.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/widgets/ad_banner_placeholder.dart';
 import '../../domain/models/discount_calculator_state.dart';
+import '../../presentation/settings/settings_viewmodel.dart';
 import '../../presentation/widgets/scroll_fade_view.dart';
 import 'discount_calculator_colors.dart';
 import 'discount_calculator_viewmodel.dart';
@@ -16,22 +15,6 @@ import 'widgets/discount_rate_section.dart';
 import 'widgets/discount_result_card.dart';
 import 'widgets/extra_discount_section.dart';
 import 'widgets/original_price_field.dart';
-
-String _getCurrencySymbol(Locale appLocale) {
-  final krwUnit = CurrencyFormatter.krwUnit(appLocale);
-  final map = <String, String>{
-    'KR': krwUnit,
-    'US': '\$', 'CA': '\$',
-    'JP': '¥', 'CN': '¥',
-    'GB': '£',
-    'DE': '€', 'FR': '€', 'IT': '€', 'ES': '€', 'NL': '€',
-    'PT': '€', 'AT': '€', 'BE': '€', 'FI': '€', 'IE': '€',
-    'IN': '₹',
-    'AU': 'A\$',
-  };
-  final code = PlatformDispatcher.instance.locale.countryCode?.toUpperCase();
-  return map[code] ?? '';
-}
 
 // ──────────────────────────────────────────
 // Screen
@@ -46,7 +29,9 @@ class DiscountCalculatorScreen extends ConsumerWidget {
     final state = ref.watch(discountCalculatorViewModelProvider);
     final vm = ref.read(discountCalculatorViewModelProvider.notifier);
     final result = vm.result;
-    final currency = _getCurrencySymbol(Localizations.localeOf(context));
+    final currencyUnit = ref.watch(displayCurrencyProvider);
+    final locale = Localizations.localeOf(context);
+    final currency = CurrencyFormatter.symbol(currencyUnit, locale);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

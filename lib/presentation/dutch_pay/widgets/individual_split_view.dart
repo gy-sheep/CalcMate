@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../presentation/settings/settings_viewmodel.dart';
 import '../dutch_pay_colors.dart';
 import '../dutch_pay_viewmodel.dart';
 import 'compact_summary_bar.dart';
@@ -123,6 +124,7 @@ class _IndividualSplitViewState extends ConsumerState<IndividualSplitView> {
     final s = ref.watch(dutchPayViewModelProvider).individualSplit;
     final vm = ref.read(dutchPayViewModelProvider.notifier);
     final result = vm.individualSplitResult;
+    final currencyUnit = ref.watch(displayCurrencyProvider);
 
     return Column(
       children: [
@@ -149,7 +151,7 @@ class _IndividualSplitViewState extends ConsumerState<IndividualSplitView> {
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: CompactBarDelegate(
-                    child: CompactSummaryBar(s: s, result: result),
+                    child: CompactSummaryBar(s: s, result: result, currencyUnit: currencyUnit),
                   ),
                 ),
               // 3. 메뉴 목록 + 결과
@@ -162,10 +164,11 @@ class _IndividualSplitViewState extends ConsumerState<IndividualSplitView> {
                       vm: vm,
                       filterPerson: _filterPerson,
                       onAddTap: () => _showInputSheet(context),
+                      currencyUnit: currencyUnit,
                     ),
                     if (s.items.isNotEmpty) ...[
                       const SizedBox(height: 12),
-                      ResultBarSection(s: s, result: result),
+                      ResultBarSection(s: s, result: result, currencyUnit: currencyUnit),
                     ],
                   ],
                 ),

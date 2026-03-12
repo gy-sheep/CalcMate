@@ -2,8 +2,8 @@
 
 ## 다음 작업
 
-> **현재 브랜치**: `dev`
-> **마지막 완료**: 리팩토링 R-01/R-06/R-10 완료 및 전반 코드 정리
+> **현재 브랜치**: `feat/currency-unit-setting`
+> **마지막 완료**: 표시 통화 설정 (부가세·할인·더치페이 적용)
 
 ### Phase 12-1: l10n 전환 ✅ 완료
 
@@ -99,6 +99,7 @@
 | — | 리팩토링 R-01 색상 네이밍 통일 (9개 *_colors.dart, Bg1/KeyNumber 패턴) | — | — |
 | — | 리팩토링 R-10 Duration 7종·BorderRadius 토큰화 (34개 교체, 18파일) | — | — |
 | 12-1 | l10n 전환 (ko/en 2개 언어, ARB 184키, DataStrings 120+항목, Phase 1~7 완료) | 36케이스 | `docs/plans/L10N_PLAN.md` |
+| — | 표시 통화 설정 (CurrencyUnit enum·CurrencyFormatter 확장·설정 바텀시트·부가세/할인/더치페이 적용, 실수령액 KRW 고정) | 30케이스 | — |
 
 > 상세 작업 이력: `HISTORY.md`
 

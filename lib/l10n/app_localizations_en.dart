@@ -61,6 +61,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_privacyPolicy => 'Privacy Policy';
 
   @override
+  String get settings_displayCurrency => 'Display Currency';
+
+  @override
+  String get settings_displayCurrencyAuto => 'Auto (Device Region)';
+
+  @override
+  String get settings_currencyKRW => 'KRW (Won)';
+
+  @override
+  String get settings_currencyUSD => 'USD (Dollar)';
+
+  @override
+  String get settings_currencyEUR => 'EUR (Euro)';
+
+  @override
+  String get settings_currencyJPY => 'JPY (Yen)';
+
+  @override
+  String get settings_currencyCNY => 'CNY (Yuan)';
+
+  @override
+  String get settings_currencyGBP => 'GBP (Pound)';
+
+  @override
   String get settings_languageSystem => 'System Default';
 
   @override

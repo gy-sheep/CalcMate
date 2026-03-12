@@ -61,6 +61,30 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_privacyPolicy => '개인정보 처리방침';
 
   @override
+  String get settings_displayCurrency => '표시 통화';
+
+  @override
+  String get settings_displayCurrencyAuto => '자동 (기기 지역)';
+
+  @override
+  String get settings_currencyKRW => 'KRW (원)';
+
+  @override
+  String get settings_currencyUSD => 'USD (달러)';
+
+  @override
+  String get settings_currencyEUR => 'EUR (유로)';
+
+  @override
+  String get settings_currencyJPY => 'JPY (엔)';
+
+  @override
+  String get settings_currencyCNY => 'CNY (위안)';
+
+  @override
+  String get settings_currencyGBP => 'GBP (파운드)';
+
+  @override
   String get settings_languageSystem => '시스템 기본';
 
   @override

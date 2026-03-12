@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SettingsState {
   ThemeMode get themeMode => throw _privateConstructorUsedError;
-  Locale? get locale => throw _privateConstructorUsedError;
+  Locale? get locale => throw _privateConstructorUsedError; // null = 시스템 기본
+  CurrencyUnit? get displayCurrency => throw _privateConstructorUsedError;
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -34,7 +35,11 @@ abstract class $SettingsStateCopyWith<$Res> {
     $Res Function(SettingsState) then,
   ) = _$SettingsStateCopyWithImpl<$Res, SettingsState>;
   @useResult
-  $Res call({ThemeMode themeMode, Locale? locale});
+  $Res call({
+    ThemeMode themeMode,
+    Locale? locale,
+    CurrencyUnit? displayCurrency,
+  });
 }
 
 /// @nodoc
@@ -51,7 +56,11 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? themeMode = null, Object? locale = freezed}) {
+  $Res call({
+    Object? themeMode = null,
+    Object? locale = freezed,
+    Object? displayCurrency = freezed,
+  }) {
     return _then(
       _value.copyWith(
             themeMode: null == themeMode
@@ -62,6 +71,10 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
                 ? _value.locale
                 : locale // ignore: cast_nullable_to_non_nullable
                       as Locale?,
+            displayCurrency: freezed == displayCurrency
+                ? _value.displayCurrency
+                : displayCurrency // ignore: cast_nullable_to_non_nullable
+                      as CurrencyUnit?,
           )
           as $Val,
     );
@@ -77,7 +90,11 @@ abstract class _$$SettingsStateImplCopyWith<$Res>
   ) = __$$SettingsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ThemeMode themeMode, Locale? locale});
+  $Res call({
+    ThemeMode themeMode,
+    Locale? locale,
+    CurrencyUnit? displayCurrency,
+  });
 }
 
 /// @nodoc
@@ -93,7 +110,11 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? themeMode = null, Object? locale = freezed}) {
+  $Res call({
+    Object? themeMode = null,
+    Object? locale = freezed,
+    Object? displayCurrency = freezed,
+  }) {
     return _then(
       _$SettingsStateImpl(
         themeMode: null == themeMode
@@ -104,6 +125,10 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
             ? _value.locale
             : locale // ignore: cast_nullable_to_non_nullable
                   as Locale?,
+        displayCurrency: freezed == displayCurrency
+            ? _value.displayCurrency
+            : displayCurrency // ignore: cast_nullable_to_non_nullable
+                  as CurrencyUnit?,
       ),
     );
   }
@@ -112,17 +137,24 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SettingsStateImpl implements _SettingsState {
-  const _$SettingsStateImpl({this.themeMode = ThemeMode.system, this.locale});
+  const _$SettingsStateImpl({
+    this.themeMode = ThemeMode.system,
+    this.locale,
+    this.displayCurrency,
+  });
 
   @override
   @JsonKey()
   final ThemeMode themeMode;
   @override
   final Locale? locale;
+  // null = 시스템 기본
+  @override
+  final CurrencyUnit? displayCurrency;
 
   @override
   String toString() {
-    return 'SettingsState(themeMode: $themeMode, locale: $locale)';
+    return 'SettingsState(themeMode: $themeMode, locale: $locale, displayCurrency: $displayCurrency)';
   }
 
   @override
@@ -132,11 +164,14 @@ class _$SettingsStateImpl implements _SettingsState {
             other is _$SettingsStateImpl &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode) &&
-            (identical(other.locale, locale) || other.locale == locale));
+            (identical(other.locale, locale) || other.locale == locale) &&
+            (identical(other.displayCurrency, displayCurrency) ||
+                other.displayCurrency == displayCurrency));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, themeMode, locale);
+  int get hashCode =>
+      Object.hash(runtimeType, themeMode, locale, displayCurrency);
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -151,12 +186,15 @@ abstract class _SettingsState implements SettingsState {
   const factory _SettingsState({
     final ThemeMode themeMode,
     final Locale? locale,
+    final CurrencyUnit? displayCurrency,
   }) = _$SettingsStateImpl;
 
   @override
   ThemeMode get themeMode;
   @override
-  Locale? get locale;
+  Locale? get locale; // null = 시스템 기본
+  @override
+  CurrencyUnit? get displayCurrency;
 
   /// Create a copy of SettingsState
   /// with the given fields replaced by the non-null parameter values.

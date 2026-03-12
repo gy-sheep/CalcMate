@@ -194,6 +194,54 @@ abstract class AppLocalizations {
   /// **'개인정보 처리방침'**
   String get settings_privacyPolicy;
 
+  /// No description provided for @settings_displayCurrency.
+  ///
+  /// In ko, this message translates to:
+  /// **'표시 통화'**
+  String get settings_displayCurrency;
+
+  /// No description provided for @settings_displayCurrencyAuto.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 (기기 지역)'**
+  String get settings_displayCurrencyAuto;
+
+  /// No description provided for @settings_currencyKRW.
+  ///
+  /// In ko, this message translates to:
+  /// **'KRW (원)'**
+  String get settings_currencyKRW;
+
+  /// No description provided for @settings_currencyUSD.
+  ///
+  /// In ko, this message translates to:
+  /// **'USD (달러)'**
+  String get settings_currencyUSD;
+
+  /// No description provided for @settings_currencyEUR.
+  ///
+  /// In ko, this message translates to:
+  /// **'EUR (유로)'**
+  String get settings_currencyEUR;
+
+  /// No description provided for @settings_currencyJPY.
+  ///
+  /// In ko, this message translates to:
+  /// **'JPY (엔)'**
+  String get settings_currencyJPY;
+
+  /// No description provided for @settings_currencyCNY.
+  ///
+  /// In ko, this message translates to:
+  /// **'CNY (위안)'**
+  String get settings_currencyCNY;
+
+  /// No description provided for @settings_currencyGBP.
+  ///
+  /// In ko, this message translates to:
+  /// **'GBP (파운드)'**
+  String get settings_currencyGBP;
+
   /// No description provided for @settings_languageSystem.
   ///
   /// In ko, this message translates to:

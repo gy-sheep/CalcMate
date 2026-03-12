@@ -8,6 +8,7 @@ import '../widgets/blur_status_bar_overlay.dart';
 import '../main/main_screen_viewmodel.dart';
 import 'calculator_management_screen.dart';
 import 'open_source_licenses_screen.dart';
+import '../../domain/models/currency_unit.dart';
 import 'settings_viewmodel.dart';
 
 // ── 설정 화면 ──
@@ -87,9 +88,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     });
   }
 
+  void _showDisplayCurrencySheet(BuildContext context, WidgetRef ref) {
+    final current = ref.read(settingsViewModelProvider).displayCurrency;
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(CmSheet.radius),
+        ),
+      ),
+      builder: (_) => _DisplayCurrencySheet(
+        selected: current,
+        onSelected: (currency) {
+          ref
+              .read(settingsViewModelProvider.notifier)
+              .handleIntent(
+                  SettingsIntent.displayCurrencyChanged(currency));
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsViewModelProvider);
+    final resolvedCurrency = ref.watch(displayCurrencyProvider);
     final entries = ref.watch(mainScreenViewModelProvider).entries;
     final visibleCount = entries.where((e) => e.isVisible).length;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -131,6 +155,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     label: l10n.settings_theme,
                     value: _themeModeLabel(l10n, settings.themeMode),
                     onTap: () => _showThemeModeSheet(context, ref),
+                  ),
+                  _SettingsTile(
+                    label: l10n.settings_displayCurrency,
+                    value: _displayCurrencyLabel(l10n, settings.displayCurrency, resolvedCurrency),
+                    onTap: () => _showDisplayCurrencySheet(context, ref),
                   ),
                 ],
               ),
@@ -203,6 +232,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ThemeMode.system => l10n.settings_themeSystem,
         ThemeMode.light => l10n.settings_themeLight,
         ThemeMode.dark => l10n.settings_themeDark,
+      };
+
+  String _displayCurrencyLabel(
+      AppLocalizations l10n, CurrencyUnit? selected, CurrencyUnit resolved) {
+    if (selected == null) return '${l10n.settings_displayCurrencyAuto} (${resolved.code})';
+    return _currencyLabel(l10n, selected);
+  }
+
+  static String _currencyLabel(AppLocalizations l10n, CurrencyUnit unit) =>
+      switch (unit) {
+        CurrencyUnit.krw => l10n.settings_currencyKRW,
+        CurrencyUnit.usd => l10n.settings_currencyUSD,
+        CurrencyUnit.eur => l10n.settings_currencyEUR,
+        CurrencyUnit.jpy => l10n.settings_currencyJPY,
+        CurrencyUnit.cny => l10n.settings_currencyCNY,
+        CurrencyUnit.gbp => l10n.settings_currencyGBP,
       };
 }
 
@@ -363,6 +408,85 @@ class _LanguageSheet extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+// ── 표시 통화 선택 바텀시트 ──
+
+class _DisplayCurrencySheet extends StatelessWidget {
+  final CurrencyUnit? selected;
+  final ValueChanged<CurrencyUnit?> onSelected;
+  const _DisplayCurrencySheet({required this.selected, required this.onSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+
+    final labels = [
+      l10n.settings_displayCurrencyAuto,
+      l10n.settings_currencyKRW,
+      l10n.settings_currencyUSD,
+      l10n.settings_currencyEUR,
+      l10n.settings_currencyJPY,
+      l10n.settings_currencyCNY,
+      l10n.settings_currencyGBP,
+    ];
+    final units = <CurrencyUnit?>[null, ...CurrencyUnit.values];
+
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: CmSheet.handleWidth,
+            height: CmSheet.handleHeight,
+            margin: const EdgeInsets.only(
+              top: CmSheet.handleTopSpacing,
+              bottom: CmSheet.handleBottomSpacing,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(CmSheet.handleRadius),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                l10n.settings_displayCurrency,
+                style: textStyle16.copyWith(color: colorScheme.onSurface),
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (int i = 0; i < labels.length; i++) ...[
+                    if (i > 0) const Divider(
+                      thickness: CmSheet.dividerThickness,
+                      height: CmSheet.dividerHeight,
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    _SheetRadioTile(
+                      label: labels[i],
+                      isSelected: selected == units[i],
+                      onTap: () => onSelected(units[i]),
+                    ),
+                  ],
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

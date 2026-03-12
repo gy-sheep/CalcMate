@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../domain/models/currency_unit.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../domain/usecases/dutch_pay_individual_split_usecase.dart';
 import '../../../l10n/app_localizations.dart';
@@ -34,9 +35,10 @@ class CompactBarDelegate extends SliverPersistentHeaderDelegate {
 // ── 컴팩트 요약 바 ───────────────────────────────────────────
 
 class CompactSummaryBar extends StatefulWidget {
-  const CompactSummaryBar({super.key, required this.s, required this.result});
+  const CompactSummaryBar({super.key, required this.s, required this.result, required this.currencyUnit});
   final IndividualSplitState s;
   final IndividualSplitResult result;
+  final CurrencyUnit currencyUnit;
 
   @override
   State<CompactSummaryBar> createState() => _CompactSummaryBarState();
@@ -113,7 +115,7 @@ class _CompactSummaryBarState extends State<CompactSummaryBar> {
       child: Row(
         children: [
           Text(
-            '${l10n.dutchPay_label_total} ${CurrencyFormatter.formatKrw(_fmt(result.totalAmount), locale)}',
+            '${l10n.dutchPay_label_total} ${CurrencyFormatter.format(_fmt(result.totalAmount), widget.currencyUnit, locale)}',
             style: textStyleCaption.copyWith(
               color: kDutchAccent,
               fontWeight: FontWeight.w700,

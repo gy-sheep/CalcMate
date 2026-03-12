@@ -20,6 +20,15 @@
   "settings_licenseCount": "{count} licenses",
   "settings_privacyPolicy": "Privacy Policy",
 
+  "settings_displayCurrency": "Display Currency",
+  "settings_displayCurrencyAuto": "Auto (Device Region)",
+  "settings_currencyKRW": "KRW (Won)",
+  "settings_currencyUSD": "USD (Dollar)",
+  "settings_currencyEUR": "EUR (Euro)",
+  "settings_currencyJPY": "JPY (Yen)",
+  "settings_currencyCNY": "CNY (Yuan)",
+  "settings_currencyGBP": "GBP (Pound)",
+
   "settings_languageSystem": "System Default",
   "settings_languageKo": "한국어",
   "settings_languageEn": "English",

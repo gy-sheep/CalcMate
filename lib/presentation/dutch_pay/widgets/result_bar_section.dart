@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../../core/l10n/currency_formatter.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../domain/models/currency_unit.dart';
 import '../../../domain/models/dutch_pay_state.dart';
 import '../../../domain/usecases/dutch_pay_individual_split_usecase.dart';
 import '../../../l10n/app_localizations.dart';
@@ -15,9 +16,10 @@ import 'share_sheet.dart';
 // ── 결과 바 차트 섹션 ────────────────────────────────────────
 
 class ResultBarSection extends StatelessWidget {
-  const ResultBarSection({super.key, required this.s, required this.result});
+  const ResultBarSection({super.key, required this.s, required this.result, required this.currencyUnit});
   final IndividualSplitState s;
   final IndividualSplitResult result;
+  final CurrencyUnit currencyUnit;
 
   String _fmt(int n) {
     if (n == 0) return '0';
@@ -51,7 +53,7 @@ class ResultBarSection extends StatelessWidget {
                 Text(l10n.dutchPay_label_result,
                     style: CmInputCard.titleText
                         .copyWith(color: kDutchTextSecondary)),
-                Text('${l10n.dutchPay_label_total} ${CurrencyFormatter.formatKrw(_fmt(result.totalAmount), locale)}',
+                Text('${l10n.dutchPay_label_total} ${CurrencyFormatter.format(_fmt(result.totalAmount), currencyUnit, locale)}',
                     style: textStyleCaption.copyWith(
                         color: kDutchTextTertiary)),
               ],
@@ -108,7 +110,7 @@ class ResultBarSection extends StatelessWidget {
                     SizedBox(
                       width: 96,
                       child: Text(
-                        CurrencyFormatter.formatKrw(_fmt(amt), locale),
+                        CurrencyFormatter.format(_fmt(amt), currencyUnit, locale),
                         textAlign: TextAlign.right,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -122,7 +124,7 @@ class ResultBarSection extends StatelessWidget {
               );
             }),
             const SizedBox(height: 4),
-            ShareResultBtn(s: s, result: result),
+            ShareResultBtn(s: s, result: result, currencyUnit: currencyUnit),
           ],
         ),
       ),
@@ -133,9 +135,10 @@ class ResultBarSection extends StatelessWidget {
 // ── 공유 버튼 ────────────────────────────────────────────────
 
 class ShareResultBtn extends StatelessWidget {
-  const ShareResultBtn({super.key, required this.s, required this.result});
+  const ShareResultBtn({super.key, required this.s, required this.result, required this.currencyUnit});
   final IndividualSplitState s;
   final IndividualSplitResult result;
+  final CurrencyUnit currencyUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +192,7 @@ class ShareResultBtn extends StatelessWidget {
             personAmounts: result.personAmounts,
             personMenus: personMenus,
           ),
+          currencyUnit: currencyUnit,
         );
       },
     );

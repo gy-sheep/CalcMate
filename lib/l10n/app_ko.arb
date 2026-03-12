@@ -30,6 +30,15 @@
   },
   "settings_privacyPolicy": "개인정보 처리방침",
 
+  "settings_displayCurrency": "표시 통화",
+  "settings_displayCurrencyAuto": "자동 (기기 지역)",
+  "settings_currencyKRW": "KRW (원)",
+  "settings_currencyUSD": "USD (달러)",
+  "settings_currencyEUR": "EUR (유로)",
+  "settings_currencyJPY": "JPY (엔)",
+  "settings_currencyCNY": "CNY (위안)",
+  "settings_currencyGBP": "GBP (파운드)",
+
   "settings_languageSystem": "시스템 기본",
   "settings_languageKo": "한국어",
   "settings_languageEn": "English",
