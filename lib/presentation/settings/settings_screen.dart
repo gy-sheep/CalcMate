@@ -733,7 +733,7 @@ class _SheetRadioTile extends StatelessWidget {
                 ),
               ),
               if (isSelected)
-                Icon(Icons.check, size: 20, color: colorScheme.primary),
+                Icon(Icons.check, size: 20, color: colorScheme.onSurface),
             ],
           ),
         ),

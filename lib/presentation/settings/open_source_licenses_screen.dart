@@ -41,14 +41,25 @@ class _OpenSourceLicensesScreenState extends State<OpenSourceLicensesScreen> {
 
   Future<void> _loadLicenses() async {
     final Map<String, List<LicenseEntry>> packages = {};
+    int count = 0;
     await for (final entry in LicenseRegistry.licenses) {
       for (final package in entry.packages) {
         packages.putIfAbsent(package, () => []).add(entry);
       }
+      count++;
+      if (count % 50 == 0 && mounted) {
+        setState(() {
+          _packages
+            ..clear()
+            ..addAll(packages);
+        });
+      }
     }
     if (mounted) {
       setState(() {
-        _packages.addAll(packages);
+        _packages
+          ..clear()
+          ..addAll(packages);
         _loaded = true;
       });
     }
@@ -77,7 +88,7 @@ class _OpenSourceLicensesScreenState extends State<OpenSourceLicensesScreen> {
       ),
       body: Stack(
         children: [
-          _loaded
+          _loaded || _packages.isNotEmpty
               ? ListView.separated(
                   controller: _scrollController,
                   padding: EdgeInsets.only(
