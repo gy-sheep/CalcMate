@@ -196,6 +196,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               _SectionCard(
                 title: l10n.settings_sectionGeneral,
                 children: [
+                  _SubSectionHeader(title: l10n.settings_subMain),
                   _SettingsTile(
                     label: l10n.settings_calculatorManagement,
                     value: l10n.settings_calculatorCount(visibleCount),
@@ -205,6 +206,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                   ),
+                  _SubSectionHeader(title: l10n.settings_subCurrency),
                   _SettingsTile(
                     label: l10n.settings_baseCurrency,
                     value: resolvedBaseCurrency,
@@ -317,6 +319,33 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
+// ── 서브 섹션 헤더 ──
+
+class _SubSectionHeader extends StatelessWidget {
+  final String title;
+  const _SubSectionHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        title,
+        style: CmInfoCard.captionText.copyWith(
+          color: colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
 // ── 설정 항목 행 ──
 
 class _SettingsTile extends StatelessWidget {
@@ -353,7 +382,7 @@ class _SettingsTile extends StatelessWidget {
               if (value != null) ...[
                 Text(
                   value!,
-                  style: textStyleCaption.copyWith(
+                  style: CmInfoCard.captionText.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),

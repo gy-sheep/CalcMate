@@ -86,11 +86,15 @@ class ExchangeRateViewModel extends AutoDisposeNotifier<ExchangeRateState> {
   ExchangeRateState build() {
     _getExchangeRateUseCase = ref.read(getExchangeRateUseCaseProvider);
     final baseCurrency = ref.read(baseCurrencyProvider);
-    // fromCode와 겹치지 않는 기본 toCodes 구성
-    final defaultToCodes = ['USD', 'EUR', 'JPY', 'KRW']
-        .where((c) => c != baseCurrency)
-        .take(3)
+    final deviceCurrency = ref.read(deviceCurrencyProvider);
+    // fromCode·기기 통화와 겹치지 않는 기본 toCodes 구성
+    final otherDefaults = ['USD', 'EUR', 'JPY', 'KRW']
+        .where((c) => c != baseCurrency && c != deviceCurrency)
         .toList();
+    final defaultToCodes = [
+      if (deviceCurrency != baseCurrency) deviceCurrency,
+      ...otherDefaults,
+    ].take(3).toList();
     Future.delayed(const Duration(milliseconds: 400), _loadRates);
     return ExchangeRateState(fromCode: baseCurrency, toCodes: defaultToCodes);
   }

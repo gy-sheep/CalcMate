@@ -30,6 +30,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings_sectionGeneral => '일반';
 
   @override
+  String get settings_subMain => '메인 리스트';
+
+  @override
+  String get settings_subCurrency => '환율 계산기';
+
+  @override
   String get settings_calculatorManagement => '계산기 관리';
 
   @override

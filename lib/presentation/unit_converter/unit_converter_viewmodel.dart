@@ -103,10 +103,7 @@ class UnitConverterViewModel extends AutoDisposeNotifier<UnitConverterState> {
         return;
 
       case '⌫':
-        if (isResult) {
-          state = _recalculate(state.copyWith(input: '0', isResult: false));
-          return;
-        }
+        isResult = false;
         if (input.length > 1) {
           final trimmed = input.substring(0, input.length - 1);
           input = (trimmed == '-') ? '0' : trimmed;

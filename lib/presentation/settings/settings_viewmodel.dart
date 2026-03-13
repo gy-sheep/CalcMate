@@ -72,6 +72,11 @@ final baseCurrencyProvider = Provider<String>((ref) {
   return settings.baseCurrency ?? _detectBaseCurrencyFromDevice();
 });
 
+/// 기기 locale 기반 통화 코드를 제공하는 Provider.
+final deviceCurrencyProvider = Provider<String>((_) {
+  return _detectBaseCurrencyFromDevice();
+});
+
 // ── ViewModel ──
 
 const _kThemeModeKey = 'theme_mode';

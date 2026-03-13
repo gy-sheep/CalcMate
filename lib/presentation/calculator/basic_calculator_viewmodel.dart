@@ -193,11 +193,6 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
 
     // 연산자로 끝나는 경우 → 같은 연산자면 무시, 다른 연산자면 교체
     if (CalculatorInputUtils.endsWithOperator(current)) {
-      if (op == '-') {
-        // 음수 대기 상태로 진입
-        state = state.copyWith(input: '$current-');
-        return;
-      }
       final lastOp = current[current.length - 1];
       if (lastOp == op) return; // 같은 연산자 무시
       state = state.copyWith(input: current.substring(0, current.length - 1) + op);
@@ -213,9 +208,9 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   void _onEquals() {
     // 반복 = : 결과 상태에서 = 를 누르면 마지막 연산 반복
     if (state.isResult && _repeatOperator.isNotEmpty) {
-      final expr = state.input +
-          _repeatOperator.replaceAll('÷', '/').replaceAll('×', '*') +
-          _repeatOperand;
+      final expr = (state.input + _repeatOperator + _repeatOperand)
+          .replaceAll('÷', '/')
+          .replaceAll('×', '*');
       final result = _useCase.execute(expr);
       state = CalculatorState(
         input: NumberFormatter.formatResult(result),
@@ -236,8 +231,8 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
     // 음수 대기 상태면 무시
     if (CalculatorInputUtils.isNegativePending(raw)) return;
 
-    // '(' 만 있는 경우 무시
-    if (raw == '(') return;
+    // ( 로 끝나면 무시 (빈 괄호 방지)
+    if (raw.endsWith('(')) return;
 
     // 미닫힌 괄호 자동 닫기
     var expr = raw;
@@ -248,8 +243,8 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
 
     final resolved = CalculatorInputUtils.resolvePercent(expr);
 
-    // 반복 = 용: resolved 기준으로 마지막 연산자/피연산자 저장
-    final lastSeg = CalculatorInputUtils.lastNumberSegment(resolved);
+    // 반복 = 용: 최상위 레벨 마지막 연산자/피연산자 저장
+    final lastSeg = CalculatorInputUtils.lastTopLevelSegment(resolved);
     final prefix = resolved.substring(0, resolved.length - lastSeg.length);
     if (prefix.isNotEmpty) {
       _repeatOperator = prefix[prefix.length - 1];
@@ -358,11 +353,8 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
       return;
     }
 
-    // ( 뒤 → 0%
-    if (current.endsWith('(')) {
-      state = state.copyWith(input: '${current}0%', isResult: false);
-      return;
-    }
+    // ( 뒤 → 무시
+    if (current.endsWith('(')) return;
 
     // 연산자 뒤 → 연산자를 %로 교체
     if (CalculatorInputUtils.endsWithOperator(current)) {
@@ -411,11 +403,11 @@ class BasicCalculatorViewModel extends AutoDisposeNotifier<CalculatorState> {
   void _onParentheses() {
     final current = state.input;
 
-    // 결과 상태 → ( 로 새 수식 시작
+    // 결과 상태 → 결과×( 로 이어감
     if (state.isResult) {
       _repeatOperator = '';
       _repeatOperand = '';
-      state = const CalculatorState(input: '(');
+      state = CalculatorState(input: '${state.input}×(');
       return;
     }
 

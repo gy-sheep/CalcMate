@@ -103,6 +103,10 @@
 | — | 표시 통화 설정 (CurrencyUnit enum·CurrencyFormatter 확장·설정 바텀시트·부가세/할인/더치페이 적용, 실수령액 KRW 고정) | 30케이스 | — |
 | 11 | 환율 기준 통화 설정 (baseCurrencyProvider·바텀시트 10개 통화·환율 계산기 fromCode 연동) | 8케이스 | — |
 | — | 앱 언어/시스템 locale 분리 (settings locale→appLanguage, BMI 시스템 locale 직접 조회, 카테고리 그리드 2행 통일) | — | — |
+| — | 기본 계산기 연산자·괄호·% 동작 개선 (음수 대기 제거, 결과×( 연결, lastTopLevelSegment 반복=) | — | — |
+| — | 환율 계산기 기기 통화 기반 기본 toCodes 구성 (deviceCurrencyProvider) | — | — |
+| — | 단위 변환기 결과 상태 백스페이스 동작 개선 | — | — |
+| — | 설정 "일반" 섹션 서브 섹션 헤더 추가 (메인 리스트·환율 계산기 구분, 배경 tint) | — | `docs/specs/SETTINGS.md` |
 
 > 상세 작업 이력: `HISTORY.md`
 

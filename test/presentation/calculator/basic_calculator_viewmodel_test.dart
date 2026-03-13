@@ -110,9 +110,9 @@ void main() {
       expect(readState().input, '0');
     });
 
-    test('연산자 뒤 - → 음수 대기', () {
+    test('연산자 뒤 - → 연산자 교체', () {
       pressAll('5 × -');
-      expect(readState().input, '5×-');
+      expect(readState().input, '5-');
     });
 
     test('연산자 교체 (다른 연산자)', () {
@@ -182,7 +182,7 @@ void main() {
 
     test('음수 대기에서 → -0.', () {
       pressAll('5 × - .');
-      expect(readState().input, '5×-0.');
+      expect(readState().input, '5-0.');
     });
 
     test(') 뒤 → ×0.', () {
@@ -236,10 +236,10 @@ void main() {
       expect(readState().input, '(3+2)×(');
     });
 
-    test('결과 상태에서 → ( 새 수식', () {
+    test('결과 상태에서 → 결과×(', () {
       pressAll('5 + 3 =');
       press('()');
-      expect(readState().input, '(');
+      expect(readState().input, '8×(');
       expect(readState().isResult, false);
     });
 
@@ -258,9 +258,9 @@ void main() {
       expect(readState().input, '50%');
     });
 
-    test('( 뒤 % → 0%', () {
+    test('( 뒤 % → 무시', () {
       pressAll('() %');
-      expect(readState().input, '(0%');
+      expect(readState().input, '(');
     });
 
     test(') 뒤 % 허용', () {
@@ -296,8 +296,8 @@ void main() {
     });
 
     test('음수 대기에서 % → 무시', () {
-      pressAll('5 × - %');
-      expect(readState().input, '5×-');
+      pressAll('() - %');
+      expect(readState().input, '(-');
     });
   });
 
@@ -346,8 +346,8 @@ void main() {
     });
 
     test('음수 대기 상태 → 무시', () {
-      pressAll('5 × - =');
-      expect(readState().input, '5×-');
+      pressAll('() - =');
+      expect(readState().input, '(-');
       expect(readState().isResult, false);
     });
 

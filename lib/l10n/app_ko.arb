@@ -9,6 +9,8 @@
   "settings_themeDark": "다크",
 
   "settings_sectionGeneral": "일반",
+  "settings_subMain": "메인 리스트",
+  "settings_subCurrency": "환율 계산기",
   "settings_calculatorManagement": "계산기 관리",
   "settings_calculatorCount": "{count}개",
   "@settings_calculatorCount": {

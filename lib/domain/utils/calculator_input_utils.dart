@@ -22,6 +22,30 @@ abstract final class CalculatorInputUtils {
     return s.substring(i + 1);
   }
 
+  /// 최상위 레벨에서 마지막 피연산자를 반환.
+  /// 괄호 그룹은 하나의 덩어리로 취급.
+  /// e.g. "2×(3+4)" → "(3+4)", "5+3" → "3"
+  static String lastTopLevelSegment(String s) {
+    int i = s.length - 1;
+    while (i >= 0) {
+      final ch = s[i];
+      if (ch == ')') {
+        int depth = 1;
+        i--;
+        while (i >= 0 && depth > 0) {
+          if (s[i] == ')') depth++;
+          if (s[i] == '(') depth--;
+          i--;
+        }
+        continue;
+      }
+      if (_nonMinusOps.contains(ch)) break;
+      if (ch == '-' && i > 0 && !_nonMinusOps.contains(s[i - 1])) break;
+      i--;
+    }
+    return s.substring(i + 1);
+  }
+
   /// 닫히지 않은 '(' 개수를 반환.
   static int unclosedParenCount(String s) {
     int count = 0;

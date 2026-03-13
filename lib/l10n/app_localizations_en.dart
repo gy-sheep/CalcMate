@@ -30,6 +30,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_sectionGeneral => 'General';
 
   @override
+  String get settings_subMain => 'Main List';
+
+  @override
+  String get settings_subCurrency => 'Currency Calculator';
+
+  @override
   String get settings_calculatorManagement => 'Calculator Management';
 
   @override

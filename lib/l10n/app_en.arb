@@ -9,6 +9,8 @@
   "settings_themeDark": "Dark",
 
   "settings_sectionGeneral": "General",
+  "settings_subMain": "Main List",
+  "settings_subCurrency": "Currency Calculator",
   "settings_calculatorManagement": "Calculator Management",
   "settings_calculatorCount": "{count}",
   "settings_baseCurrency": "Base Currency",

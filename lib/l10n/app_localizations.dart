@@ -140,6 +140,18 @@ abstract class AppLocalizations {
   /// **'일반'**
   String get settings_sectionGeneral;
 
+  /// No description provided for @settings_subMain.
+  ///
+  /// In ko, this message translates to:
+  /// **'메인 리스트'**
+  String get settings_subMain;
+
+  /// No description provided for @settings_subCurrency.
+  ///
+  /// In ko, this message translates to:
+  /// **'환율 계산기'**
+  String get settings_subCurrency;
+
   /// No description provided for @settings_calculatorManagement.
   ///
   /// In ko, this message translates to:
