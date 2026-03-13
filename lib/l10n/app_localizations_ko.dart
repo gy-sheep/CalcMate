@@ -64,13 +64,16 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get settings_licenseLoading => '라이선스 정보를 불러오는 중...';
+
+  @override
   String get settings_privacyPolicy => '개인정보 처리방침';
 
   @override
   String get settings_displayCurrency => '표시 통화';
 
   @override
-  String get settings_displayCurrencyAuto => '자동 (기기 지역)';
+  String get settings_displayCurrencyAuto => '시스템 기본';
 
   @override
   String get settings_currencyKRW => 'KRW (원)';

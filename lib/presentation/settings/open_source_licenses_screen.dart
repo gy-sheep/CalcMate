@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -130,7 +132,51 @@ class _OpenSourceLicensesScreenState extends State<OpenSourceLicensesScreen> {
                     );
                   },
                 )
-              : const Center(child: CircularProgressIndicator.adaptive()),
+              : Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(CmLoadingOverlay.radius),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: CmLoadingOverlay.blurSigma,
+                        sigmaY: CmLoadingOverlay.blurSigma,
+                      ),
+                      child: Container(
+                        padding: CmLoadingOverlay.padding,
+                        decoration: BoxDecoration(
+                          color: (isDark ? Colors.white : Colors.black)
+                              .withValues(alpha: 0.12),
+                          borderRadius:
+                              BorderRadius.circular(CmLoadingOverlay.radius),
+                          border: Border.all(
+                            color: (isDark ? Colors.white : Colors.black)
+                                .withValues(alpha: 0.24),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: CmLoadingOverlay.spinnerSize,
+                              height: CmLoadingOverlay.spinnerSize,
+                              child: CircularProgressIndicator(
+                                strokeWidth: CmLoadingOverlay.spinnerStroke,
+                                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            SizedBox(width: CmLoadingOverlay.spinnerTextSpacing),
+                            Text(
+                              AppLocalizations.of(context).settings_licenseLoading,
+                              style: CmLoadingOverlay.text.copyWith(
+                                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
           BlurStatusBarOverlay(
             isVisible: _isScrolled,
             backgroundColor: isDark ? Colors.black : Colors.white,

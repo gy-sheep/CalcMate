@@ -64,13 +64,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settings_licenseLoading => 'Loading licenses...';
+
+  @override
   String get settings_privacyPolicy => 'Privacy Policy';
 
   @override
   String get settings_displayCurrency => 'Display Currency';
 
   @override
-  String get settings_displayCurrencyAuto => 'Auto (Device Region)';
+  String get settings_displayCurrencyAuto => 'System Default';
 
   @override
   String get settings_currencyKRW => 'KRW (Won)';

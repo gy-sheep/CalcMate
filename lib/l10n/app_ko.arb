@@ -30,10 +30,11 @@
       "count": { "type": "int" }
     }
   },
+  "settings_licenseLoading": "라이선스 정보를 불러오는 중...",
   "settings_privacyPolicy": "개인정보 처리방침",
 
   "settings_displayCurrency": "표시 통화",
-  "settings_displayCurrencyAuto": "자동 (기기 지역)",
+  "settings_displayCurrencyAuto": "시스템 기본",
   "settings_currencyKRW": "KRW (원)",
   "settings_currencyUSD": "USD (달러)",
   "settings_currencyEUR": "EUR (유로)",

@@ -200,6 +200,12 @@ abstract class AppLocalizations {
   /// **'{count}개의 라이선스'**
   String settings_licenseCount(int count);
 
+  /// No description provided for @settings_licenseLoading.
+  ///
+  /// In ko, this message translates to:
+  /// **'라이선스 정보를 불러오는 중...'**
+  String get settings_licenseLoading;
+
   /// No description provided for @settings_privacyPolicy.
   ///
   /// In ko, this message translates to:
@@ -215,7 +221,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_displayCurrencyAuto.
   ///
   /// In ko, this message translates to:
-  /// **'자동 (기기 지역)'**
+  /// **'시스템 기본'**
   String get settings_displayCurrencyAuto;
 
   /// No description provided for @settings_currencyKRW.

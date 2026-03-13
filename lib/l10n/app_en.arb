@@ -20,10 +20,11 @@
   "settings_version": "Version",
   "settings_openSourceLicenses": "Open Source Licenses",
   "settings_licenseCount": "{count} licenses",
+  "settings_licenseLoading": "Loading licenses...",
   "settings_privacyPolicy": "Privacy Policy",
 
   "settings_displayCurrency": "Display Currency",
-  "settings_displayCurrencyAuto": "Auto (Device Region)",
+  "settings_displayCurrencyAuto": "System Default",
   "settings_currencyKRW": "KRW (Won)",
   "settings_currencyUSD": "USD (Dollar)",
   "settings_currencyEUR": "EUR (Euro)",
