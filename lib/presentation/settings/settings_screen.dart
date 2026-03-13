@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/blur_status_bar_overlay.dart';
@@ -233,7 +234,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   _SettingsTile(
                     label: l10n.settings_privacyPolicy,
-                    onTap: () {},
+                    onTap: () {
+                      final isKo = Localizations.localeOf(context).languageCode == 'ko';
+                      final url = isKo
+                          ? 'https://gy-sheep.github.io/CalcMate/privacy-policy-ko.html'
+                          : 'https://gy-sheep.github.io/CalcMate/privacy-policy.html';
+                      launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                    },
                   ),
                 ],
               ),

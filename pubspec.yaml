@@ -70,6 +70,7 @@ dependencies:
   package_info_plus: ^9.0.0
   firebase_analytics: ^11.6.0
   firebase_crashlytics: ^4.3.10
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

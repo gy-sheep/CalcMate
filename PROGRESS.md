@@ -31,7 +31,7 @@
 - [x] AdMob 배너 + 전면 광고 연동
 - [x] Firebase Crashlytics 연동
 - [x] 앱 언어 설정과 시스템 locale(국가 코드) 분리
-- [ ] 개인정보 처리방침 작성 + URL 확정 + `url_launcher` 연동
+- [x] 개인정보 처리방침 작성 + URL 확정 + `url_launcher` 연동
 - [ ] 인앱 결제 모듈 연동 (유료 버전 / 광고 제거)
 
 ### Phase 10: 기타

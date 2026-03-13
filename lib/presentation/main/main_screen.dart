@@ -909,10 +909,13 @@ class _SettingsMenuOverlayState extends State<_SettingsMenuOverlay>
           child: Row(
             children: [
               Icon(icon, size: 20, color: colorScheme.onSurface),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(color: colorScheme.onSurface),
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
