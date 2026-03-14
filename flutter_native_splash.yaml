@@ -1,12 +1,13 @@
 flutter_native_splash:
-  # 배경색만 설정 (이미지 없음)
-  color: "#0D0D14"
-  color_dark: "#0D0D14"
+  color: "#0F0F19"
+  color_dark: "#0F0F19"
 
   android: true
   ios: true
   web: false
 
   android_12:
-    color: "#0D0D14"
-    color_dark: "#0D0D14"
+    color: "#0F0F19"
+    color_dark: "#0F0F19"
+    image: "assets/images/splash_android12.png"
+    image_dark: "assets/images/splash_android12.png"
