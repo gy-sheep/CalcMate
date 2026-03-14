@@ -1,3 +1,10 @@
+---
+name: deploy-functions
+description: Firebase Functions를 빌드하고 배포한다
+allowed-tools: ["Bash", "Read"]
+disable-model-invocation: true
+---
+
 Firebase Functions를 빌드하고 배포한다. 아래 순서를 따른다.
 
 1. `functions/` 디렉토리에서 빌드 및 배포를 실행한다:

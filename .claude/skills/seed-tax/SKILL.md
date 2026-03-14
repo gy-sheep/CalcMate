@@ -1,3 +1,9 @@
+---
+name: seed-tax
+description: Firestore 세율 데이터를 갱신한다
+disable-model-invocation: true
+---
+
 Firestore 세율 데이터를 갱신한다. 아래 순서를 따른다.
 
 ## 1단계: 4대보험 요율 수집 요청

@@ -1,3 +1,10 @@
+---
+name: qa
+description: PROMPTS.md에서 질문을 찾아 답변하는 작업을 수행한다
+context: fork
+agent: general-purpose
+---
+
 `docs/prompts/PROPMTS.md` 파일에서 "$ARGUMENTS"에 해당하는 질문을 찾아 답변하는 작업을 수행합니다.
 
 ## 단계별 워크플로우
